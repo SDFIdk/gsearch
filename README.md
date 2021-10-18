@@ -9,6 +9,7 @@ Gsearch bygger på følgende hovedprincipper:
  - Et tyndt forretningslag, som udstiller REST services. Skrevet i Java.
  - Forretningslaget skal som udgangspunkt være selvkonfigurerende (ud fra data i databasen)
  - Forretningslaget dokumenteres som swagger
+ - Forretningslaget skal testes gennem formaliseret integrationstest (CI / CD)
  - Der udvikles (måske) en "mixer" funktion, som muliggør at man i samme kald kan kalde flere søgeressourcer i et kald og få et "mix" af objekttyper retur.
  - Et databaselag i Postgres (minimum v.12), som udstiller søgefunktioner eller views i et særskilt schema (fx. API)
  - Databasen definerer søgningerne. Der vil således ikke (eller i meget begrænset omfang) være behov for konfigurationsfiler til applikationslaget.
