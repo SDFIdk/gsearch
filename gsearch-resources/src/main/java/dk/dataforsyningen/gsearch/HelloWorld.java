@@ -55,7 +55,9 @@ public class HelloWorld {
         HikariDataSource ds = new HikariDataSource(config);
         Jdbi jdbi = Jdbi.create(ds);
         String helloWorld = jdbi.withHandle(handle -> {
-            return handle.createQuery("select 'Hello world!'").mapTo(String.class).first();
+            String sql = "select 'Hello world!'";
+            logger.info("Executing SQL " + sql);
+            return handle.createQuery(sql).mapTo(String.class).first();
         });
 
         return helloWorld;
