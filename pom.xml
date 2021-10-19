@@ -4,11 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>dk.dataforsyningen.gsearch</groupId>
   <artifactId>modules</artifactId>
-  <version>${project.version}</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>modules</name>
   <properties>
-    <project.version>1.0-SNAPSHOT</project.version>
     <jersey.version>2.35</jersey.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -19,6 +18,13 @@
         <artifactId>jersey-bom</artifactId>
         <version>${jersey.version}</version>
         <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jdbi</groupId>
+        <artifactId>jdbi3-bom</artifactId>
+        <type>pom</type>
+        <version>3.23.0</version>
         <scope>import</scope>
       </dependency>
     </dependencies>

@@ -5,13 +5,15 @@
   <parent>
     <groupId>dk.dataforsyningen.gsearch</groupId>
     <artifactId>modules</artifactId>
-    <version>${project.version}</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   <groupId>dk.dataforsyningen.gsearch</groupId>
   <artifactId>gsearch-resources</artifactId>
-  <version>${project.version}</version>
   <packaging>jar</packaging>
   <name>gsearch-resources</name>
+  <properties>
+    <lb.version>1.2.5</lb.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
@@ -20,6 +22,42 @@
     <dependency>
       <groupId>org.glassfish.jersey.inject</groupId>
       <artifactId>jersey-hk2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jdbi</groupId>
+      <artifactId>jdbi3-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>net.postgis</groupId>
+      <artifactId>postgis-jdbc-jts</artifactId>
+      <version>2021.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>4.0.3</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>${lb.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${lb.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-access</artifactId>
+      <version>${lb.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
