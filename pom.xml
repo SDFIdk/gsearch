@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>dk.dataforsyningen.gsearch</groupId>
+  <artifactId>modules</artifactId>
+  <version>${project.version}</version>
+  <packaging>pom</packaging>
+  <name>modules</name>
+  <properties>
+    <project.version>1.0-SNAPSHOT</project.version>
+    <jersey.version>2.35</jersey.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.glassfish.jersey</groupId>
+        <artifactId>jersey-bom</artifactId>
+        <version>${jersey.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <modules>
+    <module>gsearch-resources</module>
+    <module>gsearch-webapp</module>
+    <module>gsearch-standalone</module>
+  </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

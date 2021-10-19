@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>dk.dataforsyningen.gsearch</groupId>
+    <artifactId>modules</artifactId>
+    <version>${project.version}</version>
+  </parent>
+  <groupId>dk.dataforsyningen.gsearch</groupId>
+  <artifactId>gsearch-resources</artifactId>
+  <version>${project.version}</version>
+  <packaging>jar</packaging>
+  <name>gsearch-resources</name>
+  <dependencies>
+    <dependency>
+      <groupId>org.glassfish.jersey.containers</groupId>
+      <artifactId>jersey-container-servlet-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.inject</groupId>
+      <artifactId>jersey-hk2</artifactId>
+    </dependency>
+  </dependencies>
+</project>

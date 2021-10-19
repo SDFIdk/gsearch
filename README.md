@@ -14,3 +14,19 @@ Gsearch bygger på følgende hovedprincipper:
  - Et databaselag i Postgres (minimum v.12), som udstiller søgefunktioner eller views i et særskilt schema (fx. API)
  - Databasen definerer søgningerne. Der vil således ikke (eller i meget begrænset omfang) være behov for konfigurationsfiler til applikationslaget.
  - Alle udstillede objekter i databassen, dokumenteres med Postgres Comment (som kan aflæses af forretningslæget til udstilling)
+
+## Project structure
+
+This is a Maven 3 multi module project. Modules:
+
+* [gsearch-resources] - JAX-RS resource classes, contains the business logic, produces a jar
+* [gsearch-webapp] - Java Servlet 4.0 application, produces a war
+* [gsearch-standalone] - Self contained application
+
+Minimum Java runtime supported is version 8.
+
+## How to run standalone
+
+> mvn install
+
+> mvn exec:java -f gsearch-standalone/pom.xml
