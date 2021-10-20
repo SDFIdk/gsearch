@@ -16,7 +16,7 @@ import java.util.logging.LogManager;
  */
 public class Main {
     // Base URI the Grizzly HTTP server will listen on
-    public static final String BASE_URI = "http://localhost:8080/";
+    public static final String BASE_URI = "http://0.0.0.0:8080/";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -46,7 +46,6 @@ public class Main {
         DatabaseManager.start();
         final HttpServer server = startServer();
         server.start();
-        //Thread.currentThread().join();
         /*System.out.println(String.format("Jersey app started with endpoints available at "
                 + "%s%nHit Ctrl-C to stop it...", BASE_URI));
         System.in.read();
@@ -54,4 +53,3 @@ public class Main {
         DatabaseManager.shutdown();*/
     }
 }
-
