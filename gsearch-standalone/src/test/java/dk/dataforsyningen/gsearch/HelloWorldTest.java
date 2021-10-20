@@ -9,7 +9,11 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
 import static org.junit.Assert.assertEquals;
+
+import java.util.logging.LogManager;
 
 public class HelloWorldTest {
 
@@ -18,6 +22,9 @@ public class HelloWorldTest {
 
     @Before
     public void setUp() throws Exception {
+        LogManager.getLogManager().reset();
+        SLF4JBridgeHandler.install();
+        DatabaseManager.start();
         // start the server
         server = Main.startServer();
         // create the client
@@ -35,6 +42,7 @@ public class HelloWorldTest {
     @After
     public void tearDown() throws Exception {
         server.stop();
+        DatabaseManager.shutdown();
     }
 
     /**
