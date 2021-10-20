@@ -3,9 +3,11 @@ package dk.dataforsyningen.gsearch;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.logging.LogManager;
 
 /**
  * Main class.
@@ -35,11 +37,15 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        LogManager.getLogManager().reset();
+        SLF4JBridgeHandler.install();
+        DatabaseManager.start();
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey app started with endpoints available at "
                 + "%s%nHit Ctrl-C to stop it...", BASE_URI));
         System.in.read();
         server.stop();
+        DatabaseManager.shutdown();
     }
 }
 
