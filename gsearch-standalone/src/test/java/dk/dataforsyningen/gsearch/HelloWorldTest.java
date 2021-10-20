@@ -6,8 +6,8 @@ import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
@@ -17,11 +17,11 @@ import java.util.logging.LogManager;
 
 public class HelloWorldTest {
 
-    private HttpServer server;
-    private WebTarget target;
+    private static HttpServer server;
+    private static WebTarget target;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
         DatabaseManager.start();
@@ -39,8 +39,8 @@ public class HelloWorldTest {
         target = c.target(Main.BASE_URI);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         server.stop();
         DatabaseManager.shutdown();
     }
@@ -52,5 +52,14 @@ public class HelloWorldTest {
     public void testGetIt() {
         String responseMsg = target.path("helloworld").request().get(String.class);
         assertEquals("Hello world!", responseMsg);
+    }
+
+    /**
+     * Test to see that the message "Hello world!" is sent in the response.
+     */
+    @Test
+    public void testDemo() {
+        String responseMsg = target.path("demo").request().get(String.class);
+        assertEquals("[{\"vejnavn\":\"Brudedalen\",\"postdistrikt\":\"Farum\"},{\"vejnavn\":\"Suhrs Allé\",\"postdistrikt\":\"Farum\"}]", responseMsg);
     }
 }
