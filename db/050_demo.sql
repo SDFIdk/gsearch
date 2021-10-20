@@ -38,4 +38,4 @@ SELECT api.demo('suhrs Allé',NULL, 1, 100);
 SELECT api.demo(null,NULL, 1, 100);
 -- SELECT api.demo(null,NULL, 1, 200); -- Should fail!!
 
-GRANT EXECUTE ON FUNCTION api.demo TO udv_gsearch_read -- WITH PASSWORD '78gsj3457.89gvhuiy78d';
+GRANT EXECUTE ON FUNCTION api.demo TO udv_gsearch_read
