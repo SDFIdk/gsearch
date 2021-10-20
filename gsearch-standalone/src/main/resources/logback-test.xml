@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="ch.qos.logback.classic" level="ERROR"/>
+  <logger name="com.zaxxer.hikari.pool.PoolBase" level="ERROR"/>
+  <logger name="com.zaxxer.hikari.pool.HikariPool" level="ERROR"/>
+  <logger name="com.zaxxer.hikari.HikariDataSource" level="ERROR"/>
+
+  <root>
+    <level value="INFO"/>
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+</configuration>

@@ -5,9 +5,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-
 import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +14,8 @@ import org.slf4j.LoggerFactory;
  */
 @Path("helloworld")
 public class HelloWorld {
+
+    Jdbi jdbi = DatabaseManager.getJdbi();
 
     /**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -31,29 +30,6 @@ public class HelloWorld {
 
         logger.info("helloWorld called");
 
-        String PGUSER = System.getenv("PGUSER");
-        if (PGUSER == null || PGUSER.isEmpty())
-            PGUSER = "postgres";
-        String PGPASSWORD = System.getenv("PGPASSWORD");
-        if (PGPASSWORD == null || PGPASSWORD.isEmpty())
-            PGPASSWORD = "postgres";
-        String PGDATABASE = System.getenv("PGDATABASE");
-        if (PGDATABASE == null || PGDATABASE.isEmpty())
-            PGDATABASE = "postgres";
-        String PGHOST = System.getenv("PGHOST");
-        if (PGHOST == null || PGHOST.isEmpty())
-            PGHOST = "localhost";
-        String PGPORT = System.getenv("PGPORT");
-        if (PGPORT == null || PGPORT.isEmpty())
-            PGPORT = "5432";
-
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://" + PGHOST + ":" + PGPORT + "/" + PGDATABASE);
-        config.setUsername(PGUSER);
-        config.setPassword(PGPASSWORD);
-
-        HikariDataSource ds = new HikariDataSource(config);
-        Jdbi jdbi = Jdbi.create(ds);
         String helloWorld = jdbi.withHandle(handle -> {
             String sql = "select 'Hello world!'";
             logger.info("Executing SQL " + sql);
