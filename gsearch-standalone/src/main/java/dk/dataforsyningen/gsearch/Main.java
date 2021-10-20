@@ -2,6 +2,7 @@ package dk.dataforsyningen.gsearch;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
@@ -24,7 +25,9 @@ public class Main {
     public static HttpServer startServer() {
         // create a resource config that scans for JAX-RS resources and providers
         // in dk.dataforsyningen.gsearch package
-        final ResourceConfig rc = new ResourceConfig().packages("dk.dataforsyningen.gsearch");
+        final ResourceConfig rc = new ResourceConfig()
+            .packages("dk.dataforsyningen.gsearch")
+            .register(MoxyJsonFeature.class);
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
@@ -35,17 +38,20 @@ public class Main {
      * Main method.
      * @param args
      * @throws IOException
+     * @throws InterruptedException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
         DatabaseManager.start();
         final HttpServer server = startServer();
-        System.out.println(String.format("Jersey app started with endpoints available at "
+        server.start();
+        //Thread.currentThread().join();
+        /*System.out.println(String.format("Jersey app started with endpoints available at "
                 + "%s%nHit Ctrl-C to stop it...", BASE_URI));
         System.in.read();
         server.stop();
-        DatabaseManager.shutdown();
+        DatabaseManager.shutdown();*/
     }
 }
 
