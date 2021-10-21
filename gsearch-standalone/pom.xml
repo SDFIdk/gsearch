@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>dk.dataforsyningen.gsearch</groupId>
-      <artifactId>gsearch-webapp</artifactId>
+      <artifactId>gsearch-servlet</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
