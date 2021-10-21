@@ -19,9 +19,10 @@ Gsearch bygger på følgende hovedprincipper:
 
 This is a Maven 3 multi module project. Modules:
 
-* [gsearch-resources] - JAX-RS resource classes, contains the business logic, produces a jar
-* [gsearch-webapp] - Java Servlet 4.0 application, produces a war
-* [gsearch-standalone] - Self contained application
+* [gsearch-resources](gsearch-resources) - JAX-RS resource classes, contains the business logic, produces a jar
+* [gsearch-servlet](gsearch-servlet) - Java Servlet 4.0 implementation, produces a jar
+* [gsearch-webapp](gsearch-webapp) - Java Servlet 4.0 application, produces a war
+* [gsearch-standalone](gsearch-standalone) - Self contained application
 
 Minimum Java runtime supported is version 8.
 

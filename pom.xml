@@ -31,6 +31,7 @@
   </dependencyManagement>
   <modules>
     <module>gsearch-resources</module>
+    <module>gsearch-servlet</module>
     <module>gsearch-webapp</module>
     <module>gsearch-standalone</module>
   </modules>
