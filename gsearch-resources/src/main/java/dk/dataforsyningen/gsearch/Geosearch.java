@@ -21,12 +21,18 @@ import org.jdbi.v3.core.statement.StatementContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.postgis.jdbc.jts.JtsBinaryParser;
+
+import org.locationtech.jts.geom.Geometry;
+
 @Path("geosearch")
 public class Geosearch {
     Logger logger = LoggerFactory.getLogger(Geosearch.class);
 
     Jdbi jdbi = DatabaseManager.getJdbi();
     Set<String> types = DatabaseManager.getInstance().getTypes();
+
+    JtsBinaryParser binaryParser = new JtsBinaryParser();
 
     class DataMapper implements RowMapper<Data> {
         ResultSetMetaData meta;
@@ -36,12 +42,25 @@ public class Geosearch {
             this.resource = resource;
         }
 
+        private Object mapColumn(int i, ResultSet rs) throws SQLException {
+            if (meta.getColumnTypeName(i).equals("geometry")) {
+                // TODO: find out how to parse binary directly
+                //byte[] bytes = rs.getBytes(i);
+                //Geometry geometry = binaryParser.parse(bytes);
+                String hex = rs.getString(i);
+                Geometry geometry = binaryParser.parse(hex);
+                return geometry;
+            } else {
+                return rs.getString(i);
+            }
+        }
+
         @Override
         public Data map(ResultSet rs, StatementContext ctx) throws SQLException {
             Data data = new Data();
             data.type = resource;
             for (int i = 1; i <= meta.getColumnCount(); i++)
-                data.add(meta.getColumnName(i), rs.getString(i));
+                data.add(meta.getColumnName(i), mapColumn(i, rs));
             return data;
         }
 

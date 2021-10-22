@@ -18,6 +18,7 @@ public class GSearchApplication extends ResourceConfig {
   public GSearchApplication() {
     logger.debug("constructor called");
     packages("dk.dataforsyningen.gsearch");
+    register(GSearchObjectMapperProvider.class);
     register(JacksonFeature.class);
     register(OpenApiResource.class);
     register(AcceptHeaderOpenApiResource.class);
