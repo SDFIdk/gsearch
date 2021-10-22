@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 @Path("helloworld")
 public class HelloWorld {
+    static Logger logger = LoggerFactory.getLogger(HelloWorld.class);
 
     Jdbi jdbi = DatabaseManager.getJdbi();
 
@@ -26,16 +27,11 @@ public class HelloWorld {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String helloWorld() {
-        Logger logger = LoggerFactory.getLogger(HelloWorld.class.getName());
-
-        logger.info("helloWorld called");
-
+        logger.debug("helloWorld called");
         String helloWorld = jdbi.withHandle(handle -> {
             String sql = "select 'Hello world!'";
-            logger.info("Executing SQL " + sql);
             return handle.createQuery(sql).mapTo(String.class).first();
         });
-
         return helloWorld;
     }
 }

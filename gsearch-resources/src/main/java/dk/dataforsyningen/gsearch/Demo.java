@@ -16,19 +16,16 @@ import org.slf4j.LoggerFactory;
 
 @Path("demo")
 public class Demo {
+    static Logger logger = LoggerFactory.getLogger(Demo.class);
 
     Jdbi jdbi = DatabaseManager.getJdbi();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<DemoResult> demo(@DefaultValue("Farum") @QueryParam("q") String q) {
-        Logger logger = LoggerFactory.getLogger(Demo.class.getName());
-
-        logger.info("demo called");
-
+        logger.debug("demo called");
         return jdbi.withHandle(handle -> {
             String sql = "select (api.demo('" + q + "', NULL, 1, 100)).*";
-            logger.info("Executing SQL " + sql);
             handle.registerRowMapper(FieldMapper.factory(DemoResult.class));
             List<DemoResult> results = handle
                 .createQuery(sql)

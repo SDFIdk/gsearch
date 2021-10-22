@@ -17,7 +17,7 @@ public class Data {
     public Map<String, String> getProperties() {
         return properties;
     }
-    @JsonAnySetter 
+    @JsonAnySetter
     public void add(String property, String value) {
         properties.put(property, value);
     }
