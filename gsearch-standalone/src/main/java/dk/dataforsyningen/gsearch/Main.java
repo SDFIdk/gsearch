@@ -14,15 +14,16 @@ public class Main {
     public static final String BASE_URI = "http://0.0.0.0:8080/";
 
     public static HttpServer startServer() throws IOException {
-        Map<String, String> initParams = new HashMap<>();
-        initParams.put("javax.ws.rs.Application", "dk.dataforsyningen.gsearch.GSearchApplication");
-        return GrizzlyWebContainerFactory.create(URI.create(BASE_URI), initParams);
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
-        final HttpServer server = startServer();
-        server.start();
+        DatabaseManager.start();
+        Map<String, String> initParams = new HashMap<>();
+        initParams.put("javax.ws.rs.Application", "dk.dataforsyningen.gsearch.GSearchApplication");
+        HttpServer server = GrizzlyWebContainerFactory.create(URI.create(BASE_URI), initParams);
+        return server;
+    }
+
+    public static void main(String[] args) throws IOException {
+        startServer();
     }
 }
