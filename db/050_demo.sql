@@ -33,9 +33,10 @@ $function$
 ;
 
 -- Test cases:
-SELECT api.demo('Farum',NULL, 1, 100);
-SELECT api.demo('suhrs Allé',NULL, 1, 100);
-SELECT api.demo(null,NULL, 1, 100);
+SELECT (api.demo('Farum',NULL, 1, 100)).*;
+SELECT (api.demo('suhrs Allé',NULL, 1, 100)).*;
+SELECT (api.demo(null,NULL, 1, 100)).*;
 -- SELECT api.demo(null,NULL, 1, 200); -- Should fail!!
 
-GRANT EXECUTE ON FUNCTION api.demo TO udv_gsearch_read
+GRANT EXECUTE ON FUNCTION api.demo TO udv_gsearch_read;
+GRANT USAGE ON SCHEMA api TO udv_gsearch_read;
