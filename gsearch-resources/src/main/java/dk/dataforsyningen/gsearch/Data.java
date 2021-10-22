@@ -11,14 +11,14 @@ public class Data {
     @JsonProperty
     String type;
 
-    private Map<String, String> properties = new HashMap<String, String>();
+    private Map<String, Object> properties = new HashMap<String, Object>();
 
     @JsonAnyGetter
-    public Map<String, String> getProperties() {
+    public Map<String, Object> getProperties() {
         return properties;
     }
     @JsonAnySetter
-    public void add(String property, String value) {
+    public void add(String property, Object value) {
         properties.put(property, value);
     }
 }
