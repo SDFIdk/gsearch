@@ -21,13 +21,6 @@ public class GeosearchTest {
     public static void setUp() throws Exception {
         server = Main.startServer();
         Client c = ClientBuilder.newClient();
-
-        // uncomment the following line if you want to enable
-        // support for JSON in the client (you also have to uncomment
-        // dependency on jersey-media-json module in pom.xml and Main.startServer())
-        // --
-        // c.configuration().enable(new org.glassfish.jersey.media.json.JsonJaxbFeature());
-
         target = c.target(Main.BASE_URI);
     }
 
@@ -36,12 +29,13 @@ public class GeosearchTest {
         server.shutdownNow();
     }
 
-    /**
-     * Test to see that the message "Hello world!" is sent in the response.
-     */
     @Test
     public void testGeosearch() {
-        Result result = target.path("geosearch").queryParam("search", "Farum").request().get(Result.class);
-        assertEquals(2, result.data.size());
+        Result result = target
+            .path("geosearch")
+            .queryParam("search", "Farum")
+            .queryParam("resources", "postdistrikt,demo")
+            .request().get(Result.class);
+        assertEquals(3, result.data.size());
     }
 }
