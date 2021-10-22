@@ -3,7 +3,6 @@ package dk.dataforsyningen.gsearch;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 
@@ -13,9 +12,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
-public class HelloWorldTest {
+public class GeosearchTest {
 
     private static HttpServer server;
     private static WebTarget target;
@@ -43,18 +40,8 @@ public class HelloWorldTest {
      * Test to see that the message "Hello world!" is sent in the response.
      */
     @Test
-    public void testGetIt() {
-        String responseMsg = target.path("helloworld").request().get(String.class);
-        assertEquals("Hello world!", responseMsg);
-    }
-
-    /**
-     * Test to see that the message "Hello world!" is sent in the response.
-     */
-    @Test
-    public void testDemo() {
-        List<DemoResult> results = target.path("demo").request().get(new GenericType<List<DemoResult>>() {});
-        assertEquals(2, results.size());
-        assertEquals("Brudedalen", results.get(0).vejnavn);
+    public void testGeosearch() {
+        Result result = target.path("geosearch").queryParam("search", "Farum").request().get(Result.class);
+        assertEquals(2, result.data.size());
     }
 }
