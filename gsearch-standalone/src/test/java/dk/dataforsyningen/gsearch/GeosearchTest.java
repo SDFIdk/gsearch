@@ -34,8 +34,8 @@ public class GeosearchTest {
         Result result = target
             .path("geosearch")
             .queryParam("search", "Farum")
-            .queryParam("resources", "postdistrikt,demo")
+            .queryParam("resources", "postdistrikt")
             .request().get(Result.class);
-        assertEquals(3, result.data.size());
+        assertEquals(1, result.data.size());
     }
 }
