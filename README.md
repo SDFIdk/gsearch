@@ -17,17 +17,26 @@ Gsearch bygger på følgende hovedprincipper:
 
 ## Project structure
 
-This is a Maven 3 multi module project. Modules:
+This is a Spring Boot 2 project using Maven, Spring Web and JDBI.
 
-* [gsearch-resources](gsearch-resources) - JAX-RS resource classes, contains the business logic, produces a jar
-* [gsearch-servlet](gsearch-servlet) - Java Servlet 4.0 implementation, produces a jar
-* [gsearch-webapp](gsearch-webapp) - Java Servlet 4.0 application, produces a war
-* [gsearch-standalone](gsearch-standalone) - Self contained application
+Target Java version is 11.
 
-Minimum Java runtime supported is version 8.
+## Configuration
 
-## How to run standalone
+Database connection is configured by suppling environment variables PGHOST, PGPORT, PGDATABASE, PGUSER and PGPASSWORD.
 
-> mvn install
+## How to run as standalone
 
-> mvn exec:java -f gsearch-standalone/pom.xml
+> mvn spring-boot:run
+
+## How to build/run with Docker
+
+Build image with:
+
+> docker build . -t gsearch
+
+Run image with:
+
+> docker run --add-host host.docker.internal:host-gateway --env-file dev.env gsearch
+
+NOTE: dev.env specifies environment variables to local database and --add-hosts makes local postgresql instance available inside the container. This is not needed if connecting to an external database.
