@@ -35,8 +35,8 @@ Build image with:
 
 > docker build . -t gsearch
 
-Run image with:
+Run image exposed at port 8080 with:
 
-> docker run --add-host host.docker.internal:host-gateway --env-file dev.env gsearch
+> docker run --add-host host.docker.internal:host-gateway --env-file dev.env -p 8080:8080 gsearch
 
 NOTE: dev.env specifies environment variables to local database and --add-hosts makes local postgresql instance available inside the container. This is not needed if connecting to an external database.
