@@ -8,16 +8,17 @@ import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.locationtech.jts.geom.Geometry;
 
+import net.postgis.jdbc.jts.JtsBinaryParser;
+
 /**
  * Maps dynamic row data into the generic Data entity
  */
 class DataMapper implements RowMapper<Data> {
-    private final GSearchController gSearchController;
+    JtsBinaryParser binaryParser = new JtsBinaryParser();
     ResultSetMetaData meta;
     String resource;
 
     public DataMapper(GSearchController gSearchController, String resource) {
-        this.gSearchController = gSearchController;
         this.resource = resource;
     }
 
@@ -27,7 +28,7 @@ class DataMapper implements RowMapper<Data> {
             //byte[] bytes = rs.getBytes(i);
             //Geometry geometry = binaryParser.parse(bytes);
             String hex = rs.getString(i);
-            Geometry geometry = this.gSearchController.binaryParser.parse(hex);
+            Geometry geometry = this.binaryParser.parse(hex);
             return geometry;
         } else {
             return rs.getString(i);
