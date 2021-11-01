@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class GSearchController {
+public class Controller {
 
-    static Logger logger = LoggerFactory.getLogger(GSearchController.class);
+    static Logger logger = LoggerFactory.getLogger(Controller.class);
 
     @Autowired
 	private Jdbi jdbi;
@@ -25,38 +25,48 @@ public class GSearchController {
     @Autowired
 	private ResourceTypes resourceTypes;
 
-    private List<Data> getData(String search, String resource) {
+    private List<Data> getData(String search, String resource, int limit) {
         return jdbi.withHandle(handle -> {
-            String sql = "select (api." + resource + "(:search, NULL, 1, 100)).*";
+            String sql = "select (api." + resource + "(:search, NULL, 1, 100)).* limit :limit";
             handle.registerRowMapper(FieldMapper.factory(Data.class));
             List<Data> data = handle
                 .createQuery(sql)
                 .bind("search", search)
-                .map(new DataMapper(this, resource))
+                .bind("limit", limit)
+                .map(new DataMapper(resource))
                 .list();
             return data;
         });
     }
 
     @GetMapping(path = "/geosearch", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result geosearch(@RequestParam("search") String search, @RequestParam("resources") String resources) {
+    public Result geosearch(
+        @RequestParam String search,
+        @RequestParam String resources,
+        @RequestParam(defaultValue = "10") String limit) {
+
         logger.debug("geosearch called");
 
         if (search == null || search.isEmpty())
-            throw new RuntimeException("Query string parameter search is required");
+            throw new IllegalArgumentException("Query string parameter search is required");
 
         if (resources == null || resources.isEmpty())
-            throw new RuntimeException("Query string parameter resources is required");
+            throw new IllegalArgumentException("Query string parameter resources is required");
+
+        int limitInt = Integer.parseInt(limit);
+
+        if (limitInt < 1 || limitInt > 100)
+            throw new IllegalArgumentException("Query string parameter limit must be between 1-100");
 
         String[] requestedTypes = resources.split(",");
 
         for (int i = 0; i < requestedTypes.length; i++)
             if (!resourceTypes.getTypes().contains(requestedTypes[i]))
-                throw new RuntimeException("Resource " + requestedTypes[i] + " does not exist");
+                throw new IllegalArgumentException("Resource " + requestedTypes[i] + " does not exist");
 
         List<Data> data = Stream.of(requestedTypes)
             .parallel()
-            .map(t -> getData(search, t))
+            .map(t -> getData(search, t, limitInt))
             .flatMap(List::stream)
             .collect(Collectors.toList());
 

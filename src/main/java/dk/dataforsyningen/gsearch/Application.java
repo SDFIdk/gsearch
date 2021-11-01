@@ -7,10 +7,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class GSearchApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GSearchApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 	@Bean
