@@ -33,6 +33,7 @@ class Listener extends Thread
 
     public void run()
     {
+        // TODO: if unexpected failure occurs it should attempt to reestablish the listener with exponential falloff retries
         try
         {
             while (true)
