@@ -4,6 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.geotools.filter.text.cql2.CQL;
+import org.geotools.filter.text.cql2.CQLException;
+import org.geotools.data.jdbc.FilterToSQL;
+import org.geotools.data.jdbc.FilterToSQLException;
+import org.geotools.data.postgis.PostGISDialect;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.FieldMapper;
 import org.slf4j.Logger;
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
 
     static Logger logger = LoggerFactory.getLogger(Controller.class);
+
+    FilterToSQL filterToSQL = new PostGISDialect(null).createFilterToSQL();
 
     @Autowired
 	private Jdbi jdbi;
@@ -43,7 +50,8 @@ public class Controller {
     public Result geosearch(
         @RequestParam String search,
         @RequestParam String resources,
-        @RequestParam(defaultValue = "10") String limit) {
+        @RequestParam(required = false) String filter,
+        @RequestParam(defaultValue = "10") String limit) throws CQLException, FilterToSQLException {
 
         logger.debug("geosearch called");
 
@@ -53,8 +61,13 @@ public class Controller {
         if (resources == null || resources.isEmpty())
             throw new IllegalArgumentException("Query string parameter resources is required");
 
-        int limitInt = Integer.parseInt(limit);
+        if (filter != null && !filter.isEmpty()) {
+            String where = filterToSQL.encodeToString(CQL.toFilter(filter));
+            logger.info("where: " + where);
+            // TODO: actually use filter for something useful
+        }
 
+        int limitInt = Integer.parseInt(limit);
         if (limitInt < 1 || limitInt > 100)
             throw new IllegalArgumentException("Query string parameter limit must be between 1-100");
 
