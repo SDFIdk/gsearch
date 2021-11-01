@@ -18,7 +18,7 @@ class DataMapper implements RowMapper<Data> {
     ResultSetMetaData meta;
     String resource;
 
-    public DataMapper(GSearchController gSearchController, String resource) {
+    public DataMapper(String resource) {
         this.resource = resource;
     }
 
