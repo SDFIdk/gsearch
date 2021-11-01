@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Represents a dynamic object of properties that can be serialized into JSON
+ */
 public class Data {
     @JsonProperty
     String type;
