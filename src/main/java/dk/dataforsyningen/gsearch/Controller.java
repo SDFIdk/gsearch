@@ -27,7 +27,7 @@ public class Controller {
 
     private List<Data> getData(String search, String resource, int limit) {
         return jdbi.withHandle(handle -> {
-            String sql = "select (api." + resource + "(:search, NULL, 1, 100)).* limit :limit";
+            String sql = "select (api." + resource + "(:search, NULL, 1, :limit)).*";
             handle.registerRowMapper(FieldMapper.factory(Data.class));
             List<Data> data = handle
                 .createQuery(sql)
