@@ -27,6 +27,7 @@ Database connection is configured by suppling environment variables PGHOST, PGPO
 
 ## How to run as standalone
 
+> docker compose up
 > mvn spring-boot:run
 
 ## How to build/run with Docker
