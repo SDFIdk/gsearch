@@ -27,7 +27,7 @@ public class MockSpringMvcServlet implements HttpClientFactory {
         servletContext = new MockServletContext();
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(MockMvcConfig.class);
-        context.register(DataSourceConfiguration.class);
+        //context.register(DataSourceConfiguration.class);
         context.register(JdbiConfiguration.class);
         context.setServletContext(servletContext);
         servlet = new DispatcherServlet(context);
