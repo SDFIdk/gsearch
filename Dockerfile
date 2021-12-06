@@ -1,5 +1,5 @@
 FROM openjdk:11-jdk as build
-RUN curl -s https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz | tar xf -
+RUN curl -s https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz | tar xfz -
 ENV MAVEN_HOME=/apache-maven-3.8.4 \
     PATH="/apache-maven-3.8.4/bin:${PATH}"
 COPY ./pom.xml ./pom.xml
