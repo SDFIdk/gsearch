@@ -1,8 +1,7 @@
 FROM openjdk:11-jdk as build
-RUN curl -s https://dlcdn.apache.org/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz --output apache-maven-3.8.3-bin.tar.gz
-RUN tar xf apache-maven-3.8.3-bin.tar.gz
-ENV MAVEN_HOME=/apache-maven-3.8.3 \
-    PATH="/apache-maven-3.8.3/bin:${PATH}"
+RUN curl -s https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz | tar xf -
+ENV MAVEN_HOME=/apache-maven-3.8.4 \
+    PATH="/apache-maven-3.8.4/bin:${PATH}"
 COPY ./pom.xml ./pom.xml
 COPY ./src ./src
 RUN mvn package -Dmaven.test.skip=true
