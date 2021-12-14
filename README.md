@@ -23,11 +23,11 @@ Target Java version is 11.
 
 ## Configuration
 
-Database connection is configured by suppling environment variables PGHOST, PGPORT, PGDATABASE, PGUSER and PGPASSWORD.
+Database connection is configured by suppling environment variables PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD and PGMAXPOOLSIZE.
 
 ## How to run as standalone
 
-> mvn spring-boot:run
+> PGHOST=localhost PGPORT=5432 PGDATABASE=gsearch PGUSER=postgres PGPASSWORD=postgres PGMAXPOOLSIZE=4 mvn spring-boot:run
 
 ## How to build/run with Docker
 

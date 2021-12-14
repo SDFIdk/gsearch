@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
+import org.geotools.filter.text.ecql.ECQL;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
@@ -24,7 +24,7 @@ public class Controller {
 
     static Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    FilterToSQL filterToSQL = new PostGISDialect(null).createFilterToSQL();
+    static FilterToSQL filterToSQL = new PostGISDialect(null).createFilterToSQL();
 
     @Autowired
 	private Jdbi jdbi;
@@ -32,13 +32,14 @@ public class Controller {
     @Autowired
 	private ResourceTypes resourceTypes;
 
-    private List<Data> getData(String search, String resource, int limit) {
+    private List<Data> getData(String search, String resource, String where, int limit) {
         return jdbi.withHandle(handle -> {
-            String sql = "select (api." + resource + "(:search, NULL, 1, :limit)).*";
+            String sql = "select (api." + resource + "(:search, :where, 1, :limit)).*";
             handle.registerRowMapper(FieldMapper.factory(Data.class));
             List<Data> data = handle
                 .createQuery(sql)
                 .bind("search", search)
+                .bind("where", where)
                 .bind("limit", limit)
                 .map(new DataMapper(resource))
                 .list();
@@ -61,10 +62,10 @@ public class Controller {
         if (resources == null || resources.isEmpty())
             throw new IllegalArgumentException("Query string parameter resources is required");
 
+        String where = null;
         if (filter != null && !filter.isEmpty()) {
-            String where = filterToSQL.encodeToString(CQL.toFilter(filter));
+            where = filterToSQL.encodeToString(ECQL.toFilter(filter));
             logger.info("where: " + where);
-            // TODO: actually use filter for something useful
         }
 
         int limitInt = Integer.parseInt(limit);
@@ -77,9 +78,10 @@ public class Controller {
             if (!resourceTypes.getTypes().contains(requestedTypes[i]))
                 throw new IllegalArgumentException("Resource " + requestedTypes[i] + " does not exist");
 
+        String whereExpression = where != null ? where.replace("WHERE ", "") : null;
         List<Data> data = Stream.of(requestedTypes)
             .parallel()
-            .map(t -> getData(search, t, limitInt))
+            .map(t -> getData(search, t, whereExpression,  limitInt))
             .flatMap(List::stream)
             .collect(Collectors.toList());
 
