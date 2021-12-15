@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.jdbi.v3.core.Jdbi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,11 +16,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 
 @SpringBootApplication
 public class Application {
+
+    static Logger logger = LoggerFactory.getLogger(Application.class);
 
 	@Autowired
 	private Jdbi jdbi;
@@ -44,8 +49,15 @@ public class Application {
 		return schema;
 	}
 
+    @Bean
+    public OpenAPI customOpenAPI() {
+        OpenAPI openApi = new OpenAPI();
+        return openApi;
+    }
+
 	@Bean
 	public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
+        logger.info("Generating custom OpenAPI");
 		return openApi -> {
 			for (String resourceType : resourceTypes.getTypes())
 				openApi.getComponents().addSchemas(resourceType, getSchema(resourceType));
