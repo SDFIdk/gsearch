@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
 import org.geotools.data.jdbc.FilterToSQL;
@@ -31,6 +34,9 @@ public class Controller {
 	private Jdbi jdbi;
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
 	private ResourceTypes resourceTypes;
 
     private List<Data> getData(String search, String resource, String where, int limit) {
@@ -48,14 +54,9 @@ public class Controller {
         });
     }
 
-    @GetMapping(path = "/geosearch", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result geosearch(
-        @RequestParam String search,
-        @RequestParam String resources,
-        @RequestParam(required = false) String filter,
-        @RequestParam(defaultValue = "10") String limit) throws CQLException, FilterToSQLException {
-
-        logger.debug("geosearch called");
+    private Result getResult(String search, String resources, String filter, String limit)
+            throws FilterToSQLException, CQLException {
+        logger.debug("getResult called");
 
         if (search == null || search.isEmpty())
             throw new IllegalArgumentException("Query string parameter search is required");
@@ -94,5 +95,35 @@ public class Controller {
         result.message = "OK";
         result.data = data;
         return result;
+    }
+
+    @GetMapping(path = "/geosearch", produces = MediaType.APPLICATION_JSON_VALUE, params = {
+        "search", "resources"})
+    public Result geosearch(
+            @RequestParam String search,
+            @RequestParam String resources,
+            @RequestParam(required = false) String filter,
+            @RequestParam(defaultValue = "10") String limit)
+                throws CQLException, FilterToSQLException {
+        logger.debug("geosearch called");
+        Result result = getResult(search, resources, filter, limit);
+        return result;
+    }
+
+
+    @GetMapping(path = "/geosearch", produces = "application/x-javascript", params = {
+        "search", "resources", "callback"})
+    public String geosearchWithCallback(
+            @RequestParam String search,
+            @RequestParam String resources,
+            @RequestParam(required = false) String filter,
+            @RequestParam String callback,
+            @RequestParam(defaultValue = "10") String limit)
+                throws CQLException, FilterToSQLException, JsonProcessingException {
+        logger.debug("geosearchWithCallback called");
+        Result result = getResult(search, resources, filter, limit);
+        String resultStr = objectMapper.writeValueAsString(result);
+        String output = callback + "(" + resultStr + ")";
+        return output;
     }
 }
