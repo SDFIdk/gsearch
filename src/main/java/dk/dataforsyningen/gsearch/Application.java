@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 
@@ -59,6 +60,14 @@ public class Application {
 	public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
         logger.info("Generating custom OpenAPI");
 		return openApi -> {
+            ComposedSchema data = new ComposedSchema();
+            for (String resourceType : resourceTypes.getTypes()) {
+                Schema ref = new Schema();
+                ref.set$ref("#/components/schemas/" + resourceType);
+                data.addAnyOfItem(ref);
+            }
+            openApi.getComponents().getSchemas().get("Result").getProperties().put("data", data);
+            openApi.getComponents().getSchemas().remove("Data");
 			for (String resourceType : resourceTypes.getTypes())
 				openApi.getComponents().addSchemas(resourceType, getSchema(resourceType));
 		};
@@ -82,7 +91,10 @@ public class Application {
             return handle
                 .createQuery(sql)
                 .bind("typname", typname)
-                .map((rs, ctx) -> new AbstractMap.SimpleEntry<String, Schema<?>>(rs.getString("attname"), createSchema(rs.getString("description"))))
+                .map((rs, ctx) ->
+                    new AbstractMap.SimpleEntry<String, Schema<?>>(
+                        rs.getString("attname"),
+                        createSchema(rs.getString("description"))))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
         });
     }
