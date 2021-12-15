@@ -11,6 +11,7 @@ import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.FieldMapper;
+import org.opengis.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,10 @@ public class Controller {
 
         String where = null;
         if (filter != null && !filter.isEmpty()) {
-            where = filterToSQL.encodeToString(ECQL.toFilter(filter));
+            Filter ogcFilter = ECQL.toFilter(filter);
+            // TODO: visit filter to apply restrictions
+            // TODO: visit filter to remove non applicable (field name not in type fx.)
+            where = filterToSQL.encodeToString(ogcFilter);
             logger.info("where: " + where);
         }
 
