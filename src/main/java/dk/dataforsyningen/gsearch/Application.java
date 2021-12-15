@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.ComposedSchema;
+import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 
@@ -38,13 +39,14 @@ public class Application {
 
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-		return args -> {
-
-		};
+		return args -> { };
 	}
 
-	Schema<?> getSchema(String resourceType) {
-		Schema<?> schema = new Schema<>();
+	ComposedSchema getSchema(String resourceType) {
+		ComposedSchema schema = new ComposedSchema();
+        ObjectSchema data = new ObjectSchema();
+        data.set$ref("#/components/schemas/Data");
+        schema.addAllOfItem(data);
 		schema.setType("object");
 		schema.properties(getProperties(resourceType));
 		return schema;
@@ -62,18 +64,17 @@ public class Application {
 		return openApi -> {
             ComposedSchema data = new ComposedSchema();
             for (String resourceType : resourceTypes.getTypes()) {
-                Schema ref = new Schema();
+                ObjectSchema ref = new ObjectSchema();
                 ref.set$ref("#/components/schemas/" + resourceType);
                 data.addAnyOfItem(ref);
             }
             openApi.getComponents().getSchemas().get("Result").getProperties().put("data", data);
-            openApi.getComponents().getSchemas().remove("Data");
 			for (String resourceType : resourceTypes.getTypes())
 				openApi.getComponents().addSchemas(resourceType, getSchema(resourceType));
 		};
 	}
 
-    private Schema<?> createSchema(String description) {
+    private StringSchema createSchema(String description) {
         StringSchema schema = new StringSchema();
         schema.description(description);
         return schema;
@@ -92,7 +93,7 @@ public class Application {
                 .createQuery(sql)
                 .bind("typname", typname)
                 .map((rs, ctx) ->
-                    new AbstractMap.SimpleEntry<String, Schema<?>>(
+                    new AbstractMap.SimpleEntry<String, StringSchema>(
                         rs.getString("attname"),
                         createSchema(rs.getString("description"))))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
