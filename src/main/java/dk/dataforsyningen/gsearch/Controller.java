@@ -117,7 +117,7 @@ public class Controller {
             @RequestParam String search,
             @RequestParam String resources,
             @RequestParam(required = false) String filter,
-            @RequestParam String callback,
+            @RequestParam(required = false) String callback,
             @RequestParam(defaultValue = "10") String limit)
                 throws CQLException, FilterToSQLException, JsonProcessingException {
         logger.debug("geosearchWithCallback called");
