@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.5.6</version>
+    <version>2.6.1</version>
     <relativePath/>
     <!-- lookup parent from repository -->
   </parent>
@@ -16,6 +16,7 @@
   <description>New generation geosearch</description>
   <properties>
     <java.version>11</java.version>
+    <log4j2.version>2.16.0</log4j2.version>
   </properties>
   <dependencies>
     <dependency>
@@ -25,7 +26,7 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-ui</artifactId>
-      <version>1.5.12</version>
+      <version>1.6.1</version>
     </dependency>
     <dependency>
       <groupId>org.jdbi</groupId>
@@ -40,7 +41,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.3.0</version>
+      <version>42.3.1</version>
     </dependency>
     <dependency>
       <groupId>net.postgis</groupId>
