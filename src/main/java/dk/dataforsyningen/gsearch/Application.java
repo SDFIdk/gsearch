@@ -61,15 +61,15 @@ public class Application {
     public Map<String, Schema> getProperties(String typname) {
         return jdbi.withHandle(handle -> {
             String sql = "select attname, pgd.description\n" +
-            "from pg_catalog.pg_type t\n" +
-            "join pg_catalog.pg_namespace pn on (pn.oid = t.typnamespace)\n" +
-            "join pg_catalog.pg_class pc on (pc.reltype = t.oid)\n" +
-            "join pg_catalog.pg_attribute pa on (t.typrelid = pa.attrelid)\n" +
-            "join pg_catalog.pg_description pgd on (pgd.objoid = pc.oid and pgd.objsubid = pa.attnum)\n" +
-            "where pn.nspname = 'api' and pc.relkind = 'c' and t.typname = :typname;";
+                "from pg_catalog.pg_type t\n" +
+                "join pg_catalog.pg_namespace pn on (pn.oid = t.typnamespace)\n" +
+                "join pg_catalog.pg_class pc on (pc.reltype = t.oid)\n" +
+                "join pg_catalog.pg_attribute pa on (t.typrelid = pa.attrelid)\n" +
+                "join pg_catalog.pg_description pgd on (pgd.objoid = pc.oid and pgd.objsubid = pa.attnum)\n" +
+                "where pn.nspname = 'api' and pc.relkind = 'c' and t.typname = :typname;";
             return handle
-				.createQuery(sql)
-				.bind("typname", typname)
+                .createQuery(sql)
+                .bind("typname", typname)
                 .map((rs, ctx) -> new AbstractMap.SimpleEntry<String, Schema<?>>(rs.getString("attname"), createSchema(rs.getString("description"))))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
         });
