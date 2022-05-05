@@ -19,6 +19,13 @@ class Listener extends Thread
     private Jdbi jdbi;
     private JdbiConfiguration jdbiConfiguration;
 
+    /**
+     * Listens after database schema changes if the PG notify gets triggered
+     * @param ds
+     * @param jdbi
+     * @param jdbiConfiguration
+     * @throws SQLException
+     */
     Listener(DataSource ds, Jdbi jdbi, JdbiConfiguration jdbiConfiguration) throws SQLException
     {
         this.jdbi = jdbi;

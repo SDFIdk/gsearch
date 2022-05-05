@@ -31,6 +31,7 @@ public class JdbiConfiguration {
         Jdbi jdbi = Jdbi.create(proxy);
         determineTypes(jdbi);
         jdbiPlugins.forEach(plugin -> jdbi.installPlugin(plugin));
+        // TODO: Maybe this can be used to only register Row mapper once and not every time the getData gets called
         rowMappers.forEach(mapper -> jdbi.registerRowMapper(mapper));
         new Listener(ds, jdbi, this).start();
         return jdbi;
