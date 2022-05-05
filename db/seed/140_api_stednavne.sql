@@ -193,4 +193,5 @@ SELECT (api.stednavn('grøngård slot',NULL, 1, 100)).*;
 SELECT (api.stednavn('slotsruin',NULL, 1, 100)).*;
 SELECT (api.stednavn('uch',NULL, 1, 100)).*;
 SELECT (api.stednavn('hc andersen slot',NULL, 1, 100)).*;
+SELECT (api.stednavn('s',NULL, 1, 100)).*;
 */
