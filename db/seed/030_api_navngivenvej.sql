@@ -3,30 +3,27 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.navngivenvej CASCADE;
 CREATE TYPE api.navngivenvej AS (
   id TEXT,
-  "name" TEXT,
-  presentationstring TEXT,
-  geometryWkt TEXT, -- same AS bbox
-  geometryWkt_detail TEXT,
-  postcodeidentifiers TEXT,
-  districtnames TEXT,
+  praesentation TEXT,
+  vejnavn TEXT,
+  postnumre TEXT,
+  postdistrikter TEXT,
   geometri geometry,
-  bbox box2d,
+  bbox geometry,
   rang1 double precision,
   rang2 double precision
 );  
 
 COMMENT ON TYPE api.navngivenvej IS 'navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.presentationstring IS 'Præsentationsform for et navngivenvej';
-COMMENT ON COLUMN api.navngivenvej."name" IS 'Navn på vej';
+COMMENT ON COLUMN api.navngivenvej.praesentation IS 'Præsentationsform for et navngivenvej';
+COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
 COMMENT ON COLUMN api.navngivenvej.id IS 'Id på navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.postcodeidentifiers IS 'Postnumre for navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.districtnames IS 'Postdistrikter for navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri i valgt koordinatsystem';
-COMMENT ON COLUMN api.navngivenvej.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
-COMMENT ON COLUMN api.navngivenvej.geometryWkt IS 'Geometriens boundingbox i valgt koordinatsystem (som WKT)';
-COMMENT ON COLUMN api.navngivenvej.geometryWkt_detail IS 'Geometri i valgt koordinatsystem (som WKT)';
+COMMENT ON COLUMN api.navngivenvej.postnumre IS 'Postnumre for navngivenvej';
+COMMENT ON COLUMN api.navngivenvej.postdistrikter IS 'Postdistrikter for navngivenvej';
+COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej';
+COMMENT ON COLUMN api.navngivenvej.bbox IS 'Geometriens boundingbox';
 
 DROP TABLE IF EXISTS basic.navngivenvej_mv;
+
 WITH vejnavne AS
 (
   SELECT
@@ -41,14 +38,13 @@ WITH vejnavne AS
     JOIN dar.postnummer p ON (nvp.postnummer = p.id_lokalid)
 )
 SELECT
-  v.vejnavn as titel, --|| '(' || v.postnumre[1] || ' - ' || v.postnumre[-1] || ')' AS titel,
+  v.vejnavn as praesentation, --|| '(' || v.postnumre[1] || ' - ' || v.postnumre[-1] || ')' AS titel,
   v.id,
   coalesce(v.vejnavn, '') AS vejnavn,
   array_agg(distinct v.postnr) AS postnumre,
   array_agg(distinct v.postdistrikt) AS postdistrikter,
   st_multi(st_union(geometri)) AS geometri,
-  st_extent(v.geometri) AS bbox
-  --array_agg(v.kommunekode) AS kommunekoder,
+  st_envelope(st_collect(v.geometri)) AS bbox
 INTO
   basic.navngivenvej_mv
 FROM 
@@ -110,10 +106,10 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-
 CREATE INDEX ON basic.navngivenvej_mv USING GIN (textsearchable_plain_col);
 CREATE INDEX ON basic.navngivenvej_mv USING GIN (textsearchable_unaccent_col);
 CREATE INDEX ON basic.navngivenvej_mv USING GIN (textsearchable_phonetic_col);
+CREATE INDEX ON basic.navngivenvej_mv (lower(vejnavn));
 
 
 DROP FUNCTION IF EXISTS api.navngivenvej(text, text, int, int);
@@ -154,7 +150,7 @@ BEGIN
 
   -- Execute and return the result
   stmt = format(E'SELECT
-    id::text, vejnavn::text, titel::text, ST_AStext(bbox), ST_AStext(geometri), array_to_string(postnumre, '' ''), array_to_string(postdistrikter, '' ''), geometri, bbox,
+    id::text, vejnavn::text, praesentation::text, array_to_string(postnumre, '','', ''*''), array_to_string(postdistrikter, '',''), geometri, bbox,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM
@@ -165,14 +161,16 @@ BEGIN
     AND %s
   ORDER BY
     rank1 desc, rank2 desc,
-    titel
+    vejnavn
   LIMIT $3
 ;', filters);
-  RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+RAISE NOTICE '%',stmt;
+RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
 END
 $function$
 ;
 
+SELECT array_to_string(ARRAY[1, 2, 3, NULL, 5], ',')
 
 -- Test cases:
 /*
@@ -188,4 +186,5 @@ SELECT (api.navngivenvej('over-holluf væ',NULL, 1, 100)).*;
 SELECT (api.navngivenvej('Palle Juul-jensen',NULL, 1, 100)).*;
 SELECT (api.navngivenvej('frederik 7',NULL, 1, 100)).*;
 SELECT (api.navngivenvej('vilhelm becks',NULL, 1, 100)).*;
+SELECT (api.navngivenvej('s',NULL, 1, 100)).*;
 */
