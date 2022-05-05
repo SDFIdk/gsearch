@@ -11,7 +11,7 @@
   </parent>
   <groupId>dk.dataforsyningen</groupId>
   <artifactId>gsearch</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>gsearch</name>
   <description>New generation geosearch</description>
   <properties>
@@ -55,12 +55,12 @@
     <dependency>
       <groupId>org.geotools.jdbc</groupId>
       <artifactId>gt-jdbc-postgis</artifactId>
-      <version>26.0</version>
+      <version>26.4</version>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-cql</artifactId>
-      <version>26.0</version>
+      <version>26.4</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -82,6 +82,7 @@
   </dependencies>
 
   <build>
+    <finalName>${project.artifactId}</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>

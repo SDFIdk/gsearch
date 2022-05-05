@@ -1,30 +1,26 @@
 DROP TYPE IF EXISTS api.stednavn CASCADE;
 CREATE TYPE api.stednavn AS (
-  presentationstring TEXT,
   id TEXT,
+  praesentation TEXT,
   skrivemaade TEXT,
   skrivemaade_officiel TEXT,
   skrivemaade_uofficiel TEXT,
   stednavn_type TEXT,
   stednavn_subtype TEXT,
-  geometryWkt TEXT,
-  geometryWkt_detail TEXT,
-  bbox box2d,
+  bbox geometry,
   geometri geometry,
   rang1 double precision,
   rang2 double precision
 );  
 
 COMMENT ON TYPE api.stednavn IS 'Stednavn';
-COMMENT ON COLUMN api.stednavn.presentationstring IS 'Præsentationsform for stednavn';
+COMMENT ON COLUMN api.stednavn.praesentation IS 'Præsentationsform for stednavn';
 COMMENT ON COLUMN api.stednavn.id IS 'Id for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade IS 'Skrivemaade for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade_officiel IS 'Officiel skrivemaade for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade_uofficiel IS 'Uofficiel skrivemaade for stednavn';
 COMMENT ON COLUMN api.stednavn.stednavn_type IS 'Type på stednavn';
 COMMENT ON COLUMN api.stednavn.stednavn_subtype IS 'Subtype på stednavn';
-COMMENT ON COLUMN api.stednavn.geometryWkt IS 'Geometriens boundingbox i valgt koordinatsystem (som WKT)';
-COMMENT ON COLUMN api.stednavn.geometryWkt_detail IS 'Geometri i valgt koordinatsystem (som WKT)';
 COMMENT ON COLUMN api.stednavn.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 COMMENT ON COLUMN api.stednavn.geometri IS 'Geometri i valgt koordinatsystem';
 
@@ -79,7 +75,7 @@ SELECT
 	type AS stednavn_type,
 	subtype AS stednavn_subtype,
 	st_multi(st_union(geometri)) AS geometri,
-	st_extent(geometri) AS bbox
+	st_envelope(st_collect(geometri)) AS bbox
 INTO basic.stednavn_mv
 FROM agg_stednavne
 GROUP BY id,presentationstring, presentationstring_nohyphen, skrivemaade, skrivemaade_uofficiel, skrivemaade_uofficiel_nohyphen, type, subtype
@@ -164,8 +160,8 @@ BEGIN
 
     -- Execute and return the result
     stmt = format(E'SELECT
-        presentationstring::text, id::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel, 
-		skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, ST_AsText(bbox), ST_AsText(geometri), bbox, geometri,
+        id::text, presentationstring::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel, 
+		skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, bbox, geometri,
         basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	    ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM

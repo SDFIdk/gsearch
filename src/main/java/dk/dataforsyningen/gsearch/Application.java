@@ -1,10 +1,10 @@
 package dk.dataforsyningen.gsearch;
 
-import java.util.AbstractMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.media.ComposedSchema;
+import io.swagger.v3.oas.models.media.ObjectSchema;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
 import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,47 +16,48 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.media.ComposedSchema;
-import io.swagger.v3.oas.models.media.ObjectSchema;
-import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.StringSchema;
+import java.util.AbstractMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class Application {
 
     static Logger logger = LoggerFactory.getLogger(Application.class);
 
-	@Autowired
-	private Jdbi jdbi;
+    @Autowired
+    private Jdbi jdbi;
 
-	@Autowired
-	private ResourceTypes resourceTypes;
+    @Autowired
+    private ResourceTypes resourceTypes;
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
     // TODO: Can maybe be deleted
-	@Bean
-	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-		return args -> { };
-	}
+    @Bean
+    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+        return args -> {
+        };
+    }
 
     /**
      * Make a dynamic data schema with name and properties (same as the columns name + comments)
+     *
      * @param resourceType
      * @return
      */
-	ComposedSchema getSchema(String resourceType) {
-		ComposedSchema schema = new ComposedSchema();
+    ComposedSchema getSchema(String resourceType) {
+        ComposedSchema schema = new ComposedSchema();
         ObjectSchema data = new ObjectSchema();
         data.set$ref("#/components/schemas/Data");
         schema.addAllOfItem(data);
-		schema.setType("object");
-		schema.properties(getProperties(resourceType));
-		return schema;
-	}
+        schema.setType("object");
+        schema.properties(getProperties(resourceType));
+        return schema;
+    }
 
     @Bean
     public OpenAPI customOpenAPI() {
@@ -69,10 +70,10 @@ public class Application {
      *
      * @return
      */
-	@Bean
-	public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
+    @Bean
+    public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
         logger.info("Generating custom OpenAPI");
-		return openApi -> {
+        return openApi -> {
             ComposedSchema data = new ComposedSchema();
             for (String resourceType : resourceTypes.getTypes()) {
                 ObjectSchema ref = new ObjectSchema();
@@ -80,13 +81,14 @@ public class Application {
                 data.addAnyOfItem(ref);
             }
             openApi.getComponents().getSchemas().get("Result").getProperties().put("data", data);
-			for (String resourceType : resourceTypes.getTypes())
-				openApi.getComponents().addSchemas(resourceType, getSchema(resourceType));
-		};
-	}
+            for (String resourceType : resourceTypes.getTypes())
+                openApi.getComponents().addSchemas(resourceType, getSchema(resourceType));
+        };
+    }
 
     /**
      * Creates Schema with description
+     *
      * @param description
      * @return
      */
@@ -98,6 +100,7 @@ public class Application {
 
     /**
      * Fetch metadata about columns from pg_catalog in the database and transform to StringSchema entity
+     *
      * @param typname
      * @return full map of all the StringSchemas
      */
