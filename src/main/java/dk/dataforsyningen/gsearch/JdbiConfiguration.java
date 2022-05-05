@@ -1,12 +1,6 @@
 package dk.dataforsyningen.gsearch;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.spi.JdbiPlugin;
@@ -19,6 +13,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.List;
 
 @Configuration
 public class JdbiConfiguration {
@@ -35,8 +33,7 @@ public class JdbiConfiguration {
      */
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource driverManagerDataSource()
-    {
+    public DataSource driverManagerDataSource() {
         return new DriverManagerDataSource();
     }
 
