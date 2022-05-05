@@ -249,5 +249,5 @@ SELECT (api.adresse('sve',NULL, 1, 100)).*;
 SELECT (api.adresse('s',NULL, 1, 100)).*;
 */
 
-SELECT * FROM basic.tekst_forekomst tf ORDER BY 3 desc
+SELECT * FROM basic.tekst_forekomst tf ORDER BY 3 desc;
 
