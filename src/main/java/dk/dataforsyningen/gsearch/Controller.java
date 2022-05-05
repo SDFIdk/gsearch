@@ -39,9 +39,18 @@ public class Controller {
     @Autowired
 	private ResourceTypes resourceTypes;
 
+    /**
+     * It assembles full sql query from the parameters and maps the result to list of data entities
+     * @param search
+     * @param resource
+     * @param where
+     * @param limit
+     * @return
+     */
     private List<Data> getData(String search, String resource, String where, int limit) {
         return jdbi.withHandle(handle -> {
             String sql = "select (api." + resource + "(:search, :where, 1, :limit)).*";
+            // TODO: This gets register every time this method gets called
             handle.registerRowMapper(FieldMapper.factory(Data.class));
             List<Data> data = handle
                 .createQuery(sql)
@@ -54,6 +63,16 @@ public class Controller {
         });
     }
 
+    /**
+     * Transform request to database query, execute query and return the result
+     * @param search
+     * @param resources
+     * @param filter
+     * @param limit
+     * @return
+     * @throws FilterToSQLException
+     * @throws CQLException
+     */
     private Result getResult(String search, String resources, String filter, String limit)
             throws FilterToSQLException, CQLException {
         logger.debug("getResult called");
@@ -66,6 +85,7 @@ public class Controller {
 
         String where = null;
         if (filter != null && !filter.isEmpty()) {
+            // To transform cql filter to sql where clause
             Filter ogcFilter = ECQL.toFilter(filter);
             // TODO: visit filter to apply restrictions
             // TODO: visit filter to remove non applicable (field name not in type fx.)
@@ -83,10 +103,14 @@ public class Controller {
             if (!resourceTypes.getTypes().contains(requestedTypes[i]))
                 throw new IllegalArgumentException("Resource " + requestedTypes[i] + " does not exist");
 
+        // Need to remove the WHERE clause because getData expects only the expression
         String whereExpression = where != null ? where.replace("WHERE ", "") : null;
+
+        // Map requested types into results via query in parallel
+        // Concatenate into single list of results
         List<Data> data = Stream.of(requestedTypes)
             .parallel()
-            .map(t -> getData(search, t, whereExpression,  limitInt))
+            .map(resourceType -> getData(search, resourceType, whereExpression,  limitInt))
             .flatMap(List::stream)
             .collect(Collectors.toList());
 
@@ -97,6 +121,16 @@ public class Controller {
         return result;
     }
 
+    /**
+     *
+     * @param search
+     * @param resources
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
     @GetMapping(path = "/geosearch", produces = MediaType.APPLICATION_JSON_VALUE, params = {
         "search", "resources"})
     public Result geosearch(
@@ -105,12 +139,25 @@ public class Controller {
             @RequestParam(required = false) String filter,
             @RequestParam(defaultValue = "10") String limit)
                 throws CQLException, FilterToSQLException {
+        // FIXME: Needs checks to see if it compatible with old geosearch
         logger.debug("geosearch called");
         Result result = getResult(search, resources, filter, limit);
         return result;
     }
 
 
+    /**
+     * JSONP endpoint variant (the old way)
+     * @param search
+     * @param resources
+     * @param filter
+     * @param callback
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     * @throws JsonProcessingException
+     */
     @GetMapping(path = "/geosearch", produces = "application/x-javascript", params = {
         "search", "resources", "callback"})
     public String geosearchWithCallback(
@@ -122,6 +169,7 @@ public class Controller {
                 throws CQLException, FilterToSQLException, JsonProcessingException {
         logger.debug("geosearchWithCallback called");
         Result result = getResult(search, resources, filter, limit);
+        // Wraps the result in javascript callback
         String resultStr = objectMapper.writeValueAsString(result);
         String output = callback + "(" + resultStr + ")";
         return output;

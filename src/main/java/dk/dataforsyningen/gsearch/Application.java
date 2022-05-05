@@ -37,11 +37,17 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
+    // TODO: Can maybe be deleted
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> { };
 	}
 
+    /**
+     * Make a dynamic data schema with name and properties (same as the columns name + comments)
+     * @param resourceType
+     * @return
+     */
 	ComposedSchema getSchema(String resourceType) {
 		ComposedSchema schema = new ComposedSchema();
         ObjectSchema data = new ObjectSchema();
@@ -58,6 +64,11 @@ public class Application {
         return openApi;
     }
 
+    /**
+     * Enumerate resource types and creates open api schemas from them
+     *
+     * @return
+     */
 	@Bean
 	public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
         logger.info("Generating custom OpenAPI");
@@ -74,12 +85,22 @@ public class Application {
 		};
 	}
 
+    /**
+     * Creates Schema with description
+     * @param description
+     * @return
+     */
     private StringSchema createSchema(String description) {
         StringSchema schema = new StringSchema();
         schema.description(description);
         return schema;
     }
 
+    /**
+     * Fetch metadata about columns from pg_catalog in the database and transform to StringSchema entity
+     * @param typname
+     * @return full map of all the StringSchemas
+     */
     public Map<String, Schema> getProperties(String typname) {
         return jdbi.withHandle(handle -> {
             String sql = "select attname, pgd.description\n" +

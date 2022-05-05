@@ -22,6 +22,13 @@ class DataMapper implements RowMapper<Data> {
         this.resource = resource;
     }
 
+    /**
+     * Maps column value to either geometry or String
+     * @param i
+     * @param rs
+     * @return
+     * @throws SQLException
+     */
     private Object mapColumn(int i, ResultSet rs) throws SQLException {
         if (meta.getColumnTypeName(i).equals("geometry")) {
             // TODO: find out how to parse binary directly
@@ -44,6 +51,13 @@ class DataMapper implements RowMapper<Data> {
         return data;
     }
 
+    /**
+     * Get metadata to know what column type we have
+     * @param rs
+     * @param ctx
+     * @return
+     * @throws SQLException
+     */
     @Override
     public DataMapper specialize(ResultSet rs, StatementContext ctx) throws SQLException {
         meta = rs.getMetaData();
