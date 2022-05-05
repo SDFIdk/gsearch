@@ -1,4 +1,4 @@
-package dk.dataforsyningen.gsearch;
+/*package dk.dataforsyningen.gsearch;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -7,7 +7,7 @@ import com.intuit.karate.Runner;
 
 import org.junit.jupiter.api.Test;
 
-/*public class HelloMockTest {
+public class HelloMockTest {
     @Test
     public void testMock() {
         System.setProperty("karate.env", "mock");
