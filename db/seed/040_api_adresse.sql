@@ -130,7 +130,7 @@ GENERATED ALWAYS AS
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_plain_col);
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_unaccent_col);
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_phonetic_col);
-
+CREATE INDEX ON basic.adresse_mv (lower(vejnavn));
 
 DROP FUNCTION IF EXISTS api.adresse(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.adresse(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -189,27 +189,48 @@ BEGIN
       SELECT plain_vej_query_string INTO plain_query_string;
 	END IF;
 	
+    IF (SELECT COALESCE(forekomster, 0) FROM basic.tekst_forekomst WHERE ressource = 'adresse' AND lower(input_vejnavn) = tekstelement) > 1000 
+        AND filters = '1=1' THEN
+      stmt = format(E'SELECT
+        id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
+        husnummertekst::text, etagebetegnelse::text, doerbetegnelse::text, 
+        postnummer::text, postdistrikt::text, titel::text, 
+        ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
+        0::float AS rank1,
+        0::float AS rank2
+      FROM
+        basic.adresse_mv
+      WHERE
+        lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
+      ORDER BY lower(vejnavn), husnummertekst, etagebetegnelse, doerbetegnelse
+      LIMIT $3
+    ;', input_tekst, input_tekst);
+    RAISE NOTICE 'stmt=%', stmt;
+    RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+  ELSE
+    -- Execute and return the result
+    stmt = format(E'SELECT
+      id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
+      husnummertekst::text, etagebetegnelse::text, doerbetegnelse::text, 
+      postnummer::text, postdistrikt::text, titel::text, 
+      ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
+      basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
+      ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
+    FROM
+      basic.adresse_mv
+    WHERE (
+      textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
+      OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
+      AND %s
+    ORDER BY
+      rank1 desc, rank2 desc,
+      vejnavn, husnummertekst, etagebetegnelse, doerbetegnelse
+    LIMIT $3
+    ;', filters);
+       RAISE NOTICE 'stmt=%', stmt;
 
-  -- Execute and return the result
-  stmt = format(E'SELECT
-    id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
-    husnummertekst::text, etagebetegnelse::text, doerbetegnelse::text, 
-    postnummer::text, postdistrikt::text, titel::text, 
-    ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
-    basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
-    ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
-  FROM
-    basic.adresse_mv
-  WHERE (
-    textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
-    OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
-    AND %s
-  ORDER BY
-    rank1 desc, rank2 desc,
-    vejnavn, husnummertekst, etagebetegnelse, doerbetegnelse
-  LIMIT $3
-  ;', filters);
   RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+  END IF;
 END
 $function$
 ;
@@ -224,4 +245,9 @@ SELECT (api.adresse('aarhus 3',NULL, 1, 100)).*;
 SELECT (api.adresse('århus 3',NULL, 1, 100)).*;
 SELECT (api.adresse('holbæk',NULL, 1, 100)).*;
 SELECT (api.adresse('vinkel 3',NULL, 1, 100)).*;
+SELECT (api.adresse('sve',NULL, 1, 100)).*;
+SELECT (api.adresse('s',NULL, 1, 100)).*;
 */
+
+SELECT * FROM basic.tekst_forekomst tf ORDER BY 3 desc
+

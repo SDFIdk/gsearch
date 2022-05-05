@@ -31,4 +31,9 @@ Hvis der ikke er adgang men data kommer et andet sted fra, skal data ligge i de 
    - stednavne_udstil
  - Kør SQL-filer i rækkefølge - dog undtaget: `010_init_fdw.sql` og `025_basic_data.sql`
  
+Reload af schema
 
+Hvis man ænsker at en databaseændring (DDL) skal resultere at en API-servicen genindlæser, skal følgende sql køres:
+```sql
+SELECT pg_notify('gsearch', 'reload');
+```
