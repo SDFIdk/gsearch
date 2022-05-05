@@ -111,7 +111,7 @@ FROM
 CREATE INDEX ON basic.husnummer_mv USING GIN (textsearchable_plain_col_vej);
 CREATE INDEX ON basic.husnummer_mv USING GIN (textsearchable_unaccent_col_vej);
 CREATE INDEX ON basic.husnummer_mv USING GIN (textsearchable_phonetic_col_vej);
-
+CREATE INDEX ON basic.husnummer_mv (lower(vejnavn));
 
 DROP FUNCTION IF EXISTS api.husnummer(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.husnummer(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -184,25 +184,42 @@ BEGIN
   END IF;
 
   -- Execute and return the result
-  stmt = format(E'SELECT
-    id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
-    husnummertekst::text, postnummer::text, postdistrikt::text, titel::text, 
-    ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
-    basic.combine_rank($2, $2, textsearchable_plain_col_vej, textsearchable_unaccent_col_vej, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
-	  ts_rank_cd(textsearchable_phonetic_col_vej, to_tsquery(''simple'',$1))::double precision AS rank2
-  FROM
-    basic.husnummer_mv
-  WHERE
-    (textsearchable_phonetic_col_vej @@ to_tsquery(''simple'', $1)
-    OR textsearchable_plain_col_vej @@ to_tsquery(''simple'', $2))
-	  AND %s
-    AND %s
-  ORDER BY
-    rank1 desc, rank2 desc,
-    titel
-  LIMIT $3
-;', husnummer, filters);
-  RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+  IF (SELECT COALESCE(forekomster, 0) FROM basic.tekst_forekomst WHERE ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 
+      AND filters = '1=1' THEN
+    stmt = format(E'SELECT
+      id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
+      husnummertekst::text, postnummer::text, postdistrikt::text, titel::text, 
+      ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
+      0::float AS rank1,
+      0::float AS rank2
+    FROM
+      basic.husnummer_mv
+    WHERE
+      lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
+    ORDER BY
+      lower(vejnavn), husnummertekst
+    LIMIT $3;', input_tekst, input_tekst);
+--   RAISE notice '%', stmt;
+    RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+  ELSE
+    stmt = format(E'SELECT
+      id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
+      husnummertekst::text, postnummer::text, postdistrikt::text, titel::text, 
+      ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
+      basic.combine_rank($2, $2, textsearchable_plain_col_vej, textsearchable_unaccent_col_vej, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
+      ts_rank_cd(textsearchable_phonetic_col_vej, to_tsquery(''simple'',$1))::double precision AS rank2
+    FROM
+      basic.husnummer_mv
+    WHERE
+      (textsearchable_phonetic_col_vej @@ to_tsquery(''simple'', $1)
+      OR textsearchable_plain_col_vej @@ to_tsquery(''simple'', $2))
+      AND %s
+    ORDER BY
+      rank1 desc, rank2 desc,
+      titel
+    LIMIT $3;', filters);
+    RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+  END IF;
 END
 $function$
 ;
@@ -216,5 +233,6 @@ SELECT (api.husnummer('søborg h 100',NULL, 1, 100)).*;
 SELECT (api.husnummer('holbæk',NULL, 1, 100)).*;
 SELECT (api.husnummer('vinkel 3',NULL, 1, 100)).*;
 SELECT (api.husnummer('frederik 7',NULL, 1, 100)).*;
-SELECT (api.husnummer('skt anna gade 11',NULL, 1, 100)).*;
+SELECT (api.husnummer('san',NULL, 1, 100)).*;
+SELECT (api.husnummer('s',NULL, 1, 100)).*;
 */

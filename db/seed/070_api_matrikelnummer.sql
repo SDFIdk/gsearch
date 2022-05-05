@@ -208,4 +208,5 @@ SELECT (api.matrikelnummer('1320452',NULL, 1, 100)).*;
 SELECT (api.matrikelnummer('11aa 1320452',NULL, 1, 100)).*;
 SELECT (api.matrikelnummer('1320452 11aa kobbe',NULL, 1, 100)).*;
 SELECT (api.matrikelnummer('11aa søby',NULL, 1, 100)).*;
+SELECT (api.matrikelnummer('s',NULL, 1, 100)).*;
 */
