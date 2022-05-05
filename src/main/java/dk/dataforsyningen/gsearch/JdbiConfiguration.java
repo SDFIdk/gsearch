@@ -13,9 +13,11 @@ import org.jdbi.v3.core.spi.JdbiPlugin;
 import org.n52.jackson.datatype.jts.JtsModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 
 @Configuration
@@ -24,6 +26,19 @@ public class JdbiConfiguration {
     static Logger logger = LoggerFactory.getLogger(JdbiConfiguration.class);
 
     private ResourceTypes resourceTypes = new ResourceTypes();
+
+    /**
+     * The SQL data source that Jdbi will connect to. In this example we use an H2 database, but it can be any JDBC-compatible database.
+     * https://jdbi.org/#_spring5
+     *
+     * @return
+     */
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource driverManagerDataSource()
+    {
+        return new DriverManagerDataSource();
+    }
 
     @Bean
     public Jdbi jdbi(DataSource ds, List<JdbiPlugin> jdbiPlugins, List<RowMapper<?>> rowMappers) throws SQLException {
