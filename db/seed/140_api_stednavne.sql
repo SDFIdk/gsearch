@@ -5,8 +5,8 @@ CREATE TYPE api.stednavn AS (
   skrivemaade TEXT,
   skrivemaade_officiel TEXT,
   skrivemaade_uofficiel TEXT,
-  type TEXT,
-  subtype TEXT,
+  stednavn_type TEXT,
+  stednavn_subtype TEXT,
   geometryWkt TEXT,
   geometryWkt_detail TEXT,
   bbox box2d,
@@ -21,8 +21,8 @@ COMMENT ON COLUMN api.stednavn.id IS 'Id for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade IS 'Skrivemaade for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade_officiel IS 'Officiel skrivemaade for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade_uofficiel IS 'Uofficiel skrivemaade for stednavn';
-COMMENT ON COLUMN api.stednavn.type IS 'Type på stednavn';
-COMMENT ON COLUMN api.stednavn.subtype IS 'Subtype på stednavn';
+COMMENT ON COLUMN api.stednavn.stednavn_type IS 'Type på stednavn';
+COMMENT ON COLUMN api.stednavn.stednavn_subtype IS 'Subtype på stednavn';
 COMMENT ON COLUMN api.stednavn.geometryWkt IS 'Geometriens boundingbox i valgt koordinatsystem (som WKT)';
 COMMENT ON COLUMN api.stednavn.geometryWkt_detail IS 'Geometri i valgt koordinatsystem (som WKT)';
 COMMENT ON COLUMN api.stednavn.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
@@ -76,8 +76,8 @@ SELECT
 			ELSE replace(uofficielle_skrivemaader, '-', ' ')
 		END
 	) as skrivemaade_uofficiel_nohyphen,
-	type,
-	subtype,
+	type AS stednavn_type,
+	subtype AS stednavn_subtype,
 	st_multi(st_union(geometri)) AS geometri,
 	st_extent(geometri) AS bbox
 INTO basic.stednavn_mv
@@ -156,18 +156,16 @@ BEGIN
     WITH tokens AS (SELECT UNNEST(string_to_array(btrim(replace(input_tekst, '-', ' ')), ' ')) t)
   	SELECT
     	string_agg(fonetik.fnfonetik(t,2), ':* <-> ') || ':*' FROM tokens INTO query_string;
-  	raise notice 'query_string: %', query_string;
       
 	-- build the plain version of the query string for ranking purposes
 	WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
 	SELECT
 		string_agg(t, ':* <-> ') || ':*' FROM tokens INTO plain_query_string;
-	raise notice 'plain_query_string: %', plain_query_string;
 
     -- Execute and return the result
     stmt = format(E'SELECT
         presentationstring::text, id::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel, 
-		skrivemaade_uofficiel::text, type::text, subtype::text, ST_AsText(bbox), ST_AsText(geometri), bbox, geometri,
+		skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, ST_AsText(bbox), ST_AsText(geometri), bbox, geometri,
         basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	    ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM
