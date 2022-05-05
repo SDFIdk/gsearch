@@ -55,12 +55,12 @@
     <dependency>
       <groupId>org.geotools.jdbc</groupId>
       <artifactId>gt-jdbc-postgis</artifactId>
-      <version>26.0</version>
+      <version>26.4</version>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-cql</artifactId>
-      <version>26.0</version>
+      <version>26.4</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
