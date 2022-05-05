@@ -1,14 +1,13 @@
 package dk.dataforsyningen.gsearch;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-
+import net.postgis.jdbc.jts.JtsBinaryParser;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.locationtech.jts.geom.Geometry;
 
-import net.postgis.jdbc.jts.JtsBinaryParser;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 
 /**
  * Maps dynamic row data into the generic Data entity
@@ -24,6 +23,7 @@ class DataMapper implements RowMapper<Data> {
 
     /**
      * Maps column value to either geometry or String
+     *
      * @param i
      * @param rs
      * @return
@@ -53,6 +53,7 @@ class DataMapper implements RowMapper<Data> {
 
     /**
      * Get metadata to know what column type we have
+     *
      * @param rs
      * @param ctx
      * @return
