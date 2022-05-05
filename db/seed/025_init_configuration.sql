@@ -1,8 +1,8 @@
 -- Requires Superuser:
---DROP EXTENSION IF EXISTS unaccent CASCADE;
---DROP EXTENSION IF EXISTS dict_xsyn CASCADE;
---CREATE EXTENSION unaccent; -- translate accents: å -> aa ->, æ -> ae, ect.
---CREATE EXTENSION dict_xsyn; -- common synonyms used in addresses: skt -> sankt, gl -> gammel/gamle
+DROP EXTENSION IF EXISTS unaccent CASCADE;
+DROP EXTENSION IF EXISTS dict_xsyn CASCADE;
+CREATE EXTENSION unaccent; -- translate accents: å -> aa ->, æ -> ae, ect.
+CREATE EXTENSION dict_xsyn; -- common synonyms used in addresses: skt -> sankt, gl -> gammel/gamle
 
 -- create fts config from simple
 DROP TEXT SEARCH CONFIGURATION IF EXISTS basic.septima_fts_config;
@@ -10,8 +10,8 @@ CREATE TEXT SEARCH CONFIGURATION basic.septima_fts_config ( COPY = pg_catalog.si
 
 -- dict_xsyn extension automatically creates a dictionary xsyn, using a custom rules file. So use our custom-made
 -- Must be owner:
---ALTER TEXT SEARCH DICTIONARY xsyn (RULES='xsyn_gsearch', KEEPORIG=true, MATCHSYNONYMS=true, MATCHORIG=true, KEEPSYNONYMS=TRUE);
---ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_gsearch');
+ALTER TEXT SEARCH DICTIONARY xsyn (RULES='xsyn_gsearch', KEEPORIG=true, MATCHSYNONYMS=true, MATCHORIG=true, KEEPSYNONYMS=TRUE);
+ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_gsearch');
 
 -- set the configuration to use the dictionaries in order: unaccent -> xsyn -> simply 
 ALTER TEXT SEARCH CONFIGURATION basic.septima_fts_config 

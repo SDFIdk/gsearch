@@ -1,7 +1,7 @@
 export PGCLIENTENCODING=UTF8;
 export PGUSER=postgres
 export PGPASSWORD=Hypocrisy96.Agency51
-export PGDATABASE=gsearch_elvis
+export PGDATABASE=gsearch_stednavnetest
 export PGHOST=loaddb14.kmsext.dk
 export PGPORT=11513
 logfile="log_local.txt"
