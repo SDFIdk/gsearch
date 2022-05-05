@@ -4,31 +4,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'bebyggelse'::character varying AS type, t.bebyggelsestype, id_lokalid
 FROM
-  dkstednavne.bebyggelse t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.bebyggelse t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'bebyggelse'::character varying AS type, t.bebyggelsestype, id_lokalid
 FROM
-  dkstednavne.bebyggelse t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.bebyggelse t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'bebyggelse'::character varying AS type, t.bebyggelsestype, id_lokalid
 FROM
-  dkstednavne.bebyggelse t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.bebyggelse t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'bebyggelse'::character varying AS type, t.bebyggelsestype, id_lokalid
 FROM
-  dkstednavne.bebyggelse t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.bebyggelse t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'bebyggelse'::character varying AS type, t.bebyggelsestype, id_lokalid
 FROM
-  dkstednavne.bebyggelse t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.bebyggelse t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- begravelsesplads
 CREATE OR REPLACE VIEW stednavne_udstil.vw_begravelsesplads AS
@@ -36,31 +36,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'begravelsesplads'::character varying AS type, t.begravelsespladstype, id_lokalid
 FROM
-  dkstednavne.begravelsesplads t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.begravelsesplads t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'begravelsesplads'::character varying AS type, t.begravelsespladstype, id_lokalid
 FROM
-  dkstednavne.begravelsesplads t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.begravelsesplads t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'begravelsesplads'::character varying AS type, t.begravelsespladstype, id_lokalid
 FROM
-  dkstednavne.begravelsesplads t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.begravelsesplads t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'begravelsesplads'::character varying AS type, t.begravelsespladstype, id_lokalid
 FROM
-  dkstednavne.begravelsesplads t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.begravelsesplads t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'begravelsesplads'::character varying AS type, t.begravelsespladstype, id_lokalid
 FROM
-  dkstednavne.begravelsesplads t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.begravelsesplads t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- bygning
 CREATE OR REPLACE VIEW stednavne_udstil.vw_bygning AS
@@ -68,31 +68,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'bygning'::character varying AS type, t.bygningstype, id_lokalid
 FROM
-  dkstednavne.bygning t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.bygning t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'bygning'::character varying AS type, t.bygningstype, id_lokalid
 FROM
-  dkstednavne.bygning t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.bygning t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'bygning'::character varying AS type, t.bygningstype, id_lokalid
 FROM
-  dkstednavne.bygning t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.bygning t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'bygning'::character varying AS type, t.bygningstype, id_lokalid
 FROM
-  dkstednavne.bygning t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.bygning t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'bygning'::character varying AS type, t.bygningstype, id_lokalid
 FROM
-  dkstednavne.bygning t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.bygning t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- campingplads
 CREATE OR REPLACE VIEW stednavne_udstil.vw_campingplads AS
@@ -100,31 +100,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'campingplads'::character varying AS type,  t.campingpladstype, id_lokalid
 FROM
-  dkstednavne.campingplads t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.campingplads t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'campingplads'::character varying AS type,  t.campingpladstype, id_lokalid
 FROM
-  dkstednavne.campingplads t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.campingplads t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'campingplads'::character varying AS type,  t.campingpladstype, id_lokalid
 FROM
-  dkstednavne.campingplads t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.campingplads t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'campingplads'::character varying AS type,  t.campingpladstype, id_lokalid
 FROM
-  dkstednavne.campingplads t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.campingplads t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'campingplads'::character varying AS type,  t.campingpladstype, id_lokalid
 FROM
-  dkstednavne.campingplads t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.campingplads t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- farvand
 CREATE OR REPLACE VIEW stednavne_udstil.vw_farvand AS
@@ -132,31 +132,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'farvand'::character varying AS type,  t.farvandstype, id_lokalid
 FROM
-  dkstednavne.farvand t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.farvand t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'farvand'::character varying AS type,  t.farvandstype, id_lokalid
 FROM
-  dkstednavne.farvand t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.farvand t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'farvand'::character varying AS type,  t.farvandstype, id_lokalid
 FROM
-  dkstednavne.farvand t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.farvand t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'farvand'::character varying AS type,  t.farvandstype, id_lokalid
 FROM
-  dkstednavne.farvand t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.farvand t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'farvand'::character varying AS type,  t.farvandstype, id_lokalid
 FROM
-  dkstednavne.farvand t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.farvand t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- fortidsminde
 CREATE OR REPLACE VIEW stednavne_udstil.vw_fortidsminde AS
@@ -164,31 +164,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'fortidsminde'::character varying AS type,  t.fortidsmindetype, id_lokalid
 FROM
-  dkstednavne.fortidsminde t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.fortidsminde t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'fortidsminde'::character varying AS type,  t.fortidsmindetype, id_lokalid
 FROM
-  dkstednavne.fortidsminde t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.fortidsminde t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'fortidsminde'::character varying AS type,  t.fortidsmindetype, id_lokalid
 FROM
-  dkstednavne.fortidsminde t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.fortidsminde t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'fortidsminde'::character varying AS type,  t.fortidsmindetype, id_lokalid
 FROM
-  dkstednavne.fortidsminde t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.fortidsminde t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'fortidsminde'::character varying AS type,  t.fortidsmindetype, id_lokalid
 FROM
-  dkstednavne.fortidsminde t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.fortidsminde t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- friluftsbad
 CREATE OR REPLACE VIEW stednavne_udstil.vw_friluftsbad AS
@@ -196,31 +196,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'friluftsbad'::character varying AS type,  t.friluftsbadtype, id_lokalid
 FROM
-  dkstednavne.friluftsbad t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.friluftsbad t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'friluftsbad'::character varying AS type,  t.friluftsbadtype, id_lokalid
 FROM
-  dkstednavne.friluftsbad t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.friluftsbad t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'friluftsbad'::character varying AS type,  t.friluftsbadtype, id_lokalid
 FROM
-  dkstednavne.friluftsbad t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.friluftsbad t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'friluftsbad'::character varying AS type,  t.friluftsbadtype, id_lokalid
 FROM
-  dkstednavne.friluftsbad t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.friluftsbad t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'friluftsbad'::character varying AS type,  t.friluftsbadtype, id_lokalid
 FROM
-  dkstednavne.friluftsbad t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.friluftsbad t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- havnebassin
 CREATE OR REPLACE VIEW stednavne_udstil.vw_havnebassin AS
@@ -228,31 +228,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'havnebassin'::character varying AS type,  t.havnebassintype, id_lokalid
 FROM
-  dkstednavne.havnebassin t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.havnebassin t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'havnebassin'::character varying AS type,  t.havnebassintype, id_lokalid
 FROM
-  dkstednavne.havnebassin t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.havnebassin t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'havnebassin'::character varying AS type,  t.havnebassintype, id_lokalid
 FROM
-  dkstednavne.havnebassin t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.havnebassin t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'havnebassin'::character varying AS type,  t.havnebassintype, id_lokalid
 FROM
-  dkstednavne.havnebassin t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.havnebassin t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'havnebassin'::character varying AS type,  t.havnebassintype, id_lokalid
 FROM
-  dkstednavne.havnebassin t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.havnebassin t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- jernbane
 CREATE OR REPLACE VIEW stednavne_udstil.vw_jernbane AS
@@ -260,31 +260,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'jernbane'::character varying AS type,  t.jernbanetype, id_lokalid
 FROM
-  dkstednavne.jernbane t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.jernbane t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'jernbane'::character varying AS type,  t.jernbanetype, id_lokalid
 FROM
-  dkstednavne.jernbane t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.jernbane t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'jernbane'::character varying AS type,  t.jernbanetype, id_lokalid
 FROM
-  dkstednavne.jernbane t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.jernbane t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'jernbane'::character varying AS type,  t.jernbanetype, id_lokalid
 FROM
-  dkstednavne.jernbane t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.jernbane t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'jernbane'::character varying AS type,  t.jernbanetype, id_lokalid
 FROM
-  dkstednavne.jernbane t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.jernbane t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- landskabsform
 CREATE OR REPLACE VIEW stednavne_udstil.vw_landskabsform AS
@@ -292,31 +292,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'landskabsform'::character varying AS type,  t.landskabsformtype, id_lokalid
 FROM
-  dkstednavne.landskabsform t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.landskabsform t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'landskabsform'::character varying AS type,  t.landskabsformtype, id_lokalid
 FROM
-  dkstednavne.landskabsform t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.landskabsform t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'landskabsform'::character varying AS type,  t.landskabsformtype, id_lokalid
 FROM
-  dkstednavne.landskabsform t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.landskabsform t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'landskabsform'::character varying AS type,  t.landskabsformtype, id_lokalid
 FROM
-  dkstednavne.landskabsform t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.landskabsform t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'landskabsform'::character varying AS type,  t.landskabsformtype, id_lokalid
 FROM
-  dkstednavne.landskabsform t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.landskabsform t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- lufthavn
 CREATE OR REPLACE VIEW stednavne_udstil.vw_lufthavn AS
@@ -324,31 +324,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'lufthavn'::character varying AS type,  t.lufthavnstype, id_lokalid
 FROM
-  dkstednavne.lufthavn t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.lufthavn t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'lufthavn'::character varying AS type,  t.lufthavnstype, id_lokalid
 FROM
-  dkstednavne.lufthavn t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.lufthavn t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'lufthavn'::character varying AS type,  t.lufthavnstype, id_lokalid
 FROM
-  dkstednavne.lufthavn t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.lufthavn t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'lufthavn'::character varying AS type,  t.lufthavnstype, id_lokalid
 FROM
-  dkstednavne.lufthavn t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.lufthavn t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'lufthavn'::character varying AS type,  t.lufthavnstype, id_lokalid
 FROM
-  dkstednavne.lufthavn t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.lufthavn t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- naturareal
 CREATE OR REPLACE VIEW stednavne_udstil.vw_naturareal AS
@@ -356,31 +356,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'naturareal'::character varying AS type,  t.naturarealtype, id_lokalid
 FROM
-  dkstednavne.naturareal t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.naturareal t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'naturareal'::character varying AS type,  t.naturarealtype, id_lokalid
 FROM
-  dkstednavne.naturareal t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.naturareal t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'naturareal'::character varying AS type,  t.naturarealtype, id_lokalid
 FROM
-  dkstednavne.naturareal t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.naturareal t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'naturareal'::character varying AS type,  t.naturarealtype, id_lokalid
 FROM
-  dkstednavne.naturareal t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.naturareal t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'naturareal'::character varying AS type,  t.naturarealtype, id_lokalid
 FROM
-  dkstednavne.naturareal t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.naturareal t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- navigationsanlaeg
 CREATE OR REPLACE VIEW stednavne_udstil.vw_navigationsanlaeg AS
@@ -388,31 +388,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'navigationsanlaeg'::character varying AS type,  t.navigationsanlaegstype, id_lokalid
 FROM
-  dkstednavne.navigationsanlaeg t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.navigationsanlaeg t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'navigationsanlaeg'::character varying AS type,  t.navigationsanlaegstype, id_lokalid
 FROM
-  dkstednavne.navigationsanlaeg t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.navigationsanlaeg t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'navigationsanlaeg'::character varying AS type,  t.navigationsanlaegstype, id_lokalid
 FROM
-  dkstednavne.navigationsanlaeg t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.navigationsanlaeg t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'navigationsanlaeg'::character varying AS type,  t.navigationsanlaegstype, id_lokalid
 FROM
-  dkstednavne.navigationsanlaeg t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.navigationsanlaeg t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'navigationsanlaeg'::character varying AS type,  t.navigationsanlaegstype, id_lokalid
 FROM
-  dkstednavne.navigationsanlaeg t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.navigationsanlaeg t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- restriktionsareal
 CREATE OR REPLACE VIEW stednavne_udstil.vw_restriktionsareal AS
@@ -420,31 +420,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'restriktionsareal'::character varying AS type,  t.restriktionsarealtype, id_lokalid
 FROM
-  dkstednavne.restriktionsareal t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.restriktionsareal t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'restriktionsareal'::character varying AS type,  t.restriktionsarealtype, id_lokalid
 FROM
-  dkstednavne.restriktionsareal t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.restriktionsareal t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'restriktionsareal'::character varying AS type,  t.restriktionsarealtype, id_lokalid
 FROM
-  dkstednavne.restriktionsareal t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.restriktionsareal t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'restriktionsareal'::character varying AS type,  t.restriktionsarealtype, id_lokalid
 FROM
-  dkstednavne.restriktionsareal t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.restriktionsareal t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'restriktionsareal'::character varying AS type,  t.restriktionsarealtype, id_lokalid
 FROM
-  dkstednavne.restriktionsareal t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.restriktionsareal t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- sevaerdighed
 CREATE OR REPLACE VIEW stednavne_udstil.vw_sevaerdighed AS
@@ -452,31 +452,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'sevaerdighed'::character varying AS type,  t.sevaerdighedstype, id_lokalid
 FROM
-  dkstednavne.sevaerdighed t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.sevaerdighed t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'sevaerdighed'::character varying AS type,  t.sevaerdighedstype, id_lokalid
 FROM
-  dkstednavne.sevaerdighed t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.sevaerdighed t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'sevaerdighed'::character varying AS type,  t.sevaerdighedstype, id_lokalid
 FROM
-  dkstednavne.sevaerdighed t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.sevaerdighed t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'sevaerdighed'::character varying AS type,  t.sevaerdighedstype, id_lokalid
 FROM
-  dkstednavne.sevaerdighed t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.sevaerdighed t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'sevaerdighed'::character varying AS type,  t.sevaerdighedstype, id_lokalid
 FROM
-  dkstednavne.sevaerdighed t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.sevaerdighed t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- terraenkontur
 CREATE OR REPLACE VIEW stednavne_udstil.vw_terraenkontur AS
@@ -484,31 +484,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'terraenkontur'::character varying AS type,  t.terraenkonturtype, id_lokalid
 FROM
-  dkstednavne.terraenkontur t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.terraenkontur t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'terraenkontur'::character varying AS type,  t.terraenkonturtype, id_lokalid
 FROM
-  dkstednavne.terraenkontur t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.terraenkontur t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'terraenkontur'::character varying AS type,  t.terraenkonturtype, id_lokalid
 FROM
-  dkstednavne.terraenkontur t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.terraenkontur t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'terraenkontur'::character varying AS type,  t.terraenkonturtype, id_lokalid
 FROM
-  dkstednavne.terraenkontur t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.terraenkontur t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'terraenkontur'::character varying AS type,  t.terraenkonturtype, id_lokalid
 FROM
-  dkstednavne.terraenkontur t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.terraenkontur t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- urentfarvand
 CREATE OR REPLACE VIEW stednavne_udstil.vw_urentfarvand AS
@@ -516,31 +516,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'urentfarvand'::character varying AS type,  t.urentfarvandtype, id_lokalid
 FROM
-  dkstednavne.urentfarvand t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.urentfarvand t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'urentfarvand'::character varying AS type,  t.urentfarvandtype, id_lokalid
 FROM
-  dkstednavne.urentfarvand t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.urentfarvand t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'urentfarvand'::character varying AS type,  t.urentfarvandtype, id_lokalid
 FROM
-  dkstednavne.urentfarvand t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.urentfarvand t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'urentfarvand'::character varying AS type,  t.urentfarvandtype, id_lokalid
 FROM
-  dkstednavne.urentfarvand t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.urentfarvand t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'urentfarvand'::character varying AS type,  t.urentfarvandtype, id_lokalid
 FROM
-  dkstednavne.urentfarvand t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.urentfarvand t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- vandloeb
 CREATE OR REPLACE VIEW stednavne_udstil.vw_vandloeb AS
@@ -548,31 +548,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'vandloeb'::character varying AS type,  t.vandloebstype, id_lokalid
 FROM
-  dkstednavne.vandloeb t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.vandloeb t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'vandloeb'::character varying AS type,  t.vandloebstype, id_lokalid
 FROM
-  dkstednavne.vandloeb t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.vandloeb t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'vandloeb'::character varying AS type,  t.vandloebstype, id_lokalid
 FROM
-  dkstednavne.vandloeb t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.vandloeb t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'vandloeb'::character varying AS type,  t.vandloebstype, id_lokalid
 FROM
-  dkstednavne.vandloeb t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.vandloeb t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'vandloeb'::character varying AS type,  t.vandloebstype, id_lokalid
 FROM
-  dkstednavne.vandloeb t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.vandloeb t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- andentopografiflade
 CREATE OR REPLACE VIEW stednavne_udstil.vw_andentopografiflade AS
@@ -580,31 +580,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'andentopografiflade'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografiflade t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.andentopografiflade t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'andentopografiflade'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografiflade t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.andentopografiflade t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'andentopografiflade'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografiflade t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.andentopografiflade t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'andentopografiflade'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografiflade t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.andentopografiflade t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'andentopografiflade'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografiflade t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.andentopografiflade t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- andentopografipunkt
 CREATE OR REPLACE VIEW stednavne_udstil.vw_andentopografipunkt AS
@@ -612,31 +612,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'andentopografipunkt'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografipunkt t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.andentopografipunkt t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'andentopografipunkt'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografipunkt t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.andentopografipunkt t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'andentopografipunkt'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografipunkt t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.andentopografipunkt t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'andentopografipunkt'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografipunkt t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.andentopografipunkt t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'andentopografipunkt'::character varying AS type,  t.andentopografitype, id_lokalid
 FROM
-  dkstednavne.andentopografipunkt t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.andentopografipunkt t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- idraetsanlaeg
 CREATE OR REPLACE VIEW stednavne_udstil.vw_idraetsanlaeg AS
@@ -644,31 +644,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'idraetsanlaeg'::character varying AS type,  t.idraetsanlaegstype, id_lokalid
 FROM
-  dkstednavne.idraetsanlaeg t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.idraetsanlaeg t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'idraetsanlaeg'::character varying AS type,  t.idraetsanlaegstype, id_lokalid
 FROM
-  dkstednavne.idraetsanlaeg t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.idraetsanlaeg t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'idraetsanlaeg'::character varying AS type,  t.idraetsanlaegstype, id_lokalid
 FROM
-  dkstednavne.idraetsanlaeg t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.idraetsanlaeg t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'idraetsanlaeg'::character varying AS type,  t.idraetsanlaegstype, id_lokalid
 FROM
-  dkstednavne.idraetsanlaeg t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.idraetsanlaeg t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'idraetsanlaeg'::character varying AS type,  t.idraetsanlaegstype, id_lokalid
 FROM
-  dkstednavne.idraetsanlaeg t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.idraetsanlaeg t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- soe
 CREATE OR REPLACE VIEW stednavne_udstil.vw_soe AS
@@ -676,31 +676,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'soe'::character varying AS type,  t.soetype, id_lokalid
 FROM
-  dkstednavne.soe t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.soe t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'soe'::character varying AS type,  t.soetype, id_lokalid
 FROM
-  dkstednavne.soe t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.soe t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'soe'::character varying AS type,  t.soetype, id_lokalid
 FROM
-  dkstednavne.soe t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.soe t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'soe'::character varying AS type,  t.soetype, id_lokalid
 FROM
-  dkstednavne.soe t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.soe t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'soe'::character varying AS type,  t.soetype, id_lokalid
 FROM
-  dkstednavne.soe t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.soe t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- standsningssted
 CREATE OR REPLACE VIEW stednavne_udstil.vw_standsningssted AS
@@ -708,31 +708,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'standsningssted'::character varying AS type,  t.standsningsstedtype, id_lokalid
 FROM
-  dkstednavne.standsningssted t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.standsningssted t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'standsningssted'::character varying AS type,  t.standsningsstedtype, id_lokalid
 FROM
-  dkstednavne.standsningssted t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.standsningssted t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'standsningssted'::character varying AS type,  t.standsningsstedtype, id_lokalid
 FROM
-  dkstednavne.standsningssted t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.standsningssted t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'standsningssted'::character varying AS type,  t.standsningsstedtype, id_lokalid
 FROM
-  dkstednavne.standsningssted t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.standsningssted t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'standsningssted'::character varying AS type,  t.standsningsstedtype, id_lokalid
 FROM
-  dkstednavne.standsningssted t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.standsningssted t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- vej
 CREATE OR REPLACE VIEW stednavne_udstil.vw_vej AS 
@@ -740,31 +740,31 @@ SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_1_navnefoelgenummer navnefoelgenummer, t.navn_1_navnestatus navnestatus, t.navn_1_skrivemaade skrivemaade, t.navn_1_sprog sprog,
   'vej'::character varying AS type,  t.vejtype, t.id_lokalid
 FROM
-  dkstednavne.vej t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
+  stednavne_20220504.vej t where t.navn_1_skrivemaade IS NOT NULL AND t.navn_1_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_2_navnefoelgenummer navnefoelgenummer, t.navn_2_navnestatus navnestatus, t.navn_2_skrivemaade skrivemaade, t.navn_2_sprog sprog,
   'vej'::character varying AS type,  t.vejtype, t.id_lokalid
 FROM
-  dkstednavne.vej t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
+  stednavne_20220504.vej t where t.navn_2_skrivemaade IS NOT NULL AND t.navn_2_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_3_navnefoelgenummer navnefoelgenummer, t.navn_3_navnestatus navnestatus, t.navn_3_skrivemaade skrivemaade, t.navn_3_sprog sprog,
   'vej'::character varying AS type,  t.vejtype, t.id_lokalid
 FROM
-  dkstednavne.vej t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
+  stednavne_20220504.vej t where t.navn_3_skrivemaade IS NOT NULL AND t.navn_3_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_4_navnefoelgenummer navnefoelgenummer, t.navn_4_navnestatus navnestatus, t.navn_4_skrivemaade skrivemaade, t.navn_4_sprog sprog,
   'vej'::character varying AS type,  t.vejtype, t.id_lokalid
 FROM
-  dkstednavne.vej t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
+  stednavne_20220504.vej t where t.navn_4_skrivemaade IS NOT NULL AND t.navn_4_aktualitet = 'iAnvendelse'
 UNION
 SELECT
   t.objectid::integer, st_force2d(t.geometri) geometri, t.navn_5_navnefoelgenummer navnefoelgenummer, t.navn_5_navnestatus navnestatus, t.navn_5_skrivemaade skrivemaade, t.navn_5_sprog sprog,
   'vej'::character varying AS type,  t.vejtype, t.id_lokalid
 FROM
-  dkstednavne.vej t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
+  stednavne_20220504.vej t where t.navn_5_skrivemaade IS NOT NULL AND t.navn_5_aktualitet = 'iAnvendelse';
 
 -- SELECT 'SELECT * FROM ' || table_schema || '.' || table_name || ' UNION' FROM information_schema.tables where table_type='VIEW' AND table_schema='util' ORDER BY 1;
 --SELECT * FROM stednavne_udstil.vw_bebyggelse limit 10
