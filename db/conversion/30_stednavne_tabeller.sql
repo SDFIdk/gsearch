@@ -84,7 +84,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.objectid = s1.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Byer som ligger helt inde i et postnummerinddeling (25 sec.)
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (by i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (by i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -94,7 +94,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Bebyggelser som ligger helt inde i et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -108,7 +108,7 @@ WHERE
 ------------------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'begravelsesplads';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (Begravelsesplads i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (Begravelsesplads i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -117,7 +117,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'begravelsesplads' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- > 50 % i et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (Begravelsesplads i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (Begravelsesplads i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, s.geometri_udtyndet)) > 0.5*s.area)
@@ -136,7 +136,7 @@ UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE 
 UPDATE
   stednavne_udstil.stednavn_udstilling 
 SET
-  presentationstring = s.skrivemaade || ' (' || upper(SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '') FROM 1 FOR 1)) || SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '') FROM 2 FOR length(s.subtype_presentation)) || ' i ' || p.postcodename || ')'
+  presentationstring = s.skrivemaade || ' (' || upper(SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '') FROM 1 FOR 1)) || SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '') FROM 2 FOR length(s.subtype_presentation)) || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -148,7 +148,7 @@ WHERE
 UPDATE
   stednavne_udstil.stednavn_udstilling 
 SET
-  presentationstring = s.skrivemaade || ' (' || upper(SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '') FROM 1 FOR 1)) || SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '') FROM 2 FOR length(s.subtype_presentation)) || ' i ' || p.postcodename || ')'
+  presentationstring = s.skrivemaade || ' (' || upper(SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '') FROM 1 FOR 1)) || SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '') FROM 2 FOR length(s.subtype_presentation)) || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, s.geometri_udtyndet)) > 0.5*s.area)
@@ -166,7 +166,7 @@ UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = replace(pre
 --------------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'campingplads';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (Campingplads i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (Campingplads i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -176,7 +176,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- > 50 % i et postnummerinddeling
 UPDATE
-  stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (Campingplads i ' || p.postcodename || ')'
+  stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (Campingplads i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, s.geometri_udtyndet)) > 0.5*s.area)
@@ -217,7 +217,7 @@ WHERE
 ------------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'fortidsminde';
 -- Fortidsminder i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri))
@@ -226,7 +226,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'fortidsminde' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Fortidsminder, som er multi punkter og ligger > 50 % i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, st_envelope(s.geometri_udtyndet))) > 0.5*s.area)
@@ -241,7 +241,7 @@ WHERE
 -----------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'friluftsbad';
 -- Fortidsminder i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || 'Friluftsbad' || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || 'Friluftsbad' || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -261,7 +261,7 @@ UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = replace(pre
 -----------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'havnebassin';
 -- Havnebassin i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -270,7 +270,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'havnebassin' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Havnebassin,  > 50 % i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, st_envelope(s.geometri_udtyndet))) > 0.5*s.area)
@@ -284,7 +284,7 @@ WHERE
 --------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'jernbane';
 -- Jernbane i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -293,7 +293,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'jernbane' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Jernbane,  > 50 % i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, st_envelope(s.geometri_udtyndet))) > 0.5*s.area)
@@ -340,7 +340,7 @@ WHERE
   (stednavne_udstil.stednavn_udstilling.subtype ilike 'ø' OR stednavne_udstil.stednavn_udstilling.subtype ilike 'øgruppe') AND
   stednavne_udstil.stednavn_udstilling.objectid = s1.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 -- landskabsformer i postnummer
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -365,7 +365,7 @@ UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = skrivemaade
 ----------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'naturareal';
 -- Naturareal i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -379,7 +379,7 @@ WHERE
 -----------------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'navigationsanlaeg';
 -- Naturareal i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -393,7 +393,7 @@ WHERE
 ------------------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'restriktionsareal';
 -- Restriktionsanlaeg i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -417,7 +417,7 @@ UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = skrivemaade
 ------------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'sevaerdighed';
 -- Sevaerdighed i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -426,7 +426,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'sevaerdighed' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Sevaerdighed,  > 50 % i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, st_envelope(s.geometri_udtyndet))) > 0.5*s.area)
@@ -440,7 +440,7 @@ WHERE
 -------------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'terraenkontur';
 -- Terraenkontur i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -449,7 +449,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'terraenkontur' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Terraenkontur,  > 50 % i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, st_envelope(s.geometri_udtyndet))) > 0.5*s.area)
@@ -495,7 +495,7 @@ WHERE
 --------------
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'vandloeb';
 -- Vandloeb i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -504,7 +504,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'vandloeb' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Vandloeb,  > 50 % i postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, st_envelope(s.geometri_udtyndet))) > 0.5*s.area)
@@ -519,7 +519,7 @@ WHERE
 -- SELECT * from stednavne_udstil.stednavn_udstilling where type='andentopografiflade' AND presentationstring IS NULL;
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'andentopografiflade';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -528,7 +528,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'andentopografiflade' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- > 50 % i et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, s.geometri_udtyndet)) > 0.5*s.area)
@@ -549,7 +549,7 @@ WHERE
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'andentopografipunkt';
 
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -575,7 +575,7 @@ UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = skrivemaade
 -- SELECT * from stednavne_udstil.stednavn_udstilling where type='idraetsanlaeg' AND presentationstring IS NULL;
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'idraetsanlaeg';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -584,7 +584,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'idraetsanlaeg' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- > 50 % i et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, s.geometri_udtyndet)) > 0.5*s.area)
@@ -611,7 +611,7 @@ UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = replace(pre
 -- SELECT * from stednavne_udstil.stednavn_udstilling where type='soe' AND presentationstring IS NULL;
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'soe';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -620,7 +620,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'soe' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- > 50 % i et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, s.geometri_udtyndet)) > 0.5*s.area)
@@ -629,7 +629,7 @@ WHERE
   stednavne_udstil.stednavn_udstilling.type ilike 'soe' AND
   stednavne_udstil.stednavn_udstilling.objectid = s.objectid AND stednavne_udstil.stednavn_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- > 40 % i et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet AND st_area(st_intersection(p.geometri, s.geometri_udtyndet)) > 0.4*s.area)
@@ -651,7 +651,7 @@ UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = replace(pre
 -- SELECT * from stednavne_udstil.stednavn_udstilling where type='standsningssted' AND presentationstring IS NULL;
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'standsningssted';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.type || ', ' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.type || ', ' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -670,7 +670,7 @@ WHERE
 -- SELECT * from stednavne_udstil.stednavn_udstilling where type='ubearbejdetnavnflade' AND presentationstring IS NULL;
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'ubearbejdetnavnflade';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -690,7 +690,7 @@ WHERE
 -- SELECT * from stednavne_udstil.stednavn_udstilling where type='ubearbejdetnavnlinje' AND presentationstring IS NULL;
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'ubearbejdetnavnlinje';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -710,7 +710,7 @@ WHERE
 -- SELECT * from stednavne_udstil.stednavn_udstilling where type='ubearbejdetnavnpunkt' AND presentationstring IS NULL;
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'ubearbejdetnavnpunkt';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -730,7 +730,7 @@ WHERE
 -- SELECT * from stednavne_udstil.stednavn_udstilling where type='vej' AND presentationstring IS NULL;
 UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = NULL WHERE type ilike 'ubearbejdetnavnpunkt';
 -- Helt indenfor et postnummerinddeling
-UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.postcodename || ')'
+UPDATE stednavne_udstil.stednavn_udstilling SET presentationstring = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
   stednavne_udstil.stednavn_udstilling s JOIN
   dagi_500_20220504.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet))
@@ -801,7 +801,7 @@ SET
   municipality_filter = t.municipality_filter
 FROM
   (SELECT
-     s.objectid, s.navnefoelgenummer, array_to_string(array_agg(k.cpr_noegle::text), ' '::text) AS municipality_filter
+     s.objectid, s.navnefoelgenummer, array_to_string(array_agg(k.kommunekode::text), ' '::text) AS municipality_filter
    FROM
      stednavne_udstil.stednavn_udstilling s JOIN
      dagi_500_20220504.kommuneinddeling k ON (st_intersects(s.geometri, k.geometri))
