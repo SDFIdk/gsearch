@@ -1,0 +1,6 @@
+FROM maven:3.8.5-openjdk-17-slim
+WORKDIR /gsearch
+COPY pom.xml .
+RUN mvn -e -B dependency:resolve
+COPY src ./src
+RUN mvn -e -B package -DskipTests
