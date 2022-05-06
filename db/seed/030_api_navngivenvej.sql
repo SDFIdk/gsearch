@@ -170,7 +170,7 @@ END
 $function$
 ;
 
-SELECT array_to_string(ARRAY[1, 2, 3, NULL, 5], ',')
+SELECT array_to_string(ARRAY[1, 2, 3, NULL, 5], ',');
 
 -- Test cases:
 /*
