@@ -5,8 +5,6 @@ CREATE TYPE api.postdistrikt AS (
   id TEXT,
   "name" TEXT,
   presentationstring TEXT,
-  geometryWkt TEXT, -- same AS bbox
-  geometryWkt_detail TEXT,
   gadepostnummer bool,
   geometri geometry,
   bbox box2d,
@@ -20,8 +18,6 @@ COMMENT ON COLUMN api.postdistrikt."name" IS 'Navn på postdistrikt';
 COMMENT ON COLUMN api.postdistrikt.id IS 'Postnummer';
 COMMENT ON COLUMN api.postdistrikt.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.postdistrikt.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
-COMMENT ON COLUMN api.postdistrikt.geometryWkt IS 'Geometriens boundingbox i valgt koordinatsystem (som WKT)';
-COMMENT ON COLUMN api.postdistrikt.geometryWkt_detail IS 'Geometri i valgt koordinatsystem (som WKT)';
 
 DROP TABLE IF EXISTS basic.postdistrikt_mv;
 WITH postnumre AS
@@ -158,7 +154,7 @@ BEGIN
   raise notice 'plain_query_string: %', plain_query_string;
   -- Execute and return the result
   stmt = format(E'SELECT
-    postnummer, navn, titel, ST_AStext(bbox), ST_AStext(geometri), ergadepostnummer, geometri, bbox,
+    postnummer, navn, titel, ergadepostnummer, geometri, bbox,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM
