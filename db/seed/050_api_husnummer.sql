@@ -33,27 +33,27 @@ COMMENT ON COLUMN api.husnummer.adgangspunkt_geometri IS 'Geometri for adgangspu
 -- Husnummer script requires navngivenvej script to be executed first
 
 DROP TABLE IF EXISTS basic.husnummer_mv;
-with husnumre AS 
+WITH husnumre AS 
 (
-	SELECT
-		h.id_lokalid AS id,
-		h.adgangsadressebetegnelse,
-		h.husnummertekst AS husnummertekst,
+  SELECT
+    h.id_lokalid AS id,
+    h.adgangsadressebetegnelse,
+    h.husnummertekst AS husnummertekst,
     h.navngivenvej AS vejid,
-		n.vejnavn,
-		h.vejkode,
-		h.kommunekode,
-		k.navn as kommunenavn,
-		p.postnr as postnr,
-		p.navn as postdistrikt,
-		st_force2d(COALESCE(ap.geometri)) as adgangspunkt_geometri,
-		st_force2d(COALESCE(ap2.geometri)) as vejpunkt_geometri
-  	FROM
-		dar.husnummer h
-		JOIN dar.navngivenvej n ON n.id_lokalid = h.navngivenvej::uuid
-		JOIN dar.postnummer p ON p.id_lokalid = h.postnummer::uuid
-		JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt
-		JOIN dar.adressepunkt ap2 ON ap2.id_lokalid = h.vejpunkt
+    n.vejnavn,
+    h.vejkode,
+    h.kommunekode,
+    k.navn as kommunenavn,
+    p.postnr as postnr,
+    p.navn as postdistrikt,
+    st_force2d(COALESCE(ap.geometri)) as adgangspunkt_geometri,
+    st_force2d(COALESCE(ap2.geometri)) as vejpunkt_geometri
+  FROM
+    dar.husnummer h
+    JOIN dar.navngivenvej n ON n.id_lokalid = h.navngivenvej::uuid
+    JOIN dar.postnummer p ON p.id_lokalid = h.postnummer::uuid
+    JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt
+    JOIN dar.adressepunkt ap2 ON ap2.id_lokalid = h.vejpunkt
     JOIN dagi_500m_nohist_l1.kommuneinddeling k ON k.kommunekode = h.kommunekode
 )
 SELECT
@@ -66,9 +66,15 @@ SELECT
   h.kommunenavn,
   h.postnr AS postnummer,
   h.postdistrikt,
+  h.vejid,
   nv.textsearchable_plain_col AS textsearchable_plain_col_vej,
   nv.textsearchable_unaccent_col AS textsearchable_unaccent_col_vej,
   nv.textsearchable_phonetic_col AS textsearchable_phonetic_col_vej,
+  ROW_NUMBER() OVER
+    (PARTITION BY h.vejid ORDER BY
+    (substring(h.husnummertekst FROM '[0-9]*'))::int,
+     substring(h.husnummertekst FROM '[0-9]*([A-Z])') NULLS FIRST
+    ) AS sortering,
   st_multi(h.adgangspunkt_geometri) as adgangspunkt_geometri,
   st_multi(h.vejpunkt_geometri) as vejpunkt_geometri
 INTO
@@ -107,7 +113,7 @@ FROM
 CREATE INDEX ON basic.husnummer_mv USING GIN (textsearchable_plain_col_vej);
 CREATE INDEX ON basic.husnummer_mv USING GIN (textsearchable_unaccent_col_vej);
 CREATE INDEX ON basic.husnummer_mv USING GIN (textsearchable_phonetic_col_vej);
-CREATE INDEX ON basic.husnummer_mv (lower(vejnavn));
+CREATE INDEX ON basic.husnummer_mv (lower(vejnavn), vejid, sortering);
 
 DROP FUNCTION IF EXISTS api.husnummer(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.husnummer(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -193,7 +199,7 @@ BEGIN
     WHERE
       lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
     ORDER BY
-      lower(vejnavn), husnummertekst
+      lower(vejnavn), vejid, sortering
     LIMIT $3;', input_tekst, input_tekst);
 --   RAISE notice '%', stmt;
     RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
