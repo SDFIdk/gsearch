@@ -11,8 +11,6 @@ CREATE TYPE api.husnummer AS (
   postcodeIdentifier TEXT,
   districtName TEXT,
   presentationstring TEXT,
-  vejpunkt_geometryWkt_detail TEXT,
-  adgangspunkt_geometryWkt_detail TEXT,
   adgangspunkt_geometri geometry,
   vejpunkt_geometri geometry,
   rang1 double precision,
@@ -31,8 +29,6 @@ COMMENT ON COLUMN api.husnummer.districtName IS 'Postnummer navn på husnummer';
 COMMENT ON COLUMN api.husnummer.presentationstring IS 'Præsentationsform for et husnummer';
 COMMENT ON COLUMN api.husnummer.vejpunkt_geometri IS 'Geometri for vejpunkt i valgt koordinatsystem';
 COMMENT ON COLUMN api.husnummer.adgangspunkt_geometri IS 'Geometri for adgangspunkt i valgt koordinatsystem';
-COMMENT ON COLUMN api.husnummer.vejpunkt_geometryWkt_detail IS 'Geometri for husnummerets vejpunkt i valgt koordinatsystem (som WKT)';
-COMMENT ON COLUMN api.husnummer.adgangspunkt_geometryWkt_detail IS 'Geometri for husnummerets adgangspunkt i valgt koordinatsystem (som WKT)';
 
 -- Husnummer script requires navngivenvej script to be executed first
 
@@ -189,7 +185,7 @@ BEGIN
     stmt = format(E'SELECT
       id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
       husnummertekst::text, postnummer::text, postdistrikt::text, titel::text, 
-      ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
+      vejpunkt_geometri, adgangspunkt_geometri,
       0::float AS rank1,
       0::float AS rank2
     FROM
@@ -205,7 +201,7 @@ BEGIN
     stmt = format(E'SELECT
       id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
       husnummertekst::text, postnummer::text, postdistrikt::text, titel::text, 
-      ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
+      vejpunkt_geometri, adgangspunkt_geometri,
       basic.combine_rank($2, $2, textsearchable_plain_col_vej, textsearchable_unaccent_col_vej, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
       ts_rank_cd(textsearchable_phonetic_col_vej, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM

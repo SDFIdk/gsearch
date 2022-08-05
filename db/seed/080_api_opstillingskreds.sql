@@ -5,8 +5,6 @@ CREATE TYPE api.opstillingskreds AS (
   id TEXT,
   "name" TEXT,
   presentationstring TEXT,
-  geometryWkt TEXT, -- same AS bbox
-  geometryWkt_detail TEXT,
   valgkredsnr TEXT,
   storkredsnr TEXT,
   storkredsnavn TEXT,
@@ -24,8 +22,6 @@ COMMENT ON COLUMN api.opstillingskreds."name" IS 'Navn på opstillingskreds';
 COMMENT ON COLUMN api.opstillingskreds.id IS 'opstillingskredsnummer';
 COMMENT ON COLUMN api.opstillingskreds.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.opstillingskreds.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
-COMMENT ON COLUMN api.opstillingskreds.geometryWkt IS 'Geometriens boundingbox i valgt koordinatsystem (som WKT)';
-COMMENT ON COLUMN api.opstillingskreds.geometryWkt_detail IS 'Geometri i valgt koordinatsystem (som WKT)';
 
 DROP TABLE IF EXISTS basic.opstillingskreds_mv;
 WITH opstillingskredse AS
@@ -138,7 +134,7 @@ BEGIN
 	
   -- Execute and return the result
   stmt = format(E'SELECT
-    opstillingskredsnummer, navn, titel, ST_AStext(bbox), ST_AStext(geometri), 
+    opstillingskredsnummer, navn, titel, 
     valgkredsnr, storkredsnr, storkredsnavn, '''' AS landsdelsnr, '''' AS landsdelsnavn, geometri, bbox,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
     ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2

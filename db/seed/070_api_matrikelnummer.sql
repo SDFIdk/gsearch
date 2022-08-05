@@ -6,7 +6,6 @@ CREATE TYPE api.matrikelnummer AS (
   presentationstring TEXT,
   centroid_x TEXT,
   centroid_y TEXT,
-  geometryWkt_detail TEXT,
   geometri geometry,
   rang1 double precision,
   rang2 double precision
@@ -19,7 +18,6 @@ COMMENT ON COLUMN api.matrikelnummer.matrNr IS 'Matrikelnummer';
 COMMENT ON COLUMN api.matrikelnummer.presentationstring IS 'Præsentationsform for et matrikelnummer';
 COMMENT ON COLUMN api.matrikelnummer.centroid_x IS 'Centroide X for matriklens geometri';
 COMMENT ON COLUMN api.matrikelnummer.centroid_y IS 'Centroide Y for matriklens geometri';
-COMMENT ON COLUMN api.matrikelnummer.geometryWkt_detail IS 'Geometri i valgt koordinatsystem (som WKT)';
 COMMENT ON COLUMN api.matrikelnummer.geometri IS 'Geometri i valgt koordinatsystem';
 
 
@@ -181,7 +179,7 @@ BEGIN
   stmt = format(E'SELECT
     elavsnavn::text, elavskode::text, matrnr::text, titel::text, 
     ST_X((ST_DUMP(centroide_geometri)).geom)::text, ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
-    ST_AStext(geometri), geometri,
+    geometri,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
     ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2    
   FROM

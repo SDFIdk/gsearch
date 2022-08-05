@@ -11,8 +11,6 @@ CREATE TYPE api.adresse AS (
   postcodeIdentifier TEXT,
   districtName TEXT,
   presentationstring TEXT,
-  vejpunkt_geometryWkt_detail TEXT,
-  adgangspunkt_geometryWkt_detail TEXT,
   adgangspunkt_geometri geometry,
   vejpunkt_geometri geometry,
   rang1 double precision,
@@ -33,9 +31,6 @@ COMMENT ON COLUMN api.adresse.districtName IS 'Postnummer navn på adresse';
 COMMENT ON COLUMN api.adresse.presentationstring IS 'Præsentationsform for en adresse';
 COMMENT ON COLUMN api.adresse.vejpunkt_geometri IS 'Husnummergeometri på adresse for vejpunkt i valgt koordinatsystem';
 COMMENT ON COLUMN api.adresse.adgangspunkt_geometri IS 'Husnummergeometri på adresse for adgangspunkt i valgt koordinatsystem';
-COMMENT ON COLUMN api.adresse.vejpunkt_geometryWkt_detail IS 'Husnummergeometri på adresse for vejpunkt i valgt koordinatsystem (som WKT)';
-COMMENT ON COLUMN api.adresse.adgangspunkt_geometryWkt_detail IS 'Husnummergeometri på adresse for adgangspunkt i valgt koordinatsystem (som WKT)';
-
 
 DROP TABLE IF EXISTS basic.adresse_mv;
 with adresser AS 
@@ -195,7 +190,7 @@ BEGIN
         id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
         husnummertekst::text, etagebetegnelse::text, doerbetegnelse::text, 
         postnummer::text, postdistrikt::text, titel::text, 
-        ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
+        vejpunkt_geometri, adgangspunkt_geometri,
         0::float AS rank1,
         0::float AS rank2
       FROM
@@ -213,7 +208,7 @@ BEGIN
       id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
       husnummertekst::text, etagebetegnelse::text, doerbetegnelse::text, 
       postnummer::text, postdistrikt::text, titel::text, 
-      ST_AStext(vejpunkt_geometri), ST_AStext(adgangspunkt_geometri), vejpunkt_geometri, adgangspunkt_geometri,
+      vejpunkt_geometri, adgangspunkt_geometri,
       basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
       ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM

@@ -5,8 +5,6 @@ CREATE TYPE api.kommune AS (
   id TEXT,
   "name" TEXT,
   presentationstring TEXT,
-  geometryWkt TEXT, -- same AS bbox
-  geometryWkt_detail TEXT,
   geometri geometry,
   bbox box2d,
   rang1 double precision,
@@ -19,8 +17,6 @@ COMMENT ON COLUMN api.kommune."name" IS 'Navn på kommune';
 COMMENT ON COLUMN api.kommune.id IS 'kommunekode';
 COMMENT ON COLUMN api.kommune.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.kommune.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
-COMMENT ON COLUMN api.kommune.geometryWkt IS 'Geometriens boundingbox i valgt koordinatsystem (som WKT)';
-COMMENT ON COLUMN api.kommune.geometryWkt_detail IS 'Geometri i valgt koordinatsystem (som WKT)';
 
 DROP TABLE IF EXISTS basic.kommune_mv;
 WITH kommuner AS
@@ -152,7 +148,7 @@ BEGIN
   
   -- Execute and return the result
   stmt = format(E'SELECT
-    kommunekode, navn, titel, ST_AStext(bbox), ST_AStext(geometri), geometri, bbox,
+    kommunekode, navn, titel, geometri, bbox,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM
