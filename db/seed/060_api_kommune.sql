@@ -6,7 +6,7 @@ CREATE TYPE api.kommune AS (
   "name" TEXT,
   presentationstring TEXT,
   geometri geometry,
-  bbox box2d,
+  bbox geometry,
   rang1 double precision,
   rang2 double precision
 );  
@@ -148,7 +148,7 @@ BEGIN
   
   -- Execute and return the result
   stmt = format(E'SELECT
-    kommunekode, navn, titel, geometri, bbox,
+    kommunekode, navn, titel, geometri, bbox::geometry,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM

@@ -6,7 +6,7 @@ CREATE TYPE api.region AS (
   "name" TEXT,
   presentationstring TEXT,
   geometri geometry,
-  bbox box2d,
+  bbox geometry,
   rang1 double precision,
   rang2 double precision
 );  
@@ -107,20 +107,17 @@ BEGIN
   IF btrim(input_tekst) = Any('{.,-, '', \,}')  THEN
     input_tekst = '';
   END IF;  
-
   -- Build the query_string
   WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
   SELECT
     string_agg(fonetik.fnfonetik(t,2), ':* <-> ') || ':*' FROM tokens INTO query_string;
-  
   -- build the plain version of the query string for ranking purposes
   WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
   SELECT
     string_agg(t, ':* <-> ') || ':*' FROM tokens INTO plain_query_string;
-	
   -- Execute and return the result
   stmt = format(E'SELECT
-    regionskode, navn, titel, geometri, bbox,
+    regionskode, navn, titel, geometri, bbox::geometry,
 	  basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
     ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM
