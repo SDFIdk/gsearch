@@ -37,11 +37,13 @@ with adresser AS
 (
 	SELECT
 		a.id_lokalid AS id,
+		a.husnummer,
 		a.adressebetegnelse,
 		a.doerbetegnelse,
 		a.etagebetegnelse,
 		h.husnummertekst,
     	h.navngivenvej AS vejid,
+    	h.sortering AS husnummer_sortering,
 		n.vejnavn,
 		h.vejkode,
 		h.kommunekode,
@@ -52,7 +54,16 @@ with adresser AS
 		st_force2d(COALESCE(ap2.geometri)) as vejpunkt_geometri
   	FROM
 		dar.adresse a
-		JOIN dar.husnummer h ON a.husnummer = h.id_lokalid
+		JOIN 
+		  (SELECT
+		     *,
+		     ROW_NUMBER() OVER
+               (PARTITION BY navngivenvej ORDER BY
+               (substring(husnummertekst FROM '[0-9]*'))::int,
+                substring(husnummertekst FROM '[0-9]*([A-Z])') NULLS FIRST
+             ) AS sortering
+           FROM dar.husnummer
+          ) h ON a.husnummer = h.id_lokalid
 		JOIN dar.navngivenvej n ON n.id_lokalid = h.navngivenvej::uuid
 		JOIN dar.postnummer p ON p.id_lokalid = h.postnummer::uuid
 		JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt
@@ -74,6 +85,26 @@ SELECT
   nv.textsearchable_plain_col AS textsearchable_plain_col_vej,
   nv.textsearchable_unaccent_col AS textsearchable_unaccent_col_vej,
   nv.textsearchable_phonetic_col AS textsearchable_phonetic_col_vej,
+  a.vejid,
+  a.husnummer_sortering,
+  ROW_NUMBER() OVER (
+    PARTITION BY a.husnummer
+    ORDER BY
+      CASE lower(a.etagebetegnelse)
+        WHEN '' THEN -10
+        WHEN 'k3' THEN -3
+        WHEN 'k2' THEN -2
+        WHEN 'kl' THEN -1
+        WHEN 'st' THEN 0
+        ELSE (substring(a.etagebetegnelse FROM '[0-9]*'))::int
+      END,
+      CASE lower(a.doerbetegnelse)
+        WHEN 'tv' THEN -3
+        WHEN 'mf' THEN -2
+        WHEN 'th' THEN -1
+        ELSE (substring(a.doerbetegnelse FROM '^[^0-9]*([0-9]+)'))::int
+      END
+  ) AS sortering,
   st_multi(adgangspunkt_geometri) as adgangspunkt_geometri,
   st_multi(vejpunkt_geometri) as vejpunkt_geometri
 INTO
@@ -125,7 +156,7 @@ GENERATED ALWAYS AS
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_plain_col);
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_unaccent_col);
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_phonetic_col);
-CREATE INDEX ON basic.adresse_mv (lower(vejnavn));
+CREATE INDEX ON basic.adresse_mv (lower(vejnavn), vejid, husnummer_sortering, sortering);
 
 DROP FUNCTION IF EXISTS api.adresse(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.adresse(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -142,7 +173,6 @@ DECLARE
     husnr_etage_doer_query_string TEXT;
     query_string TEXT;
     plain_query_string TEXT;
-    --husnr_filter TEXT := '1=1';
     stmt TEXT;
 BEGIN
   -- Initialize
@@ -197,7 +227,8 @@ BEGIN
         basic.adresse_mv
       WHERE
         lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
-      ORDER BY lower(vejnavn), husnummertekst, etagebetegnelse, doerbetegnelse
+      ORDER BY
+        lower(vejnavn), vejid, husnummer_sortering, sortering
       LIMIT $3
     ;', input_tekst, input_tekst);
     RAISE NOTICE 'stmt=%', stmt;
@@ -219,7 +250,7 @@ BEGIN
       AND %s
     ORDER BY
       rank1 desc, rank2 desc,
-      vejnavn, husnummertekst, etagebetegnelse, doerbetegnelse
+      lower(vejnavn), vejid, husnummer_sortering, sortering
     LIMIT $3
     ;', filters);
        RAISE NOTICE 'stmt=%', stmt;
