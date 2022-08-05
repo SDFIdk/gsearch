@@ -122,60 +122,74 @@ GENERATED ALWAYS AS
 CREATE INDEX ON basic.stednavn_mv USING GIN (textsearchable_plain_col);
 CREATE INDEX ON basic.stednavn_mv USING GIN (textsearchable_unaccent_col);
 CREATE INDEX ON basic.stednavn_mv USING GIN (textsearchable_phonetic_col);
+CREATE INDEX ON basic.stednavn_mv (lower(presentationstring));
+
 
 DROP FUNCTION IF EXISTS api.stednavn(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.stednavn(input_tekst text, filters text, sortoptions int, rowlimit int)
-    RETURNS SETOF api.stednavn
-    LANGUAGE plpgsql
-    STABLE
+  RETURNS SETOF api.stednavn
+  LANGUAGE plpgsql
+  STABLE
 AS $function$
 DECLARE 
-    max_rows integer;
-    query_string TEXT;
-    plain_query_string TEXT;
-    stmt TEXT;
+  max_rows integer;
+  query_string TEXT;
+  plain_query_string TEXT;
+  stmt TEXT;
 BEGIN
-    -- Initialize
-    max_rows = 100;
-    IF rowlimit > max_rows THEN
-        RAISE 'rowlimit skal være <= %', max_rows;
-    END IF;
-    
-    IF filters IS NULL THEN
-        filters = '1=1';
-    END IF;
-
-    IF btrim(input_tekst) = Any('{.,-, '', \,}')  THEN
-        input_tekst = '';
-    END IF;
-  
-    WITH tokens AS (SELECT UNNEST(string_to_array(btrim(replace(input_tekst, '-', ' ')), ' ')) t)
-  	SELECT
-    	string_agg(fonetik.fnfonetik(t,2), ':* <-> ') || ':*' FROM tokens INTO query_string;
-      
-	-- build the plain version of the query string for ranking purposes
-	WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
-	SELECT
-		string_agg(t, ':* <-> ') || ':*' FROM tokens INTO plain_query_string;
-
+  -- Initialize
+  max_rows = 100;
+  IF rowlimit > max_rows THEN
+    RAISE 'rowlimit skal være <= %', max_rows;
+  END IF;
+  IF filters IS NULL THEN
+    filters = '1=1';
+  END IF;
+  IF btrim(input_tekst) = Any('{.,-, '', \,}')  THEN
+    input_tekst = '';
+  END IF;
+  WITH tokens AS (SELECT UNNEST(string_to_array(btrim(replace(input_tekst, '-', ' ')), ' ')) t)
+  SELECT string_agg(fonetik.fnfonetik(t,2), ':* <-> ') || ':*' FROM tokens INTO query_string;
+  -- build the plain version of the query string for ranking purposes
+  WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
+  SELECT
+    string_agg(t, ':* <-> ') || ':*' FROM tokens INTO plain_query_string;
+  IF (SELECT COALESCE(forekomster, 0) FROM basic.tekst_forekomst WHERE ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 
+      AND filters = '1=1' THEN
+    stmt = format(E'SELECT
+      id::text, presentationstring::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel, 
+      skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, bbox, geometri,
+      0::float AS rank1,
+      0::float AS rank2
+    FROM
+      basic.stednavn_mv
+    WHERE
+      lower(presentationstring) >= ''%s'' AND lower(presentationstring) <= ''%s'' || ''å''
+    ORDER BY
+      lower(presentationstring)
+    LIMIT $3;', input_tekst, input_tekst);
+    RAISE notice '%', stmt;
+    RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+  ELSE
     -- Execute and return the result
     stmt = format(E'SELECT
-        id::text, presentationstring::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel, 
-		skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, bbox, geometri,
-        basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
-	    ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
+      id::text, presentationstring::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel, 
+	  skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, bbox, geometri,
+      basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
+	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM
-        basic.stednavn_mv
+      basic.stednavn_mv
     WHERE (
-        textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
-        OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
-        AND %s
+      textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
+      OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
+      AND %s
     ORDER BY
-        rank1 desc, rank2 desc,
-        presentationstring
+      rank1 desc, rank2 desc,
+      presentationstring
     LIMIT $3
     ;', filters);
     RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+  END IF; 
 END
 $function$
 ;

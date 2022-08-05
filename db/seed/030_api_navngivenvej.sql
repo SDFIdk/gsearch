@@ -132,45 +132,53 @@ BEGIN
   IF filters IS NULL THEN
     filters = '1=1';
   END IF;
-
   IF btrim(input_tekst) = Any('{.,-, '', \,}')  THEN
     input_tekst = '';
   END IF;  
-
   -- Build the query_string
   WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
   SELECT
     string_agg(fonetik.fnfonetik(t,2), ':* <-> ') || ':*' FROM tokens INTO query_string;
-  
   -- build the plain version of the query string for ranking purposes
   WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
   SELECT
     string_agg(t, ':* <-> ') || ':*' FROM tokens INTO plain_query_string;
-	
-
-  -- Execute and return the result
+IF (SELECT COALESCE(forekomster, 0) FROM basic.tekst_forekomst WHERE ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 
+      AND filters = '1=1' THEN
   stmt = format(E'SELECT
-    id::text, vejnavn::text, praesentation::text, array_to_string(postnumre, '','', ''*''), array_to_string(postdistrikter, '',''), geometri, bbox,
-    basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
-	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
-  FROM
-    basic.navngivenvej_mv
-  WHERE (
-    textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
-    OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
-    AND %s
-  ORDER BY
-    rank1 desc, rank2 desc,
-    vejnavn
-  LIMIT $3
-;', filters);
-RAISE NOTICE '%',stmt;
-RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+      id::text, vejnavn::text, praesentation::text, array_to_string(postnumre, '','', ''*''), array_to_string(postdistrikter, '',''), geometri, bbox,
+      0::float AS rank1,
+      0::float AS rank2
+    FROM
+      basic.navngivenvej_mv
+    WHERE
+      lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
+    ORDER BY
+      lower(vejnavn)
+    LIMIT $3;', input_tekst, input_tekst);
+    RAISE notice '%', stmt;
+    RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+  ELSE
+    stmt = format(E'SELECT
+      id::text, vejnavn::text, praesentation::text, array_to_string(postnumre, '','', ''*''), array_to_string(postdistrikter, '',''), geometri, bbox,
+      basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
+	    ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
+    FROM
+      basic.navngivenvej_mv
+    WHERE (
+      textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
+      OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
+      AND %s
+    ORDER BY
+      rank1 desc, rank2 desc,
+      vejnavn
+    LIMIT $3;', filters);
+    RAISE NOTICE '%',stmt;
+    RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
+  END IF; 
 END
 $function$
 ;
-
-SELECT array_to_string(ARRAY[1, 2, 3, NULL, 5], ',');
 
 -- Test cases:
 /*
@@ -186,5 +194,6 @@ SELECT (api.navngivenvej('over-holluf væ',NULL, 1, 100)).*;
 SELECT (api.navngivenvej('Palle Juul-jensen',NULL, 1, 100)).*;
 SELECT (api.navngivenvej('frederik 7',NULL, 1, 100)).*;
 SELECT (api.navngivenvej('vilhelm becks',NULL, 1, 100)).*;
-SELECT (api.navngivenvej('s',NULL, 1, 100)).*;
+SELECT (api.navngivenvej('sadd',NULL, 1, 100)).*;
 */
+
