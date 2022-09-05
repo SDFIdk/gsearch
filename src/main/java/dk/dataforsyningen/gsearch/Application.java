@@ -80,7 +80,7 @@ public class Application {
                 ref.set$ref("#/components/schemas/" + resourceType);
                 data.addAnyOfItem(ref);
             }
-            openApi.getComponents().getSchemas().get("Result").getProperties().put("data", data);
+            openApi.getComponents().getSchemas().get("Data").getProperties().put("data", data);
             for (String resourceType : resourceTypes.getTypes())
                 openApi.getComponents().addSchemas(resourceType, getSchema(resourceType));
         };
