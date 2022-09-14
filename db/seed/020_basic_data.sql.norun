@@ -16,7 +16,7 @@ LIMIT (SELECT maxrows FROM g_options);
 
 DROP TABLE IF EXISTS mat_kf.jordstykke;
 CREATE TABLE mat_kf.jordstykke AS
-SELECT 
+SELECT
   elavsnavn, elavskode, matrnr, komnavn, wkb_geometry
 FROM mat_kf_fdw.jordstykke
 LIMIT (SELECT maxrows FROM g_options);
@@ -63,7 +63,7 @@ CREATE INDEX ON dar.navngivenvej USING gist(geometri);
 CREATE INDEX ON dar.navngivenvejpostnummer(navngivenvej, postnummer);
 CREATE INDEX ON dar.postnummer(id_lokalid);
 
-DROP TABLE IF EXISTS dar.adresse; 
+DROP TABLE IF EXISTS dar.adresse;
 CREATE TABLE dar.adresse AS
 SELECT
   id_lokalid::uuid,
@@ -99,7 +99,7 @@ FROM
   dar_fdw.husnummer_current
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dar.adressepunkt; 
+DROP TABLE IF EXISTS dar.adressepunkt;
 CREATE TABLE dar.adressepunkt AS
 SELECT
   id_lokalid::uuid,
