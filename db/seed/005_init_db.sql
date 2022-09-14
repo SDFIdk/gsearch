@@ -49,4 +49,4 @@ COMMENT ON SCHEMA api IS 'Public Schema for Gsearch';
 COMMENT ON SCHEMA basic IS 'Searchable tables';
 
 --DROP ROLE IF EXISTS udv_gsearch_read;
---CREATE USER udv_gsearch_read WITH PASSWORD 'SWAMPARADUADADA1!2"';
+--CREATE USER udv_gsearch_read WITH PASSWORD :udv_gsearch_read_pass;
