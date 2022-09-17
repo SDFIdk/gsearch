@@ -1,6 +1,6 @@
 -- Transfer data from fdw:
 DROP SERVER IF EXISTS :database_geosearch CASCADE;
-DROP SERVER IF EXISTS :database_d_databox CASCADE;
+DROP SERVER IF EXISTS :database_databox CASCADE;
 
 CREATE SERVER IF NOT EXISTS :database_geosearch FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host :hostname, dbname :database_geosearch, fetch_size '1000');
 CREATE SERVER IF NOT EXISTS :database_databox FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host :hostname, dbname :database_databox, fetch_size '1000');
