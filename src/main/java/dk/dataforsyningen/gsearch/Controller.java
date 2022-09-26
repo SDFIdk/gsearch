@@ -1,5 +1,6 @@
 package dk.dataforsyningen.gsearch;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
@@ -126,6 +127,7 @@ public class Controller {
      * @throws FilterToSQLException
      */
     @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
     public List<Data> geosearch(
         @Parameter(description = "Søgestreng")
         @RequestParam String q,
