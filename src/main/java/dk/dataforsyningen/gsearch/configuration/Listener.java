@@ -1,4 +1,4 @@
-package dk.dataforsyningen.gsearch;
+package dk.dataforsyningen.gsearch.configuration;
 
 import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
