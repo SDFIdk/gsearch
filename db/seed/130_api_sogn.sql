@@ -3,8 +3,8 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.sogn CASCADE;
 CREATE TYPE api.sogn AS (
   id TEXT,
-  "name" TEXT,
-  presentationstring TEXT,
+  sognenavn TEXT,
+  praesentation TEXT,
   geometri geometry,
   bbox geometry,
   rang1 double precision,
@@ -12,8 +12,8 @@ CREATE TYPE api.sogn AS (
 );
 
 COMMENT ON TYPE api.sogn IS 'Sogn';
-COMMENT ON COLUMN api.sogn.presentationstring IS 'Præsentationsform for et sogn';
-COMMENT ON COLUMN api.sogn."name" IS 'Navn på sogn';
+COMMENT ON COLUMN api.sogn.praesentation IS 'Præsentationsform for et sogn';
+COMMENT ON COLUMN api.sogn.sognenavn IS 'Navn på sogn';
 COMMENT ON COLUMN api.sogn.id IS 'Sognenummer';
 COMMENT ON COLUMN api.sogn.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.sogn.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
@@ -29,14 +29,14 @@ WITH sogne AS
     dagi_500m_nohist_l1.sogneinddeling s
 )
 SELECT
-  s.navn || ' sogn' AS titel,
+  s.navn || ' sogn' AS praesentation,
   s.sognekode,
   coalesce(s.navn, '') AS navn,
   st_multi(st_union(s.geometri)) AS geometri,
   st_extent(s.geometri) AS bbox
 INTO
   basic.sogn_mv
-FROM 
+FROM
   sogne s
 GROUP BY
   s.sognekode, s.navn
@@ -51,7 +51,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('simple', split_part(navn, ' ', 1)), 'A') ||
     setweight(to_tsvector('simple', split_part(navn, ' ', 2)), 'B') ||
     setweight(to_tsvector('simple', split_part(navn, ' ', 3)), 'C') ||
-  	setweight(to_tsvector('simple', basic.split_and_endsubstring(navn, 4)), 'D') 
+  	setweight(to_tsvector('simple', basic.split_and_endsubstring(navn, 4)), 'D')
   ) STORED
 ;
 
@@ -63,7 +63,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 1)), 'A') ||
     setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 2)), 'B') ||
     setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 3)), 'C') ||
-	  setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(navn, 4)), 'D') 
+	  setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(navn, 4)), 'D')
   ) STORED
 ;
 
@@ -75,7 +75,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 1), 2)), 'A') ||
     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 2), 2)), 'B') ||
     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 3), 2)), 'C') ||
-    setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(navn, 4)), 'D') 
+    setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(navn, 4)), 'D')
   ) STORED
 ;
 
@@ -91,7 +91,7 @@ CREATE OR REPLACE FUNCTION api.sogn(input_tekst text,filters text,sortoptions in
  LANGUAGE plpgsql
  STABLE
 AS $function$
-DECLARE 
+DECLARE
   max_rows integer;
   query_string TEXT;
   plain_query_string TEXT;
@@ -107,7 +107,7 @@ BEGIN
   END IF;
   IF btrim(input_tekst) = Any('{.,-, '', \,}')  THEN
     input_tekst = '';
-  END IF;  
+  END IF;
   -- Build the query_string
   WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
   SELECT
