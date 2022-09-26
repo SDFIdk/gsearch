@@ -1,6 +1,7 @@
-package dk.dataforsyningen.gsearch;
+package dk.dataforsyningen.gsearch.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dk.dataforsyningen.gsearch.ResourceTypes;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.spi.JdbiPlugin;

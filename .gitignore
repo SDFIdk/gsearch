@@ -1,10 +1,33 @@
 # vscode
-.settings
 .vscode
+
+HELP.md
+
 # maven
 target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
 .classpath
+.factorypath
 .project
-# idea
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
 .idea
+*.iws
+*.iml
+*.ipr
+/out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
 db/seed/*.txt
+/docker/reports
+/docker/docker-compose.dev.generated.override.yml
+/docker/docker-compose.dev.yml
