@@ -37,20 +37,20 @@ public class Controller {
     /**
      * It assembles full sql query from the parameters and maps the result to list of data entities
      *
-     * @param search
+     * @param q
      * @param resource
      * @param where
      * @param limit
      * @return
      */
-    private List<Data> getData(String search, String resource, String where, int limit) {
+    private List<Data> getData(String q, String resource, String where, int limit) {
         return jdbi.withHandle(handle -> {
-            String sql = "select (api." + resource + "(:search, :where, 1, :limit)).*";
+            String sql = "select (api." + resource + "(:q, :where, 1, :limit)).*";
             // TODO: This gets register every time this method gets called
             handle.registerRowMapper(FieldMapper.factory(Data.class));
             List<Data> data = handle
                 .createQuery(sql)
-                .bind("search", search)
+                .bind("search", q)
                 .bind("where", where)
                 .bind("limit", limit)
                 .map(new DataMapper(resource))
@@ -62,7 +62,7 @@ public class Controller {
     /**
      * Transform request to database query, execute query and return the result
      *
-     * @param search
+     * @param q
      * @param resources
      * @param filter
      * @param limit
@@ -70,10 +70,10 @@ public class Controller {
      * @throws FilterToSQLException
      * @throws CQLException
      */
-    private List<Data> getResult(String search, String resources, String filter, String limit)
+    private List<Data> getResult(String q, String resources, String filter, String limit)
         throws FilterToSQLException, CQLException {
-        if (search == null || search.isEmpty()) {
-            throw new IllegalArgumentException("Query string parameter search is required");
+        if (q == null || q.isEmpty()) {
+            throw new IllegalArgumentException("Query string parameter q is required");
         }
 
         if (resources == null || resources.isEmpty()) {
@@ -109,7 +109,7 @@ public class Controller {
         // Concatenate into single list of results
         List<Data> result = Stream.of(requestedTypes)
             .parallel()
-            .map(resourceType -> getData(search, resourceType, whereExpression, limitInt))
+            .map(resourceType -> getData(q, resourceType, whereExpression, limitInt))
             .flatMap(List::stream)
             .collect(Collectors.toList());
 
@@ -117,7 +117,7 @@ public class Controller {
     }
 
     /**
-     * @param search
+     * @param q
      * @param resources
      * @param filter
      * @param limit
@@ -125,11 +125,10 @@ public class Controller {
      * @throws CQLException
      * @throws FilterToSQLException
      */
-    @GetMapping(path = "/geosearch", produces = MediaType.APPLICATION_JSON_VALUE, params = {
-        "search", "resources"})
+    @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Data> geosearch(
         @Parameter(description = "Søgestreng")
-        @RequestParam String search,
+        @RequestParam String q,
         @Parameter(description = "Er en kommasepereatet list på resources navn. Se Schemas for deltajeret beskrivelse af resourcer.")
         @RequestParam String resources,
         @Parameter(description = "Angives med CQL-text, og udefra beskrivelser af mulige filtreringer for den valgte resource.")
@@ -138,8 +137,8 @@ public class Controller {
         @RequestParam(defaultValue = "10") String limit)
         throws CQLException, FilterToSQLException {
         // FIXME: Needs checks to see if it compatible with old geosearch
-        logger.debug("geosearch called");
-        List<Data> result = getResult(search, resources, filter, limit);
+        logger.debug("gsearch called");
+        List<Data> result = getResult(q, resources, filter, limit);
         return result;
     }
 }
