@@ -3,8 +3,8 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.kommune CASCADE;
 CREATE TYPE api.kommune AS (
   id TEXT,
-  "name" TEXT,
-  presentationstring TEXT,
+  kommunenavn TEXT,
+  praesentation TEXT,
   geometri geometry,
   bbox geometry,
   rang1 double precision,
@@ -12,9 +12,9 @@ CREATE TYPE api.kommune AS (
 );  
 
 COMMENT ON TYPE api.kommune IS 'Kommune';
-COMMENT ON COLUMN api.kommune.presentationstring IS 'Præsentationsform for en kommune';
-COMMENT ON COLUMN api.kommune."name" IS 'Navn på kommune';
-COMMENT ON COLUMN api.kommune.id IS 'kommunekode';
+COMMENT ON COLUMN api.kommune.praesentation IS 'Præsentationsform for en kommune';
+COMMENT ON COLUMN api.kommune.kommunenavn IS 'Navn på kommune';
+COMMENT ON COLUMN api.kommune.id IS 'Kommunekode';
 COMMENT ON COLUMN api.kommune.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.kommune.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
@@ -44,8 +44,7 @@ INTO
 FROM 
   kommuner k
 GROUP BY
-  k.kommunekode, k.navn, k.regionskode
-;
+  k.kommunekode, k.navn, k.regionskode;
 
 
 ALTER TABLE basic.kommune_mv DROP COLUMN IF EXISTS textsearchable_plain_col;
@@ -57,8 +56,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('simple', split_part(navn, ' ', 1)), 'B') ||
     setweight(to_tsvector('simple', split_part(navn, ' ', 2)), 'C') ||
   	setweight(to_tsvector('simple', basic.split_and_endsubstring(navn, 3)), 'D') 
-  ) STORED
-;
+  ) STORED;
 
 ALTER TABLE basic.kommune_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 ALTER TABLE basic.kommune_mv
@@ -69,8 +67,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 1)), 'B') ||
     setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 2)), 'C') ||
   	setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(navn, 3)), 'D') 
-  ) STORED
-;
+  ) STORED;
 
 ALTER TABLE basic.kommune_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 ALTER TABLE basic.kommune_mv
@@ -81,8 +78,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 1), 2)), 'B') ||
     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 2), 2)), 'C') ||
 	  setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(navn, 3)), 'D') 
-  ) STORED
-;
+  ) STORED;
 
 CREATE INDEX ON basic.kommune_mv USING GIN (textsearchable_plain_col);
 CREATE INDEX ON basic.kommune_mv USING GIN (textsearchable_unaccent_col);
