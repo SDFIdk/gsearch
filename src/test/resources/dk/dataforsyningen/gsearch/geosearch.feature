@@ -1,7 +1,7 @@
-Feature: Geosearch test
+Feature: Gsearch test
 
 Background:
-* url serviceUrl + '/geosearch'
+* url serviceUrl + '/search'
 
 Scenario: Testing valid GET endpoint
     When method GET
