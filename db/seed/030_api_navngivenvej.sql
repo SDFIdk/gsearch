@@ -5,7 +5,7 @@ CREATE TYPE api.navngivenvej AS (
   id TEXT,
   praesentation TEXT,
   vejnavn TEXT,
-  postnumre TEXT,
+  postnummer TEXT,
   postdistrikter TEXT,
   geometri geometry,
   bbox geometry,
@@ -13,12 +13,12 @@ CREATE TYPE api.navngivenvej AS (
   rang2 double precision
 );  
 
-COMMENT ON TYPE api.navngivenvej IS 'navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.praesentation IS 'Præsentationsform for et navngivenvej';
+COMMENT ON TYPE api.navngivenvej IS 'Navngivenvej';
+COMMENT ON COLUMN api.navngivenvej.praesentation IS 'Præsentationsform for et navngiven vej';
 COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
-COMMENT ON COLUMN api.navngivenvej.id IS 'Id på navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.postnumre IS 'Postnumre for navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.postdistrikter IS 'Postdistrikter for navngivenvej';
+COMMENT ON COLUMN api.navngivenvej.id IS 'ID på navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postdistrikter IS 'Postdistrikter for navngiven vej';
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej';
 COMMENT ON COLUMN api.navngivenvej.bbox IS 'Geometriens boundingbox';
 
@@ -29,8 +29,8 @@ WITH vejnavne AS
   SELECT
     n.id_lokalid AS id,
     n.vejnavn,
-    p.postnr as postnr,
-  	p.navn as postdistrikt, 
+    p.postnummer as postnummer,
+  	p.navn as postdistrikter,
     st_force2d(COALESCE(n.geometri)) AS geometri
   FROM
     dar.navngivenvej n
@@ -38,19 +38,18 @@ WITH vejnavne AS
     JOIN dar.postnummer p ON (nvp.postnummer = p.id_lokalid)
 )
 SELECT
-  v.vejnavn as praesentation, --|| '(' || v.postnumre[1] || ' - ' || v.postnumre[-1] || ')' AS titel,
+  v.vejnavn || '(' || v.postnummer[1] || ' - ' || v.postnummer[-1] || ')' AS praesentation,
   v.id,
   coalesce(v.vejnavn, '') AS vejnavn,
-  array_agg(distinct v.postnr) AS postnumre,
-  array_agg(distinct v.postdistrikt) AS postdistrikter,
+  array_agg(distinct v.postnummer) AS postnumre,
+  array_agg(distinct v.postdistrikter) AS postdistrikter,
   st_multi(st_union(geometri)) AS geometri,
   st_envelope(st_collect(v.geometri)) AS bbox
 INTO
   basic.navngivenvej_mv
 FROM 
   vejnavne v
-GROUP BY v.id, v.vejnavn
-;
+GROUP BY v.id, v.vejnavn;
 
 
 -- textsearchable column using predefined custom config consisting of a collection of FTS dictionaries - see 012_init_configuration.sql

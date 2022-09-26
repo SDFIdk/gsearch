@@ -1,16 +1,16 @@
 DROP TYPE IF EXISTS api.adresse CASCADE;
 CREATE TYPE api.adresse AS (
   id TEXT,
-  municpalityCode TEXT,
-  municipalityName TEXT,
-  streetCode TEXT,
-  streetName TEXT,
-  streetBuildingIdentifier TEXT,
-  floorIdentifier TEXT,
-  doorIdentifier TEXT,
-  postcodeIdentifier TEXT,
-  districtName TEXT,
-  presentationstring TEXT,
+  kommunekode TEXT,
+  kommunenavn TEXT,
+  vejkode TEXT,
+  vejnavn TEXT,
+  husnummer TEXT,
+  etagebetegnelse TEXT,
+  doerbetegnelse TEXT,
+  postnummer TEXT,
+  postdistrikt TEXT,
+  adressebetegnelse TEXT,
   adgangspunkt_geometri geometry,
   vejpunkt_geometri geometry,
   rang1 double precision,
@@ -18,37 +18,37 @@ CREATE TYPE api.adresse AS (
 );  
 
 COMMENT ON TYPE api.adresse IS 'Adresse';
-COMMENT ON COLUMN api.adresse.id IS 'Id på adresse';
-COMMENT ON COLUMN api.adresse.municpalityCode IS 'Kommunekode for en adresse';
-COMMENT ON COLUMN api.adresse.municipalityName IS 'Kommunenavn for en adresse';
-COMMENT ON COLUMN api.adresse.streetCode IS 'vejkode for en adresse';
-COMMENT ON COLUMN api.adresse.streetName is 'vejnavn for en adresse';
-COMMENT ON COLUMN api.adresse.streetBuildingIdentifier is 'husnummertekst på adresse';
-COMMENT ON COLUMN api.adresse.floorIdentifier is 'etagebetegnelse for adresse';
-COMMENT ON COLUMN api.adresse.doorIdentifier is 'dørbetegnelse for adresse';
-COMMENT ON COLUMN api.adresse.postcodeIdentifier IS 'postnummer på adresse';
-COMMENT ON COLUMN api.adresse.districtName IS 'Postnummer navn på adresse';
-COMMENT ON COLUMN api.adresse.presentationstring IS 'Præsentationsform for en adresse';
-COMMENT ON COLUMN api.adresse.vejpunkt_geometri IS 'Husnummergeometri på adresse for vejpunkt i valgt koordinatsystem';
-COMMENT ON COLUMN api.adresse.adgangspunkt_geometri IS 'Husnummergeometri på adresse for adgangspunkt i valgt koordinatsystem';
+COMMENT ON COLUMN api.adresse.id IS 'ID på adresse';
+COMMENT ON COLUMN api.adresse.kommunekode IS 'Kommunekode for en adresse';
+COMMENT ON COLUMN api.adresse.kommunenavn IS 'Kommunenavn for en adresse';
+COMMENT ON COLUMN api.adresse.vejkode IS 'Vejkode for en adresse';
+COMMENT ON COLUMN api.adresse.vejnavn is 'Vejnavn for en adresse';
+COMMENT ON COLUMN api.adresse.husnummer is 'Husnummer på adresse';
+COMMENT ON COLUMN api.adresse.etagebetegnelse is 'Etagebetegnelse for adresse';
+COMMENT ON COLUMN api.adresse.doerbetegnelse is 'Dørbetegnelse for adresse';
+COMMENT ON COLUMN api.adresse.postnummer IS 'Postnummer på adresse';
+COMMENT ON COLUMN api.adresse.postdistrikt IS 'Postdistrikt på adresse';
+COMMENT ON COLUMN api.adresse.adressebetegnelse IS 'Fulde adresse';
+COMMENT ON COLUMN api.adresse.vejpunkt_geometri IS 'Geometri for vejpunkt i valgt koordinatsystem';
+COMMENT ON COLUMN api.adresse.adgangspunkt_geometri IS 'Geometri for adgangspunkt i valgt koordinatsystem';
 
 DROP TABLE IF EXISTS basic.adresse_mv;
 with adresser AS 
 (
 	SELECT
 		a.id_lokalid AS id,
-		a.husnummer,
+		a.husnummer_id,
 		a.adressebetegnelse,
 		a.doerbetegnelse,
 		a.etagebetegnelse,
-		h.husnummertekst,
-    	h.navngivenvej AS vejid,
+		h.husnummer,
+    	h.navngivenvej_id,
     	h.sortering AS husnummer_sortering,
 		n.vejnavn,
 		h.vejkode,
 		h.kommunekode,
 		k.navn as kommunenavn,
-		p.postnr as postnr,
+		p.postnummer,
 		p.navn as postdistrikt,
 		st_force2d(COALESCE(ap.geometri)) as adgangspunkt_geometri,
 		st_force2d(COALESCE(ap2.geometri)) as vejpunkt_geometri
@@ -58,37 +58,37 @@ with adresser AS
 		  (SELECT
 		     *,
 		     ROW_NUMBER() OVER
-               (PARTITION BY navngivenvej ORDER BY
-               (substring(husnummertekst FROM '[0-9]*'))::int,
-                substring(husnummertekst FROM '[0-9]*([A-Z])') NULLS FIRST
+               (PARTITION BY navngivenvej_id ORDER BY
+               (substring(husnummer FROM '[0-9]*'))::int,
+                substring(husnummer FROM '[0-9]*([A-Z])') NULLS FIRST
              ) AS sortering
-           FROM dar.husnummer
-          ) h ON a.husnummer = h.id_lokalid
-		JOIN dar.navngivenvej n ON n.id_lokalid = h.navngivenvej::uuid
-		JOIN dar.postnummer p ON p.id_lokalid = h.postnummer::uuid
-		JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt
-		JOIN dar.adressepunkt ap2 ON ap2.id_lokalid = h.vejpunkt
+           FROM dar.husnummer_id
+          ) h ON a.husnummer_id = h.id_lokalid
+		JOIN dar.navngivenvej n ON n.id_lokalid = h.navngivenvej_id::uuid
+		JOIN dar.postnummer p ON p.id_lokalid = h.postnummer_id::uuid
+		JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt_id
+		JOIN dar.adressepunkt ap2 ON ap2.id_lokalid = h.vejpunkt_id
     	JOIN dagi_500m_nohist_l1.kommuneinddeling k ON k.kommunekode = h.kommunekode
 )
 SELECT
   a.id,
-  a.adressebetegnelse as titel,
+  a.adressebetegnelse,
   a.vejnavn,
   a.vejkode,
-  coalesce(a.husnummertekst, '') AS husnummertekst,
+  coalesce(a.husnummer, '') AS husnummer,
   coalesce(a.etagebetegnelse, '') AS etagebetegnelse,
   coalesce(a.doerbetegnelse, '') AS doerbetegnelse,
-  a.postnr AS postnummer,
+  a.postnummer,
   a.postdistrikt,
   a.kommunekode,
   a.kommunenavn,
   nv.textsearchable_plain_col AS textsearchable_plain_col_vej,
   nv.textsearchable_unaccent_col AS textsearchable_unaccent_col_vej,
   nv.textsearchable_phonetic_col AS textsearchable_phonetic_col_vej,
-  a.vejid,
+  a.navngivenvej_id,
   a.husnummer_sortering,
   ROW_NUMBER() OVER (
-    PARTITION BY a.husnummer
+    PARTITION BY a.husnummer_id
     ORDER BY
       CASE lower(a.etagebetegnelse)
         WHEN '' THEN -10
@@ -111,8 +111,7 @@ INTO
   basic.adresse_mv
 FROM 
   adresser a
-  JOIN basic.navngivenvej_mv nv ON a.vejid = nv.id
-;
+  JOIN basic.navngivenvej_mv nv ON a.navngivenvej_id = nv.id;
 
 -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
 
@@ -123,7 +122,7 @@ ADD COLUMN textsearchable_plain_col tsvector
 GENERATED ALWAYS AS
   (
     textsearchable_plain_col_vej || 
-    setweight(to_tsvector('simple', husnummertekst), 'D') ||
+    setweight(to_tsvector('simple', husnummer), 'D') ||
     setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
     setweight(to_tsvector('simple', doerbetegnelse), 'D')
   ) STORED
@@ -135,7 +134,7 @@ ADD COLUMN textsearchable_unaccent_col tsvector
 GENERATED ALWAYS AS
   (
     textsearchable_unaccent_col_vej || 
-    setweight(to_tsvector('simple', husnummertekst), 'D') ||
+    setweight(to_tsvector('simple', husnummer), 'D') ||
 	  setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
 	  setweight(to_tsvector('simple', doerbetegnelse), 'D')
   ) STORED
@@ -147,7 +146,7 @@ ADD COLUMN textsearchable_phonetic_col tsvector
 GENERATED ALWAYS AS
   (
     textsearchable_phonetic_col_vej || 
-    setweight(to_tsvector('simple', husnummertekst), 'D') ||
+    setweight(to_tsvector('simple', husnummer), 'D') ||
 	  setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
 	  setweight(to_tsvector('simple', doerbetegnelse), 'D')
   ) STORED
@@ -156,7 +155,7 @@ GENERATED ALWAYS AS
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_plain_col);
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_unaccent_col);
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_phonetic_col);
-CREATE INDEX ON basic.adresse_mv (lower(vejnavn), vejid, husnummer_sortering, sortering);
+CREATE INDEX ON basic.adresse_mv (lower(vejnavn), navngivenvej_id, husnummer_sortering, sortering);
 
 DROP FUNCTION IF EXISTS api.adresse(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.adresse(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -218,7 +217,7 @@ BEGIN
         AND filters = '1=1' THEN
       stmt = format(E'SELECT
         id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
-        husnummertekst::text, etagebetegnelse::text, doerbetegnelse::text, 
+        husnummer::text, etagebetegnelse::text, doerbetegnelse::text, 
         postnummer::text, postdistrikt::text, titel::text, 
         vejpunkt_geometri, adgangspunkt_geometri,
         0::float AS rank1,
@@ -228,7 +227,7 @@ BEGIN
       WHERE
         lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
       ORDER BY
-        lower(vejnavn), vejid, husnummer_sortering, sortering
+        lower(vejnavn), navngivenvej_id, husnummer_sortering, sortering
       LIMIT $3
     ;', input_tekst, input_tekst);
     RAISE NOTICE 'stmt=%', stmt;
@@ -237,7 +236,7 @@ BEGIN
     -- Execute and return the result
     stmt = format(E'SELECT
       id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
-      husnummertekst::text, etagebetegnelse::text, doerbetegnelse::text, 
+      husnummer::text, etagebetegnelse::text, doerbetegnelse::text, 
       postnummer::text, postdistrikt::text, titel::text, 
       vejpunkt_geometri, adgangspunkt_geometri,
       basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
@@ -250,7 +249,7 @@ BEGIN
       AND %s
     ORDER BY
       rank1 desc, rank2 desc,
-      lower(vejnavn), vejid, husnummer_sortering, sortering
+      lower(vejnavn), navngivenvej_id, husnummer_sortering, sortering
     LIMIT $3
     ;', filters);
        RAISE NOTICE 'stmt=%', stmt;
