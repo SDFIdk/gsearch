@@ -28,7 +28,7 @@ WITH postnumre AS
     COALESCE(p2.ergadepostnummer, p1.ergadepostnummer) AS ergadepostnummer,
     st_force2d(COALESCE(p2.geometri, p1.geometri)) AS geometri
   FROM
-    dagi.postnummerinddeling p1
+    dagi_10.postnummerinddeling p1
     LEFT JOIN dagi_500.postnummerinddeling p2 USING (postnummer)
 )
 SELECT
@@ -154,7 +154,7 @@ BEGIN
   raise notice 'plain_query_string: %', plain_query_string;
   -- Execute and return the result
   stmt = format(E'SELECT
-    postnummer, navn, titel, ergadepostnummer, geometri, bbox::geometry,
+    postnummer::text, navn::text, titel, ergadepostnummer, geometri, bbox::geometry,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM

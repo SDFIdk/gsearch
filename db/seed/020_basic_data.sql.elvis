@@ -1,7 +1,7 @@
 -- Create base data
 DROP TABLE IF EXISTS g_options;
 CREATE TEMPORARY TABLE g_options (maxrows int);
-INSERT INTO g_options VALUES (1000);
+INSERT INTO g_options VALUES (100000);
 
 
 -- DAGI
@@ -47,9 +47,9 @@ CREATE TABLE dagi_500.sogneinddeling AS
 SELECT * FROM dagi_500_fdw.sogneinddeling
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dagi.postnummerinddeling;
-CREATE TABLE dagi.postnummerinddeling AS
-SELECT * FROM dagi_fdw.postnummerinddeling
+DROP TABLE IF EXISTS dagi_10.postnummerinddeling;
+CREATE TABLE dagi_10.postnummerinddeling AS
+SELECT * FROM dagi_10_fdw.postnummerinddeling
 LIMIT (SELECT maxrows FROM g_options);
 
 
@@ -110,25 +110,30 @@ LIMIT (SELECT maxrows FROM g_options);
 DROP TABLE IF EXISTS dar.husnummer;
 CREATE TABLE dar.husnummer AS
 SELECT DISTINCT
-  id::uuid,
-  adgangsadressebetegnelse,
-  adgangspunkt_id::uuid as adgangspunkt,
-  husnummerretning,
-  husnummertekst,
-  vejpunkt_id::uuid as vejpunkt,
-  fk_mu_jordstykke_jordstykke as jordstykke,
-  fk_mu_jordstykke_foreløbigtplaceretpåjordstykke as placeretpaaforeloebigtjordstykke,
-  fk_geodk_bygning_geodanmarkbygning as geodanmarkbygning,
-  fk_bbr_bygning_adgangtilbygning::uuid as adgangtilbygning,
-  supplerendebynavn_id as supplerendebynavn,
-  postnummer_id as postnummer,
-  substring(fk_geodk_vejmidte_vejmidte FROM 1 FOR 4) AS kommunekode,
-  substring(fk_geodk_vejmidte_vejmidte FROM 6 FOR 4) AS vejkode,
-  navngivenvej_id::uuid as navngivenvej
+  h.id::uuid,
+  h.adgangsadressebetegnelse,
+  h.adgangspunkt_id::uuid as adgangspunkt,
+  h.husnummerretning,
+  h.husnummertekst,
+  h.vejpunkt_id::uuid as vejpunkt,
+  h.fk_mu_jordstykke_jordstykke as jordstykke,
+  h.fk_mu_jordstykke_foreløbigtplaceretpåjordstykke as placeretpaaforeloebigtjordstykke,
+  h.fk_geodk_bygning_geodanmarkbygning as geodanmarkbygning,
+  h.fk_bbr_bygning_adgangtilbygning::uuid as adgangtilbygning,
+  h.supplerendebynavn_id as supplerendebynavn,
+  h.postnummer_id as postnummer,
+  '0' || k.kommunekode::text as kommunekode,
+  '' AS vejkode,
+  h.navngivenvej_id::uuid as navngivenvej
 FROM
-  dar_fdw.dar1_husnummer
-WHERE upper(registrering) IS NULL
-AND upper(virkning) IS NULL
+  dar_fdw.dar1_husnummer h,
+  dar_fdw.dar1_darkommuneinddeling k
+WHERE h.darkommune_id = k.id
+AND upper(h.registrering) IS NULL
+AND upper(h.virkning) IS NULL
+AND upper(k.registrering) IS NULL
+AND upper(k.virkning) IS NULL
+
 LIMIT (SELECT maxrows FROM g_options);
 
 
