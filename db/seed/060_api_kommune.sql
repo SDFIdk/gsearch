@@ -35,7 +35,7 @@ SELECT
     ELSE k.navn || ' kommune'
   END) AS praesentation,
   coalesce(k.kommunekode, '') AS kommunekode,
-  coalesce(k.navn, '') AS navn,
+  coalesce(k.navn, '') AS kommunenavn,
   k.regionskode,
   st_multi(st_union(k.geometri)) AS geometri,
   st_extent(k.geometri) AS bbox
@@ -53,9 +53,9 @@ ADD COLUMN textsearchable_plain_col tsvector
 GENERATED ALWAYS AS
   (
     setweight(to_tsvector('simple', kommunekode), 'A') ||
-    setweight(to_tsvector('simple', split_part(navn, ' ', 1)), 'B') ||
-    setweight(to_tsvector('simple', split_part(navn, ' ', 2)), 'C') ||
-  	setweight(to_tsvector('simple', basic.split_and_endsubstring(navn, 3)), 'D') 
+    setweight(to_tsvector('simple', split_part(kommunenavn, ' ', 1)), 'B') ||
+    setweight(to_tsvector('simple', split_part(kommunenavn, ' ', 2)), 'C') ||
+  	setweight(to_tsvector('simple', basic.split_and_endsubstring(kommunenavn, 3)), 'D')
   ) STORED;
 
 ALTER TABLE basic.kommune_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
@@ -64,9 +64,9 @@ ADD COLUMN textsearchable_unaccent_col tsvector
 GENERATED ALWAYS AS
   (
     setweight(to_tsvector('basic.septima_fts_config', kommunekode), 'A') ||
-    setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 1)), 'B') ||
-    setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 2)), 'C') ||
-  	setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(navn, 3)), 'D') 
+    setweight(to_tsvector('basic.septima_fts_config', split_part(kommunenavn, ' ', 1)), 'B') ||
+    setweight(to_tsvector('basic.septima_fts_config', split_part(kommunenavn, ' ', 2)), 'C') ||
+  	setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(kommunenavn, 3)), 'D')
   ) STORED;
 
 ALTER TABLE basic.kommune_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
@@ -75,9 +75,9 @@ ADD COLUMN textsearchable_phonetic_col tsvector
 GENERATED ALWAYS AS
   (
     setweight(to_tsvector('simple', kommunekode), 'A') ||
-    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 1), 2)), 'B') ||
-    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 2), 2)), 'C') ||
-	  setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(navn, 3)), 'D') 
+    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(kommunenavn, ' ', 1), 2)), 'B') ||
+    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(kommunenavn, ' ', 2), 2)), 'C') ||
+	  setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(kommunenavn, 3)), 'D')
   ) STORED;
 
 CREATE INDEX ON basic.kommune_mv USING GIN (textsearchable_plain_col);
@@ -144,7 +144,7 @@ BEGIN
   
   -- Execute and return the result
   stmt = format(E'SELECT
-    kommunekode, navn, praesentation, geometri, bbox::geometry,
+    kommunekode, kommunenavn, praesentation, geometri, bbox::geometry,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM
@@ -155,7 +155,7 @@ BEGIN
     AND %s
   ORDER BY
     rank1 desc, rank2 desc,
-    navn
+    kommunenavn
   LIMIT $3
 ;', filters);
   RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
