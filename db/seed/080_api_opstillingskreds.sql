@@ -146,12 +146,10 @@ BEGIN
   ORDER BY
     rank1 desc, rank2 desc,
     opstillingskredsnavn
-  LIMIT $3
-;', filters);
+  LIMIT $3;', filters);
   RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
 END
 $function$;
-
 
 -- Test cases:
 /*
