@@ -19,7 +19,7 @@ COMMENT ON COLUMN api.postdistrikt.id IS 'Postnummer';
 COMMENT ON COLUMN api.postdistrikt.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.postdistrikt.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
-DROP TABLE IF EXISTS basic.postdistrikt_mv;
+DROP TABLE IF EXISTS basic.postdistrikt;
 WITH postnumre AS
 (
   SELECT
@@ -28,8 +28,8 @@ WITH postnumre AS
     COALESCE(p2.ergadepostnummer, p1.ergadepostnummer) AS ergadepostnummer,
     st_force2d(COALESCE(p2.geometri, p1.geometri)) AS geometri
   FROM
-    dagi_10m_nohist_l1.postnummerinddeling p1
-    LEFT JOIN dagi_500m_nohist_l1.postnummerinddeling p2 USING (postnummer)
+    dagi.postnummerinddeling p1
+    LEFT JOIN dagi_500.postnummerinddeling p2 USING (postnummer)
 )
 SELECT
   p.postnummer || ' ' || p.navn AS titel,
@@ -40,16 +40,16 @@ SELECT
   st_extent(p.geometri) AS bbox,
   array_agg(k.kommunekode) AS kommunekoder
 INTO
-  basic.postdistrikt_mv
+  basic.postdistrikt
 FROM 
   postnumre p
-  LEFT JOIN dagi_500m_nohist_l1.kommuneinddeling k ON (st_intersects(k.geometri, p.geometri))
+  LEFT JOIN dagi_500.kommuneinddeling k ON (st_intersects(k.geometri, p.geometri))
 GROUP BY
   p.postnummer, p.navn, p.ergadepostnummer
 ;
 
-ALTER TABLE basic.postdistrikt_mv DROP COLUMN IF EXISTS textsearchable_plain_col;
-ALTER TABLE basic.postdistrikt_mv
+ALTER TABLE basic.postdistrikt DROP COLUMN IF EXISTS textsearchable_plain_col;
+ALTER TABLE basic.postdistrikt
 ADD COLUMN textsearchable_plain_col tsvector
 GENERATED ALWAYS AS
   (
@@ -60,8 +60,8 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-ALTER TABLE basic.postdistrikt_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
-ALTER TABLE basic.postdistrikt_mv
+ALTER TABLE basic.postdistrikt DROP COLUMN IF EXISTS textsearchable_unaccent_col;
+ALTER TABLE basic.postdistrikt
 ADD COLUMN textsearchable_unaccent_col tsvector
 GENERATED ALWAYS AS
   (
@@ -72,8 +72,8 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-ALTER TABLE basic.postdistrikt_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
-ALTER TABLE basic.postdistrikt_mv
+ALTER TABLE basic.postdistrikt DROP COLUMN IF EXISTS textsearchable_phonetic_col;
+ALTER TABLE basic.postdistrikt
 ADD COLUMN textsearchable_phonetic_col tsvector
 GENERATED ALWAYS AS
   (
@@ -84,9 +84,9 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-CREATE INDEX ON basic.postdistrikt_mv USING GIN (textsearchable_plain_col);
-CREATE INDEX ON basic.postdistrikt_mv USING GIN (textsearchable_unaccent_col);
-CREATE INDEX ON basic.postdistrikt_mv USING GIN (textsearchable_phonetic_col);
+CREATE INDEX ON basic.postdistrikt USING GIN (textsearchable_plain_col);
+CREATE INDEX ON basic.postdistrikt USING GIN (textsearchable_unaccent_col);
+CREATE INDEX ON basic.postdistrikt USING GIN (textsearchable_phonetic_col);
 
 DROP FUNCTION IF EXISTS api.postdistrikt(text, jsonb, int, int);
 
@@ -158,7 +158,7 @@ BEGIN
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM
-    basic.postdistrikt_mv
+    basic.postdistrikt
   WHERE (
     textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
     OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))

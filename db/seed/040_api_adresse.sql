@@ -32,7 +32,7 @@ COMMENT ON COLUMN api.adresse.presentationstring IS 'Præsentationsform for en a
 COMMENT ON COLUMN api.adresse.vejpunkt_geometri IS 'Husnummergeometri på adresse for vejpunkt i valgt koordinatsystem';
 COMMENT ON COLUMN api.adresse.adgangspunkt_geometri IS 'Husnummergeometri på adresse for adgangspunkt i valgt koordinatsystem';
 
-DROP TABLE IF EXISTS basic.adresse_mv;
+DROP TABLE IF EXISTS basic.adresse;
 with adresser AS 
 (
 	SELECT
@@ -68,7 +68,7 @@ with adresser AS
 		JOIN dar.postnummer p ON p.id_lokalid = h.postnummer::uuid
 		JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt
 		JOIN dar.adressepunkt ap2 ON ap2.id_lokalid = h.vejpunkt
-    	JOIN dagi_500m_nohist_l1.kommuneinddeling k ON k.kommunekode = h.kommunekode
+    	JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
 )
 SELECT
   a.id,
@@ -108,17 +108,17 @@ SELECT
   st_multi(adgangspunkt_geometri) as adgangspunkt_geometri,
   st_multi(vejpunkt_geometri) as vejpunkt_geometri
 INTO
-  basic.adresse_mv
+  basic.adresse
 FROM 
   adresser a
-  JOIN basic.navngivenvej_mv nv ON a.vejid = nv.id
+  JOIN basic.navngivenvej nv ON a.vejid = nv.id
 ;
 
 -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
 
 -- append husnummer, etage, and dør
-ALTER TABLE basic.adresse_mv DROP COLUMN IF EXISTS textsearchable_plain_col;
-ALTER TABLE basic.adresse_mv
+ALTER TABLE basic.adresse DROP COLUMN IF EXISTS textsearchable_plain_col;
+ALTER TABLE basic.adresse
 ADD COLUMN textsearchable_plain_col tsvector
 GENERATED ALWAYS AS
   (
@@ -129,8 +129,8 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-ALTER TABLE basic.adresse_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
-ALTER TABLE basic.adresse_mv
+ALTER TABLE basic.adresse DROP COLUMN IF EXISTS textsearchable_unaccent_col;
+ALTER TABLE basic.adresse
 ADD COLUMN textsearchable_unaccent_col tsvector
 GENERATED ALWAYS AS
   (
@@ -141,8 +141,8 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-ALTER TABLE basic.adresse_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
-ALTER TABLE basic.adresse_mv
+ALTER TABLE basic.adresse DROP COLUMN IF EXISTS textsearchable_phonetic_col;
+ALTER TABLE basic.adresse
 ADD COLUMN textsearchable_phonetic_col tsvector
 GENERATED ALWAYS AS
   (
@@ -153,10 +153,10 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_plain_col);
-CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_unaccent_col);
-CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_phonetic_col);
-CREATE INDEX ON basic.adresse_mv (lower(vejnavn), vejid, husnummer_sortering, sortering);
+CREATE INDEX ON basic.adresse USING GIN (textsearchable_plain_col);
+CREATE INDEX ON basic.adresse USING GIN (textsearchable_unaccent_col);
+CREATE INDEX ON basic.adresse USING GIN (textsearchable_phonetic_col);
+CREATE INDEX ON basic.adresse (lower(vejnavn), vejid, husnummer_sortering, sortering);
 
 DROP FUNCTION IF EXISTS api.adresse(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.adresse(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -224,7 +224,7 @@ BEGIN
         0::float AS rank1,
         0::float AS rank2
       FROM
-        basic.adresse_mv
+        basic.adresse
       WHERE
         lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
       ORDER BY
@@ -243,7 +243,7 @@ BEGIN
       basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
       ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM
-      basic.adresse_mv
+      basic.adresse
     WHERE (
       textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
       OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))

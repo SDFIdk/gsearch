@@ -24,7 +24,7 @@ COMMENT ON COLUMN api.stednavn.stednavn_subtype IS 'Subtype på stednavn';
 COMMENT ON COLUMN api.stednavn.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 COMMENT ON COLUMN api.stednavn.geometri IS 'Geometri i valgt koordinatsystem';
 
-DROP TABLE IF EXISTS basic.stednavn_mv;
+DROP TABLE IF EXISTS basic.stednavn;
 with stednavne AS (
 	SELECT
 		objectid,
@@ -76,13 +76,13 @@ SELECT
 	subtype AS stednavn_subtype,
 	st_multi(st_union(geometri)) AS geometri,
 	st_envelope(st_collect(geometri)) AS bbox
-INTO basic.stednavn_mv
+INTO basic.stednavn
 FROM agg_stednavne
 GROUP BY id,presentationstring, presentationstring_nohyphen, skrivemaade, skrivemaade_uofficiel, skrivemaade_uofficiel_nohyphen, type, subtype
 ;
 
-ALTER TABLE basic.stednavn_mv DROP COLUMN IF EXISTS textsearchable_plain_col;
-ALTER TABLE basic.stednavn_mv
+ALTER TABLE basic.stednavn DROP COLUMN IF EXISTS textsearchable_plain_col;
+ALTER TABLE basic.stednavn
 ADD COLUMN textsearchable_plain_col tsvector
 GENERATED ALWAYS AS
    (
@@ -93,8 +93,8 @@ GENERATED ALWAYS AS
    ) STORED
 ;
 
-ALTER TABLE basic.stednavn_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
-ALTER TABLE basic.stednavn_mv
+ALTER TABLE basic.stednavn DROP COLUMN IF EXISTS textsearchable_unaccent_col;
+ALTER TABLE basic.stednavn
 ADD COLUMN textsearchable_unaccent_col tsvector
 GENERATED ALWAYS AS
    (
@@ -105,8 +105,8 @@ GENERATED ALWAYS AS
    ) STORED
 ;
 
-ALTER TABLE basic.stednavn_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
-ALTER TABLE basic.stednavn_mv
+ALTER TABLE basic.stednavn DROP COLUMN IF EXISTS textsearchable_phonetic_col;
+ALTER TABLE basic.stednavn
 ADD COLUMN textsearchable_phonetic_col tsvector
 GENERATED ALWAYS AS
    (
@@ -119,10 +119,10 @@ GENERATED ALWAYS AS
 
 
 
-CREATE INDEX ON basic.stednavn_mv USING GIN (textsearchable_plain_col);
-CREATE INDEX ON basic.stednavn_mv USING GIN (textsearchable_unaccent_col);
-CREATE INDEX ON basic.stednavn_mv USING GIN (textsearchable_phonetic_col);
-CREATE INDEX ON basic.stednavn_mv (lower(presentationstring));
+CREATE INDEX ON basic.stednavn USING GIN (textsearchable_plain_col);
+CREATE INDEX ON basic.stednavn USING GIN (textsearchable_unaccent_col);
+CREATE INDEX ON basic.stednavn USING GIN (textsearchable_phonetic_col);
+CREATE INDEX ON basic.stednavn (lower(presentationstring));
 
 
 DROP FUNCTION IF EXISTS api.stednavn(text, text, int, int);
@@ -162,7 +162,7 @@ BEGIN
       0::float AS rank1,
       0::float AS rank2
     FROM
-      basic.stednavn_mv
+      basic.stednavn
     WHERE
       lower(presentationstring) >= ''%s'' AND lower(presentationstring) <= ''%s'' || ''å''
     ORDER BY
@@ -178,7 +178,7 @@ BEGIN
       basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM
-      basic.stednavn_mv
+      basic.stednavn
     WHERE (
       textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
       OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))

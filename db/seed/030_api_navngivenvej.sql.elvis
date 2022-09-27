@@ -22,20 +22,20 @@ COMMENT ON COLUMN api.navngivenvej.postdistrikter IS 'Postdistrikter for navngiv
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej';
 COMMENT ON COLUMN api.navngivenvej.bbox IS 'Geometriens boundingbox';
 
-DROP TABLE IF EXISTS basic.navngivenvej_mv;
+DROP TABLE IF EXISTS basic.navngivenvej;
 
 WITH vejnavne AS
 (
   SELECT
-    n.id_lokalid AS id,
+    n.id,
     n.vejnavn,
     p.postnr as postnr,
   	p.navn as postdistrikt, 
     st_force2d(COALESCE(n.geometri)) AS geometri
   FROM
     dar.navngivenvej n
-    JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej = n.id_lokalid)
-    JOIN dar.postnummer p ON (nvp.postnummer = p.id_lokalid)
+    JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej = n.id)
+    JOIN dar.postnummer p ON (nvp.postnummer = p.id)
 )
 SELECT
   v.vejnavn as praesentation, --|| '(' || v.postnumre[1] || ' - ' || v.postnumre[-1] || ')' AS titel,
@@ -46,7 +46,7 @@ SELECT
   st_multi(st_union(geometri)) AS geometri,
   st_envelope(st_collect(v.geometri)) AS bbox
 INTO
-  basic.navngivenvej_mv
+  basic.navngivenvej
 FROM 
   vejnavne v
 GROUP BY v.id, v.vejnavn
@@ -55,8 +55,8 @@ GROUP BY v.id, v.vejnavn
 
 -- textsearchable column using predefined custom config consisting of a collection of FTS dictionaries - see 012_init_configuration.sql
 -- use either this or one below. 
--- ALTER TABLE api.navngivenvej_mv DROP COLUMN IF EXISTS textsearchable_index_col;
--- ALTER TABLE api.navngivenvej_mv
+-- ALTER TABLE api.navngivenvej DROP COLUMN IF EXISTS textsearchable_index_col;
+-- ALTER TABLE api.navngivenvej
 -- ADD COLUMN textsearchable_index_col tsvector
 -- GENERATED ALWAYS AS
 --   (
@@ -68,8 +68,8 @@ GROUP BY v.id, v.vejnavn
 -- ;
 
 -- plain textsearchable column
-ALTER TABLE basic.navngivenvej_mv DROP COLUMN IF EXISTS textsearchable_plain_col;
-ALTER TABLE basic.navngivenvej_mv
+ALTER TABLE basic.navngivenvej DROP COLUMN IF EXISTS textsearchable_plain_col;
+ALTER TABLE basic.navngivenvej
 ADD COLUMN textsearchable_plain_col tsvector
 GENERATED ALWAYS AS
   (
@@ -81,8 +81,8 @@ GENERATED ALWAYS AS
 ;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
-ALTER TABLE basic.navngivenvej_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
-ALTER TABLE basic.navngivenvej_mv
+ALTER TABLE basic.navngivenvej DROP COLUMN IF EXISTS textsearchable_unaccent_col;
+ALTER TABLE basic.navngivenvej
 ADD COLUMN textsearchable_unaccent_col tsvector
 GENERATED ALWAYS AS
   (
@@ -94,8 +94,8 @@ GENERATED ALWAYS AS
 ;
 
 -- phonetic textsearchable column: christian -> kristian, k
-ALTER TABLE basic.navngivenvej_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
-ALTER TABLE basic.navngivenvej_mv
+ALTER TABLE basic.navngivenvej DROP COLUMN IF EXISTS textsearchable_phonetic_col;
+ALTER TABLE basic.navngivenvej
 ADD COLUMN textsearchable_phonetic_col tsvector
 GENERATED ALWAYS AS
   (
@@ -106,10 +106,10 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-CREATE INDEX ON basic.navngivenvej_mv USING GIN (textsearchable_plain_col);
-CREATE INDEX ON basic.navngivenvej_mv USING GIN (textsearchable_unaccent_col);
-CREATE INDEX ON basic.navngivenvej_mv USING GIN (textsearchable_phonetic_col);
-CREATE INDEX ON basic.navngivenvej_mv (lower(vejnavn));
+CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_plain_col);
+CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_unaccent_col);
+CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_phonetic_col);
+CREATE INDEX ON basic.navngivenvej (lower(vejnavn));
 
 
 DROP FUNCTION IF EXISTS api.navngivenvej(text, text, int, int);
@@ -150,7 +150,7 @@ IF (SELECT COALESCE(forekomster, 0) FROM basic.tekst_forekomst WHERE ressource =
       0::float AS rank1,
       0::float AS rank2
     FROM
-      basic.navngivenvej_mv
+      basic.navngivenvej
     WHERE
       lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
     ORDER BY
@@ -164,7 +164,7 @@ IF (SELECT COALESCE(forekomster, 0) FROM basic.tekst_forekomst WHERE ressource =
       basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	    ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM
-      basic.navngivenvej_mv
+      basic.navngivenvej
     WHERE (
       textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
       OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))

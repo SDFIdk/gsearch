@@ -3,11 +3,6 @@ DROP TABLE IF EXISTS g_options;
 CREATE TEMPORARY TABLE g_options (maxrows int);
 --INSERT INTO g_options VALUES (1000);
 
-DROP TABLE IF EXISTS fonetik.fonetiskregel;
-CREATE TABLE fonetik.fonetiskregel AS
-SELECT *
-FROM fonetik_fdw.fonetiskregel;
-
 DROP TABLE IF EXISTS stednavne_udstil.stednavn_udstilling;
 CREATE TABLE stednavne_udstil.stednavn_udstilling AS
 SELECT *
@@ -140,48 +135,48 @@ ALTER TABLE dar.husnummer ADD CONSTRAINT husnummer_vejpunkt_fk FOREIGN KEY (vejp
 ALTER TABLE dar.husnummer ADD CONSTRAINT adresse_husnummer_adgangspunkt_fk FOREIGN KEY (adgangspunkt) REFERENCES dar.adressepunkt (id_lokalid) MATCH FULL;
 ALTER TABLE dar.husnummer ADD CONSTRAINT adresse_husnummer_vejpunkt_fk FOREIGN KEY (vejpunkt) REFERENCES dar.adressepunkt (id_lokalid) MATCH FULL;
 
-DROP TABLE IF EXISTS dagi_500m_nohist_l1.kommuneinddeling;
-CREATE TABLE dagi_500m_nohist_l1.kommuneinddeling AS
-SELECT * FROM dagi_500m_nohist_l1_fdw.kommuneinddeling
+DROP TABLE IF EXISTS dagi_500.kommuneinddeling;
+CREATE TABLE dagi_500.kommuneinddeling AS
+SELECT * FROM dagi_500_fdw.kommuneinddeling
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dagi_500m_nohist_l1.opstillingskreds;
-CREATE TABLE dagi_500m_nohist_l1.opstillingskreds AS
-SELECT * FROM dagi_500m_nohist_l1_fdw.opstillingskreds
+DROP TABLE IF EXISTS dagi_500.opstillingskreds;
+CREATE TABLE dagi_500.opstillingskreds AS
+SELECT * FROM dagi_500_fdw.opstillingskreds
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dagi_500m_nohist_l1.storkreds;
-CREATE TABLE dagi_500m_nohist_l1.storkreds AS
-SELECT * FROM dagi_500m_nohist_l1_fdw.storkreds
+DROP TABLE IF EXISTS dagi_500.storkreds;
+CREATE TABLE dagi_500.storkreds AS
+SELECT * FROM dagi_500_fdw.storkreds
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dagi_500m_nohist_l1.politikreds;
-CREATE TABLE dagi_500m_nohist_l1.politikreds AS
-SELECT * FROM dagi_500m_nohist_l1_fdw.politikreds
+DROP TABLE IF EXISTS dagi_500.politikreds;
+CREATE TABLE dagi_500.politikreds AS
+SELECT * FROM dagi_500_fdw.politikreds
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dagi_500m_nohist_l1.postnummerinddeling;
-CREATE TABLE dagi_500m_nohist_l1.postnummerinddeling AS
-SELECT * FROM dagi_500m_nohist_l1_fdw.postnummerinddeling
+DROP TABLE IF EXISTS dagi_500.postnummerinddeling;
+CREATE TABLE dagi_500.postnummerinddeling AS
+SELECT * FROM dagi_500_fdw.postnummerinddeling
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dagi_500m_nohist_l1.regionsinddeling;
-CREATE TABLE dagi_500m_nohist_l1.regionsinddeling AS
-SELECT * FROM dagi_500m_nohist_l1_fdw.regionsinddeling
+DROP TABLE IF EXISTS dagi_500.regionsinddeling;
+CREATE TABLE dagi_500.regionsinddeling AS
+SELECT * FROM dagi_500_fdw.regionsinddeling
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dagi_500m_nohist_l1.retskreds;
-CREATE TABLE dagi_500m_nohist_l1.retskreds AS
-SELECT * FROM dagi_500m_nohist_l1_fdw.retskreds
+DROP TABLE IF EXISTS dagi_500.retskreds;
+CREATE TABLE dagi_500.retskreds AS
+SELECT * FROM dagi_500_fdw.retskreds
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dagi_500m_nohist_l1.sogneinddeling;
-CREATE TABLE dagi_500m_nohist_l1.sogneinddeling AS
-SELECT * FROM dagi_500m_nohist_l1_fdw.sogneinddeling
+DROP TABLE IF EXISTS dagi_500.sogneinddeling;
+CREATE TABLE dagi_500.sogneinddeling AS
+SELECT * FROM dagi_500_fdw.sogneinddeling
 LIMIT (SELECT maxrows FROM g_options);
 
-DROP TABLE IF EXISTS dagi_10m_nohist_l1.postnummerinddeling;
-CREATE TABLE dagi_10m_nohist_l1.postnummerinddeling AS
-SELECT * FROM dagi_10m_nohist_l1_fdw.postnummerinddeling
+DROP TABLE IF EXISTS dagi.postnummerinddeling;
+CREATE TABLE dagi.postnummerinddeling AS
+SELECT * FROM dagi_fdw.postnummerinddeling
 LIMIT (SELECT maxrows FROM g_options);
 
