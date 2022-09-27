@@ -218,7 +218,7 @@ BEGIN
       stmt = format(E'SELECT
         id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
         husnummer::text, etagebetegnelse::text, doerbetegnelse::text, 
-        postnummer::text, postdistrikt::text, titel::text, 
+        postnummer::text, postdistrikt::text, adressebetegnelse::text, 
         vejpunkt_geometri, adgangspunkt_geometri,
         0::float AS rank1,
         0::float AS rank2
@@ -237,7 +237,7 @@ BEGIN
     stmt = format(E'SELECT
       id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
       husnummer::text, etagebetegnelse::text, doerbetegnelse::text, 
-      postnummer::text, postdistrikt::text, titel::text, 
+      postnummer::text, postdistrikt::text, adressebetegnelse::text, 
       vejpunkt_geometri, adgangspunkt_geometri,
       basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
       ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
