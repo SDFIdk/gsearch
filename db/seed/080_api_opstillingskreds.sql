@@ -9,8 +9,6 @@ CREATE TYPE api.opstillingskreds AS
     valgkredsnummer      TEXT,
     storkredsnummer      TEXT,
     storkredsnavn        TEXT,
-    landsdelsnummer      TEXT, --SKAL DENNE FJERNES?
-    landsdelsnavn        TEXT, -- SKAL DENNE FJERNES?
     geometri             geometry,
     bbox                 geometry,
     rang1                double precision,
@@ -51,7 +49,6 @@ INTO basic.opstillingskreds_mv
 FROM opstillingskredse o
 GROUP BY o.opstillingskredsnummer, o.navn, o.valgkredsnummer, storkredsnummer, storkredsnavn;
 
-
 ALTER TABLE basic.opstillingskreds_mv
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 ALTER TABLE basic.opstillingskreds_mv
@@ -63,7 +60,6 @@ ALTER TABLE basic.opstillingskreds_mv
                         setweight(to_tsvector('simple', split_part(opstillingskredsnavn, ' ', 3)), 'C') ||
                         setweight(to_tsvector('simple', basic.split_and_endsubstring(opstillingskredsnavn, 4)), 'D')
             ) STORED;
-
 
 ALTER TABLE basic.opstillingskreds_mv
     DROP COLUMN IF EXISTS textsearchable_unaccent_col;
@@ -143,7 +139,7 @@ BEGIN
     -- Execute and return the result
     stmt = format(E'SELECT
     opstillingskredsnummer, opstillingskredsnavn, praesentation,
-    valgkredsnummer, storkredsnummer, storkredsnavn, '''' AS landsdelsnummer, '''' AS landsdelsnavn, geometri, bbox::geometry,
+    valgkredsnummer, storkredsnummer, storkredsnavn, geometri, bbox::geometry,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
     ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM
