@@ -131,7 +131,7 @@ public class Controller {
     public List<Data> geosearch(
         @Parameter(description = "Søgestreng")
         @RequestParam String q,
-        @Parameter(description = "Er en kommasepereatet list på resources navn. Se Schemas for deltajeret beskrivelse af resourcer.")
+        @Parameter(description = "Er en kommasepareret liste på 'resources' navn. Se Schemas for deltajeret beskrivelse af resourcer.")
         @RequestParam String resources,
         @Parameter(description = "Angives med CQL-text, og udefra beskrivelser af mulige filtreringer for den valgte resource.")
         @RequestParam(required = false) String filter,
