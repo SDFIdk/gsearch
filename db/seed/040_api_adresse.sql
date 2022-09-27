@@ -125,8 +125,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('simple', husnummer), 'D') ||
     setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
     setweight(to_tsvector('simple', doerbetegnelse), 'D')
-  ) STORED
-;
+  ) STORED;
 
 ALTER TABLE basic.adresse_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 ALTER TABLE basic.adresse_mv
@@ -137,8 +136,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('simple', husnummer), 'D') ||
 	  setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
 	  setweight(to_tsvector('simple', doerbetegnelse), 'D')
-  ) STORED
-;
+  ) STORED;
 
 ALTER TABLE basic.adresse_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 ALTER TABLE basic.adresse_mv
@@ -149,8 +147,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('simple', husnummer), 'D') ||
 	  setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
 	  setweight(to_tsvector('simple', doerbetegnelse), 'D')
-  ) STORED
-;
+  ) STORED;
 
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_plain_col);
 CREATE INDEX ON basic.adresse_mv USING GIN (textsearchable_unaccent_col);
