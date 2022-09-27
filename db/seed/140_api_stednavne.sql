@@ -1,8 +1,8 @@
 DROP TYPE IF EXISTS api.stednavn CASCADE;
 CREATE TYPE api.stednavn AS (
   id TEXT,
-  praesentation TEXT,
   skrivemaade TEXT,
+  praesentation TEXT,
   skrivemaade_officiel TEXT,
   skrivemaade_uofficiel TEXT,
   stednavn_type TEXT,
@@ -15,8 +15,8 @@ CREATE TYPE api.stednavn AS (
 
 COMMENT ON TYPE api.stednavn IS 'Stednavn';
 COMMENT ON COLUMN api.stednavn.id IS 'ID for stednavn';
-COMMENT ON COLUMN api.stednavn.praesentation IS 'Præsentationsform for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade IS 'Skrivemåde for stednavn';
+COMMENT ON COLUMN api.stednavn.praesentation IS 'Præsentationsform for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade_officiel IS 'Officiel skrivemåde for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade_uofficiel IS 'Uofficiel skrivemåde for stednavn';
 COMMENT ON COLUMN api.stednavn.stednavn_type IS 'Type på stednavn';
@@ -166,7 +166,7 @@ BEGIN
   ELSE
     -- Execute and return the result
     stmt = format(E'SELECT
-      id::text, praesentation::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel,
+      id::text, skrivemaade::text, praesentation::text, skrivemaade::text AS skrivemaade_officiel,
 	  skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
       basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2

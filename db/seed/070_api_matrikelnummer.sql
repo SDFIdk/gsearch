@@ -171,7 +171,7 @@ BEGIN
 
   -- Execute and return the result
   stmt = format(E'SELECT
-    ejerlavsnavn::text, ejerlavskode::text, matrikelnummer::text, titel::text,
+    ejerlavsnavn::text, ejerlavskode::text, matrikelnummer::text, praesentation::text,
     ST_X((ST_DUMP(centroide_geometri)).geom)::text, ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
     geometri,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,

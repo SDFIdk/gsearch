@@ -3,8 +3,8 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.navngivenvej CASCADE;
 CREATE TYPE api.navngivenvej AS (
   id TEXT,
-  praesentation TEXT,
   vejnavn TEXT,
+  praesentation TEXT,
   postnummer TEXT,
   postdistrikter TEXT,
   geometri geometry,
@@ -14,9 +14,9 @@ CREATE TYPE api.navngivenvej AS (
 );  
 
 COMMENT ON TYPE api.navngivenvej IS 'Navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.praesentation IS 'Præsentationsform for et navngiven vej';
-COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
 COMMENT ON COLUMN api.navngivenvej.id IS 'ID på navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
+COMMENT ON COLUMN api.navngivenvej.praesentation IS 'Præsentationsform for et navngiven vej';
 COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer for navngiven vej';
 COMMENT ON COLUMN api.navngivenvej.postdistrikter IS 'Postdistrikter for navngiven vej';
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej';
@@ -51,7 +51,6 @@ FROM
   vejnavne v
 GROUP BY v.id, v.vejnavn;
 
-
 -- textsearchable column using predefined custom config consisting of a collection of FTS dictionaries - see 012_init_configuration.sql
 -- use either this or one below. 
 -- ALTER TABLE api.navngivenvej_mv DROP COLUMN IF EXISTS textsearchable_index_col;
@@ -76,8 +75,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('simple', split_part(vejnavn, ' ', 2)), 'B') ||
     setweight(to_tsvector('simple', split_part(vejnavn, ' ', 3)), 'C') ||
     setweight(to_tsvector('simple', basic.split_and_endsubstring(vejnavn, 4)), 'D')
-  ) STORED
-;
+  ) STORED;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
 ALTER TABLE basic.navngivenvej_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
@@ -89,8 +87,7 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 2)), 'B') ||
     setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 3)), 'C') ||
     setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(vejnavn, 4)), 'D')
-  ) STORED
-;
+  ) STORED;
 
 -- phonetic textsearchable column: christian -> kristian, k
 ALTER TABLE basic.navngivenvej_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
@@ -102,14 +99,12 @@ GENERATED ALWAYS AS
     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(vejnavn, ' ', 2), 2)), 'B') ||
     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(vejnavn, ' ', 3), 2)), 'C') ||
     setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(vejnavn, 4)), 'D')
-  ) STORED
-;
+  ) STORED;
 
 CREATE INDEX ON basic.navngivenvej_mv USING GIN (textsearchable_plain_col);
 CREATE INDEX ON basic.navngivenvej_mv USING GIN (textsearchable_unaccent_col);
 CREATE INDEX ON basic.navngivenvej_mv USING GIN (textsearchable_phonetic_col);
 CREATE INDEX ON basic.navngivenvej_mv (lower(vejnavn));
-
 
 DROP FUNCTION IF EXISTS api.navngivenvej(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.navngivenvej(input_tekst text, filters text, sortoptions int, rowlimit int)
