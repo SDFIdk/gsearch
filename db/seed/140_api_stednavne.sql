@@ -7,37 +7,37 @@ CREATE TYPE api.stednavn AS (
   skrivemaade_uofficiel TEXT,
   stednavn_type TEXT,
   stednavn_subtype TEXT,
-  bbox geometry,
   geometri geometry,
+  bbox geometry,
   rang1 double precision,
   rang2 double precision
 );
 
 COMMENT ON TYPE api.stednavn IS 'Stednavn';
-COMMENT ON COLUMN api.stednavn.praesentation IS 'Præsentationsform for stednavn';
 COMMENT ON COLUMN api.stednavn.id IS 'ID for stednavn';
+COMMENT ON COLUMN api.stednavn.praesentation IS 'Præsentationsform for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade IS 'Skrivemåde for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade_officiel IS 'Officiel skrivemåde for stednavn';
 COMMENT ON COLUMN api.stednavn.skrivemaade_uofficiel IS 'Uofficiel skrivemåde for stednavn';
 COMMENT ON COLUMN api.stednavn.stednavn_type IS 'Type på stednavn';
 COMMENT ON COLUMN api.stednavn.stednavn_subtype IS 'Subtype på stednavn';
-COMMENT ON COLUMN api.stednavn.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 COMMENT ON COLUMN api.stednavn.geometri IS 'Geometri i valgt koordinatsystem';
+COMMENT ON COLUMN api.stednavn.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
 DROP TABLE IF EXISTS basic.stednavn_mv;
 with stednavne AS (
 	SELECT
-		objectid,
-		id_lokalid,
-		coalesce(praesentation, '') AS praesentation,
-		navnestatus,
-		skrivemaade,
-		type,
-		subtype,
-		municipality_filter,
-		st_force2d(geometri_udtyndet) AS geometri
+        su.objectid,
+        su.id_lokalid,
+		coalesce(su.praesentation, '') AS praesentation,
+        su.navnestatus,
+        su.skrivemaade,
+        su.type,
+        su.subtype,
+        su.municipality_filter,
+		st_force2d(su.geometri_udtyndet) AS geometri
   	FROM
-		stednavne_udstil.stednavn_udstilling
+		stednavne_udstil.stednavn_udstilling su
 ),
 agg_stednavne AS (
 	SELECT
@@ -113,13 +113,10 @@ GENERATED ALWAYS AS
 	basic.stednavne_uofficielle_tsvector_phonetic(skrivemaade_uofficiel_nohyphen)
    ) STORED;
 
-
-
 CREATE INDEX ON basic.stednavn_mv USING GIN (textsearchable_plain_col);
 CREATE INDEX ON basic.stednavn_mv USING GIN (textsearchable_unaccent_col);
 CREATE INDEX ON basic.stednavn_mv USING GIN (textsearchable_phonetic_col);
 CREATE INDEX ON basic.stednavn_mv (lower(praesentation));
-
 
 DROP FUNCTION IF EXISTS api.stednavn(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.stednavn(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -154,7 +151,7 @@ BEGIN
       AND filters = '1=1' THEN
     stmt = format(E'SELECT
       id::text, praesentation::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel,
-      skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, bbox, geometri,
+      skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
       0::float AS rank1,
       0::float AS rank2
     FROM
@@ -170,7 +167,7 @@ BEGIN
     -- Execute and return the result
     stmt = format(E'SELECT
       id::text, praesentation::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel,
-	  skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, bbox, geometri,
+	  skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
       basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
 	  ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM
@@ -187,8 +184,7 @@ BEGIN
     RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
   END IF;
 END
-$function$
-;
+$function$;
 
 -- Test cases:
 /*
