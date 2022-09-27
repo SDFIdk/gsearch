@@ -43,9 +43,9 @@ WITH opstillingskredse AS
 SELECT
   o.navn || 'kredsen' AS praesentation,
   o.opstillingskredsnummer,
-  coalesce(o.navn, '') AS navn,
-  o.valgkredsnummer
-  o.storkredsnummer
+  coalesce(o.navn, '') AS opstillingskredsnavn,
+  o.valgkredsnummer,
+  o.storkredsnummer,
   o.storkredsnavn,
   st_multi(st_union(o.geometri)) AS geometri,
   st_extent(o.geometri) AS bbox
@@ -62,10 +62,10 @@ ALTER TABLE basic.opstillingskreds_mv
 ADD COLUMN textsearchable_plain_col tsvector
 GENERATED ALWAYS AS
   (
-    setweight(to_tsvector('simple', split_part(navn, ' ', 1)), 'A') ||
-    setweight(to_tsvector('simple', split_part(navn, ' ', 2)), 'B') ||
-    setweight(to_tsvector('simple', split_part(navn, ' ', 3)), 'C') ||
-  	setweight(to_tsvector('simple', basic.split_and_endsubstring(navn, 4)), 'D')
+    setweight(to_tsvector('simple', split_part(opstillingskredsnavn, ' ', 1)), 'A') ||
+    setweight(to_tsvector('simple', split_part(opstillingskredsnavn, ' ', 2)), 'B') ||
+    setweight(to_tsvector('simple', split_part(opstillingskredsnavn, ' ', 3)), 'C') ||
+  	setweight(to_tsvector('simple', basic.split_and_endsubstring(opstillingskredsnavn, 4)), 'D')
   ) STORED;
 
 
@@ -74,10 +74,10 @@ ALTER TABLE basic.opstillingskreds_mv
 ADD COLUMN textsearchable_unaccent_col tsvector
 GENERATED ALWAYS AS
   (
-    setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 1)), 'A') ||
-    setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 2)), 'B') ||
-    setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 3)), 'C') ||
-  	setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(navn, 4)), 'D')
+    setweight(to_tsvector('basic.septima_fts_config', split_part(opstillingskredsnavn, ' ', 1)), 'A') ||
+    setweight(to_tsvector('basic.septima_fts_config', split_part(opstillingskredsnavn, ' ', 2)), 'B') ||
+    setweight(to_tsvector('basic.septima_fts_config', split_part(opstillingskredsnavn, ' ', 3)), 'C') ||
+  	setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(opstillingskredsnavn, 4)), 'D')
   ) STORED;
 
 
@@ -86,10 +86,10 @@ ALTER TABLE basic.opstillingskreds_mv
 ADD COLUMN textsearchable_phonetic_col tsvector
 GENERATED ALWAYS AS
   (
-    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 1), 2)), 'A') ||
-    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 2), 2)), 'B') ||
-    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 3), 2)), 'C') ||
-    setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(coalesce(navn), 4)), 'D')
+    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(opstillingskredsnavn, ' ', 1), 2)), 'A') ||
+    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(opstillingskredsnavn, ' ', 2), 2)), 'B') ||
+    setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(opstillingskredsnavn, ' ', 3), 2)), 'C') ||
+    setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(coalesce(opstillingskredsnavn), 4)), 'D')
   ) STORED;
 
 CREATE INDEX ON basic.opstillingskreds_mv USING GIN (textsearchable_plain_col);
@@ -133,7 +133,7 @@ BEGIN
 
   -- Execute and return the result
   stmt = format(E'SELECT
-    opstillingskredsnummer, navn, praesentation,
+    opstillingskredsnummer, opstillingskredsnavn, praesentation,
     valgkredsnummer, storkredsnummer, storkredsnavn, '''' AS landsdelsnummer, '''' AS landsdelsnavn, geometri, bbox::geometry,
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
     ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
@@ -145,7 +145,7 @@ BEGIN
     AND %s
   ORDER BY
     rank1 desc, rank2 desc,
-    navn
+    opstillingskredsnavn
   LIMIT $3
 ;', filters);
   RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;

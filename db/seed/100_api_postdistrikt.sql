@@ -13,9 +13,9 @@ CREATE TYPE api.postdistrikt AS (
 );
 
 COMMENT ON TYPE api.postdistrikt IS 'Postdistrikt';
-COMMENT ON COLUMN api.postdistrikt.praesentation IS 'Præsentationsform for et postdistrikt';
-COMMENT ON COLUMN api.postdistrikt.postdistrikt IS 'Navn på postdistrikt';
 COMMENT ON COLUMN api.postdistrikt.id IS 'Postnummer';
+COMMENT ON COLUMN api.postdistrikt.postdistrikt IS 'Navn på postdistrikt';
+COMMENT ON COLUMN api.postdistrikt.praesentation IS 'Præsentationsform for et postdistrikt';
 COMMENT ON COLUMN api.postdistrikt.gadepostnummer IS 'Dækker postnummeret kun en gade';
 COMMENT ON COLUMN api.postdistrikt.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.postdistrikt.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
@@ -25,7 +25,7 @@ WITH postnumre AS
 (
   SELECT
     COALESCE(p2.postnummer, p1.postnummer) AS postnummer,
-    COALESCE(p2.navn, p1.navn) AS navn,
+    COALESCE(p2.navn, p1.navn) AS postdistrikt,
     COALESCE(p2.ergadepostnummer, p1.ergadepostnummer) AS ergadepostnummer,
     st_force2d(COALESCE(p2.geometri, p1.geometri)) AS geometri
   FROM
@@ -35,7 +35,7 @@ WITH postnumre AS
 SELECT
   p.postnummer || ' ' || p.navn AS praesentation,
   coalesce(p.postnummer, '') AS postnummer,
-  coalesce(p.navn, '') AS navn,
+  coalesce(p.navn, '') AS postdistrikt,
   (p.ergadepostnummer = 'true') AS ergadepostnummer,
   st_multi(st_union(p.geometri)) AS geometri,
   st_extent(p.geometri) AS bbox,

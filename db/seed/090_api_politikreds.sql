@@ -13,9 +13,10 @@ CREATE TYPE api.politikreds AS (
 );
 
 COMMENT ON TYPE api.politikreds IS 'politikreds';
+COMMENT ON COLUMN api.politikreds.id IS 'Politikredsnummer';
 COMMENT ON COLUMN api.politikreds.praesentation IS 'Præsentationsform for en politikreds';
 COMMENT ON COLUMN api.politikreds.politikredsnavn IS 'Navn på politikreds';
-COMMENT ON COLUMN api.politikreds.id IS 'politikredsnummer';
+COMMENT ON COLUMN api.politikreds.myndighedskode IS 'Politikredsens myndighedskode. Er unik for hver politikreds. 4 cifre.';
 COMMENT ON COLUMN api.politikreds.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.politikreds.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
