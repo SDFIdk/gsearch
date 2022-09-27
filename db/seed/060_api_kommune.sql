@@ -12,9 +12,9 @@ CREATE TYPE api.kommune AS (
 );  
 
 COMMENT ON TYPE api.kommune IS 'Kommune';
-COMMENT ON COLUMN api.kommune.praesentation IS 'Præsentationsform for en kommune';
-COMMENT ON COLUMN api.kommune.kommunenavn IS 'Navn på kommune';
 COMMENT ON COLUMN api.kommune.id IS 'Kommunekode';
+COMMENT ON COLUMN api.kommune.kommunenavn IS 'Navn på kommune';
+COMMENT ON COLUMN api.kommune.praesentation IS 'Præsentationsform for en kommune';
 COMMENT ON COLUMN api.kommune.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.kommune.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
