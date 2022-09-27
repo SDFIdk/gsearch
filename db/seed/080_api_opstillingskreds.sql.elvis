@@ -23,19 +23,19 @@ COMMENT ON COLUMN api.opstillingskreds.id IS 'opstillingskredsnummer';
 COMMENT ON COLUMN api.opstillingskreds.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.opstillingskreds.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
-DROP TABLE IF EXISTS basic.opstillingskreds_mv;
+DROP TABLE IF EXISTS basic.opstillingskreds;
 WITH opstillingskredse AS
 (
   SELECT
     o.opstillingskredsnummer,
     o.navn,
     o.valgkredsnummer,
-    o.storkredsnummer,
+    s.storkredsnummer,
     s.navn AS storkredsnavn,
     st_force2d(o.geometri) AS geometri
   FROM
-    dagi_500m_nohist_l1.opstillingskreds o
-    LEFT JOIN dagi_500m_nohist_l1.storkreds s on o.storkredsnummer = s.storkredsnummer
+    dagi_500.opstillingskreds o
+    LEFT JOIN dagi_500.storkreds s on o.storkredslokalid = s.id_lokalid
 )
 SELECT
   o.navn || 'kredsen' AS titel,
@@ -47,7 +47,7 @@ SELECT
   st_multi(st_union(o.geometri)) AS geometri,
   st_extent(o.geometri) AS bbox
 INTO
-  basic.opstillingskreds_mv
+  basic.opstillingskreds
 FROM 
   opstillingskredse o
 GROUP BY
@@ -55,8 +55,8 @@ GROUP BY
 ;
 
 
-ALTER TABLE basic.opstillingskreds_mv DROP COLUMN IF EXISTS textsearchable_plain_col;
-ALTER TABLE basic.opstillingskreds_mv
+ALTER TABLE basic.opstillingskreds DROP COLUMN IF EXISTS textsearchable_plain_col;
+ALTER TABLE basic.opstillingskreds
 ADD COLUMN textsearchable_plain_col tsvector
 GENERATED ALWAYS AS
   (
@@ -68,8 +68,8 @@ GENERATED ALWAYS AS
 ;
 
 
-ALTER TABLE basic.opstillingskreds_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
-ALTER TABLE basic.opstillingskreds_mv
+ALTER TABLE basic.opstillingskreds DROP COLUMN IF EXISTS textsearchable_unaccent_col;
+ALTER TABLE basic.opstillingskreds
 ADD COLUMN textsearchable_unaccent_col tsvector
 GENERATED ALWAYS AS
   (
@@ -81,8 +81,8 @@ GENERATED ALWAYS AS
 ;
 
 
-ALTER TABLE basic.opstillingskreds_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
-ALTER TABLE basic.opstillingskreds_mv
+ALTER TABLE basic.opstillingskreds DROP COLUMN IF EXISTS textsearchable_phonetic_col;
+ALTER TABLE basic.opstillingskreds
 ADD COLUMN textsearchable_phonetic_col tsvector
 GENERATED ALWAYS AS
   (
@@ -93,9 +93,9 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-CREATE INDEX ON basic.opstillingskreds_mv USING GIN (textsearchable_plain_col);
-CREATE INDEX ON basic.opstillingskreds_mv USING GIN (textsearchable_unaccent_col);
-CREATE INDEX ON basic.opstillingskreds_mv USING GIN (textsearchable_phonetic_col);
+CREATE INDEX ON basic.opstillingskreds USING GIN (textsearchable_plain_col);
+CREATE INDEX ON basic.opstillingskreds USING GIN (textsearchable_unaccent_col);
+CREATE INDEX ON basic.opstillingskreds USING GIN (textsearchable_phonetic_col);
 
 DROP FUNCTION IF EXISTS api.opstillingskreds(text, jsonb, int, int);
 
@@ -139,7 +139,7 @@ BEGIN
     basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
     ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM
-    basic.opstillingskreds_mv
+    basic.opstillingskreds
   WHERE (
     textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
     OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))

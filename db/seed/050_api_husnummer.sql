@@ -32,7 +32,7 @@ COMMENT ON COLUMN api.husnummer.adgangspunkt_geometri IS 'Geometri for adgangspu
 
 -- Husnummer script requires navngivenvej script to be executed first
 
-DROP TABLE IF EXISTS basic.husnummer_mv;
+DROP TABLE IF EXISTS basic.husnummer;
 WITH husnumre AS 
 (
   SELECT
@@ -54,7 +54,7 @@ WITH husnumre AS
     JOIN dar.postnummer p ON p.id_lokalid = h.postnummer::uuid
     JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt
     JOIN dar.adressepunkt ap2 ON ap2.id_lokalid = h.vejpunkt
-    JOIN dagi_500m_nohist_l1.kommuneinddeling k ON k.kommunekode = h.kommunekode
+    JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
 )
 SELECT
   h.id,
@@ -78,16 +78,16 @@ SELECT
   st_multi(h.adgangspunkt_geometri) as adgangspunkt_geometri,
   st_multi(h.vejpunkt_geometri) as vejpunkt_geometri
 INTO
-  basic.husnummer_mv
+  basic.husnummer
 FROM 
   husnumre h
-  JOIN basic.navngivenvej_mv nv ON h.vejid = nv.id
+  JOIN basic.navngivenvej nv ON h.vejid = nv.id
 ;
 
 -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
 
--- ALTER TABLE api.husnummer_mv DROP COLUMN IF EXISTS textsearchable_index_col_vej;
--- ALTER TABLE api.husnummer_mv
+-- ALTER TABLE api.husnummer DROP COLUMN IF EXISTS textsearchable_index_col_vej;
+-- ALTER TABLE api.husnummer
 -- ADD COLUMN textsearchable_index_col_vej tsvector
 -- GENERATED ALWAYS AS
 --   (
@@ -98,8 +98,8 @@ FROM
 --   ) STORED
 -- ;
 
--- ALTER TABLE api.husnummer_mv DROP COLUMN IF EXISTS textsearchable_rank_col_vej;
--- ALTER TABLE api.husnummer_mv
+-- ALTER TABLE api.husnummer DROP COLUMN IF EXISTS textsearchable_rank_col_vej;
+-- ALTER TABLE api.husnummer
 -- ADD COLUMN textsearchable_rank_col_vej tsvector
 -- GENERATED ALWAYS AS
 --   (
@@ -110,10 +110,10 @@ FROM
 --   ) STORED
 -- ;
 
-CREATE INDEX ON basic.husnummer_mv USING GIN (textsearchable_plain_col_vej);
-CREATE INDEX ON basic.husnummer_mv USING GIN (textsearchable_unaccent_col_vej);
-CREATE INDEX ON basic.husnummer_mv USING GIN (textsearchable_phonetic_col_vej);
-CREATE INDEX ON basic.husnummer_mv (lower(vejnavn), vejid, sortering);
+CREATE INDEX ON basic.husnummer USING GIN (textsearchable_plain_col_vej);
+CREATE INDEX ON basic.husnummer USING GIN (textsearchable_unaccent_col_vej);
+CREATE INDEX ON basic.husnummer USING GIN (textsearchable_phonetic_col_vej);
+CREATE INDEX ON basic.husnummer (lower(vejnavn), vejid, sortering);
 
 DROP FUNCTION IF EXISTS api.husnummer(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.husnummer(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -195,7 +195,7 @@ BEGIN
       0::float AS rank1,
       0::float AS rank2
     FROM
-      basic.husnummer_mv
+      basic.husnummer
     WHERE
       lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
     ORDER BY
@@ -211,7 +211,7 @@ BEGIN
       basic.combine_rank($2, $2, textsearchable_plain_col_vej, textsearchable_unaccent_col_vej, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
       ts_rank_cd(textsearchable_phonetic_col_vej, to_tsquery(''simple'',$1))::double precision AS rank2
     FROM
-      basic.husnummer_mv
+      basic.husnummer
     WHERE
       (textsearchable_phonetic_col_vej @@ to_tsquery(''simple'', $1)
       OR textsearchable_plain_col_vej @@ to_tsquery(''simple'', $2))

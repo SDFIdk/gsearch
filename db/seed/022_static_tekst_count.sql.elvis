@@ -11,7 +11,7 @@ SELECT
   substring(lower(vejnavn) FROM 1 FOR a),
   count(*)
 FROM
-  basic.adresse_mv am
+  basic.adresse am
   CROSS JOIN a
 GROUP BY
   substring(lower(vejnavn) FROM 1 FOR a)
@@ -26,7 +26,7 @@ SELECT
   substring(lower(titel) FROM 1 FOR a),
   count(*)
 FROM
-  basic.husnummer_mv am
+  basic.husnummer am
   CROSS JOIN a
 GROUP BY
   substring(lower(titel) FROM 1 FOR a)
@@ -41,7 +41,7 @@ SELECT
   substring(lower(titel) FROM 1 FOR a),
   count(*)
 FROM
-  basic.navngivenvej_mv am
+  basic.navngivenvej am
   CROSS JOIN a
 GROUP BY
   substring(lower(titel) FROM 1 FOR a)
@@ -56,7 +56,7 @@ SELECT
   substring(lower(presentationstring) FROM 1 FOR a),
   count(*)
 FROM
-  basic.stednavn_mv am
+  basic.stednavn am
   CROSS JOIN a
 GROUP BY
   substring(lower(presentationstring) FROM 1 FOR a)

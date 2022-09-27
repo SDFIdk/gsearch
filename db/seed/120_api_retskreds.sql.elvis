@@ -19,7 +19,7 @@ COMMENT ON COLUMN api.retskreds.id IS 'retskredsnummer';
 COMMENT ON COLUMN api.retskreds.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.retskreds.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
-DROP TABLE IF EXISTS basic.retskreds_mv;
+DROP TABLE IF EXISTS basic.retskreds;
 WITH retskredse AS
 (
   SELECT
@@ -28,7 +28,7 @@ WITH retskredse AS
     myndighedskode,
     st_force2d(r.geometri) AS geometri
   FROM
-    dagi_500m_nohist_l1.retskreds r
+    dagi_500.retskreds r
 )
 SELECT
   r.navn AS titel,
@@ -38,7 +38,7 @@ SELECT
   st_multi(st_union(r.geometri)) AS geometri,
   st_extent(r.geometri) AS bbox
 INTO
-  basic.retskreds_mv
+  basic.retskreds
 FROM 
   retskredse r
 GROUP BY
@@ -46,8 +46,8 @@ GROUP BY
 ;
 
 
-ALTER TABLE basic.retskreds_mv DROP COLUMN IF EXISTS textsearchable_plain_col;
-ALTER TABLE basic.retskreds_mv
+ALTER TABLE basic.retskreds DROP COLUMN IF EXISTS textsearchable_plain_col;
+ALTER TABLE basic.retskreds
 ADD COLUMN textsearchable_plain_col tsvector
 GENERATED ALWAYS AS
   (
@@ -59,8 +59,8 @@ GENERATED ALWAYS AS
 ;
 
 
-ALTER TABLE basic.retskreds_mv DROP COLUMN IF EXISTS textsearchable_unaccent_col;
-ALTER TABLE basic.retskreds_mv
+ALTER TABLE basic.retskreds DROP COLUMN IF EXISTS textsearchable_unaccent_col;
+ALTER TABLE basic.retskreds
 ADD COLUMN textsearchable_unaccent_col tsvector
 GENERATED ALWAYS AS
   (
@@ -72,8 +72,8 @@ GENERATED ALWAYS AS
 ;
 
 
-ALTER TABLE basic.retskreds_mv DROP COLUMN IF EXISTS textsearchable_phonetic_col;
-ALTER TABLE basic.retskreds_mv
+ALTER TABLE basic.retskreds DROP COLUMN IF EXISTS textsearchable_phonetic_col;
+ALTER TABLE basic.retskreds
 ADD COLUMN textsearchable_phonetic_col tsvector
 GENERATED ALWAYS AS
   (
@@ -84,9 +84,9 @@ GENERATED ALWAYS AS
   ) STORED
 ;
 
-CREATE INDEX ON basic.retskreds_mv USING GIN (textsearchable_plain_col);
-CREATE INDEX ON basic.retskreds_mv USING GIN (textsearchable_unaccent_col);
-CREATE INDEX ON basic.retskreds_mv USING GIN (textsearchable_phonetic_col);
+CREATE INDEX ON basic.retskreds USING GIN (textsearchable_plain_col);
+CREATE INDEX ON basic.retskreds USING GIN (textsearchable_unaccent_col);
+CREATE INDEX ON basic.retskreds USING GIN (textsearchable_phonetic_col);
 
 DROP FUNCTION IF EXISTS api.retskreds(text, jsonb, int, int);
 
@@ -129,7 +129,7 @@ BEGIN
 	basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
     ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
   FROM
-    basic.retskreds_mv
+    basic.retskreds
   WHERE (
     textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
 	OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))

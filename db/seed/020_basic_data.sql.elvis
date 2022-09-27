@@ -1,0 +1,175 @@
+-- Create base data
+DROP TABLE IF EXISTS g_options;
+CREATE TEMPORARY TABLE g_options (maxrows int);
+INSERT INTO g_options VALUES (1000);
+
+
+-- DAGI
+
+
+DROP TABLE IF EXISTS dagi_500.kommuneinddeling;
+CREATE TABLE dagi_500.kommuneinddeling AS
+SELECT * FROM dagi_500_fdw.kommuneinddeling
+LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS dagi_500.opstillingskreds;
+CREATE TABLE dagi_500.opstillingskreds AS
+SELECT * FROM dagi_500_fdw.opstillingskreds
+LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS dagi_500.storkreds;
+CREATE TABLE dagi_500.storkreds AS
+SELECT * FROM dagi_500_fdw.storkreds
+LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS dagi_500.politikreds;
+CREATE TABLE dagi_500.politikreds AS
+SELECT * FROM dagi_500_fdw.politikreds
+LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS dagi_500.postnummerinddeling;
+CREATE TABLE dagi_500.postnummerinddeling AS
+SELECT * FROM dagi_500_fdw.postnummerinddeling
+LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS dagi_500.regionsinddeling;
+CREATE TABLE dagi_500.regionsinddeling AS
+SELECT * FROM dagi_500_fdw.regionsinddeling
+LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS dagi_500.retskreds;
+CREATE TABLE dagi_500.retskreds AS
+SELECT * FROM dagi_500_fdw.retskreds
+LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS dagi_500.sogneinddeling;
+CREATE TABLE dagi_500.sogneinddeling AS
+SELECT * FROM dagi_500_fdw.sogneinddeling
+LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS dagi.postnummerinddeling;
+CREATE TABLE dagi.postnummerinddeling AS
+SELECT * FROM dagi_fdw.postnummerinddeling
+LIMIT (SELECT maxrows FROM g_options);
+
+
+-- DAR
+
+DROP TABLE IF EXISTS dar.navngivenvej;
+CREATE TABLE dar.navngivenvej AS
+SELECT
+  id::uuid,
+  vejnavn,
+  vejnavnebeliggenhed_vejnavnelinje as geometri
+FROM dar_fdw.dar1_navngivenvej_current
+LIMIT (SELECT maxrows FROM g_options);
+
+
+DROP TABLE IF EXISTS dar.navngivenvejpostnummer;
+CREATE TABLE dar.navngivenvejpostnummer AS
+SELECT
+  id::uuid,
+  navngivenvej_id::uuid as navngivenvej,
+  postnummer_id::uuid as postnummer
+--FROM dar_fdw.navngivenvejpostnummer_current
+FROM dar_fdw.dar1_navngivenvejpostnummerrelation_current
+LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS dar.postnummer;
+CREATE TABLE dar.postnummer AS
+SELECT
+  id::uuid,
+  navn,
+  postnr
+FROM
+  dar_fdw.dar1_postnummer_current
+LIMIT (SELECT maxrows FROM g_options);
+
+CREATE INDEX ON dar.navngivenvej(id);
+CREATE INDEX ON dar.navngivenvej USING gist(geometri);
+CREATE INDEX ON dar.navngivenvejpostnummer(navngivenvej, postnummer);
+CREATE INDEX ON dar.postnummer(id);
+
+DROP TABLE IF EXISTS dar.adresse;
+CREATE TABLE dar.adresse AS
+SELECT
+  id::uuid,
+  adressebetegnelse,
+  dørbetegnelse,
+  dørpunkt_id as doerpunkt,
+  etagebetegnelse,
+  fk_bbr_bygning_bygning::uuid as bygning,
+  husnummer_id::uuid as husnummer
+FROM
+  dar_fdw.dar1_adresse
+WHERE upper(virkning) IS NULL
+AND upper(registrering) IS NULL
+LIMIT (SELECT maxrows FROM g_options);
+
+
+DROP TABLE IF EXISTS dar.husnummer;
+CREATE TABLE dar.husnummer AS
+SELECT DISTINCT
+  id::uuid,
+  adgangsadressebetegnelse,
+  adgangspunkt_id::uuid as adgangspunkt,
+  husnummerretning,
+  husnummertekst,
+  vejpunkt_id::uuid as vejpunkt,
+  fk_mu_jordstykke_jordstykke as jordstykke,
+  fk_mu_jordstykke_foreløbigtplaceretpåjordstykke as placeretpaaforeloebigtjordstykke,
+  fk_geodk_bygning_geodanmarkbygning as geodanmarkbygning,
+  fk_bbr_bygning_adgangtilbygning::uuid as adgangtilbygning,
+  supplerendebynavn_id as supplerendebynavn,
+  postnummer_id as postnummer,
+  substring(fk_geodk_vejmidte_vejmidte FROM 1 FOR 4) AS kommunekode,
+  substring(fk_geodk_vejmidte_vejmidte FROM 6 FOR 4) AS vejkode,
+  navngivenvej_id::uuid as navngivenvej
+FROM
+  dar_fdw.dar1_husnummer
+WHERE upper(registrering) IS NULL
+AND upper(virkning) IS NULL
+LIMIT (SELECT maxrows FROM g_options);
+
+
+DROP TABLE IF EXISTS dar.adressepunkt;
+CREATE TABLE dar.adressepunkt AS
+SELECT
+  id::uuid,
+  position AS geometri
+FROM
+  dar_fdw.dar1_adressepunkt_current ac
+LIMIT (SELECT maxrows FROM g_options);
+
+
+-- Indices
+CREATE INDEX ON dar.adresse(husnummer);
+CREATE INDEX ON dar.adresse(adressebetegnelse);
+CREATE INDEX ON dar.husnummer(id);
+CREATE INDEX ON dar.husnummer(navngivenvej);
+CREATE INDEX ON dar.husnummer(vejpunkt);
+CREATE INDEX ON dar.adressepunkt(id);
+CREATE INDEX ON dar.adressepunkt USING gist (geometri);
+
+-- Primary keys
+ALTER TABLE dar.husnummer ADD CONSTRAINT husnummer_pk PRIMARY KEY (id);
+ALTER TABLE dar.adresse ADD CONSTRAINT adresse_pk PRIMARY KEY (id);
+ALTER TABLE dar.adressepunkt ADD CONSTRAINT adressepunkt_pk PRIMARY KEY (id);
+
+-- Foreign keys internal to dar
+-- ALTER TABLE dar.adresse ADD CONSTRAINT adresse_husnummer_fk FOREIGN KEY (husnummer) REFERENCES dar.husnummer (id) MATCH FULL;
+
+DROP TABLE IF EXISTS scratch.dar_husnummer_dar_adgangspunkt_fk;
+WITH invalid_relation AS
+(UPDATE dar.husnummer h SET adgangspunkt = NULL WHERE adgangspunkt IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dar.adressepunkt a WHERE h.adgangspunkt = a.id) RETURNING *)
+SELECT * INTO scratch.dar_husnummer_dar_adgangspunkt_fk FROM invalid_relation;
+ALTER TABLE dar.husnummer ADD CONSTRAINT husnummer_adgangspunkt_fk FOREIGN KEY (adgangspunkt) REFERENCES dar.adressepunkt (id) MATCH FULL;
+
+DROP TABLE IF EXISTS scratch.dar_husnummer_dar_vejpunkt_fk;
+WITH invalid_relation AS
+(UPDATE dar.husnummer h SET vejpunkt = NULL WHERE vejpunkt IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dar.adressepunkt a WHERE h.vejpunkt = a.id) RETURNING *)
+SELECT * INTO scratch.dar_husnummer_dar_vejpunkt_fk FROM invalid_relation;
+ALTER TABLE dar.husnummer ADD CONSTRAINT husnummer_vejpunkt_fk FOREIGN KEY (vejpunkt) REFERENCES dar.adressepunkt (id) MATCH FULL;
+
+ALTER TABLE dar.husnummer ADD CONSTRAINT adresse_husnummer_adgangspunkt_fk FOREIGN KEY (adgangspunkt) REFERENCES dar.adressepunkt (id) MATCH FULL;
+ALTER TABLE dar.husnummer ADD CONSTRAINT adresse_husnummer_vejpunkt_fk FOREIGN KEY (vejpunkt) REFERENCES dar.adressepunkt (id) MATCH FULL;
