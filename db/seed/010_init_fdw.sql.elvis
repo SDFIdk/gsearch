@@ -6,7 +6,7 @@ CREATE SERVER IF NOT EXISTS :dagi_server FOREIGN DATA WRAPPER postgres_fdw OPTIO
 DROP USER MAPPING IF EXISTS FOR CURRENT_USER SERVER :dagi_server;
 CREATE USER MAPPING FOR CURRENT_USER SERVER :dagi_server OPTIONS (user :dagi_username, password :dagi_password);
 
-IMPORT FOREIGN SCHEMA dagi_m_a_latest FROM SERVER :dagi_server INTO dagi_fdw;
+IMPORT FOREIGN SCHEMA dagi_m_a_latest FROM SERVER :dagi_server INTO dagi_10_fdw;
 IMPORT FOREIGN SCHEMA dagi_m_a_500_latest FROM SERVER :dagi_server INTO dagi_500_fdw;
 
 
