@@ -51,7 +51,7 @@ public class Controller {
             handle.registerRowMapper(FieldMapper.factory(Data.class));
             List<Data> data = handle
                 .createQuery(sql)
-                .bind("search", q)
+                .bind("q", q)
                 .bind("where", where)
                 .bind("limit", limit)
                 .map(new DataMapper(resource))
