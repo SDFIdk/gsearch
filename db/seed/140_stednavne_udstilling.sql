@@ -32,10 +32,18 @@ SELECT
     initcap(bebyggelsestype) as subtype_presentation,
     geometri,
     st_simplify(geometri, 100, true) as geometri_udtyndet,
-    skrivemaade || ' (' || initcap(bebyggelsestype) || ' i ' || ')' as presentationstring,
+    skrivemaade as presentationstring,
     udregnet_areal as area,
     '0000' as municipality_filter
 FROM stednavne.bebyggelse;
+
+
+UPDATE stednavne.stednavne_udstilling 
+SET presentationstring = s.skrivemaade || ' (by i ' || p.navn || ')'
+FROM
+    stednavne.stednavne_udstilling s JOIN
+    dagi_10.postnummerinddeling p ON (ST_contains(p.geometri, s.geometri_udtyndet));
+
 
 
 -- BEGRAVELSESPLADS
