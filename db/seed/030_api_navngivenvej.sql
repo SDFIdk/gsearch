@@ -1,24 +1,25 @@
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.navngivenvej CASCADE;
-CREATE TYPE api.navngivenvej AS (
-        id TEXT,
-        praesentation TEXT,
-        vejnavn TEXT,
-        postnumre TEXT,
-        postdistrikter TEXT,
-        geometri geometry,
-        bbox geometry,
-        rang1 double precision,
-        rang2 double precision
-        );  
+CREATE TYPE api.navngivenvej AS
+(
+ id             TEXT,
+ vejnavn        TEXT,
+ praesentation  TEXT,
+ postnummer     TEXT,
+ postdistrikter TEXT,
+ geometri       geometry,
+ bbox           geometry,
+ rang1          double precision,
+ rang2          double precision
+ );
 
-COMMENT ON TYPE api.navngivenvej IS 'navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.praesentation IS 'Præsentationsform for et navngivenvej';
+COMMENT ON TYPE api.navngivenvej IS 'Navngivenvej';
+COMMENT ON COLUMN api.navngivenvej.id IS 'ID på navngiven vej';
 COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
-COMMENT ON COLUMN api.navngivenvej.id IS 'Id på navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.postnumre IS 'Postnumre for navngivenvej';
-COMMENT ON COLUMN api.navngivenvej.postdistrikter IS 'Postdistrikter for navngivenvej';
+COMMENT ON COLUMN api.navngivenvej.praesentation IS 'Præsentationsform for et navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postdistrikter IS 'Postdistrikter for navngiven vej';
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej';
 COMMENT ON COLUMN api.navngivenvej.bbox IS 'Geometriens boundingbox';
 
@@ -26,103 +27,99 @@ DROP TABLE IF EXISTS basic.navngivenvej;
 
 WITH vejnavne AS
 (
- SELECT
- n.id,
+ SELECT n.id                     AS id,
  n.vejnavn,
- p.postnr as postnr,
- p.navn as postdistrikt, 
+ p.postnr                         AS postnummer,
+ p.navn                           AS postdistrikter,
  st_force2d(COALESCE(n.geometri)) AS geometri
- FROM
- dar.navngivenvej n
+ FROM dar.navngivenvej n
  JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej = n.id)
  JOIN dar.postnummer p ON (nvp.postnummer = p.id)
  )
-SELECT
-v.vejnavn as praesentation, --|| '(' || v.postnumre[1] || ' - ' || v.postnumre[-1] || ')' AS titel,
-    v.id,
-    coalesce(v.vejnavn, '') AS vejnavn,
-    array_agg(distinct v.postnr) AS postnumre,
-    array_agg(distinct v.postdistrikt) AS postdistrikter,
-    st_multi(st_union(geometri)) AS geometri,
-    st_envelope(st_collect(v.geometri)) AS bbox
-    INTO
-    basic.navngivenvej
-    FROM 
-    vejnavne v
-    GROUP BY v.id, v.vejnavn
-    ;
+--SELECT v.vejnavn || '(' || v.postnummer[1] || ' - ' || v.postnummer[-1] || ')' AS praesentation,
+SELECT v.vejnavn as praesentation,
+       v.id,
+       coalesce(v.vejnavn, '')                                                 AS vejnavn,
+       array_agg(distinct v.postnummer)                                        AS postnumre,
+       array_agg(distinct v.postdistrikter)                                    AS postdistrikter,
+       st_multi(st_union(geometri))                                            AS geometri,
+       st_envelope(st_collect(v.geometri))                                     AS bbox
+       INTO basic.navngivenvej
+       FROM vejnavne v
+       GROUP BY v.id, v.vejnavn;
 
+       -- textsearchable column using predefined custom config consisting of a collection of FTS dictionaries - see 012_init_configuration.sql
+       -- use either this or one below. 
+       -- ALTER TABLE api.navngivenvej DROP COLUMN IF EXISTS textsearchable_index_col;
+       -- ALTER TABLE api.navngivenvej
+       -- ADD COLUMN textsearchable_index_col tsvector
+       -- GENERATED ALWAYS AS
+       --   (
+               --    setweight(to_tsvector('api.septima_fts_config', split_part(coalesce(vejnavn, ''), ' ', 1)), 'A') ||
+               --     setweight(to_tsvector('api.septima_fts_config', split_part(coalesce(vejnavn, ''), ' ', 2)), 'B') ||
+               --     setweight(to_tsvector('api.septima_fts_config', split_part(coalesce(vejnavn, ''), ' ', 3)), 'C') ||
+               --     setweight(to_tsvector('api.septima_fts_config', api.split_and_endsubstring_fonetik(vejnavn, 4)), 'D')
+               --   ) STORED
+       -- ;
 
-    -- textsearchable column using predefined custom config consisting of a collection of FTS dictionaries - see 012_init_configuration.sql
-    -- use either this or one below. 
-    -- ALTER TABLE api.navngivenvej DROP COLUMN IF EXISTS textsearchable_index_col;
-    -- ALTER TABLE api.navngivenvej
-    -- ADD COLUMN textsearchable_index_col tsvector
-    -- GENERATED ALWAYS AS
-    --   (
-            --    setweight(to_tsvector('api.septima_fts_config', split_part(coalesce(vejnavn, ''), ' ', 1)), 'A') ||
-            --     setweight(to_tsvector('api.septima_fts_config', split_part(coalesce(vejnavn, ''), ' ', 2)), 'B') ||
-            --     setweight(to_tsvector('api.septima_fts_config', split_part(coalesce(vejnavn, ''), ' ', 3)), 'C') ||
-            --     setweight(to_tsvector('api.septima_fts_config', api.split_and_endsubstring_fonetik(vejnavn, 4)), 'D')
-            --   ) STORED
-    -- ;
+       -- plain textsearchable column
+       ALTER TABLE basic.navngivenvej
+       DROP COLUMN IF EXISTS textsearchable_plain_col;
+       ALTER TABLE basic.navngivenvej
+       ADD COLUMN textsearchable_plain_col tsvector
+       GENERATED ALWAYS AS
+       (
+        setweight(to_tsvector('simple', split_part(vejnavn, ' ', 1)), 'A') ||
+        setweight(to_tsvector('simple', split_part(vejnavn, ' ', 2)), 'B') ||
+        setweight(to_tsvector('simple', split_part(vejnavn, ' ', 3)), 'C') ||
+        setweight(to_tsvector('simple', basic.split_and_endsubstring(vejnavn, 4)), 'D')
+       ) STORED;
 
-    -- plain textsearchable column
-    ALTER TABLE basic.navngivenvej DROP COLUMN IF EXISTS textsearchable_plain_col;
-    ALTER TABLE basic.navngivenvej
-    ADD COLUMN textsearchable_plain_col tsvector
-    GENERATED ALWAYS AS
-    (
-     setweight(to_tsvector('simple', split_part(vejnavn, ' ', 1)), 'A') ||
-     setweight(to_tsvector('simple', split_part(vejnavn, ' ', 2)), 'B') ||
-     setweight(to_tsvector('simple', split_part(vejnavn, ' ', 3)), 'C') ||
-     setweight(to_tsvector('simple', basic.split_and_endsubstring(vejnavn, 4)), 'D')
-    ) STORED
-    ;
+       -- unaccented textsearchable column: å -> aa, é -> e, ect.
+       ALTER TABLE basic.navngivenvej
+       DROP COLUMN IF EXISTS textsearchable_unaccent_col;
+       ALTER TABLE basic.navngivenvej
+       ADD COLUMN textsearchable_unaccent_col tsvector
+       GENERATED ALWAYS AS
+       (
+        setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 1)), 'A') ||
+        setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 2)), 'B') ||
+        setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 3)), 'C') ||
+        setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(vejnavn, 4)),
+            'D')
+       ) STORED;
 
-    -- unaccented textsearchable column: å -> aa, é -> e, ect.
-    ALTER TABLE basic.navngivenvej DROP COLUMN IF EXISTS textsearchable_unaccent_col;
-    ALTER TABLE basic.navngivenvej
-    ADD COLUMN textsearchable_unaccent_col tsvector
-    GENERATED ALWAYS AS
-    (
-     setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 1)), 'A') ||
-     setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 2)), 'B') ||
-     setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 3)), 'C') ||
-     setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(vejnavn, 4)), 'D')
-    ) STORED
-    ;
+       -- phonetic textsearchable column: christian -> kristian, k
+       ALTER TABLE basic.navngivenvej
+       DROP COLUMN IF EXISTS textsearchable_phonetic_col;
+       ALTER TABLE basic.navngivenvej
+       ADD COLUMN textsearchable_phonetic_col tsvector
+       GENERATED ALWAYS AS
+       (
+        setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(vejnavn, ' ', 1), 2)), 'A') ||
+        setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(vejnavn, ' ', 2), 2)), 'B') ||
+        setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(vejnavn, ' ', 3), 2)), 'C') ||
+        setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(vejnavn, 4)), 'D')
+       ) STORED;
 
-    -- phonetic textsearchable column: christian -> kristian, k
-    ALTER TABLE basic.navngivenvej DROP COLUMN IF EXISTS textsearchable_phonetic_col;
-    ALTER TABLE basic.navngivenvej
-    ADD COLUMN textsearchable_phonetic_col tsvector
-    GENERATED ALWAYS AS
-    (
-     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(vejnavn, ' ', 1), 2)), 'A') ||
-     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(vejnavn, ' ', 2), 2)), 'B') ||
-     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(vejnavn, ' ', 3), 2)), 'C') ||
-     setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(vejnavn, 4)), 'D')
-    ) STORED
-    ;
+       CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_plain_col);
+       CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_unaccent_col);
+       CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_phonetic_col);
+       CREATE INDEX ON basic.navngivenvej (lower(vejnavn));
 
-    CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_plain_col);
-    CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_unaccent_col);
-    CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_phonetic_col);
-    CREATE INDEX ON basic.navngivenvej (lower(vejnavn));
+       DROP FUNCTION IF EXISTS api.navngivenvej(text, text, int, int);
 
-
-    DROP FUNCTION IF EXISTS api.navngivenvej(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.navngivenvej(input_tekst text, filters text, sortoptions int, rowlimit int)
     RETURNS SETOF api.navngivenvej
     LANGUAGE plpgsql
     STABLE
-    AS $function$
-    DECLARE 
-    max_rows integer;
-    query_string TEXT;
+    AS
+    $function$
+    DECLARE
+    max_rows           integer;
+    query_string       TEXT;
     plain_query_string TEXT;
-    stmt TEXT;
+    stmt               TEXT;
     BEGIN
     -- Initialize
     max_rows = 100;
@@ -132,18 +129,23 @@ CREATE OR REPLACE FUNCTION api.navngivenvej(input_tekst text, filters text, sort
     IF filters IS NULL THEN
     filters = '1=1';
     END IF;
-    IF btrim(input_tekst) = Any('{.,-, '', \,}')  THEN
+    IF btrim(input_tekst) = Any ('{.,-, '', \,}') THEN
     input_tekst = '';
-    END IF;  
+    END IF;
     -- Build the query_string
     WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
-    SELECT
-    string_agg(fonetik.fnfonetik(t,2), ':* <-> ') || ':*' FROM tokens INTO query_string;
+    SELECT string_agg(fonetik.fnfonetik(t, 2), ':* <-> ') || ':*'
+    FROM tokens
+    INTO query_string;
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (SELECT UNNEST(string_to_array(btrim(input_tekst), ' ')) t)
-    SELECT
-    string_agg(t, ':* <-> ') || ':*' FROM tokens INTO plain_query_string;
-    IF (SELECT COALESCE(forekomster, 0) FROM basic.tekst_forekomst WHERE ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 
+    SELECT string_agg(t, ':* <-> ') || ':*'
+    FROM tokens
+    INTO plain_query_string;
+IF (SELECT COALESCE(forekomster, 0)
+        FROM basic.tekst_forekomst
+        WHERE ressource = 'adresse'
+        AND lower(input_tekst) = tekstelement) > 1000
     AND filters = '1=1' THEN
     stmt = format(E'SELECT
             id::text, vejnavn::text, praesentation::text, array_to_string(postnumre, '','', ''*''), array_to_string(postdistrikter, '',''), geometri, bbox,
@@ -175,10 +177,10 @@ CREATE OR REPLACE FUNCTION api.navngivenvej(input_tekst text, filters text, sort
             LIMIT $3;', filters);
     RAISE NOTICE '%',stmt;
     RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
-    END IF; 
+    END IF;
     END
-    $function$
-    ;
+    $function$;
+
 
     -- Test cases:
     /*
@@ -196,4 +198,3 @@ CREATE OR REPLACE FUNCTION api.navngivenvej(input_tekst text, filters text, sort
        SELECT (api.navngivenvej('vilhelm becks',NULL, 1, 100)).*;
        SELECT (api.navngivenvej('sadd',NULL, 1, 100)).*;
      */
-
