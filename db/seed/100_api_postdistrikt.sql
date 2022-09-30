@@ -1,21 +1,23 @@
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.postdistrikt CASCADE;
-CREATE TYPE api.postdistrikt AS (
-        id TEXT,
-        "name" TEXT,
-        presentationstring TEXT,
-        gadepostnummer bool,
-        geometri geometry,
-        bbox geometry,
-        rang1 double precision,
-        rang2 double precision
-        );
+CREATE TYPE api.postdistrikt AS
+(
+ id             TEXT,
+ postdistrikt   TEXT,
+ praesentation  TEXT,
+ gadepostnummer bool,
+ geometri       geometry,
+ bbox           geometry,
+ rang1          double precision,
+ rang2          double precision
+ );
 
 COMMENT ON TYPE api.postdistrikt IS 'Postdistrikt';
-COMMENT ON COLUMN api.postdistrikt.presentationstring IS 'Præsentationsform for et postdistrikt';
-COMMENT ON COLUMN api.postdistrikt."name" IS 'Navn på postdistrikt';
 COMMENT ON COLUMN api.postdistrikt.id IS 'Postnummer';
+COMMENT ON COLUMN api.postdistrikt.postdistrikt IS 'Navn på postdistrikt';
+COMMENT ON COLUMN api.postdistrikt.praesentation IS 'Præsentationsform for et postdistrikt';
+COMMENT ON COLUMN api.postdistrikt.gadepostnummer IS 'Dækker postnummeret kun en gade';
 COMMENT ON COLUMN api.postdistrikt.geometri IS 'Geometri i valgt koordinatsystem';
 COMMENT ON COLUMN api.postdistrikt.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
@@ -24,17 +26,16 @@ WITH postnumre AS
 (
  SELECT
  COALESCE(p2.postnummer, p1.postnummer) AS postnummer,
- COALESCE(p2.navn, p1.navn) AS navn,
+ COALESCE(p2.navn, p1.navn) AS postdistrikt,
  COALESCE(p2.ergadepostnummer, p1.ergadepostnummer) AS ergadepostnummer,
  st_force2d(COALESCE(p2.geometri, p1.geometri)) AS geometri
  FROM
  dagi_10.postnummerinddeling p1
  LEFT JOIN dagi_500.postnummerinddeling p2 USING (postnummer)
  )
-SELECT
-p.postnummer || ' ' || p.navn AS titel,
+SELECT p.postnummer || ' ' || p.postdistrikt AS praesentation,
     coalesce(p.postnummer, '') AS postnummer,
-    coalesce(p.navn, '') AS navn,
+    coalesce(p.postdistrikt, '') AS postdistrikt,
     (p.ergadepostnummer = 'true') AS ergadepostnummer,
     st_multi(st_union(p.geometri)) AS geometri,
     st_extent(p.geometri) AS bbox,
@@ -45,7 +46,7 @@ p.postnummer || ' ' || p.navn AS titel,
     postnumre p
 LEFT JOIN dagi_500.kommuneinddeling k ON (st_intersects(k.geometri, p.geometri))
     GROUP BY
-    p.postnummer, p.navn, p.ergadepostnummer
+    p.postnummer, p.postdistrikt, p.ergadepostnummer
     ;
 
     ALTER TABLE basic.postdistrikt DROP COLUMN IF EXISTS textsearchable_plain_col;
@@ -54,11 +55,10 @@ LEFT JOIN dagi_500.kommuneinddeling k ON (st_intersects(k.geometri, p.geometri))
     GENERATED ALWAYS AS
     (
      setweight(to_tsvector('simple', postnummer), 'A') ||
-     setweight(to_tsvector('simple', split_part(navn, ' ', 1)), 'B') ||
-     setweight(to_tsvector('simple', split_part(navn, ' ', 2)), 'C') ||
-     setweight(to_tsvector('simple', basic.split_and_endsubstring(navn, 3)), 'D') 
-    ) STORED
-    ;
+     setweight(to_tsvector('simple', split_part(postdistrikt, ' ', 1)), 'B') ||
+     setweight(to_tsvector('simple', split_part(postdistrikt, ' ', 2)), 'C') ||
+     setweight(to_tsvector('simple', basic.split_and_endsubstring(postdistrikt, 3)), 'D') 
+    ) STORED;
 
     ALTER TABLE basic.postdistrikt DROP COLUMN IF EXISTS textsearchable_unaccent_col;
     ALTER TABLE basic.postdistrikt
@@ -66,9 +66,9 @@ LEFT JOIN dagi_500.kommuneinddeling k ON (st_intersects(k.geometri, p.geometri))
     GENERATED ALWAYS AS
     (
      setweight(to_tsvector('basic.septima_fts_config', postnummer), 'A') ||
-     setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 1)), 'B') ||
-     setweight(to_tsvector('basic.septima_fts_config', split_part(navn, ' ', 2)), 'C') ||
-     setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(navn, 3)), 'D') 
+     setweight(to_tsvector('basic.septima_fts_config', split_part(postdistrikt, ' ', 1)), 'B') ||
+     setweight(to_tsvector('basic.septima_fts_config', split_part(postdistrikt, ' ', 2)), 'C') ||
+     setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring(postdistrikt, 3)), 'D') 
     ) STORED
     ;
 
@@ -78,9 +78,9 @@ LEFT JOIN dagi_500.kommuneinddeling k ON (st_intersects(k.geometri, p.geometri))
     GENERATED ALWAYS AS
     (
      setweight(to_tsvector('simple', postnummer), 'A') ||
-     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 1), 2)), 'B') ||
-     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(navn, ' ', 2), 2)), 'C') ||
-     setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(navn, 3)), 'D') 
+     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(postdistrikt, ' ', 1), 2)), 'B') ||
+     setweight(to_tsvector('simple', fonetik.fnfonetik(split_part(postdistrikt, ' ', 2), 2)), 'C') ||
+     setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik(postdistrikt, 3)), 'D') 
     ) STORED
     ;
 
@@ -94,17 +94,18 @@ CREATE OR REPLACE FUNCTION api.postdistrikt(input_tekst text,filters text,sortop
     RETURNS SETOF api.postdistrikt
     LANGUAGE plpgsql
     STABLE
-    AS $function$
-    DECLARE 
-    max_rows integer;
-    input_postdistrikt TEXT;
-    input_postnr TEXT;
-    postdistrikt_string TEXT;
+    AS
+    $function$
+    DECLARE
+    max_rows                  integer;
+    input_postdistrikt        TEXT;
+    input_postnummer          TEXT;
+    postdistrikt_string       TEXT;
     postdistrikt_string_plain TEXT;
-    postnr_string TEXT;
-    query_string TEXT;
-    plain_query_string TEXT;
-    stmt TEXT;
+    postnummer_string         TEXT;
+    query_string              TEXT;
+    plain_query_string        TEXT;
+    stmt                      TEXT;
     BEGIN
     -- Initialize
     max_rows = 100;
@@ -120,10 +121,10 @@ CREATE OR REPLACE FUNCTION api.postdistrikt(input_tekst text,filters text,sortop
     END IF;
 
     SELECT btrim(regexp_replace(input_tekst, '(?<!\S)\d\S*', '', 'g')) INTO input_postdistrikt; -- matches non-digits
-    SELECT btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) INTO input_postnr; --matches digits
+    SELECT btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) INTO input_postnummer; --matches digits
 
     raise notice 'input_postdistrikt: %', input_postdistrikt;
-    raise notice 'input_postnr: %', input_postnr;
+    raise notice 'input_postnummer: %', input_postnummer;
 
     WITH tokens AS (SELECT UNNEST(string_to_array(input_postdistrikt, ' ')) t)
     SELECT
@@ -133,28 +134,28 @@ CREATE OR REPLACE FUNCTION api.postdistrikt(input_tekst text,filters text,sortop
     SELECT
     string_agg(t, ':BCD* <-> ') || ':BCD*' FROM tokens INTO postdistrikt_string_plain;
 
-    WITH tokens AS (SELECT UNNEST(string_to_array(input_postnr, ' ')) t)
-    SELECT string_agg(t, ':A | ') || ':A' FROM tokens INTO postnr_string;
+    WITH tokens AS (SELECT UNNEST(string_to_array(input_postnummer, ' ')) t)
+    SELECT string_agg(t, ':A | ') || ':A' FROM tokens INTO postnummer_string;
 
     raise notice 'postdistrikt_string: %', postdistrikt_string;
     raise notice 'postdistrikt_string_plain: %', postdistrikt_string_plain;
-    raise notice 'postnr_string: %', postnr_string;
+    raise notice 'postnummer_string: %', postnummer_string;
     CASE
-    WHEN postdistrikt_string IS NULL THEN SELECT postnr_string INTO query_string;
-    WHEN postnr_string IS NULL THEN SELECT postdistrikt_string INTO query_string;
-    ELSE SELECT postdistrikt_string || ' | ' || postnr_string INTO query_string;
+    WHEN postdistrikt_string IS NULL THEN SELECT postnummer_string INTO query_string;
+    WHEN postnummer_string IS NULL THEN SELECT postdistrikt_string INTO query_string;
+    ELSE SELECT postdistrikt_string || ' | ' || postnummer_string INTO query_string;
     END CASE;
 
     CASE
-    WHEN postdistrikt_string_plain IS NULL THEN SELECT postnr_string INTO plain_query_string;
-    WHEN postnr_string IS NULL THEN SELECT postdistrikt_string_plain INTO plain_query_string;
-    ELSE SELECT postdistrikt_string_plain || ' | ' || postnr_string INTO plain_query_string;
+    WHEN postdistrikt_string_plain IS NULL THEN SELECT postnummer_string INTO plain_query_string;
+    WHEN postnummer_string IS NULL THEN SELECT postdistrikt_string_plain INTO plain_query_string;
+    ELSE SELECT postdistrikt_string_plain || ' | ' || postnummer_string INTO plain_query_string;
     END CASE;
     raise notice 'query_string: %', query_string;
     raise notice 'plain_query_string: %', plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            postnummer::text, navn::text, titel, ergadepostnummer, geometri, bbox::geometry,
+            postnummer::text, postdistrikt::text, praesentation, ergadepostnummer, geometri, bbox::geometry,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM
@@ -165,7 +166,7 @@ CREATE OR REPLACE FUNCTION api.postdistrikt(input_tekst text,filters text,sortop
             AND %s
             ORDER BY
             rank1 desc, rank2 desc,
-            navn
+            postdistrikt
             LIMIT $3
             ;', filters);
     RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;

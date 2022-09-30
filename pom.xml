@@ -13,7 +13,7 @@
   <artifactId>gsearch</artifactId>
   <version>0.1.0</version>
   <name>gsearch</name>
-  <description>New generation geosearch</description>
+  <description>Gsearch</description>
   <properties>
     <java.version>17</java.version>
   </properties>
