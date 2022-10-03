@@ -30,7 +30,7 @@ WITH politikredse AS
  st_force2d(p.geometri) AS geometri
  FROM dagi_500.politikreds p
  )
-SELECT REPLACE(p.navn, 'Politi', 'Politikreds') AS praesention,
+SELECT REPLACE(p.navn, 'Politi', 'Politikreds') AS praesentation,
        p.politikredsnummer,
        coalesce(p.navn, '')                     AS navn,
        p.myndighedskode,
@@ -125,7 +125,7 @@ CREATE OR REPLACE FUNCTION api.politikreds(input_tekst text, filters text, sorto
 
     -- Execute and return the result
     stmt = format(E'SELECT
-            politikredsnummer::text, navn::text, praesentation, myndighedskode, geometri, bbox::geometry,
+            politikredsnummer::text, navn::text, praesentation, myndighedskode::text, geometri, bbox::geometry,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM
