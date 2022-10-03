@@ -1,8 +1,11 @@
 Feature: Gsearch test
 
 Background:
-* url serviceUrl + '/search'
+* url url + '/search'
 
-Scenario: Testing valid GET endpoint
+Scenario: Matriklen
+    Then param q = 'lund'
+    And param resources = 'matrikelnummer'
     When method GET
     Then status 200
+    And match response == '#[10]'
