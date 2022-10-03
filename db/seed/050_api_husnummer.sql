@@ -39,7 +39,7 @@ WITH husnumre AS
  SELECT h.id                       AS id,
  h.adgangsadressebetegnelse,
  h.husnummertekst as husnummer,
- h.navngivenvej,
+ h.navngivenvej_id,
  n.vejnavn,
  h.vejkode,
  h.kommunekode,
@@ -49,10 +49,10 @@ WITH husnumre AS
  st_force2d(COALESCE(ap.geometri))  as adgangspunkt_geometri,
  st_force2d(COALESCE(ap2.geometri)) as vejpunkt_geometri
  FROM dar.husnummer h
- JOIN dar.navngivenvej n ON n.id = h.navngivenvej::uuid
- JOIN dar.postnummer p ON p.id = h.postnummer::uuid
- JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt
- JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt
+ JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
+ JOIN dar.postnummer p ON p.id = h.postnummer_id::uuid
+ JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt_id
+ JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt_id
  JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
  )
 SELECT h.id,
@@ -64,12 +64,12 @@ SELECT h.id,
        h.kommunenavn,
        h.postnummer,
        h.postdistrikt,
-       h.navngivenvej,
+       h.navngivenvej_id,
        nv.textsearchable_plain_col       AS textsearchable_plain_col_vej,
        nv.textsearchable_unaccent_col    AS textsearchable_unaccent_col_vej,
        nv.textsearchable_phonetic_col    AS textsearchable_phonetic_col_vej,
        ROW_NUMBER() OVER
-       (PARTITION BY h.navngivenvej ORDER BY
+       (PARTITION BY h.navngivenvej_id ORDER BY
         NULLIF((substring(h.husnummer::text FROM '[0-9]*')), '')::int,
         substring(h.husnummer::text FROM '[0-9]*([A-Z])') NULLS FIRST
        )                             AS sortering,
@@ -77,7 +77,7 @@ SELECT h.id,
        st_multi(h.vejpunkt_geometri)     as vejpunkt_geometri
        INTO basic.husnummer
        FROM husnumre h
-       JOIN basic.navngivenvej nv ON h.navngivenvej = nv.id;
+       JOIN basic.navngivenvej nv ON h.navngivenvej_id = nv.id;
 
        -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
 
@@ -108,7 +108,7 @@ SELECT h.id,
        CREATE INDEX ON basic.husnummer USING GIN (textsearchable_plain_col_vej);
        CREATE INDEX ON basic.husnummer USING GIN (textsearchable_unaccent_col_vej);
        CREATE INDEX ON basic.husnummer USING GIN (textsearchable_phonetic_col_vej);
-       CREATE INDEX ON basic.husnummer (lower(vejnavn), navngivenvej, sortering);
+       CREATE INDEX ON basic.husnummer (lower(vejnavn), navngivenvej_id, sortering);
 
        DROP FUNCTION IF EXISTS api.husnummer(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.husnummer(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -206,7 +206,7 @@ IF (SELECT COALESCE(forekomster, 0)
             WHERE
             lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
             ORDER BY
-            lower(vejnavn), navngivenvej, sortering
+            lower(vejnavn), navngivenvej_id, sortering
             LIMIT $3;', input_tekst, input_tekst);
     --   RAISE notice '%', stmt;
     RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
