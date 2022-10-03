@@ -23,21 +23,25 @@ COMMENT ON COLUMN api.matrikelnummer.geometri IS 'Geometri i valgt koordinatsyst
 
 
 DROP TABLE IF EXISTS basic.matrikelnummer;
+
 with matrikelnumre AS
 (
- SELECT coalesce(j.ejerlavsnavn, '')         AS ejerlavsnavn,
- coalesce(j.ejerlavskode::text, '')   AS ejerlavskode,
- coalesce(j.kommunenavn, '')          AS kommunenavn,
+ SELECT coalesce(e.ejerlavsnavn, '')         AS ejerlavsnavn,
+ coalesce(e.ejerlavskode::text, '')   AS ejerlavskode,
+ coalesce(k.kommunenavn, '')          AS kommunenavn,
  coalesce(j.matrikelnummer, '')       AS matrikelnummer,
- c.wkb_geometry                       AS centroide_geometri,
- st_force2d(COALESCE(j.wkb_geometry)) as geometri
+ c.geometri                       AS centroide_geometri,
+ st_force2d(COALESCE(l.geometri)) as geometri
  FROM
  -- mat.jordstykke j
  --JOIN mat.ejerlav e ON j.ejerlavlokalid = e.id_lokalid
- mat_kf.jordstykke j
- JOIN mat_kf.centroide c ON c.ejerlavskode = j.ejerlavskode AND c.matrikelnummer = j.matrikelnummer
- )
-, ejerlavsnavn_dups AS
+ matriklen.jordstykke j
+ JOIN matriklen.ejerlav e ON e.id_lokalid = j.ejerlavlokalid
+ JOIN matriklen.centroide c ON c.jordstykkelokalid = j.id_lokalid
+ JOIN matriklen.matrikelkommune k ON k.id_lokalid = j.kommunelokalid
+ JOIN matriklen.lodflade l ON l.jordstykkelokalid = j.id_lokalid
+ ), 
+ejerlavsnavn_dups AS
 (
  select count(1) ejerlavsnavn_count,
  ejerlavsnavn,
@@ -58,11 +62,10 @@ with matrikelnumre AS
      FROM matrikelnumre
      ) x
  GROUP by ejerlavsnavn
- )
-
+)
 SELECT m.ejerlavsnavn || CASE
 WHEN ejerlavsnavn_count > 1 THEN ' (' || m.kommunenavn || ')' || ' - ' || m.matrikelnummer
-        ELSE '' || ' - ' || m.matrikelnummer END AS titel,
+        ELSE '' || ' - ' || m.matrikelnummer END AS praesentation,
         m.ejerlavsnavn,
         m.ejerlavskode,
         m.matrikelnummer,
@@ -71,49 +74,53 @@ WHEN ejerlavsnavn_count > 1 THEN ' (' || m.kommunenavn || ')' || ' - ' || m.matr
         e.textsearchable_unaccent_col_ejerlavsnavn,
         e.textsearchable_phonetic_col_ejerlavsnavn,
         st_multi(m.geometri)                                           as geometri
-        INTO basic.matrikelnummer
-        FROM matrikelnumre m
-        JOIN ejerlavsnavn_dups e ON e.ejerlavsnavn = m.ejerlavsnavn;
-
-        ALTER TABLE basic.matrikelnummer
-        DROP COLUMN IF EXISTS textsearchable_plain_col;
-        ALTER TABLE basic.matrikelnummer
-        ADD COLUMN textsearchable_plain_col tsvector
-        GENERATED ALWAYS AS
-        (
-         textsearchable_plain_col_ejerlavsnavn ||
-         setweight(to_tsvector('simple', ejerlavskode), 'A') ||
-         setweight(to_tsvector('simple', matrikelnummer), 'A')
-        ) STORED;
-
-        ALTER TABLE basic.matrikelnummer
-        DROP COLUMN IF EXISTS textsearchable_unaccent_col;
-        ALTER TABLE basic.matrikelnummer
-        ADD COLUMN textsearchable_unaccent_col tsvector
-        GENERATED ALWAYS AS
-        (
-         textsearchable_unaccent_col_ejerlavsnavn ||
-         setweight(to_tsvector('simple', ejerlavskode), 'A') ||
-         setweight(to_tsvector('simple', matrikelnummer), 'A')
-        ) STORED;
-
-        ALTER TABLE basic.matrikelnummer
-        DROP COLUMN IF EXISTS textsearchable_phonetic_col;
-        ALTER TABLE basic.matrikelnummer
-        ADD COLUMN textsearchable_phonetic_col tsvector
-        GENERATED ALWAYS AS
-        (
-         textsearchable_phonetic_col_ejerlavsnavn ||
-         setweight(to_tsvector('simple', ejerlavskode), 'A') ||
-         setweight(to_tsvector('simple', matrikelnummer), 'A')
-        ) STORED;
-
-        CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_plain_col);
-        CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_unaccent_col);
-        CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_phonetic_col);
+INTO basic.matrikelnummer
+FROM matrikelnumre m
+JOIN ejerlavsnavn_dups e ON e.ejerlavsnavn = m.ejerlavsnavn;
 
 
-        DROP FUNCTION IF EXISTS api.matrikelnummer(text, text, int, int);
+ALTER TABLE basic.matrikelnummer
+DROP COLUMN IF EXISTS textsearchable_plain_col;
+
+ALTER TABLE basic.matrikelnummer
+ADD COLUMN textsearchable_plain_col tsvector
+GENERATED ALWAYS AS
+(
+ textsearchable_plain_col_ejerlavsnavn ||
+ setweight(to_tsvector('simple', ejerlavskode), 'A') ||
+ setweight(to_tsvector('simple', matrikelnummer), 'A')
+) STORED;
+
+ALTER TABLE basic.matrikelnummer
+DROP COLUMN IF EXISTS textsearchable_unaccent_col;
+
+ALTER TABLE basic.matrikelnummer
+ADD COLUMN textsearchable_unaccent_col tsvector
+GENERATED ALWAYS AS
+(
+ textsearchable_unaccent_col_ejerlavsnavn ||
+ setweight(to_tsvector('simple', ejerlavskode), 'A') ||
+ setweight(to_tsvector('simple', matrikelnummer), 'A')
+) STORED;
+
+ALTER TABLE basic.matrikelnummer
+DROP COLUMN IF EXISTS textsearchable_phonetic_col;
+
+ALTER TABLE basic.matrikelnummer
+ADD COLUMN textsearchable_phonetic_col tsvector
+GENERATED ALWAYS AS
+(
+ textsearchable_phonetic_col_ejerlavsnavn ||
+ setweight(to_tsvector('simple', ejerlavskode), 'A') ||
+ setweight(to_tsvector('simple', matrikelnummer), 'A')
+) STORED;
+
+CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_plain_col);
+CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_unaccent_col);
+CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_phonetic_col);
+
+
+DROP FUNCTION IF EXISTS api.matrikelnummer(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.matrikelnummer(input_tekst text, filters text, sortoptions int, rowlimit int)
     RETURNS SETOF api.matrikelnummer
     LANGUAGE plpgsql
@@ -191,7 +198,7 @@ CREATE OR REPLACE FUNCTION api.matrikelnummer(input_tekst text, filters text, so
             AND %s
             ORDER BY
             rank1 desc, rank2 desc,
-            matrikelnummer, titel
+            matrikelnummer, praesentation
             LIMIT $3  ;', filters);
     RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
     END

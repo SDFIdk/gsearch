@@ -42,7 +42,7 @@ with adresser AS
  a.dørbetegnelse                   AS doerbetegnelse,
  a.etagebetegnelse,
  h.husnummertekst                   as husnummer,
- h.navngivenvej,
+ h.navngivenvej_id,
  h.sortering                        AS husnummer_sortering,
  n.vejnavn,
  h.vejkode,
@@ -56,13 +56,13 @@ with adresser AS
  JOIN
  (SELECT *,
   ROW_NUMBER() OVER
-  (PARTITION BY navngivenvej ORDER BY
+  (PARTITION BY navngivenvej_id ORDER BY
    NULLIF((substring(husnummertekst::text FROM '[0-9]*')), '')::int,
    substring(husnummertekst::text FROM '[0-9]*([A-Z])') NULLS FIRST
   ) AS sortering
   FROM dar.husnummer
- ) h ON a.husnummer = h.id
- JOIN dar.navngivenvej n ON n.id = h.navngivenvej::uuid
+ ) h ON a.husnummer_id = h.id
+ JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
  JOIN dar.postnummer p ON p.id = h.postnummer::uuid
  JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt
  JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt
@@ -82,7 +82,7 @@ with adresser AS
  nv.textsearchable_plain_col     AS textsearchable_plain_col_vej,
  nv.textsearchable_unaccent_col  AS textsearchable_unaccent_col_vej,
  nv.textsearchable_phonetic_col  AS textsearchable_phonetic_col_vej,
- a.navngivenvej,
+ a.navngivenvej_id,
  a.husnummer_sortering,
  ROW_NUMBER() OVER (
          PARTITION BY a.id
@@ -106,7 +106,7 @@ with adresser AS
  st_multi(vejpunkt_geometri)     as vejpunkt_geometri
  INTO basic.adresse
  FROM adresser a
- JOIN basic.navngivenvej nv ON a.navngivenvej = nv.id;
+ JOIN basic.navngivenvej nv ON a.navngivenvej_id = nv.id;
 
  -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
 
@@ -150,7 +150,7 @@ with adresser AS
  CREATE INDEX ON basic.adresse USING GIN (textsearchable_plain_col);
  CREATE INDEX ON basic.adresse USING GIN (textsearchable_unaccent_col);
  CREATE INDEX ON basic.adresse USING GIN (textsearchable_phonetic_col);
- CREATE INDEX ON basic.adresse (lower(vejnavn), navngivenvej, husnummer_sortering, sortering);
+ CREATE INDEX ON basic.adresse (lower(vejnavn), navngivenvej_id, husnummer_sortering, sortering);
 
  DROP FUNCTION IF EXISTS api.adresse(text, text, int, int);
 CREATE OR REPLACE FUNCTION api.adresse(input_tekst text, filters text, sortoptions int, rowlimit int)
@@ -232,7 +232,7 @@ IF (SELECT COALESCE(forekomster, 0)
             WHERE
             lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
             ORDER BY
-            lower(vejnavn), navngivenvej, husnummer_sortering, sortering
+            lower(vejnavn), navngivenvej_id, husnummer_sortering, sortering
             LIMIT $3;', input_tekst, input_tekst);
     RAISE NOTICE 'stmt=%', stmt;
     RETURN QUERY EXECUTE stmt using query_string, plain_query_string, rowlimit;
@@ -253,7 +253,7 @@ IF (SELECT COALESCE(forekomster, 0)
             AND %s
             ORDER BY
             rank1 desc, rank2 desc,
-            lower(vejnavn), navngivenvej, husnummer_sortering, sortering
+            lower(vejnavn), navngivenvej_id, husnummer_sortering, sortering
             LIMIT $3;', filters);
     RAISE NOTICE 'stmt=%', stmt;
 
