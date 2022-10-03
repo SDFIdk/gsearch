@@ -33,7 +33,7 @@ WITH vejnavne AS
  p.navn                           AS postdistrikter,
  st_force2d(COALESCE(n.geometri)) AS geometri
  FROM dar.navngivenvej n
- JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej = n.id)
+ JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej_id = n.id)
  JOIN dar.postnummer p ON (nvp.postnummer_id = p.id)
  )
 --SELECT v.vejnavn || '(' || v.postnummer[1] || ' - ' || v.postnummer[-1] || ')' AS praesentation,

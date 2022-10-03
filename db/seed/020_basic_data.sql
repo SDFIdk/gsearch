@@ -72,8 +72,8 @@ id::uuid,
     CREATE TABLE dar.navngivenvejpostnummer AS
     SELECT
     id::uuid,
-    navngivenvej_id::uuid as navngivenvej,
-    postnummer_id::uuid as postnummer
+    navngivenvej_id::uuid,
+    postnummer_id::uuid
     --FROM dar_fdw.navngivenvejpostnummer_current
     FROM dar_fdw.dar1_navngivenvejpostnummerrelation_current
     LIMIT (SELECT maxrows FROM g_options);
@@ -90,7 +90,7 @@ id::uuid,
 
     CREATE INDEX ON dar.navngivenvej(id);
     CREATE INDEX ON dar.navngivenvej USING gist(geometri);
-    CREATE INDEX ON dar.navngivenvejpostnummer(navngivenvej, postnummer);
+    CREATE INDEX ON dar.navngivenvejpostnummer(navngivenvej_id, postnummer_id);
     CREATE INDEX ON dar.postnummer(id);
 
     DROP TABLE IF EXISTS dar.adresse;
