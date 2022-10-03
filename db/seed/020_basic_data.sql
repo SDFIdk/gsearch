@@ -1,4 +1,6 @@
--- Create base data
+-- Debugging
+-- For faster debugging, you can set the following to eg. 1000 rows.
+
 DROP TABLE IF EXISTS g_options;
 CREATE TEMPORARY TABLE g_options (maxrows int);
 --INSERT INTO g_options VALUES (1000);
@@ -97,10 +99,10 @@ id::uuid,
     id::uuid,
     adressebetegnelse,
     dørbetegnelse,
-    dørpunkt_id as doerpunkt,
+    dørpunkt_id,
     etagebetegnelse,
     fk_bbr_bygning_bygning::uuid as bygning,
-    husnummer_id::uuid as husnummer
+    husnummer_id::uuid
     FROM
     dar_fdw.dar1_adresse
     WHERE upper(virkning) IS NULL
@@ -113,19 +115,19 @@ id::uuid,
     SELECT DISTINCT
     h.id::uuid,
     h.adgangsadressebetegnelse,
-    h.adgangspunkt_id::uuid as adgangspunkt,
+    h.adgangspunkt_id::uuid,
     h.husnummerretning,
     h.husnummertekst,
-    h.vejpunkt_id::uuid as vejpunkt,
+    h.vejpunkt_id::uuid,
     h.fk_mu_jordstykke_jordstykke as jordstykke,
     h.fk_mu_jordstykke_foreløbigtplaceretpåjordstykke as placeretpaaforeloebigtjordstykke,
     h.fk_geodk_bygning_geodanmarkbygning as geodanmarkbygning,
     h.fk_bbr_bygning_adgangtilbygning::uuid as adgangtilbygning,
-    h.supplerendebynavn_id as supplerendebynavn,
-    h.postnummer_id as postnummer,
+    h.supplerendebynavn_id,
+    h.postnummer_id,
     '0' || k.kommunekode::text as kommunekode,
     '' AS vejkode,
-    h.navngivenvej_id::uuid as navngivenvej
+    h.navngivenvej_id::uuid
     FROM
     dar_fdw.dar1_husnummer h,
     dar_fdw.dar1_darkommuneinddeling k
@@ -149,11 +151,11 @@ id::uuid,
 
 
     -- Indices
-    CREATE INDEX ON dar.adresse(husnummer);
+    CREATE INDEX ON dar.adresse(husnummer_id);
     CREATE INDEX ON dar.adresse(adressebetegnelse);
     CREATE INDEX ON dar.husnummer(id);
-    CREATE INDEX ON dar.husnummer(navngivenvej);
-    CREATE INDEX ON dar.husnummer(vejpunkt);
+    CREATE INDEX ON dar.husnummer(navngivenvej_id);
+    CREATE INDEX ON dar.husnummer(vejpunkt_id);
     CREATE INDEX ON dar.adressepunkt(id);
     CREATE INDEX ON dar.adressepunkt USING gist (geometri);
 
@@ -163,22 +165,64 @@ id::uuid,
     ALTER TABLE dar.adressepunkt ADD CONSTRAINT adressepunkt_pk PRIMARY KEY (id);
 
     -- Foreign keys internal to dar
-    -- ALTER TABLE dar.adresse ADD CONSTRAINT adresse_husnummer_fk FOREIGN KEY (husnummer) REFERENCES dar.husnummer (id) MATCH FULL;
+    -- ALTER TABLE dar.adresse ADD CONSTRAINT adresse_husnummer_fk FOREIGN KEY (husnummer_id) REFERENCES dar.husnummer (id) MATCH FULL;
 
     DROP TABLE IF EXISTS scratch.dar_husnummer_dar_adgangspunkt_fk;
     WITH invalid_relation AS
-(UPDATE dar.husnummer h SET adgangspunkt = NULL WHERE adgangspunkt IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dar.adressepunkt a WHERE h.adgangspunkt = a.id) RETURNING *)
+(UPDATE dar.husnummer h SET adgangspunkt_id = NULL WHERE adgangspunkt_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dar.adressepunkt a WHERE h.adgangspunkt_id = a.id) RETURNING *)
     SELECT * INTO scratch.dar_husnummer_dar_adgangspunkt_fk FROM invalid_relation;
-    ALTER TABLE dar.husnummer ADD CONSTRAINT husnummer_adgangspunkt_fk FOREIGN KEY (adgangspunkt) REFERENCES dar.adressepunkt (id) MATCH FULL;
+    ALTER TABLE dar.husnummer ADD CONSTRAINT husnummer_adgangspunkt_fk FOREIGN KEY (adgangspunkt_id) REFERENCES dar.adressepunkt (id) MATCH FULL;
 
     DROP TABLE IF EXISTS scratch.dar_husnummer_dar_vejpunkt_fk;
     WITH invalid_relation AS
-(UPDATE dar.husnummer h SET vejpunkt = NULL WHERE vejpunkt IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dar.adressepunkt a WHERE h.vejpunkt = a.id) RETURNING *)
+(UPDATE dar.husnummer h SET vejpunkt_id = NULL WHERE vejpunkt_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dar.adressepunkt a WHERE h.vejpunkt_id = a.id) RETURNING *)
     SELECT * INTO scratch.dar_husnummer_dar_vejpunkt_fk FROM invalid_relation;
-    ALTER TABLE dar.husnummer ADD CONSTRAINT husnummer_vejpunkt_fk FOREIGN KEY (vejpunkt) REFERENCES dar.adressepunkt (id) MATCH FULL;
+    ALTER TABLE dar.husnummer ADD CONSTRAINT husnummer_vejpunkt_fk FOREIGN KEY (vejpunkt_id) REFERENCES dar.adressepunkt (id) MATCH FULL;
 
-    ALTER TABLE dar.husnummer ADD CONSTRAINT adresse_husnummer_adgangspunkt_fk FOREIGN KEY (adgangspunkt) REFERENCES dar.adressepunkt (id) MATCH FULL;
-    ALTER TABLE dar.husnummer ADD CONSTRAINT adresse_husnummer_vejpunkt_fk FOREIGN KEY (vejpunkt) REFERENCES dar.adressepunkt (id) MATCH FULL;
+    ALTER TABLE dar.husnummer ADD CONSTRAINT adresse_husnummer_adgangspunkt_fk FOREIGN KEY (adgangspunkt_id) REFERENCES dar.adressepunkt (id) MATCH FULL;
+    ALTER TABLE dar.husnummer ADD CONSTRAINT adresse_husnummer_vejpunkt_fk FOREIGN KEY (vejpunkt_id) REFERENCES dar.adressepunkt (id) MATCH FULL;
+
+
+-- MATRIKLEN
+
+
+DROP TABLE IF EXISTS matriklen.jordstykke;
+
+CREATE TABLE matriklen.jordstykke AS
+    SELECT *
+    FROM matriklen_fdw.jordstykke
+    LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS matriklen.lodflade;
+
+CREATE TABLE matriklen.lodflade AS
+    SELECT *
+    FROM matriklen_fdw.lodflade
+    LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS matriklen.ejerlav;
+
+CREATE TABLE matriklen.ejerlav AS
+    SELECT *
+    FROM matriklen_fdw.ejerlav
+    LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS matriklen.centroide;
+
+CREATE TABLE matriklen.centroide AS
+    SELECT *
+    FROM matriklen_fdw.centroide
+    LIMIT (SELECT maxrows FROM g_options);
+
+DROP TABLE IF EXISTS matriklen.matrikelkommune;
+
+CREATE TABLE matriklen.matrikelkommune AS
+    SELECT *
+    FROM matriklen_fdw.matrikelkommune
+    LIMIT (SELECT maxrows FROM g_options);
+
+--CREATE INDEX ON matriklen.jordstykke (elavskode, matrnr);
+--CREATE INDEX ON matriklen.centroide (elavskode, matrnr);
 
 
 -- STEDNAVNE

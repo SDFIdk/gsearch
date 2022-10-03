@@ -37,7 +37,7 @@ with stednavne AS (
         municipality_filter,
         st_force2d(geometri_udtyndet) AS geometri
         FROM
-        stednavne_udstil.stednavn_udstilling
+        stednavne_udstilling.stednavne_udstilling
         ), 
      agg_stednavne AS (
              SELECT 
