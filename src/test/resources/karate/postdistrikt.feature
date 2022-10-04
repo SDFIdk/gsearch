@@ -1,7 +1,30 @@
-Feature: Gsearch test
+Feature: Gsearch postdistrikt test
 
 Background:
 * url url + '/search'
+
+Scenario: Response matches columns database
+    Then param q = '2605'
+    And param resources = 'postdistrikt'
+    When method GET
+    Then status 200
+    And match response == '#[1]'
+    And def bboxSchema = {type: 'Polygon', coordinates: '#array'}
+    And def geometriSchema = {type: 'MultiPolygon', coordinates: '#array'}
+    And match response contains deep
+    """
+    {
+      "type": 'postdistrikt',
+      "praesentation": '#string',
+      "bbox": '#(bboxSchema)',
+      "geometri": '#(geometriSchema)',
+      "id": '#string',
+      "postdistrikt": '#string',
+      "rang1": '#string',
+      "gadepostnummer": '#string',
+      "rang2": '#string'
+    }
+    """
 
 Scenario: Partial string
     Then param q = 'køben'
@@ -24,7 +47,7 @@ Scenario: Search is case insensitive
     Then status 200
     And def secondresponse = response
     And match secondresponse == '#[10]'
-    
+
     Then match firstresponse == secondresponse
 
     Then param q = 'KØBENHAVN'
@@ -33,7 +56,7 @@ Scenario: Search is case insensitive
     Then status 200
     And def thirdresponse = response
     And match thirdresponse == '#[10]'
-    
+
     Then match thirdresponse == secondresponse
 
 Scenario: Like search on københavn s returns København S and København SV
@@ -61,7 +84,7 @@ Scenario: Get København S from using the postnumber as search input and Søborg
     Then status 200
     And match response == '#[2]'
     And match response.[*].postdistrikt contains deep ['Søborg', 'København S']
-    
+
 Scenario: Get postdistrikt that matches with Ager
     Then param q = 'Ager'
     And param resources = 'postdistrikt'
@@ -77,36 +100,13 @@ Scenario: Do not have a match on '.'
     Then status 200
     And match response == '#[0]'
 
-Scenario: Test maximum limit and small search 
+Scenario: Test maximum limit and small search
     Then param q = 's'
     And param resources = 'postdistrikt'
     And param limit = '100'
     When method GET
     Then status 200
     And match response == '#[100]'
-
-Scenario: Response matches columns database
-    Then param q = '2605'
-    And param resources = 'postdistrikt'
-    When method GET
-    Then status 200
-    And match response == '#[1]'
-    And def bboxSchema = {type: 'Polygon', coordinates: '#array'}
-    And def geometriSchema = {type: 'MultiPolygon', coordinates: '#array'}
-    And match response contains deep
-    """
-    {
-      "type": 'postdistrikt',
-      "praesentation": '#string',
-      "bbox": '#(bboxSchema)',
-      "geometri": '#(geometriSchema)',
-      "id": '#string',
-      "postdistrikt": '#string',
-      "rang1": '#string',
-      "gadepostnummer": '#string',
-      "rang2": '#string'
-    }
-    """
 
 Scenario: Empty search input
     Then param q = ''
