@@ -76,7 +76,6 @@ Scenario: Do not have a match on '.'
     When method GET
     Then status 200
     And match response == '#[0]'
-    # The response time (in milliseconds) 
 
 Scenario: Test maximum limit and small search 
     Then param q = 's'
@@ -85,7 +84,57 @@ Scenario: Test maximum limit and small search
     When method GET
     Then status 200
     And match response == '#[100]'
-    # The response time (in milliseconds) 
+
+Scenario: Response matches columns database
+    Then param q = '2605'
+    And param resources = 'postdistrikt'
+    When method GET
+    Then status 200
+    And match response == '#[1]'
+    And def bboxSchema = {type: 'Polygon', coordinates: '#array'}
+    And def geometriSchema = {type: 'MultiPolygon', coordinates: '#array'}
+    And match response contains deep
+    """
+    {
+      "type": 'postdistrikt',
+      "praesentation": '#string',
+      "bbox": '#(bboxSchema)',
+      "geometri": '#(geometriSchema)',
+      "id": '#string',
+      "postdistrikt": '#string',
+      "rang1": '#string',
+      "gadepostnummer": '#string',
+      "rang2": '#string'
+    }
+    """
+
+Scenario: Empty search input
+    Then param q = ''
+    And param resources = 'postdistrikt'
+    When method GET
+    Then status 500
+    And match response ==
+    """
+    [
+        {
+            "message": "Query string parameter q is required"
+        }
+    ]
+    """
+
+# Need to be fixed. Should not return empty result but "message": "Query string parameter q is required"
+Scenario: Missing q query parameter
+    And param resources = 'postdistrikt'
+    When method GET
+    Then status 500
+    And match response ==
+    """
+    [
+        {
+            "message": "Query string parameter q is required"
+        }
+    ]
+    """
 
 Scenario: Exceed maximum limit
     Then param q = 's'
