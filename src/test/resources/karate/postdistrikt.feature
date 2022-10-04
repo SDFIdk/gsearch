@@ -36,13 +36,14 @@ Scenario: Search is case insensitive
     
     Then match thirdresponse == secondresponse
 
-Scenario: Get København S and København SV
+Scenario: Like search on københavn s returns København S and København SV
     Then param q = 'københavn S'
     And param resources = 'postdistrikt'
     When method GET
     Then status 200
     And match response == '#[2]'
-    And match response.[*].name contains deep ['København S', 'København SV']
+    And match response.[*].postdistrikt contains deep ['København S', 'København SV']
+    And match response.[*].praesentation contains deep ['2300 København S', '2450 København SV']
 
 Scenario: Get Birkerød and Hillerød from using the postnumber as search input
     Then param q = '3460 3400'
@@ -50,7 +51,8 @@ Scenario: Get Birkerød and Hillerød from using the postnumber as search input
     When method GET
     Then status 200
     And match response == '#[2]'
-    And match response.[*].name contains deep ['Birkerød', 'Hillerød']
+    And match response.[*].postdistrikt contains deep ['Birkerød', 'Hillerød']
+    And match response.[*].id contains deep ['3460', '3400']
 
 Scenario: Get København S from using the postnumber as search input and Søborg as tekst input
     Then param q = '2300 søborg'
@@ -58,23 +60,15 @@ Scenario: Get København S from using the postnumber as search input and Søborg
     When method GET
     Then status 200
     And match response == '#[2]'
-    And match response.[*].name contains deep ['Søborg', 'København S']
-
-Scenario: Get postdistrikt that matches with Age
-    Then param q = 'Age'
+    And match response.[*].postdistrikt contains deep ['Søborg', 'København S']
+    
+Scenario: Get postdistrikt that matches with Ager
+    Then param q = 'Ager'
     And param resources = 'postdistrikt'
     When method GET
     Then status 200
-    And match response == '#[4]'
-    And match response.[*].name contains deep ['Agersø', 'Agerskov', 'Agerbæk', 'Agedrup']
-
-Scenario: Get postdistrikt that matches with lund
-    Then param q = 'lund'
-    And param resources = 'postdistrikt'
-    When method GET
-    Then status 200
-    And match response == '#[2]'
-    And match response.[*].name contains deep ['Lunderskov', 'Lundby']
+    And match response == '#[3]'
+    And match response.[*].postdistrikt contains deep ['Agersø', 'Agerskov', 'Agerbæk']
 
 Scenario: Do not have a match on '.'
     Then param q = '.'
@@ -82,3 +76,28 @@ Scenario: Do not have a match on '.'
     When method GET
     Then status 200
     And match response == '#[0]'
+    # The response time (in milliseconds) 
+
+Scenario: Test maximum limit and small search 
+    Then param q = 's'
+    And param resources = 'postdistrikt'
+    And param limit = '100'
+    When method GET
+    Then status 200
+    And match response == '#[100]'
+    # The response time (in milliseconds) 
+
+Scenario: Exceed maximum limit
+    Then param q = 's'
+    And param resources = 'postdistrikt'
+    And param limit = '101'
+    When method GET
+    Then status 500
+    And match response ==
+    """
+    [
+        {
+            "message": "Query string parameter limit must be between 1-100"
+        }
+    ]
+    """
