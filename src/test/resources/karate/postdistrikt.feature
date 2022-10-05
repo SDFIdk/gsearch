@@ -85,14 +85,6 @@ Scenario: Get København S from using the postnumber as search input and Søborg
     And match response == '#[2]'
     And match response.[*].postdistrikt contains deep ['Søborg', 'København S']
 
-Scenario: Get postdistrikt that matches with Ager
-    Then param q = 'Ager'
-    And param resources = 'postdistrikt'
-    When method GET
-    Then status 200
-    And match response == '#[3]'
-    And match response.[*].postdistrikt contains deep ['Agersø', 'Agerskov', 'Agerbæk']
-
 Scenario: Do not have a match on '.'
     Then param q = '.'
     And param resources = 'postdistrikt'
