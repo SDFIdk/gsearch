@@ -297,15 +297,13 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         String errormessage = exception.getMessage();
         List<ErrorResponse> result = new ArrayList<>();
         result.add(new ErrorResponse(errormessage));
-        logger.debug(ERROR_STRING, exception);
-        logger.warn(errormessage, exception);
 
         ErrorResponse errorResponse =
             new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage(),
                 "error occurred");
-        logger.debug(ERROR_STRING, exception);
-        logger.debug(ERROR_STRING + errorResponse.getErrors());
+        //logger.debug(ERROR_STRING, exception);
+        //logger.debug(ERROR_STRING + errorResponse.getErrors());
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
 
