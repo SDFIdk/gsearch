@@ -1,10 +1,11 @@
-package dk.dataforsyningen.gsearch;
+package dk.dataforsyningen.gsearch.errorhandling;
 
-import dk.dataforsyningen.gsearch.errorhandling.ErrorResponse;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.ConstraintViolationException;
+import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedExceptionUtils;
@@ -44,7 +45,27 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
   }
 
-  @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(UnableToExecuteStatementException.class)
+    ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
+        UnableToExecuteStatementException exception) {
+        logger.debug(ERROR_STRING, exception);
+        ErrorResponse errorResponse = new ErrorResponse(exception.getLocalizedMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    ResponseEntity<ErrorResponse> handleConstraintViolationException(Exception exception) {
+        logger.debug(ERROR_STRING, exception);
+        String exceptionCause = getRootCause(exception).toString();
+
+        ErrorResponse errorResponse =
+            new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
+        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
+    }
+
+
+    @ExceptionHandler(IllegalArgumentException.class)
   ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception exception) {
     logger.debug(ERROR_STRING, exception);
     String exceptionCause = getRootCause(exception).toString();
@@ -86,12 +107,17 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
       HttpHeaders headers,
       HttpStatus status,
       WebRequest request) {
-    String name = exception.getParameterName();
-    logger.debug(name + " parameter is missing");
-    logger.debug(ERROR_STRING, exception);
-    System.out.println(name + " parameter is missing");
 
-    return super.handleMissingServletRequestParameter(exception, headers, status, request);
+      String exceptionCause = getRootCause(exception).toString();
+
+      ErrorResponse errorResponse =
+          new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
+
+      logger.debug(ERROR_STRING + errorResponse.getMessage());
+      logger.debug(ERROR_STRING + errorResponse.getErrors());
+      logger.debug(ERROR_STRING, exception);
+
+    return handleExceptionInternal(exception, errorResponse, headers, status, request);
     }
 
   /**
@@ -253,7 +279,11 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
    */
   @ExceptionHandler({Exception.class})
   public ResponseEntity<ErrorResponse> handleAll(Exception exception) {
+    String errormessage = exception.getMessage();
+    List<ErrorResponse> result = new ArrayList<>();
+    result.add(new ErrorResponse(errormessage));
     logger.debug(ERROR_STRING, exception);
+    logger.warn(errormessage, exception);
 
     ErrorResponse errorResponse =
         new ErrorResponse(
