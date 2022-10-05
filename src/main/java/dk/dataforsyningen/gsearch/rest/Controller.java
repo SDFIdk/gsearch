@@ -1,7 +1,12 @@
 package dk.dataforsyningen.gsearch;
 
+import dk.dataforsyningen.gsearch.errorhandling.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import java.util.Collections;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
@@ -13,7 +18,10 @@ import org.opengis.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -130,16 +138,19 @@ public class Controller {
     @Operation(tags = {"Gsearch"})
     public List<Data> geosearch(
         @Parameter(description = "Søgestreng")
-        @RequestParam String q,
+        @RequestParam(value = "q", required = true) @Min(1)  @NotBlank @Valid String q,
         @Parameter(description = "Er en kommasepareret liste på 'resources' navn. Se Schemas for deltajeret beskrivelse af resourcer.")
-        @RequestParam String resources,
+        @RequestParam(value = "resources", required = true) @Min(1)  @NotBlank @Valid String resources,
         @Parameter(description = "Angives med CQL-text, og udefra beskrivelser af mulige filtreringer for den valgte resource.")
         @RequestParam(required = false) String filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Max = 100")
         @RequestParam(defaultValue = "10") String limit)
-        throws CQLException, FilterToSQLException {
+        throws Exception {
         // FIXME: Needs checks to see if it compatible with old geosearch
         logger.debug("gsearch called");
+
+        //throw new Exception("test");
+
         List<Data> result = getResult(q, resources, filter, limit);
         return result;
     }
