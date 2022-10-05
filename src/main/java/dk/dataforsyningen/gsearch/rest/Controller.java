@@ -1,12 +1,9 @@
 package dk.dataforsyningen.gsearch.rest;
 
-import dk.dataforsyningen.gsearch.rest.DataMapper;
 import dk.dataforsyningen.gsearch.ResourceTypes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import org.geotools.data.jdbc.FilterToSQL;
@@ -125,7 +122,7 @@ public class Controller {
      */
     @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(tags = {"Gsearch"})
-    public List<Data> geosearch(
+    public List<Data> gsearch(
         @Parameter(description = "Søgestreng")
         @RequestParam(value = "q", required = true) @NotBlank String q,
         @Parameter(description = "Er en kommasepareret liste på 'resources' navn. Se Schemas for deltajeret beskrivelse af resourcer.")
