@@ -1,6 +1,5 @@
 package dk.dataforsyningen.gsearch.errorhandling;
 
-import java.time.Instant;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 
@@ -14,31 +13,27 @@ public class ErrorResponse {
   /** List of constructed error messages */
   private List<String> errors;
 
-  Instant instant = Instant.now();
-
-  Instant epochSeconds = Instant.ofEpochSecond(instant.getEpochSecond());
-
   public ErrorResponse(String message) {
-    this.message = epochSeconds.toString() + ": " + message;
+    this.message = message;
   }
 
   public ErrorResponse(HttpStatus status, String message) {
     this.status = status;
-    this.message = epochSeconds.toString() + ": " + message;
+    this.message = message;
   }
 
   public ErrorResponse(HttpStatus status, String message, List<String> errors) {
     super();
     this.status = status;
-    this.message = epochSeconds.toString() + ": " + message;
+    this.message = message;
     this.errors = errors;
   }
 
   public ErrorResponse(HttpStatus status, String message, String error) {
     super();
     this.status = status;
-    this.message = epochSeconds.toString() + ": " + message;
-    errors = List.of(epochSeconds + ": " + error);
+    this.message = message;
+    errors = List.of(error);
   }
 
   public HttpStatus getStatus() {
