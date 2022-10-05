@@ -1,6 +1,5 @@
 package dk.dataforsyningen.gsearch.errorhandling;
 
-import java.time.Instant;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 
