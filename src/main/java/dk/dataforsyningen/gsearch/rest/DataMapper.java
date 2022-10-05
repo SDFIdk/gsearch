@@ -1,4 +1,4 @@
-package dk.dataforsyningen.gsearch;
+package dk.dataforsyningen.gsearch.rest;
 
 import net.postgis.jdbc.jts.JtsBinaryParser;
 import org.jdbi.v3.core.mapper.RowMapper;

@@ -1,4 +1,4 @@
-package dk.dataforsyningen.gsearch;
+package dk.dataforsyningen.gsearch.rest;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;

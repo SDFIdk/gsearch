@@ -1,4 +1,4 @@
-package dk.dataforsyningen.downloadmanager.errorhandling;
+package dk.dataforsyningen.gsearch.errorhandling;
 
 import java.time.Instant;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ErrorResponse {
 
   public ErrorResponse(HttpStatus status, String message) {
     this.status = status;
-    this.message = message;
+    this.message = epochSeconds.toString() + ": " + message;
   }
 
   public ErrorResponse(HttpStatus status, String message, List<String> errors) {
@@ -38,7 +38,7 @@ public class ErrorResponse {
     super();
     this.status = status;
     this.message = epochSeconds.toString() + ": " + message;
-    errors = List.of(error);
+    errors = List.of(epochSeconds + ": " + error);
   }
 
   public HttpStatus getStatus() {
