@@ -74,7 +74,7 @@ Feature: Gsearch matrikel test
     When method GET
     Then status 200
     And match response == '#[10]'
-    And match response.[*].matrikelnummer contains deep ['Damhussøen', 'Utterslev']
+    And match response.[*].ejerlavsnavn contains deep ['Damhussøen, København', 'Utterslev By, Utterslev']
 
   Scenario: Do not have a match on '.'
     Then param q = '.'
