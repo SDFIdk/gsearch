@@ -19,7 +19,7 @@ Scenario: Response matches columns database
       "praesentation": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
-      "id": '#string',
+      "kommunekode": '#string',
       "rang1": '#string',
       "rang2": '#string'
     }
