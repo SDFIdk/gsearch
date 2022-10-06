@@ -33,21 +33,21 @@ Scenario: Response matches columns database
     """
 
 Scenario: Partial string
-    Then param q = 'køben'
+    Then param q = 'kocks'
     And param resources = 'adresse'
     When method GET
     Then status 200
     And match response == '#[10]'
 
 Scenario: Search is case insensitive
-    Then param q = 'København'
+    Then param q = 'Kocksvej'
     And param resources = 'adresse'
     When method GET
     Then status 200
     And def firstresponse = response
     And match firstresponse == '#[10]'
 
-    Then param q = 'københavn'
+    Then param q = 'kocksvej'
     And param resources = 'adresse'
     When method GET
     Then status 200
@@ -56,7 +56,7 @@ Scenario: Search is case insensitive
 
     Then match firstresponse == secondresponse
 
-    Then param q = 'KØBENHAVN'
+    Then param q = 'KOCKSVEJ'
     And param resources = 'adresse'
     When method GET
     Then status 200
@@ -65,31 +65,22 @@ Scenario: Search is case insensitive
 
     Then match thirdresponse == secondresponse
 
-Scenario: Like search on københavn s returns København S and København SV
-    Then param q = 'københavn S'
+Scenario: Like search on hc andersen returns H.C. Andersen and H.C. Andersens
+    Then param q = 'hc andersen'
     And param resources = 'adresse'
     When method GET
     Then status 200
-    And match response == '#[2]'
-    And match response.[*].adresse contains deep ['København S', 'København SV']
-    And match response.[*].praesentation contains deep ['2300 København S', '2450 København SV']
+    And match response == '#[10]'
+    And match response.[*].vejnavn contains deep ['H.C. Andersen Haven', 'H.C. Andersens Boulevard']
+    And match response.[*].postdistrikt contains deep ['Odense C', 'København V']
 
-Scenario: Get Birkerød and Hillerød from using the postnumber as search input
-    Then param q = '3460 3400'
+Scenario: Search steetname with number
+    Then param q = 'kocksvej 1'
     And param resources = 'adresse'
     When method GET
     Then status 200
-    And match response == '#[2]'
-    And match response.[*].adresse contains deep ['Birkerød', 'Hillerød']
-    And match response.[*].id contains deep ['3460', '3400']
-
-Scenario: Get København S from using the postnumber as search input and Søborg as tekst input
-    Then param q = '2300 søborg'
-    And param resources = 'adresse'
-    When method GET
-    Then status 200
-    And match response == '#[2]'
-    And match response.[*].adresse contains deep ['Søborg', 'København S']
+    And match response == '#[10]'
+    And match response.[*].husnummer contains deep ['(1,"")']
 
 Scenario: Do not have a match on '.'
     Then param q = '.'
@@ -97,54 +88,3 @@ Scenario: Do not have a match on '.'
     When method GET
     Then status 200
     And match response == '#[0]'
-
-Scenario: Test maximum limit and small search
-    Then param q = 's'
-    And param resources = 'adresse'
-    And param limit = '100'
-    When method GET
-    Then status 200
-    And match response == '#[100]'
-
-Scenario: Empty search input
-    Then param q = ''
-    And param resources = 'adresse'
-    When method GET
-    Then status 500
-    And match response ==
-    """
-    [
-        {
-            "message": "Query string parameter q is required"
-        }
-    ]
-    """
-
-# Need to be fixed. Should not return empty result but "message": "Query string parameter q is required"
-Scenario: Missing q query parameter
-    And param resources = 'adresse'
-    When method GET
-    Then status 500
-    And match response ==
-    """
-    [
-        {
-            "message": "Query string parameter q is required"
-        }
-    ]
-    """
-
-Scenario: Exceed maximum limit
-    Then param q = 's'
-    And param resources = 'adresse'
-    And param limit = '101'
-    When method GET
-    Then status 500
-    And match response ==
-    """
-    [
-        {
-            "message": "Query string parameter limit must be between 1-100"
-        }
-    ]
-    """
