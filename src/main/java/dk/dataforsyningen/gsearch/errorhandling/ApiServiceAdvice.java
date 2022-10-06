@@ -1,11 +1,11 @@
 package dk.dataforsyningen.gsearch.errorhandling;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.ConstraintViolationException;
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedExceptionUtils;
@@ -39,8 +39,9 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     ResponseEntity<ErrorResponse> handleEmptyResultDataAccessException(
         EmptyResultDataAccessException exception) {
+        String exceptionCause = getRootCause(exception).toString();
 
-        ErrorResponse errorResponse = new ErrorResponse(exception.getLocalizedMessage());
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, exception.getLocalizedMessage(), exceptionCause);
         logger.debug(ERROR_STRING, exception);
         logger.debug(ERROR_STRING + errorResponse.getErrors());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
@@ -49,10 +50,21 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UnableToExecuteStatementException.class)
     ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
         UnableToExecuteStatementException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getLocalizedMessage());
-        logger.debug(ERROR_STRING, exception);
-        logger.debug(ERROR_STRING + errorResponse.getErrors());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Not allowed input");
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PSQLException.class)
+    ResponseEntity<ErrorResponse> handlePSQLException(
+        PSQLException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + errorResponse.getErrors());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -66,25 +78,12 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
 
-
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception exception) {
         String exceptionCause = getRootCause(exception).toString();
 
         ErrorResponse errorResponse =
             new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
-        logger.debug(ERROR_STRING, exception);
-        logger.debug(ERROR_STRING + errorResponse.getErrors());
-        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
-    }
-
-    @ExceptionHandler(FileNotFoundException.class)
-    ResponseEntity<ErrorResponse> handleFileNotFoundException(FileNotFoundException exception) {
-        String exceptionCause = getRootCause(exception).toString();
-
-        ErrorResponse errorResponse =
-            new ErrorResponse(HttpStatus.NOT_FOUND, exception.getLocalizedMessage(),
-                exceptionCause);
         logger.debug(ERROR_STRING, exception);
         logger.debug(ERROR_STRING + errorResponse.getErrors());
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
@@ -302,8 +301,8 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
             new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage(),
                 "error occurred");
-        //logger.debug(ERROR_STRING, exception);
-        //logger.debug(ERROR_STRING + errorResponse.getErrors());
+        logger.debug(ERROR_STRING, exception);
+        logger.debug(ERROR_STRING + errorResponse.getErrors());
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
 
