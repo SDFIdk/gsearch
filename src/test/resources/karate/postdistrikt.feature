@@ -18,10 +18,10 @@ Feature: Gsearch postdistrikt test
       "praesentation": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
-      "id": '#string',
+      "postnummer": '#string',
       "postdistrikt": '#string',
-      "rang1": '#string',
       "gadepostnummer": '#string',
+      "rang1": '#string',
       "rang2": '#string'
     }
     """
