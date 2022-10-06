@@ -5,6 +5,9 @@ import dk.dataforsyningen.gsearch.ResourceTypes;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.spi.JdbiPlugin;
+import org.jdbi.v3.jackson2.Jackson2Plugin;
+import org.jdbi.v3.postgres.PostgresPlugin;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.n52.jackson.datatype.jts.JtsModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +42,13 @@ public class JdbiConfiguration {
     }
 
     @Bean
-    public Jdbi jdbi(DataSource ds, List<JdbiPlugin> jdbiPlugins, List<RowMapper<?>> rowMappers) throws SQLException {
+    public Jdbi jdbi(DataSource ds, List<RowMapper<?>> rowMappers) throws SQLException {
         TransactionAwareDataSourceProxy proxy = new TransactionAwareDataSourceProxy(ds);
-        Jdbi jdbi = Jdbi.create(proxy);
+        Jdbi jdbi = Jdbi.create(proxy)
+            .installPlugin(new SqlObjectPlugin())
+            .installPlugin(new PostgresPlugin())
+            .installPlugin(new Jackson2Plugin());
         determineTypes(jdbi);
-        jdbiPlugins.forEach(plugin -> jdbi.installPlugin(plugin));
         // TODO: Maybe this can be used to only register Row mapper once and not every time the getData gets called
         rowMappers.forEach(mapper -> jdbi.registerRowMapper(mapper));
         new Listener(ds, jdbi, this).start();
