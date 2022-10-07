@@ -14,7 +14,7 @@ Feature: Gsearch errorhandling test
         "status": "BAD_REQUEST",
         "message": "gsearch.q: must not be blank",
         "errors": [
-            "javax.validation.ConstraintViolationException: geosearch.q: must not be blank"
+            "javax.validation.ConstraintViolationException: gsearch.q: must not be blank"
         ]
     }
     """
@@ -58,9 +58,9 @@ Feature: Gsearch errorhandling test
     """
     {
         "status": "BAD_REQUEST",
-        "message": "geosearch.resources: must not be blank",
+        "message": "gsearch.resources: must not be blank",
         "errors": [
-            "javax.validation.ConstraintViolationException: geosearch.resources: must not be blank"
+            "javax.validation.ConstraintViolationException: gsearch.resources: must not be blank"
         ]
     }
     """
@@ -91,9 +91,9 @@ Feature: Gsearch errorhandling test
     """
     {
         "status": "BAD_REQUEST",
-        "message": "Required request parameter 'q' for method parameter type String is not present",
+        "message": "gsearch.limit: must be less than or equal to 100",
         "errors": [
-            "org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'q' for method parameter type String is not present"
+            "javax.validation.ConstraintViolationException: gsearch.limit: must be less than or equal to 100"
         ]
     }
     """
