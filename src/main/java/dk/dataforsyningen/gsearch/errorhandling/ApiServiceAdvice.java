@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.ConstraintViolationException;
+import org.geotools.filter.text.cql2.CQLException;
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
 import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
@@ -50,6 +51,16 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UnableToExecuteStatementException.class)
     ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
         UnableToExecuteStatementException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Not allowed input");
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CQLException.class)
+    ResponseEntity<ErrorResponse> handleCQLException(
+        CQLException exception) {
         String exceptionCause = getRootCause(exception).toString();
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Not allowed input");
         logger.info(ERROR_STRING, exception);
