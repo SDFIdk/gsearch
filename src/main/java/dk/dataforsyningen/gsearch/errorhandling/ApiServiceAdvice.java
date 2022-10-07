@@ -52,7 +52,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
         UnableToExecuteStatementException exception) {
         String exceptionCause = getRootCause(exception).toString();
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Not allowed input");
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Input invalid");
         logger.info(ERROR_STRING, exception);
         logger.info(ERROR_STRING + exceptionCause);
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -62,7 +62,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     ResponseEntity<ErrorResponse> handleCQLException(
         CQLException exception) {
         String exceptionCause = getRootCause(exception).toString();
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Not allowed input");
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Input invalid");
         logger.info(ERROR_STRING, exception);
         logger.info(ERROR_STRING + exceptionCause);
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
