@@ -3,9 +3,11 @@ package dk.dataforsyningen.gsearch.rest;
 import dk.dataforsyningen.gsearch.ResourceTypes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import java.util.Optional;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import org.apache.commons.lang3.StringUtils;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
@@ -77,13 +79,14 @@ public class Controller {
      * @throws FilterToSQLException
      * @throws CQLException
      */
-    private List<Data> getResult(String q, String resources, String filter, int limit)
+    private List<Data> getResult(String q, String resources, Optional<String> filter, int limit)
         throws FilterToSQLException, CQLException {
 
         String where = null;
-        if (filter != null && !filter.isEmpty()) {
+        // If filter is present we need to change the CQl to SQL
+        if (filter.isPresent()) {
             // To transform cql filter to sql where clause
-            Filter ogcFilter = ECQL.toFilter(filter);
+            Filter ogcFilter = ECQL.toFilter(filter.get());
             // TODO: visit filter to apply restrictions
             // TODO: visit filter to remove non applicable (field name not in type fx.)
             where = filterToSQL.encodeToString(ogcFilter);
@@ -128,12 +131,16 @@ public class Controller {
         @Parameter(description = "Er en kommasepareret liste på 'resources' navn. Se Schemas for deltajeret beskrivelse af resourcer.")
         @RequestParam(value = "resources", required = true) @NotBlank String resources,
         @Parameter(description = "Angives med CQL-text, og udefra beskrivelser af mulige filtreringer for den valgte resource.")
-        @RequestParam(required = false) String filter,
-        @Parameter(description = "Maksantallet af returneret data elementer. Max = 100")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
         throws FilterToSQLException, CQLException {
-        // FIXME: Needs checks to see if it compatible with old geosearch
-        logger.debug("gsearch called");
+
+        // filter (CQL) is not compatible with requesting multiple resources at the same time
+        if (StringUtils.containsAny(resources, ",") && filter.isPresent())
+        {
+            throw new IllegalArgumentException("Defined query parameter filter and multiple resources is incompatible");
+        }
 
         List<Data> result = getResult(q, resources, filter, limit);
         return result;
