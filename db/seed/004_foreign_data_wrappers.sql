@@ -18,7 +18,7 @@ CREATE SERVER IF NOT EXISTS :dar_server FOREIGN DATA WRAPPER postgres_fdw OPTION
 DROP USER MAPPING IF EXISTS FOR CURRENT_USER SERVER :dar_server;
 CREATE USER MAPPING FOR CURRENT_USER SERVER :dar_server OPTIONS (user :dar_username, password :dar_password);
 
-IMPORT FOREIGN SCHEMA public FROM SERVER :dar_server INTO dar_fdw;
+IMPORT FOREIGN SCHEMA dar_latest FROM SERVER :dar_server INTO dar_fdw;
 
 
 -- MATRIKLEN
