@@ -74,7 +74,7 @@ Scenario: Get København from using the kommunekode as search input
     Then status 200
     And match response == '#[1]'
     And match response.[*].kommunenavn contains deep ['København']
-    And match response.[*].id contains deep ['0101']
+    And match response.[*].kommunekode contains deep ['0101']
 
 Scenario: Combined search, Get København from using the kommunekode as search input and Herlev as tekst input
     Then param q = '0101 herlev'
