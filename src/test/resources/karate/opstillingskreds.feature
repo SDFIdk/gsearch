@@ -22,7 +22,7 @@ Feature: Gsearch opstillingskreds test
       "geometri": '#(geometriSchema)',
       "id": '#string',
       "storkredsnummer": '#string',
-      "storkredsnavn":,'#string',
+      "storkredsnavn": '#string',
       "rang1": '#string',
       "rang2": '#string'
     }
@@ -34,7 +34,7 @@ Feature: Gsearch opstillingskreds test
     When method GET
     Then status 200
     And match response == '#[2]'
-    And match response.[*].opstillingskreds contains deep ['Valby', 'Varde']
+    And match response.[*].opstillingskredsnavn contains deep ['Valby', 'Varde']
 
   Scenario: Search is case insensitive
     Then param q = 'Valby'
