@@ -75,7 +75,7 @@ SELECT DISTINCT
     husnummerlokalid::uuid as husnummer_id
 FROM
     dar_fdw.adresse
-LIMIT (SELECT maxrows FROM g_options);
+LIMIT (SELECT maxrows FROM g_options)
 ON CONFLICT DO NOTHING;
 
 
@@ -119,7 +119,7 @@ SELECT DISTINCT
     geometri
 FROM
     dar_fdw.adressepunkt
-LIMIT (SELECT maxrows FROM g_options);
+LIMIT (SELECT maxrows FROM g_options)
 ON CONFLICT DO NOTHING;
 
 
