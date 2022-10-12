@@ -75,7 +75,7 @@ Feature: Gsearch postdistrikt test
     Then status 200
     And match response == '#[2]'
     And match response.[*].postdistrikt contains deep ['Birkerød', 'Hillerød']
-    And match response.[*].id contains deep ['3460', '3400']
+    And match response.[*].postnummer contains deep ['3460', '3400']
 
   Scenario: Get København S from using the postnumber as search input and Søborg as tekst input
     Then param q = '2300 søborg'
