@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.politikreds CASCADE;
 
 CREATE TYPE api.politikreds AS (
-    id text,
+    politikredsnummer text,
     navn text,
     praesentation text,
     myndighedskode text,
@@ -15,7 +15,7 @@ CREATE TYPE api.politikreds AS (
 
 COMMENT ON TYPE api.politikreds IS 'politikreds';
 
-COMMENT ON COLUMN api.politikreds.id IS 'Politikredsnummer';
+COMMENT ON COLUMN api.politikreds.politikredsnummer IS 'Politikredsnummer';
 
 COMMENT ON COLUMN api.politikreds.praesentation IS 'Præsentationsform for en politikreds';
 

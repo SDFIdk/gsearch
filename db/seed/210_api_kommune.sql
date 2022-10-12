@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.kommune CASCADE;
 
 CREATE TYPE api.kommune AS (
-    id text,
+    kommunekode text,
     kommunenavn text,
     praesentation text,
     geometri geometry,
@@ -14,7 +14,7 @@ CREATE TYPE api.kommune AS (
 
 COMMENT ON TYPE api.kommune IS 'Kommune';
 
-COMMENT ON COLUMN api.kommune.id IS 'Kommunekode';
+COMMENT ON COLUMN api.kommune.kommunekode IS 'Kommunekode';
 
 COMMENT ON COLUMN api.kommune.kommunenavn IS 'Navn på kommune';
 

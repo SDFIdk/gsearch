@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.region CASCADE;
 
 CREATE TYPE api.region AS (
-    id text,
+    regionskode text,
     regionsnavn text,
     praesentation text,
     geometri geometry,
@@ -14,7 +14,7 @@ CREATE TYPE api.region AS (
 
 COMMENT ON TYPE api.region IS 'Region';
 
-COMMENT ON COLUMN api.region.id IS 'Kommunekredsnummer';
+COMMENT ON COLUMN api.region.regionskode IS 'Regionskode';
 
 COMMENT ON COLUMN api.region.regionsnavn IS 'Navn på region';
 

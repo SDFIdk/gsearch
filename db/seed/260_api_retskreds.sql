@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.retskreds CASCADE;
 
 CREATE TYPE api.retskreds AS (
-    id text,
+    retskredsnummer text,
     retkredsnavn text,
     praesentation text,
     myndighedskode text,
@@ -15,7 +15,7 @@ CREATE TYPE api.retskreds AS (
 
 COMMENT ON TYPE api.retskreds IS 'Retskreds';
 
-COMMENT ON COLUMN api.retskreds.id IS 'Retskredsnummer';
+COMMENT ON COLUMN api.retskreds.retskredsnummer IS 'Retskredsnummer';
 
 COMMENT ON COLUMN api.retskreds.retkredsnavn IS 'Navn på retskreds';
 
