@@ -275,15 +275,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = replace(presentationstring, 'Akvarium (Akvarium i ', 'Akvariet (')
-WHERE
-    TYPE ILIKE 'bygning'
-    AND subtype ILIKE 'Akvarium';
-
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    presentationstring = replace(presentationstring, 'akvariet (Akvarium i ', 'Akvariet (')
+    presentationstring = replace(presentationstring, 'Akvariet (Akvarium i ', 'Akvariet (')
 WHERE
     TYPE ILIKE 'bygning'
     AND subtype ILIKE 'Akvarium';
@@ -1066,7 +1058,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = replace(presentationstring, '(golfbane i ', '(')
+    presentationstring = replace(presentationstring, '(Golfbane i ', '(')
 WHERE
     TYPE ILIKE 'idraetsanlaeg'
     AND skrivemaade ILIKE '% golf%';
@@ -1075,7 +1067,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = replace(presentationstring, '(hestevæddeløbsbane i ', '(')
+    presentationstring = replace(presentationstring, '(Hestevæddeløbsbane i ', '(')
 WHERE
     TYPE ILIKE 'idraetsanlaeg'
     AND (skrivemaade ILIKE '%galopbane%'
@@ -1085,7 +1077,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = replace(presentationstring, '(motocrossbane i ', '(')
+    presentationstring = replace(presentationstring, '(Motocrossbane i ', '(')
 WHERE
     TYPE ILIKE 'idraetsanlaeg'
     AND (skrivemaade ILIKE '%motocross%');
@@ -1094,22 +1086,20 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = replace(presentationstring, '(skydebane i ', '(')
+    presentationstring = replace(presentationstring, '(Skydebane i ', '(')
 WHERE
     TYPE ILIKE 'idraetsanlaeg'
-    AND (skrivemaade ILIKE '%skydebane%'
+    AND (skrivemaade ILIKE '%skyde%'
         OR skrivemaade ILIKE '%skytteforening%');
 
 -- Juster stadion
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = replace(presentationstring, '(stadion i ', '(')
+    presentationstring = replace(presentationstring, '(Stadion i ', '(')
 WHERE
     TYPE ILIKE 'idraetsanlaeg'
-    AND (skrivemaade ILIKE '%stadion%'
-        OR skrivemaade ILIKE '%idrætsanlæg%'
-        OR skrivemaade ILIKE '%idrætspark%');
+    AND skrivemaade ILIKE '%idræts%';
 
 ---------
 -- soe --
