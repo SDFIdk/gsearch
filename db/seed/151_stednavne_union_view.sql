@@ -774,33 +774,319 @@ FROM
 */
 
 
-
 -- All elements
 CREATE OR REPLACE VIEW stednavne_udstilling.stednavne_union AS
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'bebyggelse' as type, bebyggelsestype AS subtype, id_lokalid FROM stednavne.bebyggelse UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'begravelsesplads' as type, begravelsespladstype AS subtype, id_lokalid  FROM stednavne.begravelsesplads UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'bygning' as type, bygningstype AS subtype, id_lokalid  FROM stednavne.bygning UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'campingplads' as type, campingpladstype AS subtype, id_lokalid  FROM stednavne.campingplads UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'farvand' as type, farvandstype AS subtype, id_lokalid  FROM stednavne.farvand UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'fortidsminde' as type, fortidsmindetype AS subtype, id_lokalid  FROM stednavne.fortidsminde UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'friluftsbad' as type, friluftsbadtype AS subtype, id_lokalid  FROM stednavne.friluftsbad UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'havnebassin' as type, havnebassintype AS subtype, id_lokalid  FROM stednavne.havnebassin UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'jernbane' as type, jernbanetype AS subtype, id_lokalid  FROM stednavne.jernbane UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'landskabsform' as type, landskabsformtype AS subtype, id_lokalid  FROM stednavne.landskabsform UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'lufthavn' as type, lufthavnstype AS subtype, id_lokalid  FROM stednavne.lufthavn UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'naturareal' as type, naturarealtype AS subtype, id_lokalid  FROM stednavne.naturareal UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'navigationsanlaeg' as type, navigationsanlaegstype AS subtype, id_lokalid  FROM stednavne.navigationsanlaeg UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'restriktionsareal' as type, restriktionsarealtype AS subtype, id_lokalid  FROM stednavne.restriktionsareal UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'sevaerdighed' as type, sevaerdighedstype AS subtype, id_lokalid  FROM stednavne.sevaerdighed UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'terraenkontur' as type, terraenkonturtype AS subtype, id_lokalid  FROM stednavne.terraenkontur UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'urentfarvand' as type, urentfarvandtype AS subtype, id_lokalid  FROM stednavne.urentfarvand UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'vandloeb' as type, vandloebstype AS subtype, id_lokalid  FROM stednavne.vandloeb UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'andentopografiflade' as type, andentopografitype AS subtype, id_lokalid  FROM stednavne.andentopografiflade UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'andentopografipunkt' as type, andentopografitype AS subtype, id_lokalid  FROM stednavne.andentopografipunkt UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'idraetsanlaeg' as type, idraetsanlaegstype AS subtype, id_lokalid  FROM stednavne.idraetsanlaeg UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'soe' as type, soetype AS subtype, id_lokalid  FROM stednavne.soe UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'standsningssted' as type, standsningsstedtype AS subtype, id_lokalid  FROM stednavne.standsningssted UNION
-SELECT objectid::integer, geometri, navnefoelgenummer::int, navnestatus, skrivemaade, sprog, 'vej' as type, vejtype AS subtype, id_lokalid  FROM stednavne.vej;
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'bebyggelse' AS type,
+    bebyggelsestype AS subtype,
+    id_lokalid
+FROM
+    stednavne.bebyggelse
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'begravelsesplads' AS type,
+    begravelsespladstype AS subtype,
+    id_lokalid
+FROM
+    stednavne.begravelsesplads
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'bygning' AS type,
+    bygningstype AS subtype,
+    id_lokalid
+FROM
+    stednavne.bygning
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'campingplads' AS type,
+    campingpladstype AS subtype,
+    id_lokalid
+FROM
+    stednavne.campingplads
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'farvand' AS type,
+    farvandstype AS subtype,
+    id_lokalid
+FROM
+    stednavne.farvand
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'fortidsminde' AS type,
+    fortidsmindetype AS subtype,
+    id_lokalid
+FROM
+    stednavne.fortidsminde
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'friluftsbad' AS type,
+    friluftsbadtype AS subtype,
+    id_lokalid
+FROM
+    stednavne.friluftsbad
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'havnebassin' AS type,
+    havnebassintype AS subtype,
+    id_lokalid
+FROM
+    stednavne.havnebassin
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'jernbane' AS type,
+    jernbanetype AS subtype,
+    id_lokalid
+FROM
+    stednavne.jernbane
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'landskabsform' AS type,
+    landskabsformtype AS subtype,
+    id_lokalid
+FROM
+    stednavne.landskabsform
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'lufthavn' AS type,
+    lufthavnstype AS subtype,
+    id_lokalid
+FROM
+    stednavne.lufthavn
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'naturareal' AS type,
+    naturarealtype AS subtype,
+    id_lokalid
+FROM
+    stednavne.naturareal
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'navigationsanlaeg' AS type,
+    navigationsanlaegstype AS subtype,
+    id_lokalid
+FROM
+    stednavne.navigationsanlaeg
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'restriktionsareal' AS type,
+    restriktionsarealtype AS subtype,
+    id_lokalid
+FROM
+    stednavne.restriktionsareal
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'sevaerdighed' AS type,
+    sevaerdighedstype AS subtype,
+    id_lokalid
+FROM
+    stednavne.sevaerdighed
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'terraenkontur' AS type,
+    terraenkonturtype AS subtype,
+    id_lokalid
+FROM
+    stednavne.terraenkontur
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'urentfarvand' AS type,
+    urentfarvandtype AS subtype,
+    id_lokalid
+FROM
+    stednavne.urentfarvand
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'vandloeb' AS type,
+    vandloebstype AS subtype,
+    id_lokalid
+FROM
+    stednavne.vandloeb
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'andentopografiflade' AS type,
+    andentopografitype AS subtype,
+    id_lokalid
+FROM
+    stednavne.andentopografiflade
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'andentopografipunkt' AS type,
+    andentopografitype AS subtype,
+    id_lokalid
+FROM
+    stednavne.andentopografipunkt
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'idraetsanlaeg' AS type,
+    idraetsanlaegstype AS subtype,
+    id_lokalid
+FROM
+    stednavne.idraetsanlaeg
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'soe' AS type,
+    soetype AS subtype,
+    id_lokalid
+FROM
+    stednavne.soe
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'standsningssted' AS type,
+    standsningsstedtype AS subtype,
+    id_lokalid
+FROM
+    stednavne.standsningssted
+UNION
+SELECT
+    objectid::integer,
+    geometri,
+    navnefoelgenummer::int,
+    navnestatus,
+    skrivemaade,
+    sprog,
+    'vej' AS type,
+    vejtype AS subtype,
+    id_lokalid
+FROM
+    stednavne.vej;
 
 /* Test
 SELECT * FROM stednavne_udstilling.bebyggelse LIMIT 100
