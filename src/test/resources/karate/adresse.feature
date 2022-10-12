@@ -80,7 +80,15 @@ Scenario: Search steetname with number
     When method GET
     Then status 200
     And match response == '#[10]'
-    And match response.[*].husnummer contains deep ['(1,"")']
+    And match response.[*].husnummer contains deep ['1']
+
+Scenario: Search steetname with number and letter
+    Then param q = 'kocksvej 1C'
+    And param resources = 'adresse'
+    When method GET
+    Then status 200
+    And match response == '#[2]'
+    And match response.[*].husnummer contains deep ['1C']
 
 Scenario: Do not have a match on '.'
     Then param q = '.'
