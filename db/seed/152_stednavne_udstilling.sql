@@ -130,13 +130,14 @@ SET
     presentationstring = s1.skrivemaade || ' (Bydel i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type ILIKE 'bebyggelse'
+    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (
+            s2.type ILIKE 'bebyggelse'
             AND s2.subtype ILIKE 'By'
             AND s2.area > 10000000
             AND s1.geometri_udtyndet && s2.geometri_udtyndet
             AND ST_contains (s2.geometri_udtyndet, s1.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.presentationstring IS NULL
+    stednavne_udstilling.presentationstring IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'bebyggelse'
     AND stednavne_udstilling.stednavne_udstilling.subtype ILIKE 'Bydel'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
@@ -326,15 +327,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Justeringer af presentationstring (når typen oplagt fremgår af skrivemaade)
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    presentationstring = replace(presentationstring, '(Campingplads i ', '(')
-WHERE
-    TYPE ILIKE 'campingplads'
-    AND presentationstring ILIKE '%camping%';
-
 -------------
 -- Farvand --
 -------------
@@ -451,14 +443,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Justeringer af presentationstring (når subtypen oplagt fremgår af skrivemaade)
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    presentationstring = replace(presentationstring, '(Friluftsbad i ', '(')
-WHERE
-    TYPE ILIKE 'friluftsbad'
-    AND skrivemaade ILIKE '%friluftsbad%';
-
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
@@ -657,23 +641,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'landskabsform'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
--- Justeringer af presentationstring (når subtypen oplagt fremgår af skrivemaade)
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    presentationstring = replace(presentationstring, '(Bakke i ', '(')
-WHERE
-    TYPE ILIKE 'landskabsform'
-    AND skrivemaade ILIKE '%Bakke%';
-
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    presentationstring = replace(presentationstring, '(Dal i ', '(')
-WHERE
-    TYPE ILIKE 'landskabsform'
-    AND skrivemaade ILIKE '%Dal%';
 
 ---------------
 -- Lufthavne --
@@ -1035,24 +1002,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Juster broer
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    presentationstring = replace(presentationstring, '(bro i ', '(')
-WHERE
-    TYPE ILIKE 'andentopografipunkt'
-    AND skrivemaade ILIKE '% bro%';
-
--- Juster kilder
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    presentationstring = replace(presentationstring, '(kilde i ', '(')
-WHERE
-    TYPE ILIKE 'andentopografipunkt'
-    AND (skrivemaade ILIKE '%kilde %'
-        OR skrivemaade ILIKE '%kilder %');
 
 ---------------------
 -- faergerutelinje --
@@ -1112,15 +1061,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'idraetsanlaeg'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
--- Juster cykelbaner
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    presentationstring = replace(presentationstring, '(cykelbane i ', '(')
-WHERE
-    TYPE ILIKE 'idraetsanlaeg'
-    AND skrivemaade ILIKE '%cykelbane%';
 
 -- Juster golfklubber
 UPDATE
@@ -1234,15 +1174,6 @@ SET
 WHERE
     stednavne_udstilling.stednavne_udstilling.presentationstring IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'soe';
-
--- Juster Sø
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    presentationstring = replace(presentationstring, '(sø i ', '(')
-WHERE
-    TYPE ILIKE 'soe'
-    AND (skrivemaade ILIKE '%sø');
 
 ---------------------
 -- standsningssted --
@@ -1503,3 +1434,14 @@ WHERE
     stednavne_udstilling.stednavne_udstilling.objectid = t.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = t.navnefoelgenummer;
 
+
+-- General update der fjerner alle gentagelser af subtype
+UPDATE
+	Stednavne_udstilling.stednavne_udstilling
+SET
+	presentationstring = replace(stednavne_udstilling.stednavne_udstilling.presentationstring, '(% i ','(')
+FROM
+	stednavne_udstilling.stednavne_udstilling su
+WHERE
+	su.skrivemaade
+	ilike '% ' || su.subtype_presentation;
