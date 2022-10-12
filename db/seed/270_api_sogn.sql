@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.sogn CASCADE;
 
 CREATE TYPE api.sogn AS (
-    id text,
+    sognekode text,
     sognenavn text,
     praesentation text,
     geometri geometry,
@@ -14,7 +14,7 @@ CREATE TYPE api.sogn AS (
 
 COMMENT ON TYPE api.sogn IS 'Sogn';
 
-COMMENT ON COLUMN api.sogn.id IS 'Sognenummer';
+COMMENT ON COLUMN api.sogn.sognekode IS 'Sognekode';
 
 COMMENT ON COLUMN api.sogn.sognenavn IS 'Navn på sogn';
 

@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.postdistrikt CASCADE;
 
 CREATE TYPE api.postdistrikt AS (
-    id text,
+    postnummer text,
     postdistrikt text,
     praesentation text,
     gadepostnummer bool,
@@ -15,7 +15,7 @@ CREATE TYPE api.postdistrikt AS (
 
 COMMENT ON TYPE api.postdistrikt IS 'Postdistrikt';
 
-COMMENT ON COLUMN api.postdistrikt.id IS 'Postnummer';
+COMMENT ON COLUMN api.postdistrikt.postnummer IS 'Postnummer';
 
 COMMENT ON COLUMN api.postdistrikt.postdistrikt IS 'Navn på postdistrikt';
 
