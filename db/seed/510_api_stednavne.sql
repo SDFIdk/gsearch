@@ -75,7 +75,7 @@ agg_stednavne AS (
 SELECT
     id_lokalid AS id,
     praesentation,
-    replace(praesentation, '-', ' ') AS praesentation_nohyphen,
+    replace(replace(praesentation, ' - ', ' '), '-', ' ') AS praesentation_nohyphen,
     skrivemaade,
     (
         CASE WHEN uofficielle_skrivemaader IS NULL THEN
