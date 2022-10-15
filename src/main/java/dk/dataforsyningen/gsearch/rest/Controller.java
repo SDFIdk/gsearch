@@ -105,7 +105,9 @@ public class Controller {
             if (!resourceTypes.getTypes().contains(requestedTypes[i]))
                 throw new IllegalArgumentException("Resource " + requestedTypes[i] + " does not exist");
 
-        String finalWhere = where;
+        // NOTE: Hack correct SRID
+        String finalWhere = where == null ? null : where.replaceAll("', null", "', 25832");
+        logger.debug("finalWhere: " + finalWhere);
 
         // Map requested types into results via query in parallel
         // Concatenate into single list of results
