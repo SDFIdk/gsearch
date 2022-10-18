@@ -35,7 +35,13 @@ public class Controller {
 
     static Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    static FilterToSQL filterToSQL = new PostGISDialect(null).createFilterToSQL();
+    static PostGISDialect dialect = new PostGISDialect(null);
+    static FilterToSQL filterToSQL = new CustomPostgisFilterToSQL(dialect);
+
+    static {
+        dialect.setFunctionEncodingEnabled(true);
+        filterToSQL.setInline(true);
+    }
 
     @Autowired
     private Jdbi jdbi;
@@ -96,18 +102,18 @@ public class Controller {
         String[] requestedTypes = resources.split(",");
 
         for (int i = 0; i < requestedTypes.length; i++)
-            if (!resourceTypes.getTypes().contains(requestedTypes[i])) {
+            if (!resourceTypes.getTypes().contains(requestedTypes[i]))
                 throw new IllegalArgumentException("Resource " + requestedTypes[i] + " does not exist");
-            }
 
-        // Need to remove the WHERE clause because getData expects only the expression
-        String whereExpression = where != null ? where.replace("WHERE ", "") : null;
+        // NOTE: Hack correct SRID
+        String finalWhere = where == null ? null : where.replaceAll("', null", "', 25832");
+        logger.debug("finalWhere: " + finalWhere);
 
         // Map requested types into results via query in parallel
         // Concatenate into single list of results
         List<Data> result = Stream.of(requestedTypes)
             .parallel()
-            .map(resourceType -> getData(q, resourceType, whereExpression, limit))
+            .map(resourceType -> getData(q, resourceType, finalWhere, limit))
             .flatMap(List::stream)
             .collect(Collectors.toList());
 
