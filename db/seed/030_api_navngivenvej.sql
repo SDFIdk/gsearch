@@ -36,7 +36,7 @@ WITH vejnavne AS
                       JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej = n.id_lokalid)
                       JOIN dar.postnummer p ON (nvp.postnummer = p.id_lokalid)
          )
-SELECT v.vejnavn || '(' || v.postnummer[1] || ' - ' || v.postnummer[-1] || ')' AS praesentation,
+SELECT v.vejnavn AS praesentation,
        v.id,
        coalesce(v.vejnavn, '')                                                 AS vejnavn,
        array_agg(distinct v.postnummer)                                        AS postnumre,
