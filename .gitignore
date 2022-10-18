@@ -35,4 +35,4 @@ db/seed/*.txt
 /logback-test.xml
 /karate*.jar
 /karate-config*.js
-/src/main/resources/application-dev.properties
+src/main/resources/application-dev.properties
