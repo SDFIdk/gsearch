@@ -83,6 +83,7 @@ DROP FUNCTION IF EXISTS api.postdistrikt (text, jsonb, int, int);
 CREATE OR REPLACE FUNCTION api.postdistrikt (input_tekst text, filters text, sortoptions integer, rowlimit integer)
     RETURNS SETOF api.postdistrikt
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE

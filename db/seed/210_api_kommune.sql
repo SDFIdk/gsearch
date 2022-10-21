@@ -34,7 +34,7 @@ WITH kommuner AS (
         st_force2d (k.geometri) AS geometri
     FROM
         dagi_500.kommuneinddeling k
-        LEFT JOIN dagi_500.regionsinddeling r ON k.regionlokalid = r.id_lokalid
+        LEFT JOIN dagi_500.regionsinddeling r ON k.regionslokalid = r.id_lokalid
 )
 SELECT
     (
@@ -84,6 +84,7 @@ DROP FUNCTION IF EXISTS api.kommune (text, jsonb, int, int);
 CREATE OR REPLACE FUNCTION api.kommune (input_tekst text, filters text, sortoptions integer, rowlimit integer)
     RETURNS SETOF api.kommune
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE

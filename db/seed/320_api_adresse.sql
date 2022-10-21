@@ -50,18 +50,18 @@ DROP TABLE IF EXISTS basic.adresse;
 
 WITH adresser AS (
     SELECT
-        a.id,
+        a.id_lokalid,
         a.adressebetegnelse,
         a.doerbetegnelse AS doerbetegnelse,
         a.etagebetegnelse,
         h.husnummertekst AS husnummer,
-        h.navngivenvej_id,
+        h.navngivenvej,
         h.sortering AS husnummer_sortering,
         n.vejnavn,
         h.vejkode,
         h.kommunekode,
         k.navn AS kommunenavn,
-        p.postnr AS postnummer,
+        p.postnummer AS postnummer,
         p.navn AS postdistrikt,
         st_force2d (COALESCE(ap.geometri)) AS adgangspunkt_geometri,
         st_force2d (COALESCE(ap2.geometri)) AS vejpunkt_geometri
@@ -70,20 +70,20 @@ WITH adresser AS (
         JOIN (
             SELECT
                 *,
-                ROW_NUMBER() OVER (PARTITION BY navngivenvej_id ORDER BY NULLIF ((substring(husnummertekst::text
+                ROW_NUMBER() OVER (PARTITION BY navngivenvej ORDER BY NULLIF ((substring(husnummertekst::text
                 FROM '[0-9]*')), '')::int,
                     substring(husnummertekst::text
                 FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering
             FROM
-                dar.husnummer) h ON a.husnummer_id = h.id::uuid
-            JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
-            JOIN dar.postnummer p ON p.id = h.postnummer_id::uuid
-            JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt_id
-            JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt_id
+                dar.husnummer) h ON a.husnummer = h.id_lokalid::uuid
+            JOIN dar.navngivenvej n ON n.id_lokalid  = h.navngivenvej::uuid
+            JOIN dar.postnummer p ON p.id_lokalid = h.postnummer::uuid
+            JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt
+            JOIN dar.adressepunkt ap2 ON ap2.id_lokalid = h.vejpunkt
             JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
 )
 SELECT
-    a.id,
+    a.id_lokalid,
     a.adressebetegnelse,
     a.vejnavn,
     a.vejkode,
@@ -97,9 +97,9 @@ SELECT
     nv.textsearchable_plain_col AS textsearchable_plain_col_vej,
     nv.textsearchable_unaccent_col AS textsearchable_unaccent_col_vej,
     nv.textsearchable_phonetic_col AS textsearchable_phonetic_col_vej,
-    a.navngivenvej_id,
+    a.navngivenvej AS navngivenvej_id,
     a.husnummer_sortering,
-    ROW_NUMBER() OVER (PARTITION BY a.id ORDER BY CASE lower(a.etagebetegnelse)
+    ROW_NUMBER() OVER (PARTITION BY a.id_lokalid ORDER BY CASE lower(a.etagebetegnelse)
         WHEN '' THEN
             -10
         WHEN 'k3' THEN
@@ -127,7 +127,7 @@ SELECT
     st_multi (vejpunkt_geometri) AS vejpunkt_geometri INTO basic.adresse
 FROM
     adresser a
-    JOIN basic.navngivenvej nv ON a.navngivenvej_id = nv.id;
+    JOIN basic.navngivenvej nv ON a.navngivenvej = nv.id;
 
 -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
 -- append husnummer, etage, and dør
@@ -162,6 +162,7 @@ DROP FUNCTION IF EXISTS api.adresse (text, text, int, int);
 CREATE OR REPLACE FUNCTION api.adresse (input_tekst text, filters text, sortoptions int, rowlimit int)
     RETURNS SETOF api.adresse
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE
@@ -236,7 +237,7 @@ BEGIN
         WHERE
             ressource = 'adresse' AND lower(input_vejnavn) = tekstelement) > 1000 AND filters = '1=1' THEN
         stmt = format(E'SELECT
-            id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
+            id_lokalid::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
             husnummer::text, etagebetegnelse::text, doerbetegnelse::text, 
             postnummer::text, postdistrikt::text, adressebetegnelse::text, 
             vejpunkt_geometri, adgangspunkt_geometri,
@@ -255,7 +256,7 @@ BEGIN
     ELSE
         -- Execute and return the result
         stmt = format(E'SELECT
-            id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
+            id_lokalid::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
             husnummer::text, etagebetegnelse::text, doerbetegnelse::text, 
             postnummer::text, postdistrikt::text, adressebetegnelse::text, 
             vejpunkt_geometri, adgangspunkt_geometri,

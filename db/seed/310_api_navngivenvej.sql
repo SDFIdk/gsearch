@@ -34,15 +34,15 @@ DROP TABLE IF EXISTS basic.navngivenvej;
 
 WITH vejnavne AS (
     SELECT
-        n.id AS id,
+        n.id_lokalid AS id,
         n.vejnavn,
-        p.postnr AS postnummer,
+        p.postnummer AS postnummer,
         p.navn AS postdistrikter,
         st_force2d (COALESCE(n.geometri)) AS geometri
     FROM
         dar.navngivenvej n
-        JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej_id = n.id)
-        JOIN dar.postnummer p ON (nvp.postnummer_id = p.id))
+        JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej = n.id_lokalid)
+        JOIN dar.postnummer p ON (nvp.postnummer = p.id_lokalid))
     --SELECT v.vejnavn || '(' || v.postnummer[1] || ' - ' || v.postnummer[-1] || ')' AS praesentation,
     SELECT
         v.vejnavn AS praesentation,
@@ -105,6 +105,7 @@ DROP FUNCTION IF EXISTS api.navngivenvej (text, text, int, int);
 CREATE OR REPLACE FUNCTION api.navngivenvej (input_tekst text, filters text, sortoptions int, rowlimit int)
     RETURNS SETOF api.navngivenvej
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE
@@ -200,4 +201,5 @@ $function$;
  SELECT (api.navngivenvej('frederik 7',NULL, 1, 100)).*;
  SELECT (api.navngivenvej('vilhelm becks',NULL, 1, 100)).*;
  SELECT (api.navngivenvej('sadd',NULL, 1, 100)).*;
+ SELECT (api.navngivenvej('Lærke',NULL, 1, NULL)).*;
  */

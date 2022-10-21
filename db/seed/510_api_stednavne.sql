@@ -48,7 +48,7 @@ WITH stednavne AS (
         municipality_filter,
         st_force2d (geometri_udtyndet) AS geometri
     FROM
-        stednavne_udstilling.stednavne_udstilling
+        stednavne_udstilling.stednavn_udstilling
 ),
 agg_stednavne AS (
     SELECT
@@ -136,6 +136,7 @@ DROP FUNCTION IF EXISTS api.stednavn (text, text, int, int);
 CREATE OR REPLACE FUNCTION api.stednavn (input_tekst text, filters text, sortoptions int, rowlimit int)
     RETURNS SETOF api.stednavn
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE

@@ -81,6 +81,7 @@ DROP FUNCTION IF EXISTS api.politikreds (text, jsonb, int, int);
 CREATE OR REPLACE FUNCTION api.politikreds (input_tekst text, filters text, sortoptions integer, rowlimit integer)
     RETURNS SETOF api.politikreds
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE
