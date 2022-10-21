@@ -32,20 +32,14 @@ DROP TABLE IF EXISTS basic.matrikelnummer;
 
 WITH matrikelnumre AS (
     SELECT
-        coalesce(e.ejerlavsnavn, '') AS ejerlavsnavn,
-        coalesce(e.ejerlavskode::text, '') AS ejerlavskode,
-        coalesce(k.kommunenavn, '') AS kommunenavn,
-        coalesce(j.matrikelnummer, '') AS matrikelnummer,
-        c.geometri AS centroide_geometri,
-        st_force2d (COALESCE(l.geometri)) AS geometri
+        coalesce(j.elavsnavn, '') AS ejerlavsnavn,
+        coalesce(j.elavskode::text, '') AS ejerlavskode,
+        coalesce(j.komnavn, '') AS kommunenavn,
+        coalesce(j.matrnr, '') AS matrikelnummer,
+        st_centroid(j.wkb_geometry) AS centroide_geometri,
+        st_force2d (j.wkb_geometry) AS geometri
     FROM
-        -- mat.jordstykke j
-        --JOIN mat.ejerlav e ON j.ejerlavlokalid = e.id_lokalid
-        matriklen.jordstykke j
-        JOIN matriklen.ejerlav e ON e.id_lokalid = j.ejerlavlokalid
-        JOIN matriklen.centroide c ON c.jordstykkelokalid = j.id_lokalid
-        JOIN matriklen.matrikelkommune k ON k.id_lokalid = j.kommunelokalid
-        JOIN matriklen.lodflade l ON l.jordstykkelokalid = j.id_lokalid
+        mat_kf.jordstykke j
 ),
 ejerlavsnavn_dups AS (
     SELECT
@@ -110,6 +104,7 @@ DROP FUNCTION IF EXISTS api.matrikelnummer (text, text, int, int);
 CREATE OR REPLACE FUNCTION api.matrikelnummer (input_tekst text, filters text, sortoptions int, rowlimit int)
     RETURNS SETOF api.matrikelnummer
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE

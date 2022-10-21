@@ -94,6 +94,7 @@ DROP FUNCTION IF EXISTS api.opstillingskreds (text, jsonb, int, int);
 CREATE OR REPLACE FUNCTION api.opstillingskreds (input_tekst text, filters text, sortoptions integer, rowlimit integer)
     RETURNS SETOF api.opstillingskreds
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE

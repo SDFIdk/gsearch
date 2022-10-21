@@ -75,6 +75,7 @@ DROP FUNCTION IF EXISTS api.sogn (text, jsonb, int, int);
 CREATE OR REPLACE FUNCTION api.sogn (input_tekst text, filters text, sortoptions integer, rowlimit integer)
     RETURNS SETOF api.sogn
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE

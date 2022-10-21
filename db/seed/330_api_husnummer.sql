@@ -47,24 +47,24 @@ DROP TABLE IF EXISTS basic.husnummer;
 
 WITH husnumre AS (
     SELECT
-        h.id AS id,
+        h.id_lokalid AS id,
         h.adgangsadressebetegnelse,
         h.husnummertekst AS husnummer,
-        h.navngivenvej_id,
+        h.navngivenvej AS navngivenvej_id,
         n.vejnavn,
         h.vejkode,
         h.kommunekode,
         k.navn AS kommunenavn,
-        p.postnr AS postnummer,
+        p.postnummer AS postnummer,
         p.navn AS postdistrikt,
         st_force2d (COALESCE(ap.geometri)) AS adgangspunkt_geometri,
         st_force2d (COALESCE(ap2.geometri)) AS vejpunkt_geometri
     FROM
         dar.husnummer h
-        JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
-        JOIN dar.postnummer p ON p.id = h.postnummer_id::uuid
-        JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt_id
-        JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt_id
+        JOIN dar.navngivenvej n ON n.id_lokalid = h.navngivenvej::uuid
+        JOIN dar.postnummer p ON p.id_lokalid = h.postnummer::uuid
+        JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt
+        JOIN dar.adressepunkt ap2 ON ap2.id_lokalid = h.vejpunkt
         JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
 )
 SELECT
@@ -125,6 +125,7 @@ DROP FUNCTION IF EXISTS api.husnummer (text, text, int, int);
 CREATE OR REPLACE FUNCTION api.husnummer (input_tekst text, filters text, sortoptions int, rowlimit int)
     RETURNS SETOF api.husnummer
     LANGUAGE plpgsql
+    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE
