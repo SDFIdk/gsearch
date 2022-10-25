@@ -1,3 +1,6 @@
+SELECT '250_api_region.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.region CASCADE;

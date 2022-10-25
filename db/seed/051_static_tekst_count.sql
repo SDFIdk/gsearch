@@ -1,3 +1,6 @@
+SELECT '051_static_tekst_count.sql ' || now();
+
+
 -- Create table with text combinations and number of accourences
 /* Helper to create data:
    DROP TABLE IF EXISTS basic.tekst_forekomst;

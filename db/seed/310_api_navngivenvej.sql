@@ -1,3 +1,6 @@
+SELECT '310_api_navngivenvej.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.navngivenvej CASCADE;

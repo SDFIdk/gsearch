@@ -1,3 +1,6 @@
+SELECT '240_api_postdistrikt.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.postdistrikt CASCADE;

@@ -1,3 +1,6 @@
+SELECT '220_api_opstillingskreds.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.opstillingskreds CASCADE;

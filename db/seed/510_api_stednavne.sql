@@ -1,3 +1,6 @@
+SELECT '510_api_stednavne.sql ' || now();
+
+
 DROP TYPE IF EXISTS api.stednavn CASCADE;
 
 CREATE TYPE api.stednavn AS (

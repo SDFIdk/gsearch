@@ -1,3 +1,6 @@
+SELECT '055_stednavne_subtype_translation.sql ' || now();
+
+
 -- Translates subtype to more proper form:
 DROP TABLE IF EXISTS stednavne_udstilling.subtype_translation;
 

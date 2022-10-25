@@ -1,3 +1,6 @@
+SELECT '230_api_politikreds.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.politikreds CASCADE;

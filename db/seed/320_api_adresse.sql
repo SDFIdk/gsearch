@@ -1,3 +1,6 @@
+SELECT '320_api_adresse.sql ' || now();
+
+
 DROP TYPE IF EXISTS api.adresse CASCADE;
 
 CREATE TYPE api.adresse AS (
