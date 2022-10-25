@@ -31,3 +31,8 @@ db/seed/*.txt
 /docker/reports
 /docker/docker-compose.dev.generated.override.yml
 /docker/docker-compose.dev.yml
+
+/logback-test.xml
+/karate*.jar
+/karate-config*.js
+/src/main/resources/application-dev.properties
