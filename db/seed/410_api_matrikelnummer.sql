@@ -1,3 +1,6 @@
+SELECT '410_api_matrikelnummer.sql ' || now();
+
+
 DROP TYPE IF EXISTS api.matrikelnummer CASCADE;
 
 CREATE TYPE api.matrikelnummer AS (

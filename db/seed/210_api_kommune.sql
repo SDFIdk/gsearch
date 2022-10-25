@@ -1,3 +1,6 @@
+SELECT '210_api_kommune.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.kommune CASCADE;

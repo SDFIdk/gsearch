@@ -1,3 +1,6 @@
+SELECT '140_matriklen_import.sql ' || now();
+
+
 -- DEBUG
 DROP TABLE IF EXISTS g_options;
 
@@ -72,5 +75,11 @@ LIMIT (
     FROM
         g_options);
 
---CREATE INDEX ON matriklen.jordstykke (elavskode, matrnr);
---CREATE INDEX ON matriklen.centroide (elavskode, matrnr);
+CREATE INDEX ON matriklen.jordstykke (id_lokalid);
+CREATE INDEX ON matriklen.jordstykke (ejerlavlokalid);
+CREATE INDEX ON matriklen.jordstykke (kommunelokalid);
+CREATE INDEX ON matriklen.ejerlav (id_lokalid);
+CREATE INDEX ON matriklen.ejerlav (ejerlavsnavn);
+CREATE INDEX ON matriklen.centroide (jordstykkelokalid);
+CREATE INDEX ON matriklen.matrikelkommune (id_lokalid);
+CREATE INDEX ON matriklen.lodflade (jordstykkelokalid);

@@ -1,3 +1,6 @@
+SELECT '330_api_husnummer.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.husnummer CASCADE;
