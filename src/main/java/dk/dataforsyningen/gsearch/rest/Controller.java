@@ -136,7 +136,7 @@ public class Controller {
         @RequestParam(value = "q", required = true) @NotBlank String q,
         @Parameter(description = "Er en kommasepareret liste på 'resources' navn. Se Schemas for deltajeret beskrivelse af resourcer.")
         @RequestParam(value = "resources", required = true) @NotBlank String resources,
-        @Parameter(description = "Angives med CQL-text, og udefra beskrivelser af mulige filtreringer for den valgte resource.")
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
