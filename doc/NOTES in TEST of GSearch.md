@@ -3,6 +3,8 @@
 ## Generelt - forslag/observationer
 **Rækkefølgen** af attributter bør være enten "logisk" eller alfabetisk
 
+// Enkelte bemærkninger om fundne fejl/problemer er ikke resultat af en systematisk test
+
 ### Bør droppes** 
 I alle output droppes:
 * rang1
@@ -24,6 +26,11 @@ I alle output droppes:
 
 * **bbox'** bør nok altid være med i output
 
+## Filter generelt
+Man kan ikke filtrere på attributværdier, der optræder i en attribut, der er et array. Det gælder fx _navngivenvej_ som har en attribut _postnummer_ - den kan man ikke filtrere fra. Som det er implementeret nu 
+
+På ressourcerne adresse og husnummer kan man derimod godt filtrere med _postnummer_, for dér er postnummrete en simpel attribut. 
+
 ## Geometri filter
 * bounding box 
 
@@ -37,7 +44,7 @@ I alle output droppes:
 
 ### Navngiven vej 
 Bør returnere
-* kommunekoder (liste) // så man kan filtrere på dem - ligesom man kan (?) på postnummer
+* kommunekoder (liste) // så man kan filtrere på dem - ligesom (man burde kunne!) på postnummer ... (se ovenfor vedr. attributter som arrays).
 
 ### Adresse 
 Bør returnere
@@ -83,18 +90,17 @@ Bør returnere
 **Søgning** seems to equal query of first part of string with any part of string
 
 ## Postnummer
-**Søgning** efter postnumre i københavn  //
-// Filter på gadepostnummer
+**Søgning** efter postnumre i københavn er hæmmet af at filteret på attributten _gadepostnummer_ (t/f) ikke fungerer?
+// Hvis filteret virkede, vil man kunne undgå alle 'København K' og 'København V'erne når man søger med fx _q='kø'_
 
 ## Retskredse
 **Retskredsnavne** starter altid med _"Retten i ..."_ det betyder at hvis man søger med "r" får man alle, først hvis q bliver _"ra"_ får man _"Retten i Randers"_
 
 ## Sogn
-Bør returnere
-* Reference til  Stift (navn eller kode?) - af hensyn til filtrering 
+Ingen bemærkninger
 
 ## Stednavne
 Bør returnere
-* regionskode (liste) // hvis muligt - af hensyn til filtrering
-* kommunekode (liste) // ditto.
+* regionskode (array) // hvis man kan bruge det til filtrering
+* kommunekode (array) // ditto.
 
