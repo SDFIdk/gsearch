@@ -38,17 +38,18 @@ _Eksempel:_
 
 _Parametren 'filters'_ angiver hvilken del af data-ressourcen, der søges i. Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums _Common Querry Language (CQL)_ [Link: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html].
 
-Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne _'bbox'_ og _'geometri'_.
+Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx _'bbox'_ og _'geometri'_. 
 
-Muligheden af at bruge geometri som filter kan typisk anvendes til at begrænse søgningen inden for en polygon, der eksempelvis kan repræsentere et bestemt kortudsnit i brugerapplikationen. 
-
-**NB!** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så "'" encodes til "%27", mellemrum til %20 osv. ... [Skal formuleres]
+**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så "'" encodes til "%27", mellemrum til %20 osv. ... [Skal formuleres]
+**NB** Attributter i retursvaret, der udgør et array, kan ikke benyttes som filter. Det gælder fx attributten _'postnummer'_ i ressourcen _'navngivenvej'_.
 
 _Eksempel på simpelt filter på husnummer (kommunekode='0461' dvs. Odense):_
 <https://gsearch.k8s-test-121.septima.dk/search?resources=husnummer&q=lærke&filter=kommunekode=%270461%27>
 
-_Eksempel på filter med geometri (polygon i Sønderjylland):_ 
-<https://gsearch.k8s-test-121.septima.dk/search?resources=stednavn&q=Ben&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2)))>
+Muligheden af at bruge geometri som filter kan typisk anvendes til at begrænse søgningen inden for en polygon, der eksempelvis kan repræsentere et bestemt kortudsnit i brugerapplikationen. Det spatiale referencesystem i et geometrifilter skal angives som _'SRID=25832'_. Adresser og husnumre har ikke geometri i _'bbox'_ eller _'geometri'_, men derimod i _'vejpunkt_geometri'_ og _'adgangspunkt_geometri'_, som derfor kan anvendes i et geografisk filter.
+
+_Eksempel på filter med geometri - stednavne inden for et område i Sønderjylland:_ 
+<https://gsearch.k8s-test-121.septima.dk/search?resources=stednavn&q=Ben&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))>
 
 ## Response 
 Resultatet af en forespørgsel indeholder de forekomster, som matcher forespørgslen bedst muligt. Antallet af forekomster begrænses af parmereten _'limit'_ (se ovenfor).Response er formateret som JSON.
@@ -57,66 +58,117 @@ Resultatet af en forespørgsel indeholder de forekomster, som matcher forespørg
 
 **Objektgeometri:** Objektgeometri er inkluderet i response som GeoJSON i referencesystem EPSG:25832 (ETRS89 UTM Zone 32).
 
-For adresse og husnummer indeholder response geometri for adgangspunkt og vejpunkt. Øvrige data-ressourcer har to sæt geometri: _'bbox'_ der er en beregnet bounding box, og _'geometri'_ der er basisregisterets objektgeometri. 
+For adresse og husnummer indeholder response geometri i attributterne _'vejpunkt_geometri'_ og _'adgangspunkt_geometri'_. Øvrige data-ressourcer har to sæt geometri: _'bbox'_, der er en beregnet bounding box, og _'geometri'_ der er basisregisterets objektgeometri. 
 
 For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postdistrikt, region, retskreds, sogn, anvendes den generaliserede _'D500'_ geometri.
 
 **Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder [ .... ]  eller noget ...
 
-## Eksempler for data-ressourcer
+# Eksempler
 
 ### Navngiven vej
+Syntaks-eksempel med limit=100 (>100 resultater):
+<https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&limit=100&q=krin>
 
-Syntaks-eksempel:
-<https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&q=birk>
-
-Syntaks-eksempel med filter på postnummer:
-<https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&q=birk&filter=postnummer=%273460%27>
-
-Syntaks-eksempel med filter på geometri:
-<https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&q=birk&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2)))>
+Syntaks-eksempel med filter på geometri - et område i Sønderjylland:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&q=birk&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))>
 
 ### Adresse
-
 Syntaks eksempel:
 <https://gsearch.k8s-test-121.septima.dk/search?resources=adresse&q=flens>
 
-Syntaks eksempel med filter på kommunekode:
-<https://gsearch.k8s-test-121.septima.dk/search?resources=adresse&q=flensb&>filter=kommunekode=%270360%27 
+Syntaks eksempel med med limit=30 filter på kommunekode - Lolland Kommune:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=adresse&limit=30&q=fle&filter=kommunekode=%270360%27> 
 
-Syntaks-eksempel med filter på geometri:
-<https://gsearch.k8s-test-121.septima.dk/search?resources=adresse&q=flens&filter=INTERSECTS(adgangspunkt_geometri,SRID=25832;POLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2)))>
+Syntaks-eksempel med limit=100 og filter på geometri - et område i Sønderjylland:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=adresse&limit=100&q=skanse&filter=INTERSECTS(vejpunkt_geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))>
 
 ### Husnummer
 Syntaks eksempel:
 <https://gsearch.k8s-test-121.septima.dk/search?resources=husnummer&q=genvej>
 
-Syntaks eksempel med filter på kommunekode:
+Syntaks eksempel med filter på kommunekode - Guldborgsund:
 <https://gsearch.k8s-test-121.septima.dk/search?resources=husnummer&q=gen&filter=kommunekode=%270376%27>
 
-Syntaks-eksempel med filter på geometri:
-<https://gsearch.k8s-test-121.septima.dk/search?resources=husnummer&q=byg&filter=INTERSECTS(adgangspunkt_geometri,SRID=25832;POLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2)))>
+Syntaks-eksempel med limit=100 og filter på geometri - Lolland-Falster:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=husnummer&limit=100&q=fjordbak&filter=INTERSECTS(adgangspunkt_geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))>
 
 ### Matrikelnummer
 Syntaks eksempel:
+
 <https://gsearch.k8s-test-121.septima.dk/search?resources=matrikelnummer&q=123ab>
 
 Syntaks eksempel med filter på ejerlavskode:
+
 <https://gsearch.k8s-test-121.septima.dk/search?resources=matrikelnummer&q=123ab&filter=ejerlavskode=%27130653%27>
 
 Syntaks-eksempel med filter på geometri: <https://gsearch.k8s-test-121.septima.dk/search?resources=matrikelnummer&q=22&filter=INTERSECTS(geometri,SRID=25832;POLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2)))>
 
-... osv. ... 
 ### Opstillingskreds
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=opstillingskreds&q=vest>
 
-### Politikreds 
+Syntaks eksempel med filter på storkreds:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=opstillingskreds&q=vest&filter=storkredsnummer=%276%27>
+
+Syntaks-eksempel med filter på geometri: <https://gsearch.k8s-test-121.septima.dk/search?resources=opstillingskreds&q=s&filter=INTERSECTS(geometri,SRID=25832;POLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2)))>
+
+### Politikreds
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=politikreds&q=vest>
+
+Syntaks-eksempel med filter på geometri - Nørrejylland: 
+<https://gsearch.k8s-test-121.septima.dk/search?resources=politikreds&q=ø&filter=INTERSECTS(geometri,SRID=25832;POLYGON((440000.1 6190000.2, 440000.3 6410000.4, 620000.5 6410000.6, 620000.7 6190000.8, 440000.1 6190000.2)))>
 
 ### Postdistrikt
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=postdistrikt&limit=60&q=b>
+
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=postdistrikt&q=mari>
+
+Syntaks-eksempel med filter på geometri - Lolland-Falster: 
+<https://gsearch.k8s-test-121.septima.dk/search?resources=postdistrikt&q=mari&filter=INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))>
 
 ### Region
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=region&q=mid>
+
+Syntaks eksempel - returnerer alle fem regioner:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=region&q=regi>
 
 ### Retskreds
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=retskreds&q=mid>
+
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=retskreds&q=a>
+
+Syntaks eksempel med filter på geometri - Nørrejylland:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=retskreds&q=a&filter=INTERSECTS(geometri,SRID=25832;POLYGON((440000.1 6190000.2, 440000.3 6410000.4, 620000.5 6410000.6, 620000.7 6190000.8, 440000.1 6190000.2)))>
 
 ### Sogn 
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=sogn&q=bis>
+
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=sogn&q=skal>
+
+Syntaks eksempel med filter på geometri - Odsherred:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=sogn&q=r&filter=INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))>
 
 ### Stednavn
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=stednavn&q=kattebj>
+
+Syntaks eksempel:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=stednavn&limit=40&q=kratg>
+
+Syntaks eksempel - filter på type af stednavn:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=stednavn&q=katte&filter=stednavn_type=%27bebyggelse%27>
+
+Syntaks eksempel - filter på type af stednavn:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=stednavn&q=katte&filter=stednavn_subtype=%27moseSump%27>
+
+Syntaks eksempel med filter på geometri - Odsherred:
+<https://gsearch.k8s-test-121.septima.dk/search?resources=stednavn&q=steng&filter=INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))>
