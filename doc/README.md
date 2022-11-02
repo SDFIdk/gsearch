@@ -71,7 +71,7 @@ Syntaks-eksempel med limit=100 (>100 resultater):
 <https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&limit=100&q=krin>
 
 Syntaks-eksempel med filter på geometri - et område i Sønderjylland:
-<https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&q=birk&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))>
+<https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&q=birk&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1%206074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))>
 
 ### Adresse
 Syntaks eksempel:
