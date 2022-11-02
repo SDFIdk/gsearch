@@ -18,14 +18,13 @@ Datakilder for ressourcerne er de fire autoritative grunddataregistre: Danmarks 
 
 **Login:** Loginparametre er _'login'_ (brugernavn) og _'password'_ eller, alternativt _'token'_
 
-_Eksempler:_
-<https://gsearch.k8s-test-121.septima.dk/search?login=xxxxxx&password=yyyyyy> ... 
-<https://gsearch.k8s-test-121.septima.dk/search?token=d66d32cef73a42d63397c86181c2b484> ... 
+_Eksempel_ med login: _https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&login=xxxxxx&password=yyyyyy& ..._
 
-**Søgning:** De centrale inputparametre er _'resources'_, som angiver hvilken data-ressource der skal søges i, og _'q'_ der er en tekststreng som angiver, hvad der skal søges efter. 
+_Eksempel_ med token: _https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&token=d66d32cef73a42d63397c86181c2b484& ..._ 
 
-_Eksempel:_
-<https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&q=Lærke>
+**Søgning:** De centrale inputparametre er _'resources'_, som angiver hvilken data-ressource der skal søges i og _'q'_, der er en tekststreng som angiver hvad der skal søges efter. 
+
+_Eksempel,_ hvor der søges efter navngivne veje med 'lærke' - syntaks: [...&resources=navngivenvej&q=Lærke&...](<https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&resources=navngivenvej&q=Lærke>)
 
 Parameteren _'resources'_ _kan_ definere mere end én data-ressource. I så fald skal man være opmærksom på at den supplerende parameter _'filter'_ ikke kan anvendes.
 
@@ -33,23 +32,27 @@ Parameteren _'resources'_ _kan_ definere mere end én data-ressource. I så fald
 
 _Parametren 'limit'_ begrænser det mulige antal svar i response. Maksimum er 100; default værdi er 10.
 
-_Eksempel:_
-<https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&q=vinkel&limit=90>
+_Eksempel,_ hvor der der søges efter navngivne veje med 'vinkel' og en limit på 90 - syntaks: [...&limit=90&...](<https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&resources=navngivenvej&q=vinkel&limit=90>)
 
-_Parametren 'filters'_ angiver hvilken del af data-ressourcen, der søges i. Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums [Common Querry Language (CQL)](<https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html>).
+_Parametren 'filters'_ angiver hvilken del af data-ressourcen, der søges i. 
+
+Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums [Common Querry Language (CQL)](<https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html>).
 
 Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx _'bbox'_ og _'geometri'_. 
 
-**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så "'" encodes til "%27", mellemrum til %20 osv. ... [Skal formuleres]
+**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så "'" fx encodes til "%27".
+
 **NB** Attributter i retursvaret, der udgør et array, kan ikke benyttes som filter. Det gælder fx attributten _'postnummer'_ i ressourcen _'navngivenvej'_.
 
-_Eksempel på simpelt filter på husnummer (kommunekode='0461' dvs. Odense):_
-<https://gsearch.k8s-test-121.septima.dk/search?resources=husnummer&q=lærke&filter=kommunekode=%270461%27>
+_Eksempel_ på simpelt filter på husnummer: kommunekode '0461', dvs. Odense - Syntaks: [...&filter=kommunekode=%270461%27...](<https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&resources=husnummer&q=lærke&filter=kommunekode=%270461%27>) bemærk brugen af _%27_ som erstatning for "'".
 
-Muligheden af at bruge geometri som filter kan typisk anvendes til at begrænse søgningen inden for en polygon, der eksempelvis kan repræsentere et bestemt kortudsnit i brugerapplikationen. Det spatiale referencesystem i et geometrifilter skal angives som _'SRID=25832'_. Adresser og husnumre har ikke geometri i _'bbox'_ eller _'geometri'_, men derimod i _'vejpunkt_geometri'_ og _'adgangspunkt_geometri'_, som derfor kan anvendes i et geografisk filter.
+Brug af geometri som filter vil være relevant når man ønsker at begrænse søgningen inden for en polygon, der fx kan repræsentere et kortudsnit i brugerapplikationen. 
 
-_Eksempel på filter med geometri - stednavne inden for et område i Sønderjylland:_ 
-<https://gsearch.k8s-test-121.septima.dk/search?resources=stednavn&q=Ben&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))>
+Det spatiale referencesystem i et geometrifilter skal angives som _'SRID=25832'_. 
+
+Adresser og husnumre har ikke geometri i _'bbox'_ eller _'geometri'_, Geometri findes hér i _'vejpunkt_geometri'_ og _'adgangspunkt_geometri'_, som derfor kan anvendes i et geografisk filter.
+
+_Eksempel_ på filter med geometri for stednavne inden for et område i Sønderjylland - syntaks: [...&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))...](<https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&resources=stednavn&q=Ben&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))>)
 
 ## Response 
 Resultatet af en forespørgsel indeholder de forekomster, som matcher forespørgslen bedst muligt. Antallet af forekomster begrænses af parmereten _'limit'_ (se ovenfor).Response er formateret som JSON.
