@@ -36,7 +36,7 @@ _Parametren 'limit'_ begrænser det mulige antal svar i response. Maksimum er 10
 _Eksempel:_
 <https://gsearch.k8s-test-121.septima.dk/search?resources=navngivenvej&q=vinkel&limit=90>
 
-_Parametren 'filters'_ angiver hvilken del af data-ressourcen, der søges i. Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums _Common Querry Language (CQL)_ [Link: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html].
+_Parametren 'filters'_ angiver hvilken del af data-ressourcen, der søges i. Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums [Common Querry Language (CQL)] (<https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html>).
 
 Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx _'bbox'_ og _'geometri'_. 
 
