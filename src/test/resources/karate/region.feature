@@ -15,7 +15,7 @@ Feature: Gsearch region test
         """
             {
                 "type": 'region',
-                "praesentation": 'Er lig med regionsnavn, fjern?',
+                "praesentation": '#string',
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',
                 "regionskode": '#string',
