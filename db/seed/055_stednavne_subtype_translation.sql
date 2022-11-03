@@ -51,7 +51,7 @@ INSERT INTO stednavne_udstilling.subtype_translation (subtype, subtype_presentat
     VALUES ('sommerhusområdedel', 'Sommerhusområde'),
     ('spredtBebyggelse', 'Bebyggelse'),
     ('storby', 'By'),
-    ('kristen', ''),
+    ('kristen', 'Kristen'),
     ('akvarium', 'Akvarium'),
     ('andenBygning', 'Bygning'),
     ('efterskoleUngdomsskole', 'Ungdomsskole'),
@@ -261,4 +261,23 @@ INSERT INTO stednavne_udstilling.subtype_translation (subtype, subtype_presentat
     ('vejtunnel', 'Tunnel'),
     ('plads', 'Plads'),
     ('','');
+
+INSERT INTO stednavne_udstilling.subtype_translation (subtype, subtype_presentation)
+    VALUES 
+    ('proffesionshøjskole', 'Professionshøjskole'),
+    ('skadestue', 'Skadestue'),
+    ('daginstitution', 'Daginstitution'),
+    ('mindeAndet', 'Minde'),
+    ('naturpark', 'Naturpark'),
+    ('overskylledeSten', 'Overskyllede sten'),
+    ('skovvej', 'Skovvej'),
+    ('parkeringsplads', 'Parkeringsplads'),
+    ('vejstrækning', 'Vejstrækning');
+
+INSERT INTO stednavne_udstilling.subtype_translation (subtype, subtype_presentation)
+    VALUES 
+    ('andenReligion', 'Anden religion'),
+    ('jødisk', 'Jødisk'),
+    ('mindelund', 'Mindelund'),
+    ('muslimsk', 'Muslimsk');
 
