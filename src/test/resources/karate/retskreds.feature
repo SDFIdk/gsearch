@@ -15,7 +15,7 @@ Feature: Gsearch retskreds test
         """
             {
                 "type": 'retskreds',
-                "praesentation": 'Er lig med retkredsnavn, fjern?',
+                "praesentation": '#string',
                 "bbox": '#(bboxSchema)',
                 "retkredsnavn": '#string',
                 "geometri": '#(geometriSchema)',
