@@ -1413,7 +1413,8 @@ WHERE
 ALTER TABLE stednavne_udstilling.stednavne_udstilling
     ADD COLUMN municipality_filter varchar;
 
-UPDATE -- Opdater municipalityfilter på stednavne. ca. 11 minutter
+-- Opdater municipalityfilter på stednavne. ca. 11 minutter
+UPDATE
 stednavne_udstilling.stednavne_udstilling
 SET
     municipality_filter = t.municipality_filter
@@ -1435,6 +1436,7 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = t.navnefoelgenummer;
 
 -- General update der fjerner alle gentagelser af subtype
+-- Fx `Bispebjerg Kirkegård (kirkegård i København NV)` bliver lavet om til `Bispebjerg Kirkegård (København NV)`
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
 SET

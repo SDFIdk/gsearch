@@ -92,6 +92,31 @@ FROM
     husnumre h
     JOIN basic.navngivenvej nv ON h.navngivenvej_id = nv.id;
 
+ALTER TABLE basic.husnummer
+    DROP COLUMN IF EXISTS textsearchable_plain_col;
+
+ALTER TABLE basic.husnummer
+    ADD COLUMN textsearchable_plain_col tsvector 
+    GENERATED ALWAYS AS (textsearchable_plain_col_vej || setweight(to_tsvector('simple', husnummer), 'D')) 
+    STORED;
+
+ALTER TABLE basic.husnummer
+    DROP COLUMN IF EXISTS textsearchable_unaccent_col;
+
+ALTER TABLE basic.husnummer
+    ADD COLUMN textsearchable_unaccent_col tsvector 
+    GENERATED ALWAYS AS (textsearchable_unaccent_col_vej || setweight(to_tsvector('simple', husnummer), 'D')) 
+    STORED;
+
+ALTER TABLE basic.husnummer
+    DROP COLUMN IF EXISTS textsearchable_phonetic_col;
+
+ALTER TABLE basic.husnummer
+    ADD COLUMN textsearchable_phonetic_col tsvector 
+    GENERATED ALWAYS AS (textsearchable_phonetic_col_vej || setweight(to_tsvector('simple', husnummer), 'D')) 
+    STORED;
+
+
 -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
 -- ALTER TABLE api.husnummer DROP COLUMN IF EXISTS textsearchable_index_col_vej;
 -- ALTER TABLE api.husnummer
@@ -221,13 +246,13 @@ BEGIN
             id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
             husnummer::text, postnummer::text, postdistrikt::text, adgangsadressebetegnelse::text,
             vejpunkt_geometri, adgangspunkt_geometri,
-            basic.combine_rank($2, $2, textsearchable_plain_col_vej, textsearchable_unaccent_col_vej, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
-            ts_rank_cd(textsearchable_phonetic_col_vej, to_tsquery(''simple'',$1))::double precision AS rank2
+            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
+            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM
             basic.husnummer
             WHERE
-            (textsearchable_phonetic_col_vej @@ to_tsquery(''simple'', $1)
-             OR textsearchable_plain_col_vej @@ to_tsquery(''simple'', $2))
+            (textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
+             OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
             rank1 desc, rank2 desc,
