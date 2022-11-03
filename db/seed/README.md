@@ -1,4 +1,5 @@
 # gsearch
+
 Installation af ny database:
 
  - Postgres database (fx. `test_gsearch`):
@@ -24,16 +25,18 @@ Installation af ny database:
 
 Hvis der ikke er adgang men data kommer et andet sted fra, skal data ligge i de særskilte schemaer:
  - Populér data i schemaerne:
-   - dagi_10m_nohist_l1
-   - dagi_500m_nohist_l1
+   - dagi_10
+   - dagi_500
    - dar
-   - mat_kf
+   - matriklen
    - stednavne_udstil
  - Kør SQL-filer i rækkefølge - dog undtaget: `010_init_fdw.sql` og `025_basic_data.sql`
  
 Reload af schema
 
-Hvis man ænsker at en databaseændring (DDL) skal resultere at en API-servicen genindlæser, skal følgende sql køres:
+Hvis man ønsker at en databaseændring (DDL) skal resultere at en API-servicen genindlæser, skal følgende sql køres:
+
 ```sql
 SELECT pg_notify('gsearch', 'reload');
 ```
+
