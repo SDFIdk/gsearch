@@ -179,7 +179,7 @@ DECLARE
     stmt text;
 BEGIN
     -- Initialize
-    max_rows = 100;
+    max_rows = 1000;
     IF rowlimit > max_rows THEN
         RAISE 'rowlimit skal være <= %', max_rows;
     END IF;
@@ -189,90 +189,172 @@ BEGIN
     IF btrim(input_tekst) = ANY ('{.,-, '', \,}') THEN
         input_tekst = '';
     END IF;
+
+
     SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[1]) INTO input_vejnavn;
+        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[1]) 
+    INTO input_vejnavn;
+
+
     SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2]) INTO input_husnr_etage_doer;
+        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2]) 
+    INTO input_husnr_etage_doer;
+
+
+    -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(input_vejnavn), ' ')) t
-)
+    )
     SELECT
         string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     FROM
-        tokens INTO vej_query_string;
+        tokens 
+    INTO vej_query_string;
+
+
+    -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
+            -- Splitter op i temp-tabel hver hvert vejnavn-ord i hver sin raekke.
             UNNEST(string_to_array(btrim(input_vejnavn), ' ')) t
-)
+    )
     SELECT
         string_agg(t, ':* <-> ') || ':*'
     FROM
-        tokens INTO plain_vej_query_string;
+        tokens 
+    INTO plain_vej_query_string;
+
+
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(input_husnr_etage_doer), ' ')) t
-)
+    )
     SELECT
         string_agg(t, ' <-> ')
     FROM
-        tokens INTO husnr_etage_doer_query_string;
+        tokens 
+    INTO husnr_etage_doer_query_string;
+
+
     IF husnr_etage_doer_query_string IS NOT NULL THEN
         SELECT
-            vej_query_string || ' <-> ' || husnr_etage_doer_query_string INTO query_string;
+            vej_query_string || ' <-> ' || husnr_etage_doer_query_string 
+        INTO query_string;
     ELSE
         SELECT
-            vej_query_string INTO query_string;
+            vej_query_string 
+        INTO query_string;
     END IF;
+
+
     IF husnr_etage_doer_query_string IS NOT NULL THEN
         SELECT
-            plain_vej_query_string || ' <-> ' || husnr_etage_doer_query_string INTO plain_query_string;
+            plain_vej_query_string || ' <-> ' || husnr_etage_doer_query_string 
+        INTO plain_query_string;
     ELSE
         SELECT
-            plain_vej_query_string INTO plain_query_string;
+            plain_vej_query_string 
+        INTO plain_query_string;
     END IF;
+
+-- Hvis en soegning ender med at have over ca. 1000 resultater, kan soegningen tage lang tid.
+-- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
+-- eller adresse = 'od'). 
+-- Saa for at goere api'et hurtigere ved disse soegninger, er der to forskellige queries
+-- i denne funktion. Den ene bliver brugt, hvis der er over 1000 forekomster.
+-- Vi har hardcoded antal forekomster i tabellen: `tekst_forekomst`.
+-- Dette gaelder for:
+-- - husnummer
+-- - adresse
+-- - navngivenvej
+-- - stednavn
+
+-- Et par linjer nede herfra, tilfoejes der et `|| ''å''`. Det er et hack,
+-- for at representere den alfanumerisk sidste vej, der starter med `%s`
+
     IF (
         SELECT
             COALESCE(forekomster, 0)
         FROM
             basic.tekst_forekomst
         WHERE
-            ressource = 'adresse' AND lower(input_vejnavn) = tekstelement) > 1000 AND filters = '1=1' THEN
+            ressource = 'adresse' 
+        AND lower(input_vejnavn) = tekstelement ) > 1000 
+        AND filters = '1=1' 
+    THEN
         stmt = format(E'SELECT
-            id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
-            husnummer::text, etagebetegnelse::text, doerbetegnelse::text, 
-            postnummer::text, postdistrikt::text, adressebetegnelse::text, 
-            vejpunkt_geometri, adgangspunkt_geometri,
-            0::float AS rank1,
-            0::float AS rank2
+                id::text, 
+                kommunekode::text, 
+                kommunenavn::text, 
+                vejkode::text, 
+                vejnavn::text, 
+                husnummer::text, 
+                etagebetegnelse::text, 
+                doerbetegnelse::text, 
+                postnummer::text, 
+                postdistrikt::text, 
+                adressebetegnelse::text, 
+                vejpunkt_geometri, 
+                adgangspunkt_geometri,
+                0::float AS rank1,
+                0::float AS rank2
             FROM
-            basic.adresse
+                basic.adresse
             WHERE
-            lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
+                lower(vejnavn) >= ''%s'' 
+                AND lower(vejnavn) <= ''%s'' || ''å''
             ORDER BY
-            lower(vejnavn), navngivenvej_id, husnummer_sortering, sortering
+                lower(vejnavn), 
+                navngivenvej_id, 
+                husnummer_sortering, 
+                sortering
             LIMIT $3;', input_tekst, input_tekst);
-        RAISE NOTICE 'stmt=%', stmt;
+        --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
     ELSE
         -- Execute and return the result
         stmt = format(E'SELECT
-            id::text, kommunekode::text, kommunenavn::text, vejkode::text, vejnavn::text, 
-            husnummer::text, etagebetegnelse::text, doerbetegnelse::text, 
-            postnummer::text, postdistrikt::text, adressebetegnelse::text, 
-            vejpunkt_geometri, adgangspunkt_geometri,
-            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
-            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
+                id::text, 
+                kommunekode::text, 
+                kommunenavn::text, 
+                vejkode::text, 
+                vejnavn::text, 
+                husnummer::text, 
+                etagebetegnelse::text, 
+                doerbetegnelse::text, 
+                postnummer::text, 
+                postdistrikt::text, 
+                adressebetegnelse::text, 
+                vejpunkt_geometri, 
+                adgangspunkt_geometri,
+                basic.combine_rank(
+                    $2, 
+                    $2, 
+                    textsearchable_plain_col, 
+                    textsearchable_unaccent_col, 
+                    ''simple''::regconfig, 
+                    ''basic.septima_fts_config''::regconfig
+                ) AS rank1,
+                ts_rank_cd(
+                    textsearchable_phonetic_col, 
+                    to_tsquery(''simple'',$1)
+                )::double precision AS rank2
             FROM
-            basic.adresse
+                basic.adresse
             WHERE (
                 textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
-                OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
+                OR textsearchable_plain_col @@ to_tsquery(''simple'', $2)
+            )
             AND %s
             ORDER BY
-            rank1 desc, rank2 desc,
-            lower(vejnavn), navngivenvej_id, husnummer_sortering, sortering
+                rank1 desc, 
+                rank2 desc,
+                lower(vejnavn), 
+                navngivenvej_id, 
+                husnummer_sortering, 
+                sortering
             LIMIT $3;', filters);
         RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
