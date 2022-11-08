@@ -45,6 +45,8 @@ COMMENT ON COLUMN api.husnummer.vejpunkt_geometri IS 'Geometri for vejpunkt i va
 
 COMMENT ON COLUMN api.husnummer.adgangspunkt_geometri IS 'Geometri for adgangspunkt i valgt koordinatsystem';
 
+CREATE COLLATION IF NOT EXISTS husnummer_collation (provider = icu, locale = 'en@colNumeric=yes');
+
 -- Husnummer script requires navngivenvej script to be executed first
 DROP TABLE IF EXISTS basic.husnummer;
 
@@ -87,34 +89,37 @@ SELECT
     ROW_NUMBER() OVER (PARTITION BY h.navngivenvej_id ORDER BY NULLIF ((substring(h.husnummer::text FROM '[0-9]*')), '')::int,
         substring(h.husnummer::text FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering,
         st_multi (h.adgangspunkt_geometri) AS adgangspunkt_geometri,
-    st_multi (h.vejpunkt_geometri) AS vejpunkt_geometri 
+    st_multi (h.vejpunkt_geometri) AS vejpunkt_geometri
 INTO basic.husnummer
 FROM
     husnumre h
     JOIN basic.navngivenvej nv ON h.navngivenvej_id = nv.id;
 
 ALTER TABLE basic.husnummer
+    ALTER COLUMN husnummer TYPE TEXT COLLATE husnummer_collation;
+
+ALTER TABLE basic.husnummer
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
 ALTER TABLE basic.husnummer
-    ADD COLUMN textsearchable_plain_col tsvector 
-    GENERATED ALWAYS AS (textsearchable_plain_col_vej || setweight(to_tsvector('simple', husnummer), 'D')) 
+    ADD COLUMN textsearchable_plain_col tsvector
+    GENERATED ALWAYS AS (textsearchable_plain_col_vej || setweight(to_tsvector('simple', husnummer), 'D'))
     STORED;
 
 ALTER TABLE basic.husnummer
     DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 
 ALTER TABLE basic.husnummer
-    ADD COLUMN textsearchable_unaccent_col tsvector 
-    GENERATED ALWAYS AS (textsearchable_unaccent_col_vej || setweight(to_tsvector('simple', husnummer), 'D')) 
+    ADD COLUMN textsearchable_unaccent_col tsvector
+    GENERATED ALWAYS AS (textsearchable_unaccent_col_vej || setweight(to_tsvector('simple', husnummer), 'D'))
     STORED;
 
 ALTER TABLE basic.husnummer
     DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 
 ALTER TABLE basic.husnummer
-    ADD COLUMN textsearchable_phonetic_col tsvector 
-    GENERATED ALWAYS AS (textsearchable_phonetic_col_vej || setweight(to_tsvector('simple', husnummer), 'D')) 
+    ADD COLUMN textsearchable_phonetic_col tsvector
+    GENERATED ALWAYS AS (textsearchable_phonetic_col_vej || setweight(to_tsvector('simple', husnummer), 'D'))
     STORED;
 
 
@@ -190,29 +195,29 @@ BEGIN
 
     -- Get vejnavn from input
     SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[1]) 
+        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[1])
     INTO input_vejnavn;
-   
+
     -- Get husnummer from input
     SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2]) 
+        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2])
     INTO input_husnummer;
     -- SELECT
-    --    regexp_replace(btrim(coalesce(input_tekst)), '^.* ', '') 
+    --    regexp_replace(btrim(coalesce(input_tekst)), '^.* ', '')
     -- INTO husnummer;
 
 
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
         SELECT
-            -- Fjerner husnummer fra input_tekst og splitter op i temp-tabel hver hvert vejnavn-ord i 
+            -- Fjerner husnummer fra input_tekst og splitter op i temp-tabel hver hvert vejnavn-ord i
             -- hver sin raekke.
             UNNEST(string_to_array(btrim(input_vejnavn), ' ')) t
     )
     SELECT
         string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     FROM
-        tokens 
+        tokens
     INTO vej_query_string;
 
 
@@ -225,7 +230,7 @@ BEGIN
     SELECT
         string_agg(t, ':* <-> ') || ':*'
     FROM
-        tokens 
+        tokens
     INTO plain_vej_query_string;
 
 
@@ -236,28 +241,28 @@ BEGIN
     SELECT
         string_agg(t, ' <-> ') || ':*'
     FROM
-        tokens 
+        tokens
     INTO husnummer_query_string;
 
 
     IF husnummer_query_string IS NOT NULL THEN
         SELECT
-            vej_query_string || ' <-> ' || husnummer_query_string 
+            vej_query_string || ' <-> ' || husnummer_query_string
         INTO query_string;
     ELSE
         SELECT
-            vej_query_string 
+            vej_query_string
         INTO query_string;
     END IF;
 
 
     IF husnummer_query_string IS NOT NULL THEN
         SELECT
-            plain_vej_query_string || ' <-> ' || husnummer_query_string 
+            plain_vej_query_string || ' <-> ' || husnummer_query_string
         INTO plain_query_string;
     ELSE
         SELECT
-            plain_vej_query_string 
+            plain_vej_query_string
         INTO plain_query_string;
     END IF;
     -- Set husnummer where statement to stored husnummer after it's been used to replace in inputstring
@@ -272,7 +277,7 @@ BEGIN
     --    SELECT
     --        string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     --    FROM
-    --        tokens 
+    --        tokens
     --    INTO query_string;
 
 
@@ -283,13 +288,13 @@ BEGIN
     --    SELECT
     --        string_agg(t, ':* <-> ') || ':*'
     --    FROM
-    --        tokens 
+    --        tokens
     --    INTO plain_query_string;
 
 
 -- Hvis en soegning ender med at have over ca. 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
--- eller adresse = 'od'). 
+-- eller adresse = 'od').
 -- Saa for at goere api'et hurtigere ved disse soegninger, er der to forskellige queries
 -- i denne funktion. Den ene bliver brugt, hvis der er over 1000 forekomster.
 -- Vi har hardcoded antal forekomster i tabellen: `tekst_forekomst`.
@@ -308,29 +313,29 @@ BEGIN
         FROM
             basic.tekst_forekomst
         WHERE
-            ressource = 'husnummer' 
-        AND lower(input_tekst) = tekstelement) > 1000 
-        AND filters = '1=1' 
+            ressource = 'husnummer'
+        AND lower(input_tekst) = tekstelement) > 1000
+        AND filters = '1=1'
     THEN
         stmt = format(E'SELECT
-                id::text, 
-                kommunekode::text, 
-                kommunenavn::text, 
-                vejkode::text, 
-                vejnavn::text, 
-                husnummer::text, 
-                postnummer::text, 
-                postdistrikt::text, 
+                id::text,
+                kommunekode::text,
+                kommunenavn::text,
+                vejkode::text,
+                vejnavn::text,
+                husnummer::text,
+                postnummer::text,
+                postdistrikt::text,
                 adgangsadressebetegnelse::text,
-                vejpunkt_geometri, 
+                vejpunkt_geometri,
                 adgangspunkt_geometri,
                 0::float AS rank1,
                 0::float AS rank2
             FROM
                 basic.husnummer
             WHERE
-                lower(vejnavn) >= ''%s'' 
-            AND 
+                lower(vejnavn) >= ''%s''
+            AND
                 lower(vejnavn) <= ''%s'' || ''å''
             ORDER BY
                 lower(vejnavn),
@@ -348,7 +353,7 @@ BEGIN
                 kommunekode::text,
                 kommunenavn::text,
                 vejkode::text,
-                vejnavn::text, 
+                vejnavn::text,
                 husnummer::text,
                 postnummer::text,
                 postdistrikt::text,
