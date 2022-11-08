@@ -72,7 +72,7 @@ Adresser og husnumre har ikke geometri i _'bbox'_ eller _'geometri'_, Geometri f
 _Eksempel_ på filter med geometri for stednavne inden for et område i Sønderjylland
 
 ```http
-GET https://api.dataforsyningen.dk/gsearch/v1.0/search?gresources=stednavn&q=Ben&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2))) HTTP/1.1
+GET https://api.dataforsyningen.dk/gsearch/v1.0/search?gresources=stednavn&q=Ben&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -351,7 +351,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-> Syntaks eksempel med filter på geometri - Odsherred:
+Syntaks eksempel med filter på geometri - Odsherred:
 
 ```http
 GET https://api.dataforsyningen.dk/gsearch/v1.0/search?resources=stednavn&q=steng&filter=INTERSECTS(geometri,SRID=25832;POLYGON((625000.1%206165000.2,%20625000.3%206215000.4,%20677000.5%206215000.6,%20677000.7%206165000.8,%20625000.1%206165000.2))) HTTP/1.1
