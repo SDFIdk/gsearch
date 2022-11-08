@@ -234,7 +234,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input_husnummer), ' ')) t
     )
     SELECT
-        string_agg(t, ' <-> ')
+        string_agg(t, ' <-> ') || ':*'
     FROM
         tokens 
     INTO husnummer_query_string;
@@ -375,6 +375,7 @@ BEGIN
             AND
                 %s
             ORDER BY
+                husnummer,
                 rank1 desc,
                 rank2 desc,
                 adgangsadressebetegnelse
