@@ -63,7 +63,7 @@ Feature: Gsearch husnummer test
 
     Then match thirdresponse == secondresponse
 
-Scenario: Search steetname with number
+Scenario: Search streetname with number
     Then param q = 'kocksvej 1'
     And param resources = 'husnummer'
     When method GET
@@ -71,12 +71,12 @@ Scenario: Search steetname with number
     And match response == '#[10]'
   And match response.[*].husnummer contains deep ['1']
 
-  Scenario: Search steetname with number and letter
+  Scenario: Search streetname with number and letter
     Then param q = 'kocksvej 1C'
     And param resources = 'husnummer'
     When method GET
     Then status 200
-    And match response == '#[2]'
+    And match response == '#[1]'
     And match response.[*].husnummer contains deep ['1C']
 
   Scenario: Do not have a match on '.'
