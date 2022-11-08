@@ -1,3 +1,6 @@
+SELECT '510_api_stednavne.sql ' || now();
+
+
 DROP TYPE IF EXISTS api.stednavn CASCADE;
 
 CREATE TYPE api.stednavn AS (
@@ -145,7 +148,7 @@ DECLARE
     stmt text;
 BEGIN
     -- Initialize
-    max_rows = 100;
+    max_rows = 1000;
     IF rowlimit > max_rows THEN
         RAISE 'rowlimit skal være <= %', max_rows;
     END IF;
@@ -191,7 +194,7 @@ BEGIN
             ORDER BY
             lower(praesentation)
             LIMIT $3;', input_tekst, input_tekst);
-        RAISE NOTICE '%', stmt;
+        --RAISE NOTICE '%', stmt;
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
     ELSE

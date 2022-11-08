@@ -1,3 +1,6 @@
+SELECT '151_stednavne_union_view.sql ' || now();
+
+
 -- bebyggelse
 /*
 CREATE OR REPLACE VIEW stednavne_udstilling.vw_bebyggelse AS

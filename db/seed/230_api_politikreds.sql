@@ -1,3 +1,6 @@
+SELECT '230_api_politikreds.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.politikreds CASCADE;
@@ -90,7 +93,7 @@ DECLARE
     stmt text;
 BEGIN
     -- Initialize
-    max_rows = 100;
+    max_rows = 1000;
     IF rowlimit > max_rows THEN
         RAISE 'rowlimit skal være <= %', max_rows;
     END IF;

@@ -1,3 +1,6 @@
+SELECT '006_helper_functions.sql ' || now();
+
+
 -- Returns the tail of a space-delimited string, where N denotes the start of the tail. Ex: split_and_endsubstring("x y z", 2) -> "y z"
 DROP FUNCTION IF EXISTS basic.split_and_endsubstring (text, integer);
 
