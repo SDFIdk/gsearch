@@ -1,3 +1,6 @@
+SELECT '410_api_matrikelnummer.sql ' || now();
+
+
 DROP TYPE IF EXISTS api.matrikelnummer CASCADE;
 
 CREATE TYPE api.matrikelnummer AS (
@@ -124,7 +127,7 @@ DECLARE
     stmt text;
 BEGIN
     -- Initialize
-    max_rows = 100;
+    max_rows = 1000;
     IF rowlimit > max_rows THEN
         RAISE 'rowlimit skal være <= %', max_rows;
     END IF;

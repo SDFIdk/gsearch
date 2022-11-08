@@ -1,3 +1,6 @@
+SELECT '150_stednavne_import.sql ' || now();
+
+
 -- DEBUG
 DROP TABLE IF EXISTS g_options;
 
@@ -7,7 +10,7 @@ CREATE TEMPORARY TABLE g_options (
 
 --INSERT INTO g_options VALUES (1000);
 -- STEDNAVNE
-DROP TABLE IF EXISTS stednavne.vej;
+DROP TABLE IF EXISTS stednavne.vej CASCADE;
 
 CREATE TABLE stednavne.vej AS
 SELECT

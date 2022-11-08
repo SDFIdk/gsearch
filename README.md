@@ -17,9 +17,9 @@ Gsearch bygger på følgende hovedprincipper:
 
 ## Project structure
 
-This is a Spring Boot 2 project using Maven, Spring Web and JDBI.
+This is a Spring Boot project using Maven, Spring Web and JDBI.
 
-Target Java version is 11.
+Target Java version is 17.
 
 ## Configuration
 

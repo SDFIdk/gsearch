@@ -1,3 +1,6 @@
+SELECT '004_foreign_data_wrappers.sql ' || now();
+
+
 -- DAGI
 DROP SERVER IF EXISTS :dagi_server CASCADE;
 

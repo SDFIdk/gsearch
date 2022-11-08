@@ -1,3 +1,6 @@
+SELECT '310_api_navngivenvej.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.navngivenvej CASCADE;
@@ -114,7 +117,7 @@ DECLARE
     stmt text;
 BEGIN
     -- Initialize
-    max_rows = 100;
+    max_rows = 1000;
     IF rowlimit > max_rows THEN
         RAISE 'rowlimit skal være <= %', max_rows;
     END IF;
@@ -160,7 +163,7 @@ BEGIN
             ORDER BY
             lower(vejnavn)
             LIMIT $3;', input_tekst, input_tekst);
-        RAISE NOTICE '%', stmt;
+        --RAISE NOTICE '%', stmt;
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
     ELSE
@@ -178,7 +181,7 @@ BEGIN
             rank1 desc, rank2 desc,
             vejnavn
             LIMIT $3;', filters);
-        RAISE NOTICE '%', stmt;
+        --RAISE NOTICE '%', stmt;
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
     END IF;

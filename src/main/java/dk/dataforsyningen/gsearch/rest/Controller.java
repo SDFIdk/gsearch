@@ -1,7 +1,13 @@
-package dk.dataforsyningen.gsearch;
+package dk.dataforsyningen.gsearch.rest;
 
+import dk.dataforsyningen.gsearch.ResourceTypes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import java.util.Optional;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import org.apache.commons.lang3.StringUtils;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
@@ -14,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +29,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Validated
 @RestController
 public class Controller {
 
     static Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    static FilterToSQL filterToSQL = new PostGISDialect(null).createFilterToSQL();
+    static PostGISDialect dialect = new PostGISDialect(null);
+    static FilterToSQL filterToSQL = new CustomPostgisFilterToSQL(dialect);
+
+    static {
+        dialect.setFunctionEncodingEnabled(true);
+        filterToSQL.setInline(true);
+    }
 
     @Autowired
     private Jdbi jdbi;
@@ -44,7 +58,7 @@ public class Controller {
      * @param limit
      * @return
      */
-    private List<Data> getData(String q, String resource, String where, int limit) {
+    private List<Data> getData(String q, String resource, String where, Integer limit) {
         return jdbi.withHandle(handle -> {
             String sql = "select (api." + resource + "(:q, :where, 1, :limit)).*";
             // TODO: This gets register every time this method gets called
@@ -71,46 +85,35 @@ public class Controller {
      * @throws FilterToSQLException
      * @throws CQLException
      */
-    private List<Data> getResult(String q, String resources, String filter, String limit)
+    private List<Data> getResult(String q, String resources, Optional<String> filter, int limit)
         throws FilterToSQLException, CQLException {
-        if (q == null || q.isEmpty()) {
-            throw new IllegalArgumentException("Query string parameter q is required");
-        }
-
-        if (resources == null || resources.isEmpty()) {
-            throw new IllegalArgumentException("Query string parameter resources is required");
-        }
 
         String where = null;
-        if (filter != null && !filter.isEmpty()) {
+        // If filter is present we need to change the CQl to SQL
+        if (filter.isPresent()) {
             // To transform cql filter to sql where clause
-            Filter ogcFilter = ECQL.toFilter(filter);
+            Filter ogcFilter = ECQL.toFilter(filter.get());
             // TODO: visit filter to apply restrictions
             // TODO: visit filter to remove non applicable (field name not in type fx.)
             where = filterToSQL.encodeToString(ogcFilter);
             logger.debug("where: " + where);
         }
 
-        int limitInt = Integer.parseInt(limit);
-        if (limitInt < 1 || limitInt > 100) {
-            throw new IllegalArgumentException("Query string parameter limit must be between 1-100");
-        }
-
         String[] requestedTypes = resources.split(",");
 
         for (int i = 0; i < requestedTypes.length; i++)
-            if (!resourceTypes.getTypes().contains(requestedTypes[i])) {
+            if (!resourceTypes.getTypes().contains(requestedTypes[i]))
                 throw new IllegalArgumentException("Resource " + requestedTypes[i] + " does not exist");
-            }
 
-        // Need to remove the WHERE clause because getData expects only the expression
-        String whereExpression = where != null ? where.replace("WHERE ", "") : null;
+        // NOTE: Hack correct SRID
+        String finalWhere = where == null ? null : where.replaceAll("', null", "', 25832");
+        logger.debug("finalWhere: " + finalWhere);
 
         // Map requested types into results via query in parallel
         // Concatenate into single list of results
         List<Data> result = Stream.of(requestedTypes)
             .parallel()
-            .map(resourceType -> getData(q, resourceType, whereExpression, limitInt))
+            .map(resourceType -> getData(q, resourceType, finalWhere, limit))
             .flatMap(List::stream)
             .collect(Collectors.toList());
 
@@ -128,18 +131,23 @@ public class Controller {
      */
     @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(tags = {"Gsearch"})
-    public List<Data> geosearch(
+    public List<Data> gsearch(
         @Parameter(description = "Søgestreng")
-        @RequestParam String q,
+        @RequestParam(value = "q", required = true) @NotBlank String q,
         @Parameter(description = "Er en kommasepareret liste på 'resources' navn. Se Schemas for deltajeret beskrivelse af resourcer.")
-        @RequestParam String resources,
-        @Parameter(description = "Angives med CQL-text, og udefra beskrivelser af mulige filtreringer for den valgte resource.")
-        @RequestParam(required = false) String filter,
-        @Parameter(description = "Maksantallet af returneret data elementer. Max = 100")
-        @RequestParam(defaultValue = "10") String limit)
-        throws CQLException, FilterToSQLException {
-        // FIXME: Needs checks to see if it compatible with old geosearch
-        logger.debug("gsearch called");
+        @RequestParam(value = "resources", required = true) @NotBlank String resources,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        // filter (CQL) is not compatible with requesting multiple resources at the same time
+        if (StringUtils.containsAny(resources, ",") && filter.isPresent())
+        {
+            throw new IllegalArgumentException("Defined query parameter filter and multiple resources is incompatible");
+        }
+
         List<Data> result = getResult(q, resources, filter, limit);
         return result;
     }

@@ -1,3 +1,6 @@
+SELECT '003_dar_datatypes.sql ' || now();
+
+
 DROP TYPE IF EXISTS public.bebyggelseref CASCADE;
 
 CREATE TYPE public.bebyggelseref AS (
