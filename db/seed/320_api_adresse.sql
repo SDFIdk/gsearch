@@ -231,7 +231,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input_husnr_etage_doer), ' ')) t
     )
     SELECT
-        string_agg(t, ' <-> ')
+        string_agg(t, ' <-> ') || ':*'
     FROM
         tokens 
     INTO husnr_etage_doer_query_string;
