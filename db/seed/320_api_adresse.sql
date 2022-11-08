@@ -231,7 +231,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input_husnr_etage_doer), ' ')) t
     )
     SELECT
-        string_agg(t, ' <-> ') || ':*'
+        string_agg(t, ' <-> ')
     FROM
         tokens 
     INTO husnr_etage_doer_query_string;
@@ -356,7 +356,7 @@ BEGIN
                 husnummer_sortering, 
                 sortering
             LIMIT $3;', filters);
-        RAISE NOTICE 'stmt=%', stmt;
+        --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
     END IF;

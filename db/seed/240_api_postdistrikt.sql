@@ -117,8 +117,8 @@ BEGIN
     SELECT
         btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) INTO input_postnummer;
     --matches digits
-    RAISE NOTICE 'input_postdistrikt: %', input_postdistrikt;
-    RAISE NOTICE 'input_postnummer: %', input_postnummer;
+    --RAISE NOTICE 'input_postdistrikt: %', input_postdistrikt;
+    --RAISE NOTICE 'input_postnummer: %', input_postnummer;
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_postdistrikt, ' ')) t
@@ -143,9 +143,9 @@ BEGIN
         string_agg(t, ':A | ') || ':A'
     FROM
         tokens INTO postnummer_string;
-    RAISE NOTICE 'postdistrikt_string: %', postdistrikt_string;
-    RAISE NOTICE 'postdistrikt_string_plain: %', postdistrikt_string_plain;
-    RAISE NOTICE 'postnummer_string: %', postnummer_string;
+    --RAISE NOTICE 'postdistrikt_string: %', postdistrikt_string;
+    --RAISE NOTICE 'postdistrikt_string_plain: %', postdistrikt_string_plain;
+    --RAISE NOTICE 'postnummer_string: %', postnummer_string;
     CASE WHEN postdistrikt_string IS NULL THEN
         SELECT
             postnummer_string INTO query_string;
@@ -166,7 +166,7 @@ BEGIN
             SELECT
                 postdistrikt_string_plain || ' | ' || postnummer_string INTO plain_query_string;
     END CASE;
-    RAISE NOTICE 'query_string: %', query_string; RAISE NOTICE 'plain_query_string: %', plain_query_string;
+    --RAISE NOTICE 'query_string: %', query_string; RAISE NOTICE 'plain_query_string: %', plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
             postnummer::text, postdistrikt::text, praesentation, ergadepostnummer, geometri, bbox::geometry,
