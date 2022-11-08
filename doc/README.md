@@ -351,7 +351,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel med filter på geometri - Odsherred:
+> Syntaks eksempel med filter på geometri - Odsherred:
 
 ```http
 GET https://api.dataforsyningen.dk/gsearch/v1.0/search?resources=stednavn&q=steng&filter=INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2))) HTTP/1.1
