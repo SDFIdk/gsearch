@@ -20,7 +20,7 @@ Datakilder for ressourcerne er de fire autoritative grunddataregistre: Danmarks 
 _Eksempel,_ hvor der søges efter navngivne veje med 'lærke'
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?gresources=navngivenvej&q=Lærke HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&q=Lærke HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -34,7 +34,7 @@ _Parametren 'limit'_ begrænser det mulige antal svar i response. Maksimum er 10
 _Eksempel,_ hvor der der søges efter navngivne veje med 'vinkel' og en limit på 90
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?gresources=navngivenvej&q=vinkel&limit=90 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&q=vinkel&limit=90 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -58,7 +58,7 @@ Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, 
 _Eksempel_ på simpelt filter på husnummer: kommunekode '0461', dvs. Odense, bemærk brugen af `%27` som erstatning for `'`.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?gresources=husnummer&q=lærke&filter=kommunekode=%270461%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=husnummer&q=lærke&filter=kommunekode=%270461%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -72,7 +72,7 @@ Adresser og husnumre har ikke geometri i _'bbox'_ eller _'geometri'_, Geometri f
 _Eksempel_ på filter med geometri for stednavne inden for et område i Sønderjylland
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?gresources=stednavn&q=Ben&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=stednavn&q=Ben&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
