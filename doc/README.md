@@ -41,13 +41,7 @@ Accept: application/json
 
 _Parametren 'filters'_ angiver hvilken del af data-ressourcen, der søges i.
 
-Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums
-
-```http
-GET https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
-```
+Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums <https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html>
 
 Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx _'bbox'_ og _'geometri'_.
 
