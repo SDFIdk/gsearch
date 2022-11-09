@@ -190,9 +190,6 @@ BEGIN
         input_tekst = '';
     END IF;
 
-    -- If husnummer at end of input then store it and query rest on vejnavn
- --   IF regexp_replace(btrim(coalesce(input_tekst, '')), '^.* ', '') ~* '^[0-9]' THEN
-
     -- Get vejnavn from input
     SELECT
         btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[1])
@@ -202,10 +199,6 @@ BEGIN
     SELECT
         btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2])
     INTO input_husnummer;
-    -- SELECT
-    --    regexp_replace(btrim(coalesce(input_tekst)), '^.* ', '')
-    -- INTO husnummer;
-
 
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
@@ -265,32 +258,6 @@ BEGIN
             plain_vej_query_string
         INTO plain_query_string;
     END IF;
-    -- Set husnummer where statement to stored husnummer after it's been used to replace in inputstring
-   --  husnummer := 'husnummer ilike ''' || husnummer || '''';
-
-    -- If no husnummer at end of input query as if it was just vejnavn
-    --ELSE
-    --    WITH tokens AS (
-    --       SELECT
-    --            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
-    --    )
-    --    SELECT
-    --        string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
-    --    FROM
-    --        tokens
-    --    INTO query_string;
-
-
-    --    WITH tokens AS (
-    --        SELECT
-    --            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
-    --    )
-    --    SELECT
-    --        string_agg(t, ':* <-> ') || ':*'
-    --    FROM
-    --        tokens
-    --    INTO plain_query_string;
-
 
 -- Hvis en soegning ender med at have over ca. 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
