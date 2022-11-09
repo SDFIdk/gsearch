@@ -146,11 +146,6 @@ ALTER TABLE basic.husnummer
 --     setweight(to_tsvector('simple', api.split_and_endsubstring(vejnavn, 4)), 'D')
 --   ) STORED
 -- ;
-CREATE INDEX ON basic.husnummer USING GIN (textsearchable_plain_col_vej);
-
-CREATE INDEX ON basic.husnummer USING GIN (textsearchable_unaccent_col_vej);
-
-CREATE INDEX ON basic.husnummer USING GIN (textsearchable_phonetic_col_vej);
 
 CREATE INDEX ON basic.husnummer USING GIN (textsearchable_plain_col);
 
