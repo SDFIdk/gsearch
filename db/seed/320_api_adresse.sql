@@ -138,19 +138,34 @@ ALTER TABLE basic.adresse
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
 ALTER TABLE basic.adresse
-    ADD COLUMN textsearchable_plain_col tsvector GENERATED ALWAYS AS (textsearchable_plain_col_vej || setweight(to_tsvector('simple', husnummer), 'D') || setweight(to_tsvector('simple', etagebetegnelse), 'D') || setweight(to_tsvector('simple', doerbetegnelse), 'D')) STORED;
+    ADD COLUMN textsearchable_plain_col tsvector
+        GENERATED ALWAYS AS (textsearchable_plain_col_vej ||
+                             setweight(to_tsvector('simple', husnummer), 'D') ||
+                             setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
+                             setweight(to_tsvector('simple', doerbetegnelse), 'D'))
+        STORED;
 
 ALTER TABLE basic.adresse
     DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 
 ALTER TABLE basic.adresse
-    ADD COLUMN textsearchable_unaccent_col tsvector GENERATED ALWAYS AS (textsearchable_unaccent_col_vej || setweight(to_tsvector('simple', husnummer), 'D') || setweight(to_tsvector('simple', etagebetegnelse), 'D') || setweight(to_tsvector('simple', doerbetegnelse), 'D')) STORED;
+    ADD COLUMN textsearchable_unaccent_col tsvector
+        GENERATED ALWAYS AS (textsearchable_unaccent_col_vej ||
+                             setweight(to_tsvector('simple', husnummer), 'D') ||
+                             setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
+                             setweight(to_tsvector('simple', doerbetegnelse), 'D'))
+        STORED;
 
 ALTER TABLE basic.adresse
     DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 
 ALTER TABLE basic.adresse
-    ADD COLUMN textsearchable_phonetic_col tsvector GENERATED ALWAYS AS (textsearchable_phonetic_col_vej || setweight(to_tsvector('simple', husnummer), 'D') || setweight(to_tsvector('simple', etagebetegnelse), 'D') || setweight(to_tsvector('simple', doerbetegnelse), 'D')) STORED;
+    ADD COLUMN textsearchable_phonetic_col tsvector
+        GENERATED ALWAYS AS (textsearchable_phonetic_col_vej ||
+                             setweight(to_tsvector('simple', husnummer), 'D') ||
+                             setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
+                             setweight(to_tsvector('simple', doerbetegnelse), 'D'))
+        STORED;
 
 CREATE INDEX ON basic.adresse USING GIN (textsearchable_plain_col);
 
