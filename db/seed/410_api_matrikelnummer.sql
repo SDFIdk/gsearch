@@ -114,11 +114,14 @@ ALTER TABLE basic.matrikelnummer
                              setweight(to_tsvector('simple', matrikelnummer), 'A'))
         STORED;
 
+
 CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_plain_col);
 
 CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_unaccent_col);
 
 CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_phonetic_col);
+
+CREATE INDEX ON basic.matrikelnummer (matrikelnummer, praesentation);
 
 DROP FUNCTION IF EXISTS api.matrikelnummer (text, text, int, int);
 
