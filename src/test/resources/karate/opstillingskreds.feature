@@ -75,4 +75,4 @@ Feature: Gsearch opstillingskreds test
     And param limit = '100'
     When method GET
     Then status 200
-    And match response == '#[100]'
+    And match response == '#[17]'
