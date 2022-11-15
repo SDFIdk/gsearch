@@ -99,7 +99,7 @@ For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postd
 ## Husnummer
 * Syntaks eksempel som søger efter 'genvej': **...&q=genvej...** [Prøv her](<https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&resources=husnummer&q=genvej>)
 
-* Syntaks eksempel som søger efter 'gen' med med limit=30 og filter på kommunekode 0376, dvs. Guldborgsund Kommune: **...&limit=30&q=fle&filter=kommunekode=%270360%27...** [Prøv her](<https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&resources=husnummer&limit=30&q=fle&filter=kommunekode=%270376%27>) 
+* Syntaks eksempel som søger efter 'fl' med med limit=30 og filter på kommunekode 0376, dvs. Guldborgsund Kommune: **...&limit=30&q=fl&filter=kommunekode=%270360%27...** [Prøv her](<https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&resources=husnummer&limit=30&q=fl&filter=kommunekode=%270376%27>) 
 
 * Syntaks eksempel som søger efter 'fjordbak' med limit=100 og filter på adgangspunkt_geometri - Lolland-Falster: **...&limit=100&q=fjordbak&filter=INTERSECTS(adgangspunkt_geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))** [Prøv her](<https://api.dataforsyningen.dk/gsearch_test/v1.0/search?token=d66d32cef73a42d63397c86181c2b484&resources=husnummer&limit=100&q=fjordbak&filter=INTERSECTS(adgangspunkt_geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))>)
 
