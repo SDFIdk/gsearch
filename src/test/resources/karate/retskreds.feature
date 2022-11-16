@@ -66,3 +66,11 @@ Feature: Gsearch retskreds test
         When method GET
         Then status 200
         And match response == '#[0]'
+
+    Scenario: Test maximum limit and one character search
+        Then param q = 'r'
+        And param resources = 'retskreds'
+        And param limit = '100'
+        When method GET
+        Then status 200
+        And match response == '#[23]'

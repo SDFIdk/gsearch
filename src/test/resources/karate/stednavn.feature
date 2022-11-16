@@ -34,8 +34,8 @@ Feature: Gsearch stednavn test
         And param resources = 'stednavn'
         When method GET
         Then status 200
-        And match response == '#[2]'
-        And match response.[*].skrivemaade_officiel contains deep ['Valby Gl. Skole', 'Store Valbygård']
+        And match response == '#[4]'
+        And match response.[*].skrivemaade_officiel contains deep ['Gadekærvej Storbyhave', 'Valby Gl. Skole', 'Station Gearhallen', 'Store Valbygård']
 
     Scenario: Search is case insensitive
         Then param q = 'Valbyparken'
@@ -77,3 +77,11 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[0]'
+
+    Scenario: Test maximum limit and one character search
+        Then param q = 's'
+        And param resources = 'stednavn'
+        And param limit = '100'
+        When method GET
+        Then status 200
+        And match response == '#[100]'
