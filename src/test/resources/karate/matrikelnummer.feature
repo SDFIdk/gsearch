@@ -83,7 +83,7 @@ Feature: Gsearch matrikel test
     Then status 200
     And match response == '#[0]'
 
-  Scenario: Test maximum limit and small search
+  Scenario: Test maximum limit and one character search
     Then param q = 's'
     And param resources = 'matrikelnummer'
     And param limit = '100'

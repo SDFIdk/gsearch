@@ -67,8 +67,8 @@ Feature: Gsearch navngivenvej test
     Then status 200
     And match response == '#[0]'
 
-  Scenario: Test maximum limit and small search
-    Then param q = 'k'
+  Scenario: Test maximum limit and one character search
+    Then param q = 's'
     And param resources = 'navngivenvej'
     And param limit = '100'
     When method GET

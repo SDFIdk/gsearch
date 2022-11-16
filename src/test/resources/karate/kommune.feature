@@ -91,7 +91,7 @@ Scenario: Do not have a match on '.'
     Then status 200
     And match response == '#[0]'
 
-Scenario: Test maximum limit and small search
+Scenario: Test maximum limit and one character search
     Then param q = 'h'
     And param resources = 'kommune'
     And param limit = '100'

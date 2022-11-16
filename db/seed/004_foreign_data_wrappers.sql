@@ -85,7 +85,7 @@ CREATE USER MAPPING FOR CURRENT_USER SERVER :stednavne_server OPTIONS (
     PASSWORD :stednavne_password
 );
 
-IMPORT FOREIGN SCHEMA stednavne
+IMPORT FOREIGN SCHEMA stednavne_latest
 FROM
     SERVER :stednavne_server INTO stednavne_fdw;
 
