@@ -1,3 +1,6 @@
+SELECT '152_stednavne_udstilling.sql ' || now();
+
+
 -- Køretid ca. 6:30 minutter
 -- Sikkerhedskopi:
 -- SELECT * INTO stednavne_udstilling.stednavne_udstilling_2015_03_25 FROM stednavne_udstilling.stednavne_udstilling;
@@ -50,6 +53,13 @@ CREATE INDEX stednavne_udstilling_subtype_idx ON stednavne_udstilling.stednavne_
 CREATE INDEX stednavne_udstilling_type_presentation_idx ON stednavne_udstilling.stednavne_udstilling (TYPE, presentationstring);
 
 CREATE INDEX stednavne_udstilling_type_geom_idx ON stednavne_udstilling.stednavne_udstilling USING gist (geometri);
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype_presentation);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (presentationstring);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (objectid);
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -- Opdater subtype_presentation
 UPDATE
@@ -1180,7 +1190,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = s.skrivemaade || ' (' || s.type || ', ' || s.subtype_presentation || ' i ' || p.navn || ')'
+    presentationstring = s.skrivemaade || ' (' || INITCAP(s.type) || ', ' || s.subtype || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
@@ -1194,7 +1204,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = skrivemaade || ' (' || TYPE || ', ' || subtype_presentation || ')'
+    presentationstring = skrivemaade || ' (' || INITCAP(TYPE) || ', ' || subtype || ')'
 WHERE
     stednavne_udstilling.stednavne_udstilling.presentationstring IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'standsningssted';
@@ -1386,7 +1396,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = skrivemaade || ' (' || TYPE || ')'
+    presentationstring = skrivemaade || ' (' || INITCAP(TYPE) || ')'
 WHERE
     stednavne_udstilling.stednavne_udstilling.presentationstring IS NULL
     AND btrim(subtype_presentation) = '';
@@ -1394,7 +1404,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    presentationstring = skrivemaade || ' (' || TYPE || ' / ' || subtype_presentation || ')'
+    presentationstring = skrivemaade || ' (' || INITCAP(TYPE) || ' / ' || subtype_presentation || ')'
 WHERE
     stednavne_udstilling.stednavne_udstilling.presentationstring IS NULL
     AND btrim(subtype_presentation) <> '';
@@ -1403,7 +1413,8 @@ WHERE
 ALTER TABLE stednavne_udstilling.stednavne_udstilling
     ADD COLUMN municipality_filter varchar;
 
-UPDATE -- Opdater municipalityfilter på stednavne. ca. 11 minutter
+-- Opdater municipalityfilter på stednavne. ca. 11 minutter
+UPDATE
 stednavne_udstilling.stednavne_udstilling
 SET
     municipality_filter = t.municipality_filter
@@ -1424,14 +1435,11 @@ WHERE
     stednavne_udstilling.stednavne_udstilling.objectid = t.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = t.navnefoelgenummer;
 
-
 -- General update der fjerner alle gentagelser af subtype
+-- Fx `Bispebjerg Kirkegård (kirkegård i København NV)` bliver lavet om til `Bispebjerg Kirkegård (København NV)`
 UPDATE
-	Stednavne_udstilling.stednavne_udstilling
+	stednavne_udstilling.stednavne_udstilling
 SET
-	presentationstring = replace(stednavne_udstilling.stednavne_udstilling.presentationstring, '(% i ','(')
-FROM
-	stednavne_udstilling.stednavne_udstilling su
+	presentationstring = replace(stednavne_udstilling.stednavne_udstilling.presentationstring, stednavne_udstilling.stednavne_udstilling.subtype_presentation || ' i ','')
 WHERE
-	su.skrivemaade
-	ilike '% ' || su.subtype_presentation;
+	stednavne_udstilling.stednavne_udstilling.skrivemaade ilike '% ' || stednavne_udstilling.stednavne_udstilling.subtype_presentation;

@@ -1,4 +1,4 @@
-FROM maven:3.8.5-openjdk-17-slim
+FROM maven:3.8.6-eclipse-temurin-17-alpine
 WORKDIR /gsearch
 COPY pom.xml .
 RUN mvn -e -B dependency:resolve

@@ -1,3 +1,6 @@
+SELECT '151_stednavne_union_view.sql ' || now();
+
+
 -- bebyggelse
 /*
 CREATE OR REPLACE VIEW stednavne_udstilling.vw_bebyggelse AS
@@ -787,7 +790,7 @@ SELECT
     bebyggelsestype AS subtype,
     id_lokalid
 FROM
-    stednavne.bebyggelse
+    stednavne_udstilling.bebyggelse
 UNION
 SELECT
     objectid::integer,
@@ -800,7 +803,7 @@ SELECT
     begravelsespladstype AS subtype,
     id_lokalid
 FROM
-    stednavne.begravelsesplads
+    stednavne_udstilling.begravelsesplads
 UNION
 SELECT
     objectid::integer,
@@ -813,7 +816,7 @@ SELECT
     bygningstype AS subtype,
     id_lokalid
 FROM
-    stednavne.bygning
+    stednavne_udstilling.bygning
 UNION
 SELECT
     objectid::integer,
@@ -826,7 +829,7 @@ SELECT
     campingpladstype AS subtype,
     id_lokalid
 FROM
-    stednavne.campingplads
+    stednavne_udstilling.campingplads
 UNION
 SELECT
     objectid::integer,
@@ -839,7 +842,7 @@ SELECT
     farvandstype AS subtype,
     id_lokalid
 FROM
-    stednavne.farvand
+    stednavne_udstilling.farvand
 UNION
 SELECT
     objectid::integer,
@@ -852,7 +855,7 @@ SELECT
     fortidsmindetype AS subtype,
     id_lokalid
 FROM
-    stednavne.fortidsminde
+    stednavne_udstilling.fortidsminde
 UNION
 SELECT
     objectid::integer,
@@ -865,7 +868,7 @@ SELECT
     friluftsbadtype AS subtype,
     id_lokalid
 FROM
-    stednavne.friluftsbad
+    stednavne_udstilling.friluftsbad
 UNION
 SELECT
     objectid::integer,
@@ -878,7 +881,7 @@ SELECT
     havnebassintype AS subtype,
     id_lokalid
 FROM
-    stednavne.havnebassin
+    stednavne_udstilling.havnebassin
 UNION
 SELECT
     objectid::integer,
@@ -891,7 +894,7 @@ SELECT
     jernbanetype AS subtype,
     id_lokalid
 FROM
-    stednavne.jernbane
+    stednavne_udstilling.jernbane
 UNION
 SELECT
     objectid::integer,
@@ -904,7 +907,7 @@ SELECT
     landskabsformtype AS subtype,
     id_lokalid
 FROM
-    stednavne.landskabsform
+    stednavne_udstilling.landskabsform
 UNION
 SELECT
     objectid::integer,
@@ -917,7 +920,7 @@ SELECT
     lufthavnstype AS subtype,
     id_lokalid
 FROM
-    stednavne.lufthavn
+    stednavne_udstilling.lufthavn
 UNION
 SELECT
     objectid::integer,
@@ -930,7 +933,7 @@ SELECT
     naturarealtype AS subtype,
     id_lokalid
 FROM
-    stednavne.naturareal
+    stednavne_udstilling.naturareal
 UNION
 SELECT
     objectid::integer,
@@ -943,7 +946,7 @@ SELECT
     navigationsanlaegstype AS subtype,
     id_lokalid
 FROM
-    stednavne.navigationsanlaeg
+    stednavne_udstilling.navigationsanlaeg
 UNION
 SELECT
     objectid::integer,
@@ -956,7 +959,7 @@ SELECT
     restriktionsarealtype AS subtype,
     id_lokalid
 FROM
-    stednavne.restriktionsareal
+    stednavne_udstilling.restriktionsareal
 UNION
 SELECT
     objectid::integer,
@@ -969,7 +972,7 @@ SELECT
     sevaerdighedstype AS subtype,
     id_lokalid
 FROM
-    stednavne.sevaerdighed
+    stednavne_udstilling.sevaerdighed
 UNION
 SELECT
     objectid::integer,
@@ -982,7 +985,7 @@ SELECT
     terraenkonturtype AS subtype,
     id_lokalid
 FROM
-    stednavne.terraenkontur
+    stednavne_udstilling.terraenkontur
 UNION
 SELECT
     objectid::integer,
@@ -995,7 +998,7 @@ SELECT
     urentfarvandtype AS subtype,
     id_lokalid
 FROM
-    stednavne.urentfarvand
+    stednavne_udstilling.urentfarvand
 UNION
 SELECT
     objectid::integer,
@@ -1008,7 +1011,7 @@ SELECT
     vandloebstype AS subtype,
     id_lokalid
 FROM
-    stednavne.vandloeb
+    stednavne_udstilling.vandloeb
 UNION
 SELECT
     objectid::integer,
@@ -1021,7 +1024,7 @@ SELECT
     andentopografitype AS subtype,
     id_lokalid
 FROM
-    stednavne.andentopografiflade
+    stednavne_udstilling.andentopografiflade
 UNION
 SELECT
     objectid::integer,
@@ -1034,7 +1037,7 @@ SELECT
     andentopografitype AS subtype,
     id_lokalid
 FROM
-    stednavne.andentopografipunkt
+    stednavne_udstilling.andentopografipunkt
 UNION
 SELECT
     objectid::integer,
@@ -1047,7 +1050,7 @@ SELECT
     idraetsanlaegstype AS subtype,
     id_lokalid
 FROM
-    stednavne.idraetsanlaeg
+    stednavne_udstilling.idraetsanlaeg
 UNION
 SELECT
     objectid::integer,
@@ -1060,7 +1063,7 @@ SELECT
     soetype AS subtype,
     id_lokalid
 FROM
-    stednavne.soe
+    stednavne_udstilling.soe
 UNION
 SELECT
     objectid::integer,
@@ -1073,7 +1076,7 @@ SELECT
     standsningsstedtype AS subtype,
     id_lokalid
 FROM
-    stednavne.standsningssted
+    stednavne_udstilling.standsningssted
 UNION
 SELECT
     objectid::integer,
@@ -1086,7 +1089,7 @@ SELECT
     vejtype AS subtype,
     id_lokalid
 FROM
-    stednavne.vej;
+    stednavne_udstilling.vej;
 
 /* Test
 SELECT * FROM stednavne_udstilling.bebyggelse LIMIT 100
