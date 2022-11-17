@@ -1,5 +1,8 @@
+SELECT '150_stednavne_import.sql ' || now();
+
+
 -- DEBUG
-DROP TABLE IF EXISTS g_options;
+DROP TABLE IF EXISTS g_options CASCADE;
 
 CREATE TEMPORARY TABLE g_options (
     maxrows int
@@ -7,7 +10,7 @@ CREATE TEMPORARY TABLE g_options (
 
 --INSERT INTO g_options VALUES (1000);
 -- STEDNAVNE
-DROP TABLE IF EXISTS stednavne.vej;
+DROP TABLE IF EXISTS stednavne.vej CASCADE;
 
 CREATE TABLE stednavne.vej AS
 SELECT
@@ -20,7 +23,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.vandloeb;
+DROP TABLE IF EXISTS stednavne.vandloeb CASCADE;
 
 CREATE TABLE stednavne.vandloeb AS
 SELECT
@@ -33,7 +36,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.urentfarvand;
+DROP TABLE IF EXISTS stednavne.urentfarvand CASCADE;
 
 CREATE TABLE stednavne.urentfarvand AS
 SELECT
@@ -46,7 +49,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.ubearbejdetnavnpunkt;
+DROP TABLE IF EXISTS stednavne.ubearbejdetnavnpunkt CASCADE;
 
 CREATE TABLE stednavne.ubearbejdetnavnpunkt AS
 SELECT
@@ -59,7 +62,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.ubearbejdetnavnlinje;
+DROP TABLE IF EXISTS stednavne.ubearbejdetnavnlinje CASCADE;
 
 CREATE TABLE stednavne.ubearbejdetnavnlinje AS
 SELECT
@@ -72,7 +75,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.ubearbejdetnavnflade;
+DROP TABLE IF EXISTS stednavne.ubearbejdetnavnflade CASCADE;
 
 CREATE TABLE stednavne.ubearbejdetnavnflade AS
 SELECT
@@ -85,7 +88,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.terraenkontur;
+DROP TABLE IF EXISTS stednavne.terraenkontur CASCADE;
 
 CREATE TABLE stednavne.terraenkontur AS
 SELECT
@@ -98,7 +101,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.standsningssted;
+DROP TABLE IF EXISTS stednavne.standsningssted CASCADE;
 
 CREATE TABLE stednavne.standsningssted AS
 SELECT
@@ -111,7 +114,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.soe;
+DROP TABLE IF EXISTS stednavne.soe CASCADE;
 
 CREATE TABLE stednavne.soe AS
 SELECT
@@ -124,7 +127,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.sevaerdighed;
+DROP TABLE IF EXISTS stednavne.sevaerdighed CASCADE;
 
 CREATE TABLE stednavne.sevaerdighed AS
 SELECT
@@ -137,7 +140,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.restriktionsareal;
+DROP TABLE IF EXISTS stednavne.restriktionsareal CASCADE;
 
 CREATE TABLE stednavne.restriktionsareal AS
 SELECT
@@ -150,7 +153,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.navigationsanlaeg;
+DROP TABLE IF EXISTS stednavne.navigationsanlaeg CASCADE;
 
 CREATE TABLE stednavne.navigationsanlaeg AS
 SELECT
@@ -163,7 +166,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.naturareal;
+DROP TABLE IF EXISTS stednavne.naturareal CASCADE;
 
 CREATE TABLE stednavne.naturareal AS
 SELECT
@@ -176,7 +179,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.lufthavn;
+DROP TABLE IF EXISTS stednavne.lufthavn CASCADE;
 
 CREATE TABLE stednavne.lufthavn AS
 SELECT
@@ -189,7 +192,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.landskabsform;
+DROP TABLE IF EXISTS stednavne.landskabsform CASCADE;
 
 CREATE TABLE stednavne.landskabsform AS
 SELECT
@@ -202,7 +205,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.jernbane;
+DROP TABLE IF EXISTS stednavne.jernbane CASCADE;
 
 CREATE TABLE stednavne.jernbane AS
 SELECT
@@ -215,7 +218,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.idraetsanlaeg;
+DROP TABLE IF EXISTS stednavne.idraetsanlaeg CASCADE;
 
 CREATE TABLE stednavne.idraetsanlaeg AS
 SELECT
@@ -228,7 +231,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.havnebassin;
+DROP TABLE IF EXISTS stednavne.havnebassin CASCADE;
 
 CREATE TABLE stednavne.havnebassin AS
 SELECT
@@ -241,7 +244,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.friluftsbad;
+DROP TABLE IF EXISTS stednavne.friluftsbad CASCADE;
 
 CREATE TABLE stednavne.friluftsbad AS
 SELECT
@@ -254,7 +257,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.fortidsminde;
+DROP TABLE IF EXISTS stednavne.fortidsminde CASCADE;
 
 CREATE TABLE stednavne.fortidsminde AS
 SELECT
@@ -267,7 +270,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.farvand;
+DROP TABLE IF EXISTS stednavne.farvand CASCADE;
 
 CREATE TABLE stednavne.farvand AS
 SELECT
@@ -280,7 +283,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.campingplads;
+DROP TABLE IF EXISTS stednavne.campingplads CASCADE;
 
 CREATE TABLE stednavne.campingplads AS
 SELECT
@@ -293,7 +296,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.bygning;
+DROP TABLE IF EXISTS stednavne.bygning CASCADE;
 
 CREATE TABLE stednavne.bygning AS
 SELECT
@@ -306,7 +309,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.begravelsesplads;
+DROP TABLE IF EXISTS stednavne.begravelsesplads CASCADE;
 
 CREATE TABLE stednavne.begravelsesplads AS
 SELECT
@@ -319,7 +322,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.bebyggelse;
+DROP TABLE IF EXISTS stednavne.bebyggelse CASCADE;
 
 CREATE TABLE stednavne.bebyggelse AS
 SELECT
@@ -332,7 +335,7 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.andentopografipunkt;
+DROP TABLE IF EXISTS stednavne.andentopografipunkt CASCADE;
 
 CREATE TABLE stednavne.andentopografipunkt AS
 SELECT
@@ -345,13 +348,26 @@ LIMIT (
     FROM
         g_options);
 
-DROP TABLE IF EXISTS stednavne.andentopografiflade;
+DROP TABLE IF EXISTS stednavne.andentopografiflade CASCADE;
 
 CREATE TABLE stednavne.andentopografiflade AS
 SELECT
     *
 FROM
     stednavne_fdw.andentopografiflade
+LIMIT (
+    SELECT
+        maxrows
+    FROM
+        g_options);
+
+DROP TABLE IF EXISTS stednavne.stednavn CASCADE;
+
+CREATE TABLE stednavne.stednavn AS
+SELECT
+    *
+FROM
+    stednavne_fdw.stednavn
 LIMIT (
     SELECT
         maxrows

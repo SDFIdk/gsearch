@@ -1,3 +1,6 @@
+SELECT '130_dar_import.sql ' || now();
+
+
 -- DEBUG
 DROP TABLE IF EXISTS g_options;
 

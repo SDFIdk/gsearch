@@ -1,3 +1,6 @@
+SELECT '008_danish_search.sql ' || now();
+
+
 -- Requires Superuser:
 DROP EXTENSION IF EXISTS unaccent CASCADE;
 

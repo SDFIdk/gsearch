@@ -1,3 +1,6 @@
+SELECT '140_matriklen_import.sql ' || now();
+
+
 -- DEBUG
 DROP TABLE IF EXISTS g_options;
 
@@ -14,6 +17,8 @@ SELECT
     *
 FROM
     matriklen_fdw.jordstykke
+WHERE
+    status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
@@ -27,6 +32,8 @@ SELECT
     *
 FROM
     matriklen_fdw.lodflade
+WHERE
+        status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
@@ -40,6 +47,8 @@ SELECT
     *
 FROM
     matriklen_fdw.ejerlav
+WHERE
+        status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
@@ -53,6 +62,8 @@ SELECT
     *
 FROM
     matriklen_fdw.centroide
+WHERE
+        status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
@@ -66,11 +77,19 @@ SELECT
     *
 FROM
     matriklen_fdw.matrikelkommune
+WHERE
+        status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
     FROM
         g_options);
 
---CREATE INDEX ON matriklen.jordstykke (elavskode, matrnr);
---CREATE INDEX ON matriklen.centroide (elavskode, matrnr);
+CREATE INDEX ON matriklen.jordstykke (id_lokalid);
+CREATE INDEX ON matriklen.jordstykke (ejerlavlokalid);
+CREATE INDEX ON matriklen.jordstykke (kommunelokalid);
+CREATE INDEX ON matriklen.ejerlav (id_lokalid);
+CREATE INDEX ON matriklen.ejerlav (ejerlavsnavn);
+CREATE INDEX ON matriklen.centroide (jordstykkelokalid);
+CREATE INDEX ON matriklen.matrikelkommune (id_lokalid);
+CREATE INDEX ON matriklen.lodflade (jordstykkelokalid);

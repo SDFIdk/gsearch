@@ -1,3 +1,6 @@
+SELECT '002_extensions_schemas.sql ' || now();
+
+
 -- Extensions and schemas:
 CREATE EXTENSION IF NOT EXISTS postgis;
 

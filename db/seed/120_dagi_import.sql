@@ -1,3 +1,6 @@
+SELECT '120_dagi_import.sql ' || now();
+
+
 -- DEBUG
 DROP TABLE IF EXISTS g_options;
 

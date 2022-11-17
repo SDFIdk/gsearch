@@ -1,3 +1,6 @@
+SELECT '005_create_fonetik.sql ' || now();
+
+
 CREATE SCHEMA IF NOT EXISTS fonetik;
 
 ALTER SCHEMA fonetik OWNER TO postgres;
