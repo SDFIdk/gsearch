@@ -17,6 +17,8 @@ SELECT
     *
 FROM
     matriklen_fdw.jordstykke
+WHERE
+    status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
@@ -30,6 +32,8 @@ SELECT
     *
 FROM
     matriklen_fdw.lodflade
+WHERE
+        status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
@@ -43,6 +47,8 @@ SELECT
     *
 FROM
     matriklen_fdw.ejerlav
+WHERE
+        status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
@@ -56,6 +62,8 @@ SELECT
     *
 FROM
     matriklen_fdw.centroide
+WHERE
+        status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
@@ -69,6 +77,8 @@ SELECT
     *
 FROM
     matriklen_fdw.matrikelkommune
+WHERE
+        status = 'Gældende'
 LIMIT (
     SELECT
         maxrows
