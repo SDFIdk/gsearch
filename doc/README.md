@@ -12,6 +12,21 @@
 
 Datakilder for ressourcerne er de fire autoritative grunddataregistre: Danmarks Adresseregister (DAR), Danmarks Administrative, Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne (DS), som alle udstilles via Datafordeleren.
 
+I hver ressource søges der efter bedst mulig match i et eller flere felter/attributter som følger:
+
+* Navngiven vej: Der søges i DAR navngivenvej og postnummer
+* Husnummer: Der søges i DAR husnummer
+* Adresse: Der søges i DAR adresse, husnummer, navngivenvej, postnummer
+* Matrikelnummer: Der søges i MAT matrikelnummer
+* Kommune: Der søges i DAGI kommuneinddeling
+* Opstillingskreds: Der DAGI opstillingskreds
+* Politikreds: Der søges i DAGI politikreds
+* Postdistrikt: Der søges i DAGI postnummerinddeling
+* Region: Der søges i regionsinddeling
+* Retskreds: Der søges i DAGI retskreds
+* Sogn: Der søges i DAGI sogneinddeling
+* Stednavn: Der søges i stednavneregisteret på tværs af alle stednavne
+
 ## Request syntax
 **URL** til GSearch er `https://api.dataforsyningen.dk/rest/gsearch/v1.0/search`
 
@@ -82,7 +97,7 @@ For adresse og husnummer indeholder response geometri i attributterne _'vejpunkt
 
 For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postdistrikt, region, retskreds, sogn, anvendes den generaliserede _'D500'_ geometri.
 
-**Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder [ .... ]  eller noget ...
+**Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder. Output for hver ressource er i øvrigt dokumenteret i swagger-dokumentationen her [en URL svarende til https://gsearch.k8s-test-121.septima.dk/swagger-ui/index.html]
 
 <h2 id="gsearch-eksempler">Eksempler</h2>
 
