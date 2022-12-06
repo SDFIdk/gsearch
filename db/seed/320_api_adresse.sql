@@ -53,18 +53,18 @@ DROP TABLE IF EXISTS basic.adresse;
 
 WITH adresser AS (
     SELECT
-        a.id_lokalid,
+        a.id,
         a.adressebetegnelse,
         a.doerbetegnelse AS doerbetegnelse,
         a.etagebetegnelse,
         h.husnummertekst AS husnummer,
-        h.navngivenvej,
+        h.navngivenvej_id,
         h.sortering AS husnummer_sortering,
         n.vejnavn,
         h.vejkode,
         h.kommunekode,
         k.navn AS kommunenavn,
-        p.postnummer AS postnummer,
+        p.postnr AS postnummer,
         p.navn AS postdistrikt,
         st_force2d (COALESCE(ap.geometri)) AS adgangspunkt_geometri,
         st_force2d (COALESCE(ap2.geometri)) AS vejpunkt_geometri
@@ -73,20 +73,20 @@ WITH adresser AS (
         JOIN (
             SELECT
                 *,
-                ROW_NUMBER() OVER (PARTITION BY navngivenvej ORDER BY NULLIF ((substring(husnummertekst::text
+                ROW_NUMBER() OVER (PARTITION BY navngivenvej_id ORDER BY NULLIF ((substring(husnummertekst::text
                 FROM '[0-9]*')), '')::int,
                     substring(husnummertekst::text
                 FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering
             FROM
-                dar.husnummer) h ON a.husnummer = h.id_lokalid::uuid
-            JOIN dar.navngivenvej n ON n.id_lokalid  = h.navngivenvej::uuid
-            JOIN dar.postnummer p ON p.id_lokalid = h.postnummer::uuid
-            JOIN dar.adressepunkt ap ON ap.id_lokalid = h.adgangspunkt
-            JOIN dar.adressepunkt ap2 ON ap2.id_lokalid = h.vejpunkt
+                dar.husnummer) h ON a.husnummer_id = h.id::uuid
+            JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
+            JOIN dar.postnummer p ON p.id = h.postnummer_id::uuid
+            JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt_id
+            JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt_id
             JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
 )
 SELECT
-    a.id_lokalid,
+    a.id,
     a.adressebetegnelse,
     a.vejnavn,
     a.vejkode,
@@ -100,9 +100,9 @@ SELECT
     nv.textsearchable_plain_col AS textsearchable_plain_col_vej,
     nv.textsearchable_unaccent_col AS textsearchable_unaccent_col_vej,
     nv.textsearchable_phonetic_col AS textsearchable_phonetic_col_vej,
-    a.navngivenvej AS navngivenvej_id,
+    a.navngivenvej_id,
     a.husnummer_sortering,
-    ROW_NUMBER() OVER (PARTITION BY a.id_lokalid ORDER BY CASE lower(a.etagebetegnelse)
+    ROW_NUMBER() OVER (PARTITION BY a.id ORDER BY CASE lower(a.etagebetegnelse)
         WHEN '' THEN
             -10
         WHEN 'k3' THEN
@@ -130,7 +130,7 @@ SELECT
     st_multi (vejpunkt_geometri) AS vejpunkt_geometri INTO basic.adresse
 FROM
     adresser a
-    JOIN basic.navngivenvej nv ON a.navngivenvej = nv.id;
+    JOIN basic.navngivenvej nv ON a.navngivenvej_id = nv.id;
 
 -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
 -- append husnummer, etage, and dør
@@ -180,7 +180,6 @@ DROP FUNCTION IF EXISTS api.adresse (text, text, int, int);
 CREATE OR REPLACE FUNCTION api.adresse (input_tekst text, filters text, sortoptions int, rowlimit int)
     RETURNS SETOF api.adresse
     LANGUAGE plpgsql
-    SECURITY DEFINER
     STABLE
     AS $function$
 DECLARE
@@ -208,12 +207,12 @@ BEGIN
 
 
     SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[1]) 
+        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[1])
     INTO input_vejnavn;
 
 
     SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2]) 
+        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2])
     INTO input_husnr_etage_doer;
 
 
@@ -225,7 +224,7 @@ BEGIN
     SELECT
         string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     FROM
-        tokens 
+        tokens
     INTO vej_query_string;
 
 
@@ -238,7 +237,7 @@ BEGIN
     SELECT
         string_agg(t, ':* <-> ') || ':*'
     FROM
-        tokens 
+        tokens
     INTO plain_vej_query_string;
 
 
@@ -249,34 +248,34 @@ BEGIN
     SELECT
         string_agg(t, ' <-> ')
     FROM
-        tokens 
+        tokens
     INTO husnr_etage_doer_query_string;
 
 
     IF husnr_etage_doer_query_string IS NOT NULL THEN
         SELECT
-            vej_query_string || ' <-> ' || husnr_etage_doer_query_string 
+            vej_query_string || ' <-> ' || husnr_etage_doer_query_string
         INTO query_string;
     ELSE
         SELECT
-            vej_query_string 
+            vej_query_string
         INTO query_string;
     END IF;
 
 
     IF husnr_etage_doer_query_string IS NOT NULL THEN
         SELECT
-            plain_vej_query_string || ' <-> ' || husnr_etage_doer_query_string 
+            plain_vej_query_string || ' <-> ' || husnr_etage_doer_query_string
         INTO plain_query_string;
     ELSE
         SELECT
-            plain_vej_query_string 
+            plain_vej_query_string
         INTO plain_query_string;
     END IF;
 
 -- Hvis en soegning ender med at have over ca. 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
--- eller adresse = 'od'). 
+-- eller adresse = 'od').
 -- Saa for at goere api'et hurtigere ved disse soegninger, er der to forskellige queries
 -- i denne funktion. Den ene bliver brugt, hvis der er over 1000 forekomster.
 -- Vi har hardcoded antal forekomster i tabellen: `tekst_forekomst`.
@@ -295,35 +294,35 @@ BEGIN
         FROM
             basic.tekst_forekomst
         WHERE
-            ressource = 'adresse' 
-        AND lower(input_vejnavn) = tekstelement ) > 1000 
-        AND filters = '1=1' 
+            ressource = 'adresse'
+        AND lower(input_vejnavn) = tekstelement ) > 1000
+        AND filters = '1=1'
     THEN
         stmt = format(E'SELECT
-                id::text, 
-                kommunekode::text, 
-                kommunenavn::text, 
-                vejkode::text, 
-                vejnavn::text, 
-                husnummer::text, 
-                etagebetegnelse::text, 
-                doerbetegnelse::text, 
-                postnummer::text, 
-                postdistrikt::text, 
-                adressebetegnelse::text, 
-                vejpunkt_geometri, 
+                id::text,
+                kommunekode::text,
+                kommunenavn::text,
+                vejkode::text,
+                vejnavn::text,
+                husnummer::text,
+                etagebetegnelse::text,
+                doerbetegnelse::text,
+                postnummer::text,
+                postdistrikt::text,
+                adressebetegnelse::text,
+                vejpunkt_geometri,
                 adgangspunkt_geometri,
                 0::float AS rank1,
                 0::float AS rank2
             FROM
                 basic.adresse
             WHERE
-                lower(vejnavn) >= ''%s'' 
+                lower(vejnavn) >= ''%s''
                 AND lower(vejnavn) <= ''%s'' || ''å''
             ORDER BY
-                lower(vejnavn), 
-                navngivenvej_id, 
-                husnummer_sortering, 
+                lower(vejnavn),
+                navngivenvej_id,
+                husnummer_sortering,
                 sortering
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
@@ -332,29 +331,29 @@ BEGIN
     ELSE
         -- Execute and return the result
         stmt = format(E'SELECT
-                id::text, 
-                kommunekode::text, 
-                kommunenavn::text, 
-                vejkode::text, 
-                vejnavn::text, 
-                husnummer::text, 
-                etagebetegnelse::text, 
-                doerbetegnelse::text, 
-                postnummer::text, 
-                postdistrikt::text, 
-                adressebetegnelse::text, 
-                vejpunkt_geometri, 
+                id::text,
+                kommunekode::text,
+                kommunenavn::text,
+                vejkode::text,
+                vejnavn::text,
+                husnummer::text,
+                etagebetegnelse::text,
+                doerbetegnelse::text,
+                postnummer::text,
+                postdistrikt::text,
+                adressebetegnelse::text,
+                vejpunkt_geometri,
                 adgangspunkt_geometri,
                 basic.combine_rank(
-                    $2, 
-                    $2, 
-                    textsearchable_plain_col, 
-                    textsearchable_unaccent_col, 
-                    ''simple''::regconfig, 
+                    $2,
+                    $2,
+                    textsearchable_plain_col,
+                    textsearchable_unaccent_col,
+                    ''simple''::regconfig,
                     ''basic.septima_fts_config''::regconfig
                 ) AS rank1,
                 ts_rank_cd(
-                    textsearchable_phonetic_col, 
+                    textsearchable_phonetic_col,
                     to_tsquery(''simple'',$1)
                 )::double precision AS rank2
             FROM
@@ -365,11 +364,11 @@ BEGIN
             )
             AND %s
             ORDER BY
-                rank1 desc, 
+                rank1 desc,
                 rank2 desc,
-                lower(vejnavn), 
-                navngivenvej_id, 
-                husnummer_sortering, 
+                lower(vejnavn),
+                navngivenvej_id,
+                husnummer_sortering,
                 sortering
             LIMIT $3;', filters);
         --RAISE NOTICE 'stmt=%', stmt;
