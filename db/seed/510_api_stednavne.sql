@@ -181,9 +181,9 @@ BEGIN
         FROM
             basic.tekst_forekomst
         WHERE
-            ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
+            ressource = 'stednavn' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
         stmt = format(E'SELECT
-            id::text, praesentation::text, skrivemaade::text, skrivemaade::text AS skrivemaade_officiel,
+            id::text, skrivemaade::text, praesentation::text, skrivemaade::text AS skrivemaade_officiel,
             skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
             0::float AS rank1,
             0::float AS rank2
