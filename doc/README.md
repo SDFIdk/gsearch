@@ -102,7 +102,7 @@ For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postd
 <h2 id="gsearch-eksempler">Eksempler</h2>
 
 ### Navngiven vej
-Syntaks-eksempel med limit=100 (```http100 resultater):
+Syntaks-eksempel som søger efter 'krin' med limit=100 (>100 resultater):
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&limit=100&q=krin HTTP/1.1
@@ -110,7 +110,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks-eksempel med filter på geometri - et område i Sønderjylland:
+Syntaks eksempel som søger efter 'birk' med filter på geometri - et område i Sønderjylland:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&q=birk&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
@@ -119,7 +119,7 @@ Accept: application/json
 ```
 
 ### Adresse
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'flens':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=adresse&q=flens HTTP/1.1
@@ -127,7 +127,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel med med limit=30 filter på kommunekode - Lolland Kommune:
+Syntaks eksempel som søger efter 'fle' med med limit=30 og filter på kommunekode 0360, dvs. Lolland Kommune:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=adresse&limit=30&q=fle&filter=kommunekode=%270360%27 HTTP/1.1
@@ -135,7 +135,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks-eksempel med limit=100 og filter på geometri - et område i Sønderjylland:
+Syntaks eksempel som søger efter 'skanse' med limit=100 og filter på vejpunkt_geometri - et område i Sønderjylland:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=adresse&limit=100&q=skanse&filter=INTERSECTS(vejpunkt_geometri,SRID=25832%3BPOLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
@@ -144,7 +144,7 @@ Accept: application/json
 ```
 
 ### Husnummer
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'genvej':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=husnummer&q=genvej HTTP/1.1
@@ -152,15 +152,15 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel med filter på kommunekode - Guldborgsund:
+Syntaks eksempel som søger efter 'fl' med med limit=30 og filter på kommunekode 0376, dvs. Guldborgsund Kommune:
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=husnummer&q=gen&filter=kommunekode=%270376%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=husnummer&limit=30&q=fl&filter=kommunekode=%270376%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks-eksempel med limit=100 og filter på geometri - Lolland-Falster:
+Syntaks eksempel som søger efter 'fjordbak' med limit=100 og filter på adgangspunkt_geometri - Lolland-Falster:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=husnummer&limit=100&q=fjordbak&filter=INTERSECTS(adgangspunkt_geometri,SRID=25832%3BPOLYGON((615000.1%206049000.2,%20615000.3%206111000.4,%20735000.5%206111000.6,%20735000.7%206049000.8,%20615000.1%206049000.2))) HTTP/1.1
@@ -169,7 +169,7 @@ Accept: application/json
 ```
 
 ### Matrikelnummer
-Syntaks eksempel:
+Syntaks eksempel som søger efter '123ab':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=matrikelnummer&q=123ab HTTP/1.1
@@ -177,7 +177,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel med filter på ejerlavskode:
+Syntaks eksempel som søger efter '123ab' med filter på ejerlavskode '130653':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=matrikelnummer&q=123ab&filter=ejerlavskode=%27130653%27 HTTP/1.1
@@ -185,7 +185,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks-eksempel med filter på geometri:
+Syntaks eksempel som søger efter '22' med filter på geometri - Lolland-Falster:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=matrikelnummer&q=22&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2))) HTTP/1.1
@@ -194,7 +194,7 @@ Accept: application/json
 ```
 
 ### Opstillingskreds
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'vest':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=opstillingskreds&q=vest HTTP/1.1
@@ -202,7 +202,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel med filter på storkreds:
+Syntaks eksempel som søger efter 'vest' med filter på storkreds '6':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=opstillingskreds&q=vest&filter=storkredsnummer=%276%27 HTTP/1.1
@@ -210,16 +210,8 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks-eksempel med filter på geometri:
-
-```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=opstillingskreds&q=s&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2))) HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
-```
-
 ### Politikreds
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'vest':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=politikreds&q=vest HTTP/1.1
@@ -227,7 +219,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks-eksempel med filter på geometri - Nørrejylland:
+Syntaks eksempel som søger efter 'ø' med filter på geometri - Nørrejylland:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=politikreds&q=ø&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((440000.1%206190000.2,%20440000.3%206410000.4,%20620000.5%206410000.6,%20620000.7%206190000.8,%20440000.1%206190000.2))) HTTP/1.1
@@ -236,7 +228,7 @@ Accept: application/json
 ```
 
 ### Postdistrikt
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'b' og limit '60':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=postdistrikt&limit=60&q=b HTTP/1.1
@@ -244,7 +236,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'mari':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=postdistrikt&q=mari HTTP/1.1
@@ -252,7 +244,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks-eksempel med filter på geometri - Lolland-Falster:
+Syntaks eksempel som søger efter 'mar'og filter på geometri - Lolland-Falster:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=postdistrikt&q=mari&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1%206049000.2,%20615000.3%206111000.4,%20735000.5%206111000.6,%20735000.7%206049000.8,%20615000.1%206049000.2))) HTTP/1.1
@@ -261,7 +253,7 @@ Accept: application/json
 ```
 
 ### Region
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'mid':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=region&q=mid HTTP/1.1
@@ -269,7 +261,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel - returnerer alle fem regioner:
+Syntaks eksempel som søger efter 'regi' (og returnerer alle fem):
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=region&q=regi HTTP/1.1
@@ -278,15 +270,15 @@ Accept: application/json
 ```
 
 ### Retskreds
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'mid':
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=retskreds&q=ros HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=retskreds&q=mid HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'a' (og returnerer alle fem):
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=retskreds&q=a HTTP/1.1
@@ -294,16 +286,8 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel med filter på geometri - Nørrejylland:
-
-```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=retskreds&q=a&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((440000.1%206190000.2,%20440000.3%206410000.4,%20620000.5%206410000.6,%20620000.7%206190000.8,%20440000.1%206190000.2))) HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
-```
-
 ### Sogn
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'bis:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=sogn&q=bis HTTP/1.1
@@ -311,7 +295,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'skal':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=sogn&q=skal HTTP/1.1
@@ -319,7 +303,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel med filter på geometri - Odsherred:
+Syntaks eksempel som søger efter 'r' og med filter på geometri - Odsherred:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=sogn&q=r&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((625000.1%206165000.2,%20625000.3%206215000.4,%20677000.5%206215000.6,%20677000.7%206165000.8,%20625000.1%206165000.2))) HTTP/1.1
@@ -328,7 +312,7 @@ Accept: application/json
 ```
 
 ### Stednavn
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'kattebj':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=stednavn&q=kattebj HTTP/1.1
@@ -336,7 +320,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel:
+Syntaks eksempel som søger efter 'kratg':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=stednavn&limit=40&q=kratg HTTP/1.1
@@ -344,7 +328,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel - filter på type af stednavn:
+Syntaks eksempel som søger efter 'katte' og med filter på type af stednavn 'bebyggelse':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=stednavn&q=katte&filter=stednavn_type=%27bebyggelse%27 HTTP/1.1
@@ -352,7 +336,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel - filter på type af stednavn:
+Syntaks eksempel som søger efter 'katte' og med filter på type af stednavn 'moseSump':
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=stednavn&q=katte&filter=stednavn_subtype=%27moseSump%27 HTTP/1.1
@@ -360,7 +344,7 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel med filter på geometri - Odsherred:
+Syntaks eksempel som søger efter 'steng' og med filter på geometri - Odsherred:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=stednavn&q=steng&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((625000.1%206165000.2,%20625000.3%206215000.4,%20677000.5%206215000.6,%20677000.7%206165000.8,%20625000.1%206165000.2))) HTTP/1.1
