@@ -46,8 +46,8 @@ public class OpenApiConfig {
             .version("1.0.0")
             .description("""
                 APIet __Gsearch__ er velegnet til implementering af typeahead fritekstsøgninger på websites.
-                
-                Gsearch understøtter fritekstsøgninger, type-ahead, fonetisk genkendelse af stavemåder, samt søgning i adresser, administrative enheder (DAGI), stednavne og matrikler.
+
+                Gsearch understøtter fritekstsøgninger, type-ahead, fonetisk genkendelse af stavemåder, samt søgning i Danmarks adresser og vejnavne, Danmarks administrative geografiske enheder (DAGI), Danske Stednavne og Matriklen.
                 """))
         // AddSecurityItem section applies created scheme/paths globally
         .addSecurityItem(new SecurityRequirement().addList(securitySchemeNameHeader))
