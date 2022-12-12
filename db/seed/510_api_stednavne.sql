@@ -175,6 +175,21 @@ BEGIN
         string_agg(t, ':* <-> ') || ':*'
     FROM
         tokens INTO plain_query_string;
+
+-- Hvis en input_tekst kun indeholder bogstaver og har over 1000 resultater, kan soegningen tage lang tid.
+-- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
+-- eller adresse = 'od').
+-- Saa for at goere api'et hurtigere ved disse soegninger, er der to forskellige queries
+-- i denne funktion. Den ene bliver brugt, hvis der er over 1000 forekomster.
+-- Vi har hardcoded antal forekomster i tabellen: `tekst_forekomst`.
+-- Dette gaelder for:
+-- - husnummer
+-- - adresse
+-- - navngivenvej
+-- - stednavn
+
+-- Et par linjer nede herfra, tilfoejes der et `|| ''å''`. Det er et hack,
+-- for at representere den alfanumerisk sidste vej, der starter med `%s`
     IF (
         SELECT
             COALESCE(forekomster, 0)
