@@ -273,7 +273,7 @@ BEGIN
         INTO plain_query_string;
     END IF;
 
--- Hvis en soegning ender med at have over ca. 1000 resultater, kan soegningen tage lang tid.
+-- Hvis en input_tekst kun indeholder bogstaver og har over 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
 -- eller adresse = 'od').
 -- Saa for at goere api'et hurtigere ved disse soegninger, er der to forskellige queries
