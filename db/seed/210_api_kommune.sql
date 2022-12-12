@@ -113,11 +113,12 @@ BEGIN
         input_tekst = '';
     END IF;
     SELECT
-        btrim(regexp_replace(input_tekst, '(?<!\S)\d\S*', '', 'g')) INTO input_kommunenavn;
-    -- matches non-digits
+        -- matches non-digits
+        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1])
+    INTO input_kommunenavn;
     SELECT
+        -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
         btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) INTO input_kommunekode;
-    --matches digits
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_kommunenavn, ' ')) t
@@ -187,4 +188,8 @@ $function$;
  SELECT (api.kommune('ålborg',NULL, 1, 100)).*;
  SELECT (api.kommune('nord',NULL, 1, 100)).*;
  SELECT (api.kommune('0101 fred',NULL, 1, 100)).*;
+ SELECT(api.kommune('a 1 a',NULL,1,100)).*;
+ SELECT(api.kommune('Lyngby-Tårbæk 0851',NULL,1,100)).*;
+ SELECT(api.kommune('0851 Lyngby',NULL,1,100)).*;
+ SELECT(api.kommune('0760 0730 0840 0329 0265 0230 0175',NULL,1,100)).*;
  */

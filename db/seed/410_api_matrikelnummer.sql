@@ -154,16 +154,15 @@ BEGIN
     END IF;
 
     SELECT
-        btrim(regexp_replace(input_tekst, '(?<!\S)\d\S*', '', 'g'))
+        -- matches non-digits
+        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1])
     INTO input_ejerlavsnavn;
-    -- matches non-digits
 
     SELECT
+        -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
         btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
     INTO input_ejerlavskode_matrikelnummer;
 
-
-    --matches digits
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_ejerlavsnavn, ' ')) t
@@ -308,4 +307,6 @@ $function$;
  SELECT (api.matrikelnummer('1320452 11aa kobbe',NULL, 1, 100)).*;
  SELECT (api.matrikelnummer('11aa søby',NULL, 1, 100)).*;
  SELECT (api.matrikelnummer('s',NULL, 1, 100)).*;
+ SELECT (api.matrikelnummer('a 1 a', NULL, 1, 100)).*;
+
  */

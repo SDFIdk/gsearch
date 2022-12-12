@@ -112,11 +112,13 @@ BEGIN
         input_tekst = '';
     END IF;
     SELECT
-        btrim(regexp_replace(input_tekst, '(?<!\S)\d\S*', '', 'g')) INTO input_postdistrikt;
-    -- matches non-digits
+        -- matches non-digits
+        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1])
+    INTO input_postdistrikt;
     SELECT
-        btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) INTO input_postnummer;
-    --matches digits
+        -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
+        btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
+    INTO input_postnummer;
     --RAISE NOTICE 'input_postdistrikt: %', input_postdistrikt;
     --RAISE NOTICE 'input_postnummer: %', input_postnummer;
     WITH tokens AS (
@@ -199,4 +201,15 @@ $function$;
  SELECT (api.postdistrikt('Age',NULL, 1, 100)).*;
  SELECT (api.postdistrikt('.',NULL, 1, 100)).*;
  SELECT (api.postdistrikt(null,NULL, 1, 100)).*;
+
+ SELECT	(api.postdistrikt('a 1 a',	NULL,	1,	100)).*;
+
+ SELECT	(api.postdistrikt('Anholt 8961',	NULL,	1,	100)).*;
+
+ SELECT	(api.postdistrikt('6753 Lyngby',	NULL,	1,	100)).*;
+
+SELECT	(api.postdistrikt('Anholt Ans By Ansager Arden Asaa',	NULL,	1,	100)).*;
+
+SELECT	(api.postdistrikt('5320 6753 6534 4244 2620 3450 3770 8961',	NULL,	1,	100)).*;
+
  */
