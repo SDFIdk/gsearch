@@ -7,7 +7,7 @@ CREATE TYPE api.matrikelnummer AS (
     ejerlavsnavn text,
     ejerlavskode text,
     matrikelnummer text,
-    praesentation text,
+    visningstekst text,
     centroid_x text,
     centroid_y text,
     geometri geometry,
@@ -23,7 +23,7 @@ COMMENT ON COLUMN api.matrikelnummer.ejerlavskode IS 'Ejerlavskode for matrikel'
 
 COMMENT ON COLUMN api.matrikelnummer.matrikelnummer IS 'Matrikelnummer';
 
-COMMENT ON COLUMN api.matrikelnummer.praesentation IS 'Præsentationsform for et matrikelnummer';
+COMMENT ON COLUMN api.matrikelnummer.visningstekst IS 'Præsentationsform for et matrikelnummer';
 
 COMMENT ON COLUMN api.matrikelnummer.centroid_x IS 'Centroide X for matriklens geometri';
 
@@ -71,7 +71,7 @@ SELECT
         ' (' || m.kommunenavn || ')' || ' - ' || m.matrikelnummer
     ELSE
         '' || ' - ' || m.matrikelnummer
-    END AS praesentation,
+    END AS visningstekst,
     m.ejerlavsnavn,
     m.ejerlavskode,
     m.matrikelnummer,
@@ -121,7 +121,7 @@ CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_unaccent_col);
 
 CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_phonetic_col);
 
-CREATE INDEX ON basic.matrikelnummer (matrikelnummer, praesentation);
+CREATE INDEX ON basic.matrikelnummer (matrikelnummer, visningstekst);
 
 DROP FUNCTION IF EXISTS api.matrikelnummer (text, text, int, int);
 
@@ -170,9 +170,9 @@ BEGIN
     SELECT
         string_agg(t, ':* <-> ') || ':*'
     FROM
-        tokens 
+        tokens
     INTO ejerlavsnavn_string_plain;
-    
+
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_ejerlavsnavn, ' ')) t
@@ -181,7 +181,7 @@ BEGIN
         string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     FROM
         tokens INTO ejerlavsnavn_string;
-    
+
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_ejerlavskode_matrikelnummer, ' ')) t
@@ -214,7 +214,7 @@ BEGIN
 
 -- Hvis en soegning ender med at have over ca. 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
--- eller adresse = 'od'). 
+-- eller adresse = 'od').
 -- Saa for at goere api'et hurtigere ved disse soegninger, er der to forskellige queries
 -- i denne funktion. Den ene bliver brugt, hvis der er over 1000 forekomster.
 -- Vi har hardcoded antal forekomster i tabellen: `tekst_forekomst`.
@@ -233,15 +233,15 @@ BEGIN
         FROM
             basic.tekst_forekomst
         WHERE
-            ressource = 'matrikelnummer' 
-        AND lower(input_ejerlavsnavn) = tekstelement ) > 1000 
-        AND filters = '1=1' 
+            ressource = 'matrikelnummer'
+        AND lower(input_ejerlavsnavn) = tekstelement ) > 1000
+        AND filters = '1=1'
     THEN
         stmt = format(E'SELECT
-                ejerlavsnavn::text, 
-                ejerlavskode::text, 
+                ejerlavsnavn::text,
+                ejerlavskode::text,
                 matrikelnummer::text,
-                praesentation::text,
+                visningstekst::text,
                 ST_X((ST_DUMP(centroide_geometri)).geom)::text,
                 ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
                 geometri,
@@ -250,11 +250,11 @@ BEGIN
             FROM
                 basic.matrikelnummer
             WHERE
-                lower(ejerlavsnavn) >= ''%s'' 
+                lower(ejerlavsnavn) >= ''%s''
                 AND lower(ejerlavsnavn) <= ''%s'' || ''å''
             ORDER BY
                 matrikelnummer,
-                praesentation
+                visningstekst
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
@@ -262,10 +262,10 @@ BEGIN
     ELSE
     -- Execute and return the result
     stmt = format(E'SELECT
-            ejerlavsnavn::text, 
-            ejerlavskode::text, 
+            ejerlavsnavn::text,
+            ejerlavskode::text,
             matrikelnummer::text,
-            praesentation::text,
+            visningstekst::text,
             ST_X((ST_DUMP(centroide_geometri)).geom)::text,
             ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
             geometri,
@@ -292,7 +292,7 @@ BEGIN
             rank1 desc,
             rank2 desc,
             matrikelnummer,
-            praesentation
+            visningstekst
         LIMIT $3  ;', filters); RETURN QUERY EXECUTE stmt
     USING query_string, plain_query_string, rowlimit;
     END IF;

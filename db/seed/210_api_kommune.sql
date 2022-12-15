@@ -8,7 +8,7 @@ DROP TYPE IF EXISTS api.kommune CASCADE;
 CREATE TYPE api.kommune AS (
     kommunekode text,
     kommunenavn text,
-    praesentation text,
+    visningstekst text,
     geometri geometry,
     bbox geometry,
     rang1 double precision,
@@ -21,7 +21,7 @@ COMMENT ON COLUMN api.kommune.kommunekode IS 'Kommunekode';
 
 COMMENT ON COLUMN api.kommune.kommunenavn IS 'Navn på kommune';
 
-COMMENT ON COLUMN api.kommune.praesentation IS 'Præsentationsform for en kommune';
+COMMENT ON COLUMN api.kommune.visningstekst IS 'Præsentationsform for en kommune';
 
 COMMENT ON COLUMN api.kommune.geometri IS 'Geometri i valgt koordinatsystem';
 
@@ -45,7 +45,7 @@ SELECT
             k.navn || 's kommune'
         ELSE
             k.navn || ' kommune'
-        END) AS praesentation,
+        END) AS visningstekst,
     coalesce(k.kommunekode, '') AS kommunekode,
     coalesce(k.navn, '') AS kommunenavn,
     k.regionskode,
@@ -165,7 +165,7 @@ BEGIN
     END CASE;
     -- Execute and return the result
     stmt = format(E'SELECT
-            kommunekode::text, kommunenavn::text, praesentation, geometri, bbox::geometry,
+            kommunekode::text, kommunenavn::text, visningstekst, geometri, bbox::geometry,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM

@@ -6,7 +6,7 @@ DROP TYPE IF EXISTS api.stednavn CASCADE;
 CREATE TYPE api.stednavn AS (
     id text,
     skrivemaade text,
-    praesentation text,
+    visningstekst text,
     skrivemaade_officiel text,
     skrivemaade_uofficiel text,
     stednavn_type text,
@@ -23,7 +23,7 @@ COMMENT ON COLUMN api.stednavn.id IS 'ID for stednavn';
 
 COMMENT ON COLUMN api.stednavn.skrivemaade IS 'Skrivemåde for stednavn';
 
-COMMENT ON COLUMN api.stednavn.praesentation IS 'Præsentationsform for stednavn';
+COMMENT ON COLUMN api.stednavn.visningstekst IS 'Præsentationsform for stednavn';
 
 COMMENT ON COLUMN api.stednavn.skrivemaade_officiel IS 'Officiel skrivemåde for stednavn';
 
@@ -43,7 +43,7 @@ WITH stednavne AS (
     SELECT
         objectid,
         id_lokalid,
-        coalesce(presentationstring, '') AS praesentation,
+        coalesce(presentationstring, '') AS visningstekst,
         navnestatus,
         skrivemaade,
         type,
@@ -77,8 +77,8 @@ agg_stednavne AS (
 )
 SELECT
     id_lokalid AS id,
-    praesentation,
-    replace(replace(praesentation, ' - ', ' '), '-', ' ') AS praesentation_nohyphen,
+    visningstekst,
+    replace(replace(visningstekst, ' - ', ' '), '-', ' ') AS visningstekst_nohyphen,
     skrivemaade,
     (
         CASE WHEN uofficielle_skrivemaader IS NULL THEN
@@ -100,8 +100,8 @@ FROM
     agg_stednavne
 GROUP BY
     id,
-    praesentation,
-    praesentation_nohyphen,
+    visningstekst,
+    visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
     skrivemaade_uofficiel_nohyphen,
@@ -112,19 +112,19 @@ ALTER TABLE basic.stednavn
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
 ALTER TABLE basic.stednavn
-    ADD COLUMN textsearchable_plain_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('simple', split_part(praesentation, ' ', 1)), 'A') || setweight(to_tsvector('simple', split_part(praesentation, ' ', 2)), 'B') || setweight(to_tsvector('simple', basic.split_and_endsubstring ((praesentation), 3)), 'C') || basic.stednavne_uofficielle_tsvector (skrivemaade_uofficiel)) STORED;
+    ADD COLUMN textsearchable_plain_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('simple', split_part(visningstekst, ' ', 1)), 'A') || setweight(to_tsvector('simple', split_part(visningstekst, ' ', 2)), 'B') || setweight(to_tsvector('simple', basic.split_and_endsubstring ((visningstekst), 3)), 'C') || basic.stednavne_uofficielle_tsvector (skrivemaade_uofficiel)) STORED;
 
 ALTER TABLE basic.stednavn
     DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 
 ALTER TABLE basic.stednavn
-    ADD COLUMN textsearchable_unaccent_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('basic.septima_fts_config', split_part(praesentation, ' ', 1)), 'A') || setweight(to_tsvector('basic.septima_fts_config', split_part(praesentation, ' ', 2)), 'B') || setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (praesentation, 3)), 'C') || basic.stednavne_uofficielle_tsvector (skrivemaade_uofficiel)) STORED;
+    ADD COLUMN textsearchable_unaccent_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('basic.septima_fts_config', split_part(visningstekst, ' ', 1)), 'A') || setweight(to_tsvector('basic.septima_fts_config', split_part(visningstekst, ' ', 2)), 'B') || setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (visningstekst, 3)), 'C') || basic.stednavne_uofficielle_tsvector (skrivemaade_uofficiel)) STORED;
 
 ALTER TABLE basic.stednavn
     DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 
 ALTER TABLE basic.stednavn
-    ADD COLUMN textsearchable_phonetic_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(praesentation_nohyphen, ' ', 1), 2)), 'A') || setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(praesentation_nohyphen, ' ', 2), 2)), 'B') || setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (praesentation_nohyphen, 3)), 'C') || basic.stednavne_uofficielle_tsvector_phonetic (skrivemaade_uofficiel_nohyphen)) STORED;
+    ADD COLUMN textsearchable_phonetic_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(visningstekst_nohyphen, ' ', 1), 2)), 'A') || setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(visningstekst_nohyphen, ' ', 2), 2)), 'B') || setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (visningstekst_nohyphen, 3)), 'C') || basic.stednavne_uofficielle_tsvector_phonetic (skrivemaade_uofficiel_nohyphen)) STORED;
 
 CREATE INDEX ON basic.stednavn USING GIN (textsearchable_plain_col);
 
@@ -132,7 +132,7 @@ CREATE INDEX ON basic.stednavn USING GIN (textsearchable_unaccent_col);
 
 CREATE INDEX ON basic.stednavn USING GIN (textsearchable_phonetic_col);
 
-CREATE INDEX ON basic.stednavn (lower(praesentation));
+CREATE INDEX ON basic.stednavn (lower(visningstekst));
 
 DROP FUNCTION IF EXISTS api.stednavn (text, text, int, int);
 
@@ -198,16 +198,16 @@ BEGIN
         WHERE
             ressource = 'stednavn' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
         stmt = format(E'SELECT
-            id::text, skrivemaade::text, praesentation::text, skrivemaade::text AS skrivemaade_officiel,
+            id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
             skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
             0::float AS rank1,
             0::float AS rank2
             FROM
             basic.stednavn
             WHERE
-            lower(praesentation) >= ''%s'' AND lower(praesentation) <= ''%s'' || ''å''
+            lower(visningstekst) >= ''%s'' AND lower(visningstekst) <= ''%s'' || ''å''
             ORDER BY
-            lower(praesentation)
+            lower(visningstekst)
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE '%', stmt;
         RETURN QUERY EXECUTE stmt
@@ -215,7 +215,7 @@ BEGIN
     ELSE
         -- Execute and return the result
         stmt = format(E'SELECT
-            id::text, skrivemaade::text, praesentation::text, skrivemaade::text AS skrivemaade_officiel,
+            id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
             skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
@@ -227,7 +227,7 @@ BEGIN
             AND %s
             ORDER BY
             rank1 desc, rank2 desc,
-            praesentation
+            visningstekst
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;

@@ -8,7 +8,7 @@ DROP TYPE IF EXISTS api.postdistrikt CASCADE;
 CREATE TYPE api.postdistrikt AS (
     postnummer text,
     postdistrikt text,
-    praesentation text,
+    visningstekst text,
     gadepostnummer bool,
     geometri geometry,
     bbox geometry,
@@ -22,7 +22,7 @@ COMMENT ON COLUMN api.postdistrikt.postnummer IS 'Postnummer';
 
 COMMENT ON COLUMN api.postdistrikt.postdistrikt IS 'Navn på postdistrikt';
 
-COMMENT ON COLUMN api.postdistrikt.praesentation IS 'Præsentationsform for et postdistrikt';
+COMMENT ON COLUMN api.postdistrikt.visningstekst IS 'Præsentationsform for et postdistrikt';
 
 COMMENT ON COLUMN api.postdistrikt.gadepostnummer IS 'Dækker postnummeret kun en gade';
 
@@ -42,7 +42,7 @@ WITH postnumre AS (
         dagi_10.postnummerinddeling p1
         LEFT JOIN dagi_500.postnummerinddeling p2 USING (postnummer))
 SELECT
-    p.postnummer || ' ' || p.postdistrikt AS praesentation,
+    p.postnummer || ' ' || p.postdistrikt AS visningstekst,
     coalesce(p.postnummer, '') AS postnummer,
     coalesce(p.postdistrikt, '') AS postdistrikt,
     (p.ergadepostnummer = 'true') AS ergadepostnummer,
@@ -171,7 +171,7 @@ BEGIN
     --RAISE NOTICE 'query_string: %', query_string; RAISE NOTICE 'plain_query_string: %', plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            postnummer::text, postdistrikt::text, praesentation, ergadepostnummer, geometri, bbox::geometry,
+            postnummer::text, postdistrikt::text, visningstekst, ergadepostnummer, geometri, bbox::geometry,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM

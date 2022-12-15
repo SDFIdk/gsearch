@@ -14,7 +14,7 @@ CREATE TYPE api.adresse AS (
     doerbetegnelse text,
     postnummer text,
     postdistrikt text,
-    adressebetegnelse text,
+    visningstekst text,
     adgangspunkt_geometri geometry,
     vejpunkt_geometri geometry,
     rang1 double precision,
@@ -43,7 +43,7 @@ COMMENT ON COLUMN api.adresse.postnummer IS 'Postnummer på adresse';
 
 COMMENT ON COLUMN api.adresse.postdistrikt IS 'Postdistrikt på adresse';
 
-COMMENT ON COLUMN api.adresse.adressebetegnelse IS 'Fulde adresse';
+COMMENT ON COLUMN api.adresse.visningstekst IS 'Fulde adresse';
 
 COMMENT ON COLUMN api.adresse.vejpunkt_geometri IS 'Geometri for vejpunkt i valgt koordinatsystem';
 
@@ -51,10 +51,13 @@ COMMENT ON COLUMN api.adresse.adgangspunkt_geometri IS 'Geometri for adgangspunk
 
 DROP TABLE IF EXISTS basic.adresse;
 
+-- Gets the list of problem roadnames
+-- SELECT DISTINCT a.vejnavn FROM basic.adresse a WHERE vejnavn ~ '\d';
+
 WITH adresser AS (
     SELECT
         a.id,
-        a.adressebetegnelse,
+        a.visningstekst,
         a.doerbetegnelse AS doerbetegnelse,
         a.etagebetegnelse,
         h.husnummertekst AS husnummer,
@@ -87,7 +90,7 @@ WITH adresser AS (
 )
 SELECT
     a.id,
-    a.adressebetegnelse,
+    a.visningstekst,
     a.vejnavn,
     a.vejkode,
     coalesce(a.husnummer::text, ''::text) AS husnummer,
@@ -309,7 +312,7 @@ BEGIN
                 doerbetegnelse::text,
                 postnummer::text,
                 postdistrikt::text,
-                adressebetegnelse::text,
+                visningstekst::text,
                 vejpunkt_geometri,
                 adgangspunkt_geometri,
                 0::float AS rank1,
@@ -341,7 +344,7 @@ BEGIN
                 doerbetegnelse::text,
                 postnummer::text,
                 postdistrikt::text,
-                adressebetegnelse::text,
+                visningstekst::text,
                 vejpunkt_geometri,
                 adgangspunkt_geometri,
                 basic.combine_rank(

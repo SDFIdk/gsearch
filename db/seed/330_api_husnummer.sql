@@ -14,7 +14,7 @@ CREATE TYPE api.husnummer AS (
     husnummer text,
     postnummer text,
     postdistrikt text,
-    adgangsadressebetegnelse text,
+    visningstekst text,
     adgangspunkt_geometri geometry,
     vejpunkt_geometri geometry,
     rang1 double precision,
@@ -39,7 +39,7 @@ COMMENT ON COLUMN api.husnummer.postnummer IS 'Postnummer for et husnummer';
 
 COMMENT ON COLUMN api.husnummer.postdistrikt IS 'Postdistrikt for et husnummer';
 
-COMMENT ON COLUMN api.husnummer.adgangsadressebetegnelse IS 'Adgangsadresse for et husnummer';
+COMMENT ON COLUMN api.husnummer.visningstekst IS 'Adgangsadresse for et husnummer';
 
 COMMENT ON COLUMN api.husnummer.vejpunkt_geometri IS 'Geometri for vejpunkt i valgt koordinatsystem';
 
@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS basic.husnummer;
 WITH husnumre AS (
     SELECT
         h.id AS id,
-        h.adgangsadressebetegnelse,
+        h.visningstekst,
         h.husnummertekst AS husnummer,
         h.navngivenvej_id,
         n.vejnavn,
@@ -74,7 +74,7 @@ WITH husnumre AS (
 )
 SELECT
     h.id,
-    h.adgangsadressebetegnelse,
+    h.visningstekst,
     h.husnummer,
     h.vejnavn,
     h.vejkode,
@@ -288,7 +288,7 @@ BEGIN
                 husnummer::text,
                 postnummer::text,
                 postdistrikt::text,
-                adgangsadressebetegnelse::text,
+                visningstekst::text,
                 vejpunkt_geometri,
                 adgangspunkt_geometri,
                 0::float AS rank1,
@@ -319,7 +319,7 @@ BEGIN
                 husnummer::text,
                 postnummer::text,
                 postdistrikt::text,
-                adgangsadressebetegnelse::text,
+                visningstekst::text,
                 vejpunkt_geometri,
                 adgangspunkt_geometri,
                 basic.combine_rank(
@@ -345,7 +345,7 @@ BEGIN
                 husnummer,
                 rank1 desc,
                 rank2 desc,
-                adgangsadressebetegnelse
+                visningstekst
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
