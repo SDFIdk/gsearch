@@ -53,14 +53,14 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenv
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-
+### Filter
 _Parametren 'filters'_ angiver hvilken del af data-ressourcen, der søges i.
 
 Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums <https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html>
 
 Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx _'bbox'_ og _'geometri'_.
 
-**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så `'` fx encodes til `%27`.
+**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så `'` fx encodes til `%27` og at udtrykken er defineret som tekst.
 
 **NB** Attributter i retursvaret, der udgør et array, kan ikke benyttes som filter. Det gælder fx attributten _'postnummer'_ i ressourcen _'navngivenvej'_.
 
