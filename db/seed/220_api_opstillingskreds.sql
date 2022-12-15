@@ -8,7 +8,7 @@ DROP TYPE IF EXISTS api.opstillingskreds CASCADE;
 CREATE TYPE api.opstillingskreds AS (
     id text,
     opstillingskredsnavn text,
-    praesentation text,
+    visningstekst text,
     valgkredsnummer text,
     storkredsnummer text,
     storkredsnavn text,
@@ -24,7 +24,7 @@ COMMENT ON COLUMN api.opstillingskreds.id IS 'Opstillingskredsnummer';
 
 COMMENT ON COLUMN api.opstillingskreds.opstillingskredsnavn IS 'Navn på opstillingskreds';
 
-COMMENT ON COLUMN api.opstillingskreds.praesentation IS 'Præsentationsform for en opstillingskreds';
+COMMENT ON COLUMN api.opstillingskreds.visningstekst IS 'Præsentationsform for en opstillingskreds';
 
 COMMENT ON COLUMN api.opstillingskreds.valgkredsnummer IS 'Unik nummer indenfor storkredsen';
 
@@ -51,7 +51,7 @@ WITH opstillingskredse AS (
         LEFT JOIN dagi_500.storkreds s ON o.storkredslokalid = s.id_lokalid
 )
 SELECT
-    o.navn || 'kredsen' AS praesentation,
+    o.navn || 'kredsen' AS visningstekst,
     o.opstillingskredsnummer,
     coalesce(o.navn, '') AS opstillingskredsnavn,
     o.valgkredsnummer,
@@ -136,7 +136,7 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            opstillingskredsnummer::text, opstillingskredsnavn::text, praesentation,
+            opstillingskredsnummer::text, opstillingskredsnavn::text, visningstekst,
             valgkredsnummer::text, storkredsnummer::text, storkredsnavn::text, geometri, bbox::geometry,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2

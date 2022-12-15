@@ -8,7 +8,7 @@ DROP TYPE IF EXISTS api.sogn CASCADE;
 CREATE TYPE api.sogn AS (
     sognekode text,
     sognenavn text,
-    praesentation text,
+    visningstekst text,
     geometri geometry,
     bbox geometry,
     rang1 double precision,
@@ -21,7 +21,7 @@ COMMENT ON COLUMN api.sogn.sognekode IS 'Sognekode';
 
 COMMENT ON COLUMN api.sogn.sognenavn IS 'Navn på sogn';
 
-COMMENT ON COLUMN api.sogn.praesentation IS 'Præsentationsform for et sogn';
+COMMENT ON COLUMN api.sogn.visningstekst IS 'Præsentationsform for et sogn';
 
 COMMENT ON COLUMN api.sogn.geometri IS 'Geometri i valgt koordinatsystem';
 
@@ -38,7 +38,7 @@ WITH sogne AS (
         dagi_500.sogneinddeling s
 )
 SELECT
-    s.navn || ' sogn' AS praesentation,
+    s.navn || ' sogn' AS visningstekst,
     s.sognekode,
     coalesce(s.navn, '') AS sognenavn,
     st_multi (st_union (s.geometri)) AS geometri,
@@ -117,7 +117,7 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            sognekode::text, sognenavn::text, praesentation, geometri, bbox::geometry,
+            sognekode::text, sognenavn::text, visningstekst, geometri, bbox::geometry,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM
@@ -128,7 +128,7 @@ BEGIN
             AND %s
             ORDER BY
             rank1 desc, rank2 desc,
-            praesentation
+            visningstekst
             LIMIT $3;', filters);
     RETURN QUERY EXECUTE stmt
     USING query_string, plain_query_string, rowlimit;

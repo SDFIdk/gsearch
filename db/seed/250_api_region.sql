@@ -8,7 +8,7 @@ DROP TYPE IF EXISTS api.region CASCADE;
 CREATE TYPE api.region AS (
     regionskode text,
     regionsnavn text,
-    praesentation text,
+    visningstekst text,
     geometri geometry,
     bbox geometry,
     rang1 double precision,
@@ -21,7 +21,7 @@ COMMENT ON COLUMN api.region.regionskode IS 'Regionskode';
 
 COMMENT ON COLUMN api.region.regionsnavn IS 'Navn på region';
 
-COMMENT ON COLUMN api.region.praesentation IS 'Præsentationsform for en region';
+COMMENT ON COLUMN api.region.visningstekst IS 'Præsentationsform for en region';
 
 COMMENT ON COLUMN api.region.geometri IS 'Geometri i valgt koordinatsystem';
 
@@ -38,7 +38,7 @@ WITH regioner AS (
         dagi_500.regionsinddeling r
 )
 SELECT
-    r.navn AS praesentation,
+    r.navn AS visningstekst,
     r.regionskode,
     coalesce(r.navn, '') AS regionsnavn,
     st_multi (st_union (r.geometri)) AS geometri,
@@ -117,7 +117,7 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            regionskode::text, regionsnavn::text, praesentation::text, geometri, bbox::geometry,
+            regionskode::text, regionsnavn::text, visningstekst::text, geometri, bbox::geometry,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM

@@ -8,7 +8,7 @@ DROP TYPE IF EXISTS api.retskreds CASCADE;
 CREATE TYPE api.retskreds AS (
     retskredsnummer text,
     retkredsnavn text,
-    praesentation text,
+    visningstekst text,
     myndighedskode text,
     geometri geometry,
     bbox geometry,
@@ -22,7 +22,7 @@ COMMENT ON COLUMN api.retskreds.retskredsnummer IS 'Retskredsnummer';
 
 COMMENT ON COLUMN api.retskreds.retkredsnavn IS 'Navn på retskreds';
 
-COMMENT ON COLUMN api.retskreds.praesentation IS 'Præsentationsform for en retskreds';
+COMMENT ON COLUMN api.retskreds.visningstekst IS 'Præsentationsform for en retskreds';
 
 COMMENT ON COLUMN api.retskreds.myndighedskode IS 'Retskredsens myndighedskode. Er unik for hver retskreds. 4 cifre.';
 
@@ -42,7 +42,7 @@ WITH retskredse AS (
         dagi_500.retskreds r
 )
 SELECT
-    r.navn AS praesentation,
+    r.navn AS visningstekst,
     r.retskredsnummer,
     coalesce(r.navn, '') AS retkredsnavn,
     r.myndighedskode,
@@ -123,7 +123,7 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            retskredsnummer::text, retkredsnavn::text, praesentation::text, myndighedskode::text, geometri, bbox::geometry,
+            retskredsnummer::text, retkredsnavn::text, visningstekst::text, myndighedskode::text, geometri, bbox::geometry,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM
@@ -146,5 +146,5 @@ $function$;
  SELECT (api.retskreds('hjør',NULL, 1, 100)).*;
  SELECT (api.retskreds('køben',NULL, 1, 100)).*;
  SELECT (api.retskreds('ret',NULL, 1, 100)).*;
- SELECT (api.retskreds('i he',NULL, 1, 100)).*; 
+ SELECT (api.retskreds('i he',NULL, 1, 100)).*;
  */
