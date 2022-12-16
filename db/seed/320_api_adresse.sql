@@ -57,7 +57,7 @@ DROP TABLE IF EXISTS basic.adresse;
 WITH adresser AS (
     SELECT
         a.id,
-        a.visningstekst,
+        a.adressebetegnelse,
         a.doerbetegnelse AS doerbetegnelse,
         a.etagebetegnelse,
         h.husnummertekst AS husnummer,
