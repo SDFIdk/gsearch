@@ -90,7 +90,7 @@ WITH adresser AS (
 )
 SELECT
     a.id,
-    a.visningstekst,
+    a.adressebetegnelse,
     a.vejnavn,
     a.vejkode,
     coalesce(a.husnummer::text, ''::text) AS husnummer,
