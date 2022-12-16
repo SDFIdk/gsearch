@@ -205,7 +205,7 @@ BEGIN
             FROM
             basic.stednavn
             WHERE
-            lower(visningstekst) >= ''%s'' AND lower(visningstekst) <= ''%s'' || ''å''
+            lower(visningstekst) >= lower(''%s'') AND lower(visningstekst) <= lower(''%s'') || ''å''
             ORDER BY
             lower(visningstekst)
             LIMIT $3;', input_tekst, input_tekst);

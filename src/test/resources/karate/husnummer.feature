@@ -93,3 +93,20 @@ Scenario: Search streetname with number
     When method GET
     Then status 200
     And match response == '#[100]'
+
+  Scenario: Test that upper and lower case gives the same result
+    Then param q = 'Ø'
+    And param resources = 'husnummer'
+    And param limit = '10'
+    When method GET
+    Then status 200
+    And match firstResponse == '#[10]'
+
+    Then param q = 'ø'
+    And param resources = 'husnummer'
+    And param limit = '10'
+    When method GET
+    Then status 200
+    And match secondResponse == '#[10]'
+
+    And match firstResponse == secondResponse

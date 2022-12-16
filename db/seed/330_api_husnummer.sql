@@ -296,9 +296,9 @@ BEGIN
             FROM
                 basic.husnummer
             WHERE
-                lower(vejnavn) >= ''%s''
+                lower(vejnavn) >= lower(''%s'')
             AND
-                lower(vejnavn) <= ''%s'' || ''å''
+                lower(vejnavn) <= lower(''%s'') || ''å''
             ORDER BY
                 lower(vejnavn),
                 navngivenvej_id,
