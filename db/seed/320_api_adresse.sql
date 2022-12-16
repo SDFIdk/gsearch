@@ -320,8 +320,8 @@ BEGIN
             FROM
                 basic.adresse
             WHERE
-                lower(vejnavn) >= ''%s''
-                AND lower(vejnavn) <= ''%s'' || ''å''
+                lower(vejnavn) >= lower(''%s'')
+                AND lower(vejnavn) <= lower(''%s'') || ''å''
             ORDER BY
                 lower(vejnavn),
                 navngivenvej_id,

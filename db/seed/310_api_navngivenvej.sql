@@ -174,7 +174,7 @@ BEGIN
             FROM
             basic.navngivenvej
             WHERE
-            lower(vejnavn) >= ''%s'' AND lower(vejnavn) <= ''%s'' || ''å''
+            lower(vejnavn) >= lower(''%s'') AND lower(vejnavn) <= lower(''%s'') || ''å''
             ORDER BY
             lower(vejnavn)
             LIMIT $3;', input_tekst, input_tekst);
