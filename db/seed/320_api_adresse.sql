@@ -57,7 +57,7 @@ DROP TABLE IF EXISTS basic.adresse;
 WITH adresser AS (
     SELECT
         a.id,
-        a.adressebetegnelse,
+        a.adressebetegnelse as visningstekst,
         a.doerbetegnelse AS doerbetegnelse,
         a.etagebetegnelse,
         h.husnummertekst AS husnummer,
@@ -90,7 +90,7 @@ WITH adresser AS (
 )
 SELECT
     a.id,
-    a.adressebetegnelse,
+    a.visningstekst,
     a.vejnavn,
     a.vejkode,
     coalesce(a.husnummer::text, ''::text) AS husnummer,
