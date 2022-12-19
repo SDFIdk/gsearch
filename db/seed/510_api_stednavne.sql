@@ -53,27 +53,54 @@ WITH stednavne AS (
     FROM
         stednavne_udstilling.stednavne_udstilling
 ),
+agg_stednavne_officiel AS (
+    SELECT
+        objectid,
+        skrivemaade
+    FROM
+        stednavne_udstilling.stednavne_udstilling o
+    WHERE
+        navnestatus <> 'uofficielt'
+),
+agg_stednavne_uofficiel AS (
+    SELECT
+        objectid,
+        skrivemaade
+    FROM
+        stednavne_udstilling.stednavne_udstilling u
+    WHERE
+        navnestatus = 'uofficielt'
+),
 agg_stednavne AS (
     SELECT
-        s.*,
-        u.uofficielle_skrivemaader
-    FROM (
-        SELECT
-            *
-        FROM
-            stednavne
-        WHERE
-            navnestatus <> 'uofficielt') s
-        LEFT JOIN (
-            SELECT
-                string_agg(skrivemaade, ';') uofficielle_skrivemaader,
-                objectid
-            FROM
-                stednavne
-            WHERE
-                navnestatus = 'uofficielt'
-            GROUP BY
-                objectid) u ON u.objectid = s.objectid
+        su.objectid,
+        id_lokalid,
+        navnefoelgenummer,
+        presentationstring,
+        navnestatus,
+        o.skrivemaade AS skrivemaade,
+        u.skrivemaade AS uofficielle_skrivemaader,
+        "type",
+        subtype,
+        geometri_udtyndet,
+        municipality_filter
+    FROM
+        stednavne_udstilling.stednavne_udstilling su
+    LEFT JOIN agg_stednavne_officiel o ON
+        o.objectid = su.objectid
+    LEFT JOIN agg_stednavne_uofficiel u ON
+        u.objectid = su.objectid
+    GROUP BY
+        su.objectid,
+        id_lokalid,
+        navnefoelgenummer,
+        presentationstring,
+        o.skrivemaade,
+        u.skrivemaade,
+        "type",
+        subtype,
+        geometri_udtyndet,
+        municipality_filter
 )
 SELECT
     id_lokalid AS id,
