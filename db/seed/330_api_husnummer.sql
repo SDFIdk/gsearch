@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS basic.husnummer;
 WITH husnumre AS (
     SELECT
         h.id AS id,
-        h.adgangsadressebetegnelse,
+        h.adgangsadressebetegnelse AS visningstekst,
         h.husnummertekst AS husnummer,
         h.navngivenvej_id,
         n.vejnavn,
@@ -74,7 +74,7 @@ WITH husnumre AS (
 )
 SELECT
     h.id,
-    h.adgangsadressebetegnelse,
+    h.visningstekst,
     h.husnummer,
     h.vejnavn,
     h.vejkode,
