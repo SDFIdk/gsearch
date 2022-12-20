@@ -103,3 +103,12 @@ Feature: Gsearch stednavn test
         And match secondResponse == '#[10]'
 
         And match firstResponse == secondResponse
+
+    Scenario: Find a stednavn that only has an uofficielt skrivemaade
+        Then param q = 'Chokola'
+        And param resources = 'stednavn'
+        And param limit = '10'
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[*].skrivemaade_uofficiel contains ['Chokoladekrydset']
