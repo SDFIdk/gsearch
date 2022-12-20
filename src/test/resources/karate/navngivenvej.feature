@@ -16,7 +16,7 @@ Feature: Gsearch navngivenvej test
     {
       "type": 'navngivenvej',
       "postnummer": '#string',
-      "praesentation": '#string',
+      "visningstekst": '#string',
       "vejnavn": '#string',
       "postdistrikter": '#string',
       "bbox": '#(bboxSchema)',

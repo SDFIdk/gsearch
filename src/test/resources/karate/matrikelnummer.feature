@@ -16,7 +16,7 @@ Feature: Gsearch matrikel test
       "type": 'matrikelnummer',
       "ejerlavskode": '#string',
       "ejerlavsnavn": '#string',
-      "praesentation": '#string',
+      "visningstekst": '#string',
       "geometri": '#(geometriSchema)',
       "centroid_x": '#string',
       "centroid_y": '#string',

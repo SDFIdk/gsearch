@@ -15,7 +15,7 @@ Feature: Gsearch husnummer test
     {
       "type": 'husnummer',
       "vejkode": '#string',
-      "adgangsadressebetegnelse": '#string',
+      "visningstekst": '#string',
       "adgangspunkt_geometri": '#(geometriSchema)',
       "husnummer": '#string',
       "vejnavn": '#string',

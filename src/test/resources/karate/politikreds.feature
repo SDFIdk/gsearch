@@ -15,7 +15,7 @@ Feature: Gsearch politikreds test
         """
         {
         "type": 'politikreds',
-        "praesentation": '#string',
+        "visningstekst": '#string',
         "bbox": '#(bboxSchema)',
         "politikredsnummer": '#string',
         "geometri": '#(geometriSchema)',
@@ -32,7 +32,7 @@ Feature: Gsearch politikreds test
         When method GET
         Then status 200
         And match response == '#[2]'
-        And match response.[*].praesentation contains deep ['Nordjyllands Politikreds', 'Nordsjællands Politikreds']
+        And match response.[*].visningstekst contains deep ['Nordjyllands Politikreds', 'Nordsjællands Politikreds']
 
     Scenario: Search is case insensitive
         Then param q = 'Nordjylland'
