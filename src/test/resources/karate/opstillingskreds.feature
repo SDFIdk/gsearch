@@ -16,7 +16,7 @@ Feature: Gsearch opstillingskreds test
     {
       "type": 'opstillingskreds',
       "opstillingskredsnavn": '#string',
-      "praesentation": '#string',
+      "visningstekst": '#string',
       "bbox": '#(bboxSchema)',
       "valgkredsnummer": '#string',
       "geometri": '#(geometriSchema)',

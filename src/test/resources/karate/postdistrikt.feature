@@ -15,7 +15,7 @@ Feature: Gsearch postdistrikt test
     """
     {
       "type": 'postdistrikt',
-      "praesentation": '#string',
+      "visningstekst": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
       "postnummer": '#string',
@@ -66,7 +66,7 @@ Feature: Gsearch postdistrikt test
     Then status 200
     And match response == '#[2]'
     And match response.[*].postdistrikt contains deep ['København S', 'København SV']
-    And match response.[*].praesentation contains deep ['2300 København S', '2450 København SV']
+    And match response.[*].visningstekst contains deep ['2300 København S', '2450 København SV']
 
   Scenario: Get Birkerød and Hillerød from using the postnumber as search input
     Then param q = '3460 3400'

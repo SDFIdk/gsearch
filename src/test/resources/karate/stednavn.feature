@@ -17,7 +17,7 @@ Feature: Gsearch stednavn test
                 "type": 'stednavn',
                 "skrivemaade_uofficiel": '#string',
                 "skrivemaade_officiel": '#string',
-                "praesentation": '#string',
+                "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "skrivemaade": '#string',
                 "stednavn_subtype": '#string',

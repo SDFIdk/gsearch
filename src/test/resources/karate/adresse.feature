@@ -20,7 +20,7 @@ Feature: Gsearch adresse test
           "husnummer": '#string',
           "vejnavn": '#string',
           "kommunekode": '#string',
-          "adressebetegnelse": '#string',
+          "visningstekst": '#string',
           "kommunenavn": '#string',
           "doerbetegnelse": '#string',
           "postnummer": '#string',
