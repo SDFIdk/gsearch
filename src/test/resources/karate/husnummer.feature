@@ -107,6 +107,7 @@ Scenario: Search streetname with number
     And param limit = '10'
     When method GET
     Then status 200
+    And def secondResponse = response
     And match secondResponse == '#[10]'
 
     And match response == secondResponse
