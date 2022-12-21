@@ -59,8 +59,6 @@ CREATE INDEX ON dar.navngivenvej (id);
 
 CREATE INDEX ON dar.navngivenvej USING gist (geometri);
 
-CREATE INDEX ON dar.navngivenvej USING gist (geometri_omraade);
-
 CREATE INDEX ON dar.navngivenvejpostnummer (navngivenvej_id, postnummer_id);
 
 CREATE INDEX ON dar.postnummer (id);
