@@ -100,7 +100,7 @@ Scenario: Search streetname with number
     And param limit = '10'
     When method GET
     Then status 200
-    And match firstResponse == '#[10]'
+    And match response == '#[10]'
 
     Then param q = 'ø'
     And param resources = 'husnummer'
@@ -109,4 +109,4 @@ Scenario: Search streetname with number
     Then status 200
     And match secondResponse == '#[10]'
 
-    And match firstResponse == secondResponse
+    And match response == secondResponse
