@@ -11,9 +11,7 @@ CREATE TYPE api.politikreds AS (
     visningstekst text,
     myndighedskode text,
     geometri geometry,
-    bbox geometry,
-    rang1 double precision,
-    rang2 double precision
+    bbox geometry
 );
 
 COMMENT ON TYPE api.politikreds IS 'politikreds';
