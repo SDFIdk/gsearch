@@ -13,7 +13,7 @@ CREATE TYPE api.adresse AS (
     etagebetegnelse text,
     doerbetegnelse text,
     postnummer text,
-    postdistrikt text,
+    postnummernavn text,
     visningstekst text,
     adgangspunkt_geometri geometry,
     vejpunkt_geometri geometry
@@ -39,7 +39,7 @@ COMMENT ON COLUMN api.adresse.doerbetegnelse IS 'Dørbetegnelse for adresse';
 
 COMMENT ON COLUMN api.adresse.postnummer IS 'Postnummer på adresse';
 
-COMMENT ON COLUMN api.adresse.postdistrikt IS 'Postdistrikt på adresse';
+COMMENT ON COLUMN api.adresse.postnummernavn IS 'Postdistrikt på adresse';
 
 COMMENT ON COLUMN api.adresse.visningstekst IS 'Fulde adresse';
 
@@ -66,7 +66,7 @@ WITH adresser AS (
         h.kommunekode,
         k.navn AS kommunenavn,
         p.postnr AS postnummer,
-        p.navn AS postdistrikt,
+        p.navn AS postnummernavn,
         st_force2d (COALESCE(ap.geometri)) AS adgangspunkt_geometri,
         st_force2d (COALESCE(ap2.geometri)) AS vejpunkt_geometri
     FROM
@@ -95,7 +95,7 @@ SELECT
     coalesce(a.etagebetegnelse, ''::text) AS etagebetegnelse,
     coalesce(a.doerbetegnelse, ''::text) AS doerbetegnelse,
     a.postnummer,
-    a.postdistrikt,
+    a.postnummernavn,
     a.kommunekode,
     a.kommunenavn,
     nv.textsearchable_plain_col AS textsearchable_plain_col_vej,
@@ -309,7 +309,7 @@ BEGIN
                 etagebetegnelse::text,
                 doerbetegnelse::text,
                 postnummer::text,
-                postdistrikt::text,
+                postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
                 adgangspunkt_geometri,
@@ -341,7 +341,7 @@ BEGIN
                 etagebetegnelse::text,
                 doerbetegnelse::text,
                 postnummer::text,
-                postdistrikt::text,
+                postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
                 adgangspunkt_geometri,
