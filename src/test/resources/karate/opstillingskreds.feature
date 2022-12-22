@@ -20,7 +20,7 @@ Feature: Gsearch opstillingskreds test
       "bbox": '#(bboxSchema)',
       "valgkredsnummer": '#string',
       "geometri": '#(geometriSchema)',
-      "id": '#string',
+      "opstillingskredsnummer": '#string',
       "storkredsnummer": '#string',
       "storkredsnavn": '#string',
       "rang1": '#string',
