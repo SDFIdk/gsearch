@@ -7,7 +7,7 @@ DROP TYPE IF EXISTS api.postdistrikt CASCADE;
 
 CREATE TYPE api.postdistrikt AS (
     postnummer text,
-    postdistrikt text,
+    postnummernavn text,
     visningstekst text,
     gadepostnummer bool,
     geometri geometry,
@@ -20,7 +20,7 @@ COMMENT ON TYPE api.postdistrikt IS 'Postdistrikt';
 
 COMMENT ON COLUMN api.postdistrikt.postnummer IS 'Postnummer';
 
-COMMENT ON COLUMN api.postdistrikt.postdistrikt IS 'Navn på postdistrikt';
+COMMENT ON COLUMN api.postdistrikt.postnummernavn IS 'Navn på postdistrikt';
 
 COMMENT ON COLUMN api.postdistrikt.visningstekst IS 'Præsentationsform for et postdistrikt';
 
@@ -35,16 +35,16 @@ DROP TABLE IF EXISTS basic.postdistrikt;
 WITH postnumre AS (
     SELECT
         COALESCE(p2.postnummer, p1.postnummer) AS postnummer,
-        COALESCE(p2.navn, p1.navn) AS postdistrikt,
+        COALESCE(p2.navn, p1.navn) AS postnummernavn,
         COALESCE(p2.ergadepostnummer, p1.ergadepostnummer) AS ergadepostnummer,
         st_force2d (COALESCE(p2.geometri, p1.geometri)) AS geometri
     FROM
         dagi_10.postnummerinddeling p1
         LEFT JOIN dagi_500.postnummerinddeling p2 USING (postnummer))
 SELECT
-    p.postnummer || ' ' || p.postdistrikt AS visningstekst,
+    p.postnummer || ' ' || p.postnummernavn AS visningstekst,
     coalesce(p.postnummer, '') AS postnummer,
-    coalesce(p.postdistrikt, '') AS postdistrikt,
+    coalesce(p.postnummernavn, '') AS postnummernavn,
     (p.ergadepostnummer = 'true') AS ergadepostnummer,
     st_multi (st_union (p.geometri)) AS geometri,
     st_extent (p.geometri) AS bbox,
@@ -54,26 +54,26 @@ FROM
     LEFT JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, p.geometri))
 GROUP BY
     p.postnummer,
-    p.postdistrikt,
+    p.postnummernavn,
     p.ergadepostnummer;
 
 ALTER TABLE basic.postdistrikt
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
 ALTER TABLE basic.postdistrikt
-    ADD COLUMN textsearchable_plain_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('simple', postnummer), 'A') || setweight(to_tsvector('simple', split_part(postdistrikt, ' ', 1)), 'B') || setweight(to_tsvector('simple', split_part(postdistrikt, ' ', 2)), 'C') || setweight(to_tsvector('simple', basic.split_and_endsubstring (postdistrikt, 3)), 'D')) STORED;
+    ADD COLUMN textsearchable_plain_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('simple', postnummer), 'A') || setweight(to_tsvector('simple', split_part(postnummernavn, ' ', 1)), 'B') || setweight(to_tsvector('simple', split_part(postnummernavn, ' ', 2)), 'C') || setweight(to_tsvector('simple', basic.split_and_endsubstring (postnummernavn, 3)), 'D')) STORED;
 
 ALTER TABLE basic.postdistrikt
     DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 
 ALTER TABLE basic.postdistrikt
-    ADD COLUMN textsearchable_unaccent_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('basic.septima_fts_config', postnummer), 'A') || setweight(to_tsvector('basic.septima_fts_config', split_part(postdistrikt, ' ', 1)), 'B') || setweight(to_tsvector('basic.septima_fts_config', split_part(postdistrikt, ' ', 2)), 'C') || setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (postdistrikt, 3)), 'D')) STORED;
+    ADD COLUMN textsearchable_unaccent_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('basic.septima_fts_config', postnummer), 'A') || setweight(to_tsvector('basic.septima_fts_config', split_part(postnummernavn, ' ', 1)), 'B') || setweight(to_tsvector('basic.septima_fts_config', split_part(postnummernavn, ' ', 2)), 'C') || setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (postnummernavn, 3)), 'D')) STORED;
 
 ALTER TABLE basic.postdistrikt
     DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 
 ALTER TABLE basic.postdistrikt
-    ADD COLUMN textsearchable_phonetic_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('simple', postnummer), 'A') || setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(postdistrikt, ' ', 1), 2)), 'B') || setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(postdistrikt, ' ', 2), 2)), 'C') || setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (postdistrikt, 3)), 'D')) STORED;
+    ADD COLUMN textsearchable_phonetic_col tsvector GENERATED ALWAYS AS (setweight(to_tsvector('simple', postnummer), 'A') || setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(postnummernavn, ' ', 1), 2)), 'B') || setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(postnummernavn, ' ', 2), 2)), 'C') || setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (postnummernavn, 3)), 'D')) STORED;
 
 CREATE INDEX ON basic.postdistrikt USING GIN (textsearchable_plain_col);
 
@@ -90,10 +90,10 @@ CREATE OR REPLACE FUNCTION api.postdistrikt (input_tekst text, filters text, sor
     AS $function$
 DECLARE
     max_rows integer;
-    input_postdistrikt text;
+    input_postnummernavn text;
     input_postnummer text;
     postdistrikt_string text;
-    postdistrikt_string_plain text;
+    postnummernavn_string_plain text;
     postnummer_string text;
     query_string text;
     plain_query_string text;
@@ -114,16 +114,16 @@ BEGIN
     SELECT
         -- matches non-digits
         btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1])
-    INTO input_postdistrikt;
+    INTO input_postnummernavn;
     SELECT
         -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
         btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
     INTO input_postnummer;
-    --RAISE NOTICE 'input_postdistrikt: %', input_postdistrikt;
+    --RAISE NOTICE 'input_postnummernavn: %', input_postnummernavn;
     --RAISE NOTICE 'input_postnummer: %', input_postnummer;
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(input_postdistrikt, ' ')) t
+            UNNEST(string_to_array(input_postnummernavn, ' ')) t
 )
     SELECT
         string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
@@ -131,12 +131,12 @@ BEGIN
         tokens INTO postdistrikt_string;
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(input_postdistrikt, ' ')) t
+            UNNEST(string_to_array(input_postnummernavn, ' ')) t
 )
     SELECT
         string_agg(t, ':BCD* <-> ') || ':BCD*'
     FROM
-        tokens INTO postdistrikt_string_plain;
+        tokens INTO postnummernavn_string_plain;
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_postnummer, ' ')) t
@@ -146,7 +146,7 @@ BEGIN
     FROM
         tokens INTO postnummer_string;
     --RAISE NOTICE 'postdistrikt_string: %', postdistrikt_string;
-    --RAISE NOTICE 'postdistrikt_string_plain: %', postdistrikt_string_plain;
+    --RAISE NOTICE 'postnummernavn_string_plain: %', postnummernavn_string_plain;
     --RAISE NOTICE 'postnummer_string: %', postnummer_string;
     CASE WHEN postdistrikt_string IS NULL THEN
         SELECT
@@ -158,20 +158,20 @@ BEGIN
             SELECT
                 postdistrikt_string || ' | ' || postnummer_string INTO query_string;
     END CASE;
-    CASE WHEN postdistrikt_string_plain IS NULL THEN
+    CASE WHEN postnummernavn_string_plain IS NULL THEN
         SELECT
             postnummer_string INTO plain_query_string;
     WHEN postnummer_string IS NULL THEN
         SELECT
-            postdistrikt_string_plain INTO plain_query_string;
+            postnummernavn_string_plain INTO plain_query_string;
         ELSE
             SELECT
-                postdistrikt_string_plain || ' | ' || postnummer_string INTO plain_query_string;
+                postnummernavn_string_plain || ' | ' || postnummer_string INTO plain_query_string;
     END CASE;
     --RAISE NOTICE 'query_string: %', query_string; RAISE NOTICE 'plain_query_string: %', plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            postnummer::text, postdistrikt::text, visningstekst, ergadepostnummer, geometri, bbox::geometry,
+            postnummer::text, postnummernavn::text, visningstekst, ergadepostnummer, geometri, bbox::geometry,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM
@@ -182,7 +182,7 @@ BEGIN
             AND %s
             ORDER BY
             rank1 desc, rank2 desc,
-            postdistrikt
+            postnummernavn
             LIMIT $3
             ;', filters); RETURN QUERY EXECUTE stmt
     USING query_string, plain_query_string, rowlimit;
