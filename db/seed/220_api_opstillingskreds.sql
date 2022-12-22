@@ -6,7 +6,7 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.opstillingskreds CASCADE;
 
 CREATE TYPE api.opstillingskreds AS (
-    id text,
+    opstillingskredsnummer text,
     opstillingskredsnavn text,
     visningstekst text,
     valgkredsnummer text,
@@ -20,7 +20,7 @@ CREATE TYPE api.opstillingskreds AS (
 
 COMMENT ON TYPE api.opstillingskreds IS 'Opstillingskreds';
 
-COMMENT ON COLUMN api.opstillingskreds.id IS 'Opstillingskredsnummer';
+COMMENT ON COLUMN api.opstillingskreds.opstillingskredsnummer IS 'Opstillingskredsnummer';
 
 COMMENT ON COLUMN api.opstillingskreds.opstillingskredsnavn IS 'Navn på opstillingskreds';
 
