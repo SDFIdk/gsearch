@@ -29,7 +29,7 @@ COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer for navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.postdistrikter IS 'Postdistrikter for navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej';
+COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej. Kan enten være en linje eller en polygon';
 
 COMMENT ON COLUMN api.navngivenvej.bbox IS 'Geometriens boundingbox';
 
@@ -41,7 +41,7 @@ WITH vejnavne AS (
         n.vejnavn,
         p.postnr AS postnummer,
         p.navn AS postdistrikter,
-        st_force2d (COALESCE(n.geometri)) AS geometri
+        n.geometri AS geometri
     FROM
         dar.navngivenvej n
         JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej_id = n.id)
@@ -54,7 +54,8 @@ WITH vejnavne AS (
     array_agg(DISTINCT v.postnummer) AS postnumre,
     array_agg(DISTINCT v.postdistrikter) AS postdistrikter,
     st_multi (st_union (geometri)) AS geometri,
-    st_envelope (st_collect (v.geometri)) AS bbox INTO basic.navngivenvej
+    st_envelope (st_collect (v.geometri)) AS bbox
+INTO basic.navngivenvej
 FROM
     vejnavne v
 GROUP BY

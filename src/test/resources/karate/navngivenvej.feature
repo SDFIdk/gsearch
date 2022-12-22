@@ -16,7 +16,7 @@ Feature: Gsearch navngivenvej test
     {
       "type": 'navngivenvej',
       "postnummer": '#string',
-      "praesentation": '#string',
+      "visningstekst": '#string',
       "vejnavn": '#string',
       "postdistrikter": '#string',
       "bbox": '#(bboxSchema)',
@@ -39,8 +39,7 @@ Feature: Gsearch navngivenvej test
     And param resources = 'navngivenvej'
     When method GET
     Then status 200
-    And def firstresponse = response
-    And match firstresponse == '#[9]'
+    And match response == '#[9]'
 
     Then param q = 'kocksvej'
     And param resources = 'navngivenvej'
@@ -49,7 +48,7 @@ Feature: Gsearch navngivenvej test
     And def secondresponse = response
     And match secondresponse == '#[9]'
 
-    Then match firstresponse == secondresponse
+    Then match response == secondresponse
 
     Then param q = 'KOCKSVEJ'
     And param resources = 'navngivenvej'
@@ -81,13 +80,14 @@ Feature: Gsearch navngivenvej test
     And param limit = '10'
     When method GET
     Then status 200
-    And match firstResponse == '#[10]'
+    And match response == '#[10]'
 
     Then param q = 'ø'
     And param resources = 'navngivenvej'
     And param limit = '10'
     When method GET
     Then status 200
+    And def secondResponse = response
     And match secondResponse == '#[10]'
 
-    And match firstResponse == secondResponse
+    And match response == secondResponse

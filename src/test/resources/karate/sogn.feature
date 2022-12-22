@@ -24,7 +24,7 @@ Feature: Gsearch sogn test
             {
                 "type": 'sogn',
                 "sognenavn": '#string',
-                "praesentation": '#string',
+                "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',
                 "sognekode": '#string',

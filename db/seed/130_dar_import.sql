@@ -16,7 +16,7 @@ CREATE TABLE dar.navngivenvej AS
 SELECT
     id_lokalid::uuid AS id,
     vejnavn,
-    geometri
+    COALESCE(geometri, st_setsrid(st_geomfromtext(wkt_omr),25832)) AS geometri
 FROM
     dar_fdw.navngivenvej
 LIMIT (

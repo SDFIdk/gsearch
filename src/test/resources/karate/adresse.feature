@@ -20,7 +20,7 @@ Feature: Gsearch adresse test
           "husnummer": '#string',
           "vejnavn": '#string',
           "kommunekode": '#string',
-          "adressebetegnelse": '#string',
+          "visningstekst": '#string',
           "kommunenavn": '#string',
           "doerbetegnelse": '#string',
           "postnummer": '#string',
@@ -44,8 +44,7 @@ Feature: Gsearch adresse test
         And param resources = 'adresse'
         When method GET
         Then status 200
-        And def firstresponse = response
-        And match firstresponse == '#[10]'
+        And match response == '#[10]'
 
         Then param q = 'kocksvej'
         And param resources = 'adresse'
@@ -54,7 +53,7 @@ Feature: Gsearch adresse test
         And def secondresponse = response
         And match secondresponse == '#[10]'
 
-        Then match firstresponse == secondresponse
+        Then match response == secondresponse
 
         Then param q = 'KOCKSVEJ'
         And param resources = 'adresse'
@@ -111,16 +110,17 @@ Feature: Gsearch adresse test
         And param limit = '10'
         When method GET
         Then status 200
-        And match firstResponse == '#[10]'
+        And match response == '#[10]'
 
         Then param q = 'ø'
         And param resources = 'adresse'
         And param limit = '10'
         When method GET
         Then status 200
+        And def secondResponse = response
         And match secondResponse == '#[10]'
 
-        And match firstResponse == secondResponse
+        And match response == secondResponse
 
 
 

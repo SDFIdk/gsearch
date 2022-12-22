@@ -82,7 +82,7 @@ agg_stednavne AS (
         u.skrivemaade AS uofficielle_skrivemaader,
         "type",
         subtype,
-        geometri_udtyndet,
+        geometri_udtyndet as geometri,
         municipality_filter
     FROM
         stednavne_udstilling.stednavne_udstilling su
