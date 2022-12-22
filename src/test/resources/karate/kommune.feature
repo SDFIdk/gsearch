@@ -16,7 +16,7 @@ Scenario: Response matches columns database
     {
       "type": 'kommune',
       "kommunenavn": '#string',
-      "praesentation": '#string',
+      "visningstekst": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
       "kommunekode": '#string',
@@ -65,7 +65,7 @@ Scenario: Like search on nord returns Norddjurs and Nordfyns
     Then status 200
     And match response == '#[2]'
     And match response.[*].kommunenavn contains deep ['Norddjurs', 'Nordfyns']
-    And match response.[*].praesentation contains deep ['Norddjurs kommune', 'Nordfyns kommune']
+    And match response.[*].visningstekst contains deep ['Norddjurs kommune', 'Nordfyns kommune']
 
 Scenario: Get København from using the kommunekode as search input
     Then param q = '0101'

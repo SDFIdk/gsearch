@@ -17,7 +17,7 @@ Feature: Gsearch stednavn test
                 "type": 'stednavn',
                 "skrivemaade_uofficiel": '#string',
                 "skrivemaade_officiel": '#string',
-                "praesentation": '#string',
+                "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "skrivemaade": '#string',
                 "stednavn_subtype": '#string',
@@ -34,7 +34,7 @@ Feature: Gsearch stednavn test
         And param resources = 'stednavn'
         When method GET
         Then status 200
-        And match response == '#[4]'
+        And match response == '#[6]'
         And match response.[*].skrivemaade_officiel contains deep ['Gadekærvej Storbyhave', 'Valby Gl. Skole', 'Station Gearhallen', 'Store Valbygård']
 
     Scenario: Search is case insensitive
@@ -93,13 +93,23 @@ Feature: Gsearch stednavn test
         And param limit = '10'
         When method GET
         Then status 200
-        And match firstResponse == '#[10]'
+        And match response == '#[10]'
 
         Then param q = 'ø'
         And param resources = 'stednavn'
         And param limit = '10'
         When method GET
         Then status 200
+        And def secondResponse = response
         And match secondResponse == '#[10]'
 
-        And match firstResponse == secondResponse
+        And match response == secondResponse
+
+    Scenario: Find a stednavn that only has an uofficielt skrivemaade
+        Then param q = 'Chokola'
+        And param resources = 'stednavn'
+        And param limit = '10'
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[*].skrivemaade_uofficiel contains ['Chokoladekrydset']
