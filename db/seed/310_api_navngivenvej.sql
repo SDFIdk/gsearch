@@ -10,7 +10,7 @@ CREATE TYPE api.navngivenvej AS (
     vejnavn text,
     visningstekst text,
     postnummer text,
-    postdistrikter text,
+    postnummernavne text,
     geometri geometry,
     bbox geometry,
     rang1 double precision,
@@ -27,7 +27,7 @@ COMMENT ON COLUMN api.navngivenvej.visningstekst IS 'Præsentationsform for et n
 
 COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer for navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.postdistrikter IS 'Postdistrikter for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postnummernavne IS 'Alle postnummernavne den navngiven vej befinder sig i';
 
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej. Kan enten være en linje eller en polygon';
 
@@ -40,7 +40,7 @@ WITH vejnavne AS (
         n.id AS id,
         n.vejnavn,
         p.postnr AS postnummer,
-        p.navn AS postdistrikter,
+        p.navn AS postnummernavne,
         n.geometri AS geometri
     FROM
         dar.navngivenvej n
@@ -52,7 +52,7 @@ WITH vejnavne AS (
         v.id,
         coalesce(v.vejnavn, '') AS vejnavn,
     array_agg(DISTINCT v.postnummer) AS postnumre,
-    array_agg(DISTINCT v.postdistrikter) AS postdistrikter,
+    array_agg(DISTINCT v.postnummernavne) AS postnummernavne,
     st_multi (st_union (geometri)) AS geometri,
     st_envelope (st_collect (v.geometri)) AS bbox
 INTO basic.navngivenvej
@@ -169,7 +169,7 @@ BEGIN
         WHERE
             ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
         stmt = format(E'SELECT
-            id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postdistrikter, '',''), geometri, bbox,
+            id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavne, '',''), geometri, bbox,
             0::float AS rank1,
             0::float AS rank2
             FROM
@@ -184,7 +184,7 @@ BEGIN
         USING query_string, plain_query_string, rowlimit;
     ELSE
         stmt = format(E'SELECT
-            id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postdistrikter, '',''), geometri, bbox,
+            id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavne, '',''), geometri, bbox,
             basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
             ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
             FROM
