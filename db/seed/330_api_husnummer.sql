@@ -11,9 +11,9 @@ CREATE TYPE api.husnummer AS (
     kommunenavn text,
     vejkode text,
     vejnavn text,
-    husnummer text,
+    husnummertekst text,
     postnummer text,
-    postdistrikt text,
+    postnummernavn text,
     visningstekst text,
     adgangspunkt_geometri geometry,
     vejpunkt_geometri geometry,
@@ -33,11 +33,11 @@ COMMENT ON COLUMN api.husnummer.vejkode IS 'Vejkode for et husnummer';
 
 COMMENT ON COLUMN api.husnummer.vejnavn IS 'Vejnavn for et husnummer';
 
-COMMENT ON COLUMN api.husnummer.husnummer IS 'Husnummer';
+COMMENT ON COLUMN api.husnummer.husnummertekst IS 'Husnummertekst evt. med bogstavsbetegnelse';
 
 COMMENT ON COLUMN api.husnummer.postnummer IS 'Postnummer for et husnummer';
 
-COMMENT ON COLUMN api.husnummer.postdistrikt IS 'Postdistrikt for et husnummer';
+COMMENT ON COLUMN api.husnummer.postnummernavn IS 'Postdistrikt for et husnummer';
 
 COMMENT ON COLUMN api.husnummer.visningstekst IS 'Adgangsadresse for et husnummer';
 
@@ -54,14 +54,14 @@ WITH husnumre AS (
     SELECT
         h.id AS id,
         h.adgangsadressebetegnelse AS visningstekst,
-        h.husnummertekst AS husnummer,
+        h.husnummertekst,
         h.navngivenvej_id,
         n.vejnavn,
         h.vejkode,
         h.kommunekode,
         k.navn AS kommunenavn,
         p.postnr AS postnummer,
-        p.navn AS postdistrikt,
+        p.navn AS postnummernavn,
         st_force2d (COALESCE(ap.geometri)) AS adgangspunkt_geometri,
         st_force2d (COALESCE(ap2.geometri)) AS vejpunkt_geometri
     FROM
@@ -75,19 +75,19 @@ WITH husnumre AS (
 SELECT
     h.id,
     h.visningstekst,
-    h.husnummer,
+    h.husnummertekst,
     h.vejnavn,
     h.vejkode,
     h.kommunekode,
     h.kommunenavn,
     h.postnummer,
-    h.postdistrikt,
+    h.postnummernavn,
     h.navngivenvej_id,
     nv.textsearchable_plain_col AS textsearchable_plain_col_vej,
     nv.textsearchable_unaccent_col AS textsearchable_unaccent_col_vej,
     nv.textsearchable_phonetic_col AS textsearchable_phonetic_col_vej,
-    ROW_NUMBER() OVER (PARTITION BY h.navngivenvej_id ORDER BY NULLIF ((substring(h.husnummer::text FROM '[0-9]*')), '')::int,
-        substring(h.husnummer::text FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering,
+    ROW_NUMBER() OVER (PARTITION BY h.navngivenvej_id ORDER BY NULLIF ((substring(h.husnummertekst::text FROM '[0-9]*')), '')::int,
+        substring(h.husnummertekst::text FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering,
         st_multi (h.adgangspunkt_geometri) AS adgangspunkt_geometri,
     st_multi (h.vejpunkt_geometri) AS vejpunkt_geometri
 INTO basic.husnummer
@@ -96,14 +96,14 @@ FROM
     JOIN basic.navngivenvej nv ON h.navngivenvej_id = nv.id;
 
 ALTER TABLE basic.husnummer
-    ALTER COLUMN husnummer TYPE TEXT COLLATE husnummer_collation;
+    ALTER COLUMN husnummertekst TYPE TEXT COLLATE husnummer_collation;
 
 ALTER TABLE basic.husnummer
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
 ALTER TABLE basic.husnummer
     ADD COLUMN textsearchable_plain_col tsvector
-    GENERATED ALWAYS AS (textsearchable_plain_col_vej || setweight(to_tsvector('simple', husnummer), 'D'))
+    GENERATED ALWAYS AS (textsearchable_plain_col_vej || setweight(to_tsvector('simple', husnummertekst), 'D'))
     STORED;
 
 ALTER TABLE basic.husnummer
@@ -111,7 +111,7 @@ ALTER TABLE basic.husnummer
 
 ALTER TABLE basic.husnummer
     ADD COLUMN textsearchable_unaccent_col tsvector
-    GENERATED ALWAYS AS (textsearchable_unaccent_col_vej || setweight(to_tsvector('simple', husnummer), 'D'))
+    GENERATED ALWAYS AS (textsearchable_unaccent_col_vej || setweight(to_tsvector('simple', husnummertekst), 'D'))
     STORED;
 
 ALTER TABLE basic.husnummer
@@ -119,7 +119,7 @@ ALTER TABLE basic.husnummer
 
 ALTER TABLE basic.husnummer
     ADD COLUMN textsearchable_phonetic_col tsvector
-    GENERATED ALWAYS AS (textsearchable_phonetic_col_vej || setweight(to_tsvector('simple', husnummer), 'D'))
+    GENERATED ALWAYS AS (textsearchable_phonetic_col_vej || setweight(to_tsvector('simple', husnummertekst), 'D'))
     STORED;
 
 
@@ -165,10 +165,10 @@ CREATE OR REPLACE FUNCTION api.husnummer (input_tekst text, filters text, sortop
 DECLARE
     max_rows integer;
     input_vejnavn text;
-    input_husnummer text := '1=1';
+    input_husnummertekst text := '1=1';
     vej_query_string text;
     plain_vej_query_string text;
-    husnummer_query_string text;
+    husnummertekst_query_string text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -193,7 +193,7 @@ BEGIN
     -- Get husnummer from input
     SELECT
         btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2])
-    INTO input_husnummer;
+    INTO input_husnummertekst;
 
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
@@ -224,18 +224,18 @@ BEGIN
 
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(btrim(input_husnummer), ' ')) t
+            UNNEST(string_to_array(btrim(input_husnummertekst), ' ')) t
     )
     SELECT
         string_agg(t, ' <-> ') || ':*'
     FROM
         tokens
-    INTO husnummer_query_string;
+    INTO husnummertekst_query_string;
 
 
-    IF husnummer_query_string IS NOT NULL THEN
+    IF husnummertekst_query_string IS NOT NULL THEN
         SELECT
-            vej_query_string || ' <-> ' || husnummer_query_string
+            vej_query_string || ' <-> ' || husnummertekst_query_string
         INTO query_string;
     ELSE
         SELECT
@@ -244,9 +244,9 @@ BEGIN
     END IF;
 
 
-    IF husnummer_query_string IS NOT NULL THEN
+    IF husnummertekst_query_string IS NOT NULL THEN
         SELECT
-            plain_vej_query_string || ' <-> ' || husnummer_query_string
+            plain_vej_query_string || ' <-> ' || husnummertekst_query_string
         INTO plain_query_string;
     ELSE
         SELECT
@@ -285,9 +285,9 @@ BEGIN
                 kommunenavn::text,
                 vejkode::text,
                 vejnavn::text,
-                husnummer::text,
+                husnummertekst::text,
                 postnummer::text,
-                postdistrikt::text,
+                postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
                 adgangspunkt_geometri,
@@ -316,9 +316,9 @@ BEGIN
                 kommunenavn::text,
                 vejkode::text,
                 vejnavn::text,
-                husnummer::text,
+                husnummertekst::text,
                 postnummer::text,
-                postdistrikt::text,
+                postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
                 adgangspunkt_geometri,
@@ -342,7 +342,7 @@ BEGIN
             AND
                 %s
             ORDER BY
-                husnummer,
+                husnummertekst,
                 rank1 desc,
                 rank2 desc,
                 visningstekst
