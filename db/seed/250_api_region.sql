@@ -10,9 +10,7 @@ CREATE TYPE api.region AS (
     regionsnavn text,
     visningstekst text,
     geometri geometry,
-    bbox geometry,
-    rang1 double precision,
-    rang2 double precision
+    bbox geometry
 );
 
 COMMENT ON TYPE api.region IS 'Region';
