@@ -14,11 +14,11 @@ Datakilder for ressourcerne er de fire autoritative grunddataregistre: Danmarks 
 
 I hver ressource søges der efter bedst mulig match i et eller flere felter/attributter som følger:
 
-* Navngiven vej: Der søges i DAR navngivenvej og postnummer
-* Husnummer: Der søges i DAR husnummer
 * Adresse: Der søges i DAR adresse, husnummer, navngivenvej, postnummer
-* Matrikelnummer: Der søges i MAT matrikelnummer
 * Kommune: Der søges i DAGI kommuneinddeling
+* Husnummer: Der søges i DAR husnummer
+* Matrikelnummer: Der søges i MAT matrikelnummer
+* Navngiven vej: Der søges i DAR navngivenvej og postnummer
 * Opstillingskreds: Der DAGI opstillingskreds
 * Politikreds: Der søges i DAGI politikreds
 * Postdistrikt: Der søges i DAGI postnummerinddeling
@@ -101,25 +101,6 @@ For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postd
 
 <h2 id="gsearch-eksempler">Eksempler</h2>
 
-### Navngiven vej
-```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&limit=100&q=krin HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
-```
-Syntaks-eksempel som søger efter 'krin' med limit=100 (>100 resultater):
-
-<br/><br/>
-
-```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&q=birk&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
-```
-Syntaks eksempel som søger efter 'birk' med filter på geometri - et område i Sønderjylland:
-
-<br/><br/>
-
 ### Adresse
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=adresse&q=flens HTTP/1.1
@@ -176,6 +157,35 @@ Syntaks eksempel som søger efter 'fjordbak' med limit=100 og filter på adgangs
 
 <br/><br/>
 
+### Kommune
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=kommune&q=a HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter 'a':
+
+<br/><br/>
+
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=kommune&q=a&filter=kommunekode=%270851%27 HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter 'a' med filter på kommunekode '0851':
+
+<br/><br/>
+
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=kommune&q=l&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2))) HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter 'l' med filter på geometri - Lolland-Falster:
+
+<br/><br/>
+
+
 ### Matrikelnummer
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=matrikelnummer&q=123ab HTTP/1.1
@@ -201,6 +211,25 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 Syntaks eksempel som søger efter '22' med filter på geometri - Lolland-Falster:
+
+<br/><br/>
+
+### Navngivenvej
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&limit=100&q=krin HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks-eksempel som søger efter 'krin' med limit=100 (>100 resultater):
+
+<br/><br/>
+
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&q=birk&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter 'birk' med filter på geometri - et område i Sønderjylland:
 
 <br/><br/>
 
