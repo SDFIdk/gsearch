@@ -16,9 +16,7 @@ CREATE TYPE api.husnummer AS (
     postnummernavn text,
     visningstekst text,
     adgangspunkt_geometri geometry,
-    vejpunkt_geometri geometry,
-    rang1 double precision,
-    rang2 double precision
+    vejpunkt_geometri geometry
 );
 
 COMMENT ON TYPE api.husnummer IS 'Husnummer';
