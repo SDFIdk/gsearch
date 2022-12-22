@@ -19,7 +19,7 @@ Feature: Gsearch postdistrikt test
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
       "postnummer": '#string',
-      "postdistrikt": '#string',
+      "postnummernavn": '#string',
       "gadepostnummer": '#string',
       "rang1": '#string',
       "rang2": '#string'
@@ -65,7 +65,7 @@ Feature: Gsearch postdistrikt test
     When method GET
     Then status 200
     And match response == '#[2]'
-    And match response.[*].postdistrikt contains deep ['København S', 'København SV']
+    And match response.[*]postnummernavn contains deep ['København S', 'København SV']
     And match response.[*].visningstekst contains deep ['2300 København S', '2450 København SV']
 
   Scenario: Get Birkerød and Hillerød from using the postnumber as search input
@@ -74,7 +74,7 @@ Feature: Gsearch postdistrikt test
     When method GET
     Then status 200
     And match response == '#[2]'
-    And match response.[*].postdistrikt contains deep ['Birkerød', 'Hillerød']
+    And match response.[*]postnummernavn contains deep ['Birkerød', 'Hillerød']
     And match response.[*].postnummer contains deep ['3460', '3400']
 
   Scenario: Get København S from using the postnumber as search input and Søborg as tekst input
@@ -83,7 +83,7 @@ Feature: Gsearch postdistrikt test
     When method GET
     Then status 200
     And match response == '#[2]'
-    And match response.[*].postdistrikt contains deep ['Søborg', 'København S']
+    And match response.[*]postnummernavn contains deep ['Søborg', 'København S']
 
   Scenario: Do not have a match on '.'
     Then param q = '.'

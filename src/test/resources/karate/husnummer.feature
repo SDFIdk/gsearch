@@ -24,7 +24,7 @@ Feature: Gsearch husnummer test
       "postnummer": '#string',
       "vejpunkt_geometri": '#(geometriSchema)',
       "id": '#string',
-      "postdistrikt": '#string',
+      "postnummernavn": '#string',
       "rang1": '#string',
       "rang2": '#string'
     }
@@ -69,7 +69,7 @@ Scenario: Search streetname with number
     When method GET
     Then status 200
     And match response == '#[10]'
-  And match response.[*].husnummer contains deep ['1']
+  And match response.[*].husnummertekst contains deep ['1']
 
   Scenario: Search streetname with number and letter
     Then param q = 'kocksvej 1C'
@@ -77,7 +77,7 @@ Scenario: Search streetname with number
     When method GET
     Then status 200
     And match response == '#[1]'
-    And match response.[*].husnummer contains deep ['1C']
+    And match response.[*].husnummertekst contains deep ['1C']
 
   Scenario: Do not have a match on '.'
     Then param q = '.'
