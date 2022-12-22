@@ -19,7 +19,7 @@ CREATE TYPE api.stednavn AS (
 
 COMMENT ON TYPE api.stednavn IS 'Stednavn';
 
-COMMENT ON COLUMN api.stednavn.id IS 'ID for stednavn';
+COMMENT ON COLUMN api.stednavn.id IS 'UUID for stednavn';
 
 COMMENT ON COLUMN api.stednavn.skrivemaade IS 'Skrivemåde for stednavn';
 
@@ -29,9 +29,9 @@ COMMENT ON COLUMN api.stednavn.skrivemaade_officiel IS 'Officiel skrivemåde for
 
 COMMENT ON COLUMN api.stednavn.skrivemaade_uofficiel IS 'Uofficiel skrivemåde for stednavn';
 
-COMMENT ON COLUMN api.stednavn.stednavn_type IS 'Type på stednavn';
+COMMENT ON COLUMN api.stednavn.stednavn_type IS 'Featuretype på stednavn';
 
-COMMENT ON COLUMN api.stednavn.stednavn_subtype IS 'Subtype på stednavn';
+COMMENT ON COLUMN api.stednavn.stednavn_subtype IS 'Topografitype på stednavn';
 
 COMMENT ON COLUMN api.stednavn.geometri IS 'Geometri i valgt koordinatsystem';
 
