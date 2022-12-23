@@ -315,8 +315,8 @@ BEGIN
                 visningstekst::text,
                 vejpunkt_geometri,
                 adgangspunkt_geometri,
-                0::float AS rank1,
-                0::float AS rank2
+                0::float AS rang1,
+                0::float AS rang2
             FROM
                 basic.adresse
             WHERE
@@ -354,11 +354,11 @@ BEGIN
                     textsearchable_unaccent_col,
                     ''simple''::regconfig,
                     ''basic.septima_fts_config''::regconfig
-                ) AS rank1,
+                ) AS rang1,
                 ts_rank_cd(
                     textsearchable_phonetic_col,
                     to_tsquery(''simple'',$1)
-                )::double precision AS rank2
+                )::double precision AS rang2
             FROM
                 basic.adresse
             WHERE (
@@ -367,8 +367,8 @@ BEGIN
             )
             AND %s
             ORDER BY
-                rank1 desc,
-                rank2 desc,
+                rang1 desc,
+                rang2 desc,
                 lower(vejnavn),
                 navngivenvej_id,
                 husnummer_sortering,

@@ -138,8 +138,8 @@ BEGIN
     stmt = format(E'SELECT
             opstillingskredsnummer::text, opstillingskredsnavn::text, visningstekst,
             valgkredsnummer::text, storkredsnummer::text, storkredsnavn::text, geometri, bbox::geometry,
-            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
-            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
+            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rang1,
+            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rang2
             FROM
             basic.opstillingskreds
             WHERE (
@@ -147,7 +147,7 @@ BEGIN
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-            rank1 desc, rank2 desc,
+            rang1 desc, rang2 desc,
             opstillingskredsnavn
             LIMIT $3;', filters);
     RETURN QUERY EXECUTE stmt

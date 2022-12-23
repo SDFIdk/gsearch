@@ -227,8 +227,8 @@ BEGIN
         stmt = format(E'SELECT
             id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
             skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
-            0::float AS rank1,
-            0::float AS rank2
+            0::float AS rang1,
+            0::float AS rang2
             FROM
             basic.stednavn
             WHERE
@@ -244,8 +244,8 @@ BEGIN
         stmt = format(E'SELECT
             id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
             skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
-            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rank1,
-            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rank2
+            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rang1,
+            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rang2
             FROM
             basic.stednavn
             WHERE (
@@ -253,7 +253,7 @@ BEGIN
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-            rank1 desc, rank2 desc,
+            rang1 desc, rang2 desc,
             visningstekst
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
