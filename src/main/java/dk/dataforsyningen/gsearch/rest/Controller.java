@@ -122,6 +122,282 @@ public class Controller {
 
     /**
      * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/adresse", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getAdresse(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "adresse", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/husnummer", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getHusnummer(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "husnummer", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/kommune", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getKommune(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "kommune", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/matrikel", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getMatrikel(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "matrikelnummer", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/navngivenvej", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getNavngivenvej(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "navngivenvej", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/opstillingskreds", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getOpstillingskreds(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "opstillingskreds", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/politikreds", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getPolitikreds(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "politikreds", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/postdistrikt", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getPostdistrikt(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "postdistrikt", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/region", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getRegion(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "region", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/retskreds", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getRetskreds(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "retskreds", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/sogn", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getSogn(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "sogn", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
+     * @param filter
+     * @param limit
+     * @return
+     * @throws CQLException
+     * @throws FilterToSQLException
+     */
+    @GetMapping(path = "/stednavn", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(tags = {"Gsearch"})
+    public List<Data> getStednavn(
+        @Parameter(description = "Søgestreng")
+        @RequestParam(value = "q", required = true) @NotBlank String q,
+        @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+        @RequestParam(required = false) Optional<String> filter,
+        @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+        @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+        throws FilterToSQLException, CQLException {
+
+        List<Data> result = getResult(q, "stednavn", filter, limit);
+        return result;
+    }
+
+    /**
+     * @param q
      * @param resources
      * @param filter
      * @param limit
