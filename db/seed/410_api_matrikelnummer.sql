@@ -10,7 +10,9 @@ CREATE TYPE api.matrikelnummer AS (
     visningstekst text,
     centroid_x text,
     centroid_y text,
-    geometri geometry
+    geometri geometry,
+    rang1 double precision,
+    rang2 double precision
 );
 
 COMMENT ON TYPE api.matrikelnummer IS 'Matrikelnummer';

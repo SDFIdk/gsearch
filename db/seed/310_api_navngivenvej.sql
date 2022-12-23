@@ -12,7 +12,9 @@ CREATE TYPE api.navngivenvej AS (
     postnummer text,
     postnummernavne text,
     geometri geometry,
-    bbox geometry
+    bbox geometry,
+    rang1 double precision,
+    rang2 double precision
 );
 
 COMMENT ON TYPE api.navngivenvej IS 'Navngivenvej';

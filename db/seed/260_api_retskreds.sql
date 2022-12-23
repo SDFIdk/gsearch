@@ -11,7 +11,9 @@ CREATE TYPE api.retskreds AS (
     visningstekst text,
     myndighedskode text,
     geometri geometry,
-    bbox geometry
+    bbox geometry,
+    rang1 double precision,
+    rang2 double precision
 );
 
 COMMENT ON TYPE api.retskreds IS 'Retskreds';
