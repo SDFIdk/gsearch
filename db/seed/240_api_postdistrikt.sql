@@ -11,7 +11,9 @@ CREATE TYPE api.postdistrikt AS (
     visningstekst text,
     gadepostnummer bool,
     geometri geometry,
-    bbox geometry
+    bbox geometry,
+    rang1 double precision,
+    rang2 double precision
 );
 
 COMMENT ON TYPE api.postdistrikt IS 'Postdistrikt';
