@@ -96,7 +96,7 @@ public class OpenApiConfig {
       for (String resourceType : resourceTypes.getTypes()) {
         ObjectSchema ref = new ObjectSchema();
         ref.set$ref("#/components/schemas/" + resourceType);
-        data.addAnyOfItem(ref);
+        data.addOneOfItem(ref);
       }
 
       // Add data to Data object and as an attribut to all the others schemas
