@@ -18,7 +18,7 @@ Feature: Gsearch navngivenvej test
       "postnummer": '#string',
       "visningstekst": '#string',
       "vejnavn": '#string',
-      "postnummernavn": '#string',
+      "postnummernavne": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
       "id": '#string',
