@@ -75,7 +75,6 @@ public class OpenApiConfig {
     ComposedSchema schema = new ComposedSchema();
     ObjectSchema data = new ObjectSchema();
     data.set$ref("#/components/schemas/Data");
-    schema.addAllOfItem(data);
     schema.setType("object");
     schema.properties(getProperties(resourceType));
     return schema;
