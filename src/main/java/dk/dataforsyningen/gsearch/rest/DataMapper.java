@@ -66,7 +66,7 @@ class DataMapper implements RowMapper<Object> {
         if (resource.equals(ResourceType.KOMMUNE.toString())) {
             return mapKommune(rs, ctx);
         }
-        if (resource.equals(ResourceType.MATRIKEL.toString())) {
+        if (resource.equals(ResourceType.MATRIKELNUMMER.toString())) {
             return mapMatrikel(rs, ctx);
         }
         if (resource.equals(ResourceType.NAVNGIVENVEJ.toString())) {
