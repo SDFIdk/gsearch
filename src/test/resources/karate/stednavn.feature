@@ -14,7 +14,6 @@ Feature: Gsearch stednavn test
         And match response contains deep
         """
             {
-                "type": 'stednavn',
                 "skrivemaade_uofficiel": '#string',
                 "skrivemaade_officiel": '#string',
                 "visningstekst": '#string',

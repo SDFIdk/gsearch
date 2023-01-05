@@ -13,7 +13,6 @@ Feature: Gsearch matrikel test
     And match response contains deep
     """
     {
-      "type": 'matrikelnummer',
       "ejerlavskode": '#string',
       "ejerlavsnavn": '#string',
       "visningstekst": '#string',

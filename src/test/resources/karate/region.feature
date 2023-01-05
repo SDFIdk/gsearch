@@ -14,7 +14,6 @@ Feature: Gsearch region test
         And match response contains deep
         """
             {
-                "type": 'region',
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',

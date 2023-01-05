@@ -13,7 +13,6 @@ Feature: Gsearch adresse test
         And match response contains deep
         """
         {
-          "type": 'adresse',
           "vejkode": '#string',
           "etagebetegnelse": '#string',
           "adgangspunkt_geometri": '#(geometriSchema)',

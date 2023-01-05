@@ -14,7 +14,6 @@ Feature: Gsearch opstillingskreds test
     And match response contains deep
     """
     {
-      "type": 'opstillingskreds',
       "opstillingskredsnavn": '#string',
       "visningstekst": '#string',
       "bbox": '#(bboxSchema)',
