@@ -14,11 +14,10 @@ Feature: Gsearch navngivenvej test
     And match response contains deep
     """
     {
-      "type": 'navngivenvej',
       "postnummer": '#string',
       "visningstekst": '#string',
       "vejnavn": '#string',
-      "postdistrikter": '#string',
+      "postnummernavne": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
       "id": '#string',

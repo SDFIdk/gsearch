@@ -13,7 +13,6 @@ Feature: Gsearch husnummer test
     And match response contains deep
     """
     {
-      "type": 'husnummer',
       "vejkode": '#string',
       "visningstekst": '#string',
       "adgangspunkt_geometri": '#(geometriSchema)',

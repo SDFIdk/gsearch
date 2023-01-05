@@ -1,5 +1,18 @@
 package dk.dataforsyningen.gsearch.rest;
 
+import dk.dataforsyningen.gsearch.datamodel.ResourceType;
+import dk.dataforsyningen.gsearch.datamodel.adresse;
+import dk.dataforsyningen.gsearch.datamodel.husnummer;
+import dk.dataforsyningen.gsearch.datamodel.kommune;
+import dk.dataforsyningen.gsearch.datamodel.matrikelnummer;
+import dk.dataforsyningen.gsearch.datamodel.navngivenvej;
+import dk.dataforsyningen.gsearch.datamodel.opstillingskreds;
+import dk.dataforsyningen.gsearch.datamodel.politikreds;
+import dk.dataforsyningen.gsearch.datamodel.postdistrikt;
+import dk.dataforsyningen.gsearch.datamodel.region;
+import dk.dataforsyningen.gsearch.datamodel.retskreds;
+import dk.dataforsyningen.gsearch.datamodel.sogn;
+import dk.dataforsyningen.gsearch.datamodel.stednavn;
 import net.postgis.jdbc.jts.JtsBinaryParser;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -12,7 +25,7 @@ import java.sql.SQLException;
 /**
  * Maps dynamic row data into the generic Data entity
  */
-class DataMapper implements RowMapper<Data> {
+class DataMapper implements RowMapper<Object> {
     JtsBinaryParser binaryParser = new JtsBinaryParser();
     ResultSetMetaData meta;
     String resource;
@@ -43,9 +56,125 @@ class DataMapper implements RowMapper<Data> {
     }
 
     @Override
-    public Data map(ResultSet rs, StatementContext ctx) throws SQLException {
-        Data data = new Data();
-        data.type = resource;
+    public Object map(ResultSet rs, StatementContext ctx) throws SQLException {
+        if (resource.equals(ResourceType.ADRESSE.toString())) {
+            return mapAdresse(rs, ctx);
+        }
+        if (resource.equals(ResourceType.HUSNUMMER.toString())) {
+            return mapHusnummer(rs, ctx);
+        }
+        if (resource.equals(ResourceType.KOMMUNE.toString())) {
+            return mapKommune(rs, ctx);
+        }
+        if (resource.equals(ResourceType.MATRIKELNUMMER.toString())) {
+            return mapMatrikel(rs, ctx);
+        }
+        if (resource.equals(ResourceType.NAVNGIVENVEJ.toString())) {
+            return mapNavngivenvej(rs, ctx);
+        }
+        if (resource.equals(ResourceType.OPSTILLINGSKREDS.toString())) {
+            return mapOpstillingskreds(rs, ctx);
+        }
+        if (resource.equals(ResourceType.POLITIKREDS.toString())) {
+            return mapPolitikreds(rs, ctx);
+        }
+        if (resource.equals(ResourceType.POSTDISTRIKT.toString())) {
+            return mapPostDistrikt(rs, ctx);
+        }
+        if (resource.equals(ResourceType.REGION.toString())) {
+            return mapRegion(rs, ctx);
+        }
+        if (resource.equals(ResourceType.RETSKREDS.toString())) {
+            return mapRetskreds(rs, ctx);
+        }
+        if (resource.equals(ResourceType.SOGN.toString())) {
+            return mapSogn(rs, ctx);
+        }
+        if (resource.equals(ResourceType.STEDNAVN.toString())) {
+            return mapStednavn(rs, ctx);
+        }
+        throw new IllegalStateException("Could not resolve mapping strategy for object");
+    }
+
+    private adresse mapAdresse(ResultSet rs, StatementContext ctx) throws SQLException {
+        adresse data = new adresse();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private husnummer mapHusnummer(ResultSet rs, StatementContext ctx) throws SQLException {
+        husnummer data = new husnummer();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private kommune mapKommune(ResultSet rs, StatementContext ctx) throws SQLException {
+        kommune data = new kommune();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private matrikelnummer mapMatrikel(ResultSet rs, StatementContext ctx) throws SQLException {
+        matrikelnummer data = new matrikelnummer();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private navngivenvej mapNavngivenvej(ResultSet rs, StatementContext ctx) throws SQLException {
+        navngivenvej data = new navngivenvej();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private opstillingskreds mapOpstillingskreds(ResultSet rs, StatementContext ctx) throws SQLException {
+        opstillingskreds data = new opstillingskreds();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private politikreds mapPolitikreds(ResultSet rs, StatementContext ctx) throws SQLException {
+        politikreds data = new politikreds();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private postdistrikt mapPostDistrikt(ResultSet rs, StatementContext ctx) throws SQLException {
+        postdistrikt data = new postdistrikt();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private region mapRegion(ResultSet rs, StatementContext ctx) throws SQLException {
+        region data = new region();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private retskreds mapRetskreds(ResultSet rs, StatementContext ctx) throws SQLException {
+        retskreds data = new retskreds();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private sogn mapSogn(ResultSet rs, StatementContext ctx) throws SQLException {
+        sogn data = new sogn();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private stednavn mapStednavn(ResultSet rs, StatementContext ctx) throws SQLException {
+        stednavn data = new stednavn();
         for (int i = 1; i <= meta.getColumnCount(); i++)
             data.add(meta.getColumnName(i), mapColumn(i, rs));
         return data;

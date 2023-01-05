@@ -13,7 +13,6 @@ Feature: Gsearch adresse test
         And match response contains deep
         """
         {
-          "type": 'adresse',
           "vejkode": '#string',
           "etagebetegnelse": '#string',
           "adgangspunkt_geometri": '#(geometriSchema)',
@@ -26,7 +25,7 @@ Feature: Gsearch adresse test
           "postnummer": '#string',
           "vejpunkt_geometri": '#(geometriSchema)',
           "id": '#string',
-          "postdistrikt": '#string',
+          "postnummernavn": '#string',
           "rang1": '#string',
           "rang2": '#string'
         }
@@ -71,7 +70,7 @@ Feature: Gsearch adresse test
         Then status 200
         And match response == '#[10]'
         And match response.[*].vejnavn contains deep ['H.C. Andersen Haven', 'H.C. Andersens Boulevard']
-        And match response.[*].postdistrikt contains deep ['Odense C', 'København V']
+        And match response.[*].postnummernavn contains deep ['Odense C', 'København V']
 
     Scenario: Search steetname with number
         Then param q = 'kocksvej 1'
