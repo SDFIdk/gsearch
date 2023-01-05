@@ -145,7 +145,9 @@ ALTER TABLE basic.adresse
         GENERATED ALWAYS AS (textsearchable_plain_col_vej ||
                              setweight(to_tsvector('simple', husnummer), 'D') ||
                              setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
-                             setweight(to_tsvector('simple', doerbetegnelse), 'D'))
+                             setweight(to_tsvector('simple', doerbetegnelse), 'D') ||
+                             setweight(to_tsvector('simple', postnummer), 'D') ||
+                             setweight(to_tsvector('simple', postnummernavn), 'D'))
         STORED;
 
 ALTER TABLE basic.adresse
@@ -156,7 +158,9 @@ ALTER TABLE basic.adresse
         GENERATED ALWAYS AS (textsearchable_unaccent_col_vej ||
                              setweight(to_tsvector('simple', husnummer), 'D') ||
                              setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
-                             setweight(to_tsvector('simple', doerbetegnelse), 'D'))
+                             setweight(to_tsvector('simple', doerbetegnelse), 'D') ||
+                             setweight(to_tsvector('simple', postnummer), 'D') ||
+                             setweight(to_tsvector('simple', postnummernavn), 'D'))
         STORED;
 
 ALTER TABLE basic.adresse
@@ -167,7 +171,9 @@ ALTER TABLE basic.adresse
         GENERATED ALWAYS AS (textsearchable_phonetic_col_vej ||
                              setweight(to_tsvector('simple', husnummer), 'D') ||
                              setweight(to_tsvector('simple', etagebetegnelse), 'D') ||
-                             setweight(to_tsvector('simple', doerbetegnelse), 'D'))
+                             setweight(to_tsvector('simple', doerbetegnelse), 'D') ||
+                             setweight(to_tsvector('simple', postnummer), 'D') ||
+                             setweight(to_tsvector('simple', postnummernavn), 'D'))
         STORED;
 
 CREATE INDEX ON basic.adresse USING GIN (textsearchable_plain_col);
@@ -187,11 +193,7 @@ CREATE OR REPLACE FUNCTION api.adresse (input_tekst text, filters text, sortopti
     AS $function$
 DECLARE
     max_rows integer;
-    input_vejnavn text;
-    input_husnr_etage_doer text;
-    vej_query_string text;
-    plain_vej_query_string text;
-    husnr_etage_doer_query_string text;
+    input text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -210,71 +212,36 @@ BEGIN
 
 
     SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[1])
-    INTO input_vejnavn;
+        btrim(input_tekst)
+    INTO input;
 
-
-    SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2])
-    INTO input_husnr_etage_doer;
 
 
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(btrim(input_vejnavn), ' ')) t
+            UNNEST(string_to_array(btrim(input), ' ')) t
     )
     SELECT
         string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     FROM
         tokens
-    INTO vej_query_string;
+    INTO query_string;
 
 
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
             -- Splitter op i temp-tabel hver hvert vejnavn-ord i hver sin raekke.
-            UNNEST(string_to_array(btrim(input_vejnavn), ' ')) t
+            UNNEST(string_to_array(btrim(input), ' ')) t
     )
     SELECT
         string_agg(t, ':* <-> ') || ':*'
     FROM
         tokens
-    INTO plain_vej_query_string;
+    INTO plain_query_string;
 
 
-    WITH tokens AS (
-        SELECT
-            UNNEST(string_to_array(btrim(input_husnr_etage_doer), ' ')) t
-    )
-    SELECT
-        string_agg(t, ' <-> ')
-    FROM
-        tokens
-    INTO husnr_etage_doer_query_string;
-
-
-    IF husnr_etage_doer_query_string IS NOT NULL THEN
-        SELECT
-            vej_query_string || ' <-> ' || husnr_etage_doer_query_string
-        INTO query_string;
-    ELSE
-        SELECT
-            vej_query_string
-        INTO query_string;
-    END IF;
-
-
-    IF husnr_etage_doer_query_string IS NOT NULL THEN
-        SELECT
-            plain_vej_query_string || ' <-> ' || husnr_etage_doer_query_string
-        INTO plain_query_string;
-    ELSE
-        SELECT
-            plain_vej_query_string
-        INTO plain_query_string;
-    END IF;
 
 -- Hvis en input_tekst kun indeholder bogstaver og har over 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
@@ -298,7 +265,7 @@ BEGIN
             basic.tekst_forekomst
         WHERE
             ressource = 'adresse'
-        AND lower(input_vejnavn) = tekstelement ) > 1000
+        AND lower(input) = tekstelement ) > 1000
         AND filters = '1=1'
     THEN
         stmt = format(E'SELECT
@@ -393,3 +360,4 @@ $function$;
  SELECT (api.adresse('sve',NULL, 1, 100)).*;
  SELECT (api.adresse('s',NULL, 1, 100)).*;
  */
+
