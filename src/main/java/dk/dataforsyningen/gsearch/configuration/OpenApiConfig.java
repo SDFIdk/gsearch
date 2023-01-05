@@ -46,6 +46,7 @@ public class OpenApiConfig {
             .title("Gsearch")
             .version("1.0.0")
             .description("""
+                Er under udvikling. Der kan forekomme breaking changes.
                 APIet __Gsearch__ er velegnet til implementering af typeahead fritekstsøgninger på websites.
 
                 Gsearch understøtter fritekstsøgninger, type-ahead, fonetisk genkendelse af stavemåder, samt søgning i Danmarks adresser og vejnavne, Danmarks administrative geografiske enheder (DAGI), Danske Stednavne og Matriklen.
@@ -75,7 +76,6 @@ public class OpenApiConfig {
     ComposedSchema schema = new ComposedSchema();
     ObjectSchema data = new ObjectSchema();
     data.set$ref("#/components/schemas/Data");
-    schema.addAllOfItem(data);
     schema.setType("object");
     schema.properties(getProperties(resourceType));
     return schema;
@@ -96,7 +96,7 @@ public class OpenApiConfig {
       for (String resourceType : resourceTypes.getTypes()) {
         ObjectSchema ref = new ObjectSchema();
         ref.set$ref("#/components/schemas/" + resourceType);
-        data.addAnyOfItem(ref);
+        data.addOneOfItem(ref);
       }
 
       // Add data to Data object and as an attribut to all the others schemas

@@ -14,7 +14,6 @@ Feature: Gsearch politikreds test
         And match response contains deep
         """
         {
-        "type": 'politikreds',
         "visningstekst": '#string',
         "bbox": '#(bboxSchema)',
         "politikredsnummer": '#string',

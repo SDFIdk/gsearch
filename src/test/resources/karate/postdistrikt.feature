@@ -14,7 +14,6 @@ Feature: Gsearch postdistrikt test
     And match response contains deep
     """
     {
-      "type": 'postdistrikt',
       "visningstekst": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',

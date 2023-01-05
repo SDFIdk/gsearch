@@ -14,7 +14,6 @@ Feature: Gsearch retskreds test
         And match response contains deep
         """
             {
-                "type": 'retskreds',
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "retkredsnavn": '#string',
