@@ -14,7 +14,6 @@ Scenario: Response matches columns database
     And match response contains deep
     """
     {
-      "type": 'kommune',
       "kommunenavn": '#string',
       "visningstekst": '#string',
       "bbox": '#(bboxSchema)',

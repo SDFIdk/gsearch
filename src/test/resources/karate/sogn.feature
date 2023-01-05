@@ -22,7 +22,6 @@ Feature: Gsearch sogn test
         And match response contains deep
         """
             {
-                "type": 'sogn',
                 "sognenavn": '#string',
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
