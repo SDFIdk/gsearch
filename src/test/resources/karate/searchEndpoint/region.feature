@@ -1,11 +1,11 @@
-Feature: Gsearch politikreds test
+Feature: Gsearch region test
 
     Background:
-        * url url + '/politikreds'
+        * url url + '/search'
 
-    Scenario: politikreds
-        Then param q = 'Nordjylland'
-        
+    Scenario: Response matches columns database
+        Then param q = 'hovedstaden'
+        And param resources = 'region'
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -13,36 +13,35 @@ Feature: Gsearch politikreds test
         And def geometriSchema = {type: 'MultiPolygon', coordinates: '#array'}
         And match response contains deep
         """
-        {
-        "visningstekst": '#string',
-        "bbox": '#(bboxSchema)',
-        "politikredsnummer": '#string',
-        "geometri": '#(geometriSchema)',
-        "politikredsnummer": '#string',
-        "myndighedskode": '#string',
-        "rang1": '#string',
-        "rang2": '#string'
-        }
+            {
+                "visningstekst": '#string',
+                "bbox": '#(bboxSchema)',
+                "geometri": '#(geometriSchema)',
+                "regionskode": '#string',
+                "regionsnavn": '#string',
+                "rang1": '#string',
+                "rang2": '#string'
+            }
         """
 
     Scenario: Partial string
-        Then param q = 'nord'
-        
+        Then param q = 'region'
+        And param resources = 'region'
         When method GET
         Then status 200
-        And match response == '#[2]'
-        And match response.[*].visningstekst contains deep ['Nordjyllands Politikreds', 'Nordsjællands Politikreds']
+        And match response == '#[5]'
+        And match response.[*].regionsnavn contains deep ['Region Hovedstaden', 'Region Midtjylland', 'Region Nordjylland', 'Region Sjælland', 'Region Syddanmark']
 
     Scenario: Search is case insensitive
-        Then param q = 'Nordjylland'
-        
+        Then param q = 'Hovedstaden'
+        And param resources = 'region'
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
-        Then param q = 'nordjylland'
-        
+        Then param q = 'hovedstaden'
+        And param resources = 'region'
         When method GET
         Then status 200
         And def secondresponse = response
@@ -50,8 +49,8 @@ Feature: Gsearch politikreds test
 
         Then match firstresponse == secondresponse
 
-        Then param q = 'NORDJYLLAND'
-        
+        Then param q = 'HOVEDSTADEN'
+        And param resources = 'region'
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -61,7 +60,7 @@ Feature: Gsearch politikreds test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        
+        And param resources = 'region'
         When method GET
         Then status 200
         And match response == '#[0]'
