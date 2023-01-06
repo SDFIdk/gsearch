@@ -14,7 +14,7 @@ Feature: Gsearch errorhandling test
         "status": "BAD_REQUEST",
         "message": "getPostdistrikt.q: must not be blank",
         "errors": [
-            "javax.validation.ConstraintViolationException: getPostdistrikt.q: must not be blank"
+            "jakarta.validation.ConstraintViolationException: getPostdistrikt.q: must not be blank"
         ]
     }
     """
@@ -61,7 +61,7 @@ Feature: Gsearch errorhandling test
         "status": "BAD_REQUEST",
         "message": "getPostdistrikt.limit: must be less than or equal to 100",
         "errors": [
-            "javax.validation.ConstraintViolationException: getPostdistrikt.limit: must be less than or equal to 100"
+            "jakarta.validation.ConstraintViolationException: getPostdistrikt.limit: must be less than or equal to 100"
         ]
     }
     """
