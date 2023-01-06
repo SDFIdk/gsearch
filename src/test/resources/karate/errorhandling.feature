@@ -12,9 +12,9 @@ Feature: Gsearch errorhandling test
     """
     {
         "status": "BAD_REQUEST",
-        "message": "gsearch.q: must not be blank",
+        "message": "getPostdistrikt.q: must not be blank",
         "errors": [
-            "javax.validation.ConstraintViolationException: gsearch.q: must not be blank"
+            "javax.validation.ConstraintViolationException: getPostdistrikt.q: must not be blank"
         ]
     }
     """
@@ -38,15 +38,14 @@ Feature: Gsearch errorhandling test
     Then url url + '/postdistrikt1'
     Then param q = 's'
     When method GET
-    Then status 400
+    Then status 404
     And match response ==
     """
     {
-        "status": "BAD_REQUEST",
-        "message": "Resource postdistrikt1 does not exist",
-        "errors": [
-            "java.lang.IllegalArgumentException: Resource postdistrikt1 does not exist"
-        ]
+        "timestamp":#number,
+        "status":404,
+        "error":"Not Found",
+        "path":"/postdistrikt1"
     }
     """
 
@@ -60,9 +59,9 @@ Feature: Gsearch errorhandling test
     """
     {
         "status": "BAD_REQUEST",
-        "message": "gsearch.limit: must be less than or equal to 100",
+        "message": "getPostdistrikt.limit: must be less than or equal to 100",
         "errors": [
-            "javax.validation.ConstraintViolationException: gsearch.limit: must be less than or equal to 100"
+            "javax.validation.ConstraintViolationException: getPostdistrikt.limit: must be less than or equal to 100"
         ]
     }
     """
