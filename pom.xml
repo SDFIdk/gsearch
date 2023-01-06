@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.5</version>
+    <version>3.0.1</version>
     <relativePath/>
     <!-- lookup parent from repository -->
   </parent>
@@ -16,7 +16,7 @@
   <description>Gsearch</description>
   <properties>
     <java.version>17</java.version>
-    <org.jdbi.version>3.34.0</org.jdbi.version>
+    <org.jdbi.version>3.36.0</org.jdbi.version>
   </properties>
   <dependencies>
     <dependency>
@@ -29,8 +29,8 @@
     </dependency>
     <dependency>
       <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-ui</artifactId>
-      <version>1.6.12</version>
+      <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+      <version>2.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.jdbi</groupId>
@@ -60,7 +60,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.5.0</version>
+      <version>42.5.1</version>
     </dependency>
     <dependency>
       <groupId>net.postgis</groupId>
