@@ -1,11 +1,11 @@
 Feature: Gsearch kommune test
 
 Background:
-* url url + '/kommune'
+* url url + '/search'
 
 Scenario: Response matches columns database
     Then param q = 'Albertslund'
-    
+    And param resources = 'kommune'
     When method GET
     Then status 200
     And match response == '#[1]'
@@ -26,21 +26,21 @@ Scenario: Response matches columns database
 
 Scenario: Partial string
     Then param q = 'køben'
-    
+    And param resources = 'kommune'
     When method GET
     Then status 200
     And match response == '#[1]'
 
 Scenario: Search is case insensitive
     Then param q = 'København'
-    
+    And param resources = 'kommune'
     When method GET
     Then status 200
     And def firstresponse = response
     And match firstresponse == '#[1]'
 
     Then param q = 'københavn'
-    
+    And param resources = 'kommune'
     When method GET
     Then status 200
     And def secondresponse = response
@@ -49,7 +49,7 @@ Scenario: Search is case insensitive
     Then match firstresponse == secondresponse
 
     Then param q = 'KØBENHAVN'
-    
+    And param resources = 'kommune'
     When method GET
     Then status 200
     And def thirdresponse = response
@@ -59,7 +59,7 @@ Scenario: Search is case insensitive
 
 Scenario: Like search on nord returns Norddjurs and Nordfyns
     Then param q = 'nord'
-    
+    And param resources = 'kommune'
     When method GET
     Then status 200
     And match response == '#[2]'
@@ -68,7 +68,7 @@ Scenario: Like search on nord returns Norddjurs and Nordfyns
 
 Scenario: Get København from using the kommunekode as search input
     Then param q = '0101'
-    
+    And param resources = 'kommune'
     When method GET
     Then status 200
     And match response == '#[1]'
@@ -77,7 +77,7 @@ Scenario: Get København from using the kommunekode as search input
 
 Scenario: Combined search, Get København from using the kommunekode as search input and Herlev as tekst input
     Then param q = '0101 herlev'
-    
+    And param resources = 'kommune'
     When method GET
     Then status 200
     And match response == '#[2]'
@@ -85,14 +85,14 @@ Scenario: Combined search, Get København from using the kommunekode as search i
 
 Scenario: Do not have a match on '.'
     Then param q = '.'
-    
+    And param resources = 'kommune'
     When method GET
     Then status 200
     And match response == '#[0]'
 
 Scenario: Test maximum limit and one character search
     Then param q = 'h'
-    
+    And param resources = 'kommune'
     And param limit = '100'
     When method GET
     Then status 200

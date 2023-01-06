@@ -1,11 +1,11 @@
 Feature: Gsearch retskreds test
 
     Background:
-        * url url + '/search'
+        * url url + '/retskreds'
 
     Scenario: Response matches columns database
         Then param q = 'aalborg'
-        And param resources = 'retskreds'
+        
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -27,7 +27,7 @@ Feature: Gsearch retskreds test
 
     Scenario: Partial string
         Then param q = 'retten i aa'
-        And param resources = 'retskreds'
+        
         When method GET
         Then status 200
         And match response == '#[2]'
@@ -35,14 +35,14 @@ Feature: Gsearch retskreds test
 
     Scenario: Search is case insensitive
         Then param q = 'Glostrup'
-        And param resources = 'retskreds'
+        
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
         Then param q = 'glostrup'
-        And param resources = 'retskreds'
+        
         When method GET
         Then status 200
         And def secondresponse = response
@@ -51,7 +51,7 @@ Feature: Gsearch retskreds test
         Then match firstresponse == secondresponse
 
         Then param q = 'GLOSTRUP'
-        And param resources = 'retskreds'
+        
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -61,14 +61,14 @@ Feature: Gsearch retskreds test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        And param resources = 'retskreds'
+        
         When method GET
         Then status 200
         And match response == '#[0]'
 
     Scenario: Test maximum limit and one character search
         Then param q = 'r'
-        And param resources = 'retskreds'
+        
         And param limit = '100'
         When method GET
         Then status 200
