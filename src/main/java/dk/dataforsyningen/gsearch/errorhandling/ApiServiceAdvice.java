@@ -305,16 +305,11 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorResponse> handleAll(Exception exception) {
-        String errormessage = exception.getMessage();
-        List<ErrorResponse> result = new ArrayList<>();
-        result.add(new ErrorResponse(errormessage));
-
         ErrorResponse errorResponse =
             new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage(),
-                "error occurred");
-        logger.debug(ERROR_STRING, exception);
-        logger.debug(ERROR_STRING + errorResponse.getErrors());
+                HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage(), "error occurred");
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exception.getLocalizedMessage());
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
 
