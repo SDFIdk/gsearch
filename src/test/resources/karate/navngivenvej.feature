@@ -90,3 +90,10 @@ Feature: Gsearch navngivenvej test
     And match secondResponse == '#[10]'
 
     And match response == secondResponse
+
+  Scenario: Response with multipolygon
+    Then param q = 'Christiansø'
+
+    When method GET
+    Then status 200
+    And match response == '#[1]'
