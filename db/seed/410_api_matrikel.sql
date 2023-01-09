@@ -1,12 +1,12 @@
-SELECT '410_api_matrikelnummer.sql ' || now();
+SELECT '410_api_matrikel.sql ' || now();
 
 
-DROP TYPE IF EXISTS api.matrikelnummer CASCADE;
+DROP TYPE IF EXISTS api.matrikelCASCADE;
 
-CREATE TYPE api.matrikelnummer AS (
+CREATE TYPE api.matrikelAS (
     ejerlavsnavn text,
     ejerlavskode text,
-    matrikelnummer text,
+    matrikel text,
     visningstekst text,
     centroid_x text,
     centroid_y text,
@@ -15,23 +15,23 @@ CREATE TYPE api.matrikelnummer AS (
     rang2 double precision
 );
 
-COMMENT ON TYPE api.matrikelnummer IS 'Matrikelnummer';
+COMMENT ON TYPE api.matrikel IS 'Matrikelnummer';
 
-COMMENT ON COLUMN api.matrikelnummer.ejerlavsnavn IS 'Ejerlavsnavn for matrikel';
+COMMENT ON COLUMN api.matrikel.ejerlavsnavn IS 'Ejerlavsnavn for matrikel';
 
-COMMENT ON COLUMN api.matrikelnummer.ejerlavskode IS 'Ejerlavskode for matrikel';
+COMMENT ON COLUMN api.matrikel.ejerlavskode IS 'Ejerlavskode for matrikel';
 
-COMMENT ON COLUMN api.matrikelnummer.matrikelnummer IS 'Matrikelnummer';
+COMMENT ON COLUMN api.matrikel.matrikelnummer IS 'Matrikelnummer';
 
-COMMENT ON COLUMN api.matrikelnummer.visningstekst IS 'Præsentationsform for et matrikelnummer';
+COMMENT ON COLUMN api.matrikel.visningstekst IS 'Præsentationsform for et matrikelnummer';
 
-COMMENT ON COLUMN api.matrikelnummer.centroid_x IS 'Centroide X for matriklens geometri';
+COMMENT ON COLUMN api.matrikel.centroid_x IS 'Centroide X for matriklens geometri';
 
-COMMENT ON COLUMN api.matrikelnummer.centroid_y IS 'Centroide Y for matriklens geometri';
+COMMENT ON COLUMN api.matrikel.centroid_y IS 'Centroide Y for matriklens geometri';
 
-COMMENT ON COLUMN api.matrikelnummer.geometri IS 'Geometri i valgt koordinatsystem';
+COMMENT ON COLUMN api.matrikel.geometri IS 'Geometri i valgt koordinatsystem';
 
-DROP TABLE IF EXISTS basic.matrikelnummer;
+DROP TABLE IF EXISTS basic.matrikel;
 
 WITH matrikelnumre AS (
     SELECT
@@ -79,35 +79,35 @@ SELECT
     e.textsearchable_plain_col_ejerlavsnavn,
     e.textsearchable_unaccent_col_ejerlavsnavn,
     e.textsearchable_phonetic_col_ejerlavsnavn,
-    st_multi (m.geometri) AS geometri INTO basic.matrikelnummer
+    st_multi (m.geometri) AS geometri INTO basic.matrikel
 FROM
     matrikelnumre m
     JOIN ejerlavsnavn_dups e ON e.ejerlavsnavn = m.ejerlavsnavn;
 
-ALTER TABLE basic.matrikelnummer
+ALTER TABLE basic.matrikel
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
-ALTER TABLE basic.matrikelnummer
+ALTER TABLE basic.matrikel
     ADD COLUMN textsearchable_plain_col tsvector
         GENERATED ALWAYS AS (textsearchable_plain_col_ejerlavsnavn ||
                              setweight(to_tsvector('simple', ejerlavskode), 'A') ||
                              setweight(to_tsvector('simple', matrikelnummer), 'A'))
         STORED;
 
-ALTER TABLE basic.matrikelnummer
+ALTER TABLE basic.matrikel
     DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 
-ALTER TABLE basic.matrikelnummer
+ALTER TABLE basic.matrikel
     ADD COLUMN textsearchable_unaccent_col tsvector
         GENERATED ALWAYS AS (textsearchable_unaccent_col_ejerlavsnavn ||
                              setweight(to_tsvector('simple', ejerlavskode), 'A') ||
                              setweight(to_tsvector('simple', matrikelnummer), 'A'))
         STORED;
 
-ALTER TABLE basic.matrikelnummer
+ALTER TABLE basic.matrikel
     DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 
-ALTER TABLE basic.matrikelnummer
+ALTER TABLE basic.matrikel
     ADD COLUMN textsearchable_phonetic_col tsvector
         GENERATED ALWAYS AS (textsearchable_phonetic_col_ejerlavsnavn ||
                              setweight(to_tsvector('simple', ejerlavskode), 'A') ||
@@ -115,28 +115,28 @@ ALTER TABLE basic.matrikelnummer
         STORED;
 
 
-CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_plain_col);
+CREATE INDEX ON basic.matrikel USING GIN (textsearchable_plain_col);
 
-CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_unaccent_col);
+CREATE INDEX ON basic.matrikel USING GIN (textsearchable_unaccent_col);
 
-CREATE INDEX ON basic.matrikelnummer USING GIN (textsearchable_phonetic_col);
+CREATE INDEX ON basic.matrikel USING GIN (textsearchable_phonetic_col);
 
-CREATE INDEX ON basic.matrikelnummer (matrikelnummer, visningstekst);
+CREATE INDEX ON basic.matrikel (matrikelnummer, visningstekst);
 
-DROP FUNCTION IF EXISTS api.matrikelnummer (text, text, int, int);
+DROP FUNCTION IF EXISTS api.matrikel(text, text, int, int);
 
-CREATE OR REPLACE FUNCTION api.matrikelnummer (input_tekst text, filters text, sortoptions int, rowlimit int)
-    RETURNS SETOF api.matrikelnummer
+CREATE OR REPLACE FUNCTION api.matrikel(input_tekst text, filters text, sortoptions int, rowlimit int)
+    RETURNS SETOF api.matrikel
     LANGUAGE plpgsql
     STABLE
     AS $function$
 DECLARE
     max_rows integer;
     input_ejerlavsnavn text;
-    input_ejerlavskode_matrikelnummer text;
+    input_ejerlavskode_matrikel text;
     ejerlavsnavn_string text;
     ejerlavsnavn_string_plain text;
-    ejerlavskode_matrikelnummer_string text;
+    ejerlavskode_matrikel_string text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -161,7 +161,7 @@ BEGIN
     SELECT
         -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
         btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
-    INTO input_ejerlavskode_matrikelnummer;
+    INTO input_ejerlavskode_matrikel;
 
     WITH tokens AS (
         SELECT
@@ -184,31 +184,31 @@ BEGIN
 
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(input_ejerlavskode_matrikelnummer, ' ')) t
+            UNNEST(string_to_array(input_ejerlavskode_matrikel, ' ')) t
     )
     SELECT
         string_agg(t, ' & ')
     FROM
-        tokens INTO ejerlavskode_matrikelnummer_string;
+        tokens INTO ejerlavskode_matrikel_string;
     CASE WHEN ejerlavsnavn_string IS NULL THEN
         SELECT
-            ejerlavskode_matrikelnummer_string INTO query_string;
-    WHEN ejerlavskode_matrikelnummer_string IS NULL THEN
+            ejerlavskode_matrikel_string INTO query_string;
+    WHEN ejerlavskode_matrikel_string IS NULL THEN
         SELECT
             ejerlavsnavn_string INTO query_string;
         ELSE
             SELECT
-                ejerlavsnavn_string || ' | ' || ejerlavskode_matrikelnummer_string INTO query_string;
+                ejerlavsnavn_string || ' | ' || ejerlavskode_matrikel_string INTO query_string;
     END CASE;
     CASE WHEN ejerlavsnavn_string_plain IS NULL THEN
         SELECT
-            ejerlavskode_matrikelnummer_string INTO plain_query_string;
-    WHEN ejerlavskode_matrikelnummer_string IS NULL THEN
+            ejerlavskode_matrikel_string INTO plain_query_string;
+    WHEN ejerlavskode_matrikel_string IS NULL THEN
         SELECT
             ejerlavsnavn_string_plain INTO plain_query_string;
         ELSE
             SELECT
-                ejerlavsnavn_string_plain || ' | ' || ejerlavskode_matrikelnummer_string INTO plain_query_string;
+                ejerlavsnavn_string_plain || ' | ' || ejerlavskode_matrikel_string INTO plain_query_string;
     END CASE;
 
 
@@ -233,7 +233,7 @@ BEGIN
         FROM
             basic.tekst_forekomst
         WHERE
-            ressource = 'matrikelnummer'
+            ressource = 'matrikel'
         AND lower(input_ejerlavsnavn) = tekstelement ) > 1000
         AND filters = '1=1'
     THEN
@@ -248,12 +248,12 @@ BEGIN
                 0::float AS rang1,
                 0::float AS rang2
             FROM
-                basic.matrikelnummer
+                basic.matrikel
             WHERE
                 lower(ejerlavsnavn) >= ''%s''
                 AND lower(ejerlavsnavn) <= ''%s'' || ''å''
             ORDER BY
-                matrikelnummer,
+                matrikel,
                 visningstekst
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
@@ -282,7 +282,7 @@ BEGIN
                 to_tsquery(''simple'',$1)
             )::double precision AS rang2
         FROM
-            basic.matrikelnummer
+            basic.matrikel
         WHERE (
             textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
             OR textsearchable_plain_col @@ to_tsquery(''simple'', $2)
@@ -300,13 +300,13 @@ BEGIN
 $function$;
 -- Test cases:
 /*
- SELECT (api.matrikelnummer('søby',NULL, 1, 100)).*;
- SELECT (api.matrikelnummer('11aa',NULL, 1, 100)).*;
- SELECT (api.matrikelnummer('1320452',NULL, 1, 100)).*;
- SELECT (api.matrikelnummer('11aa 1320452',NULL, 1, 100)).*;
- SELECT (api.matrikelnummer('1320452 11aa kobbe',NULL, 1, 100)).*;
- SELECT (api.matrikelnummer('11aa søby',NULL, 1, 100)).*;
- SELECT (api.matrikelnummer('s',NULL, 1, 100)).*;
- SELECT (api.matrikelnummer('a 1 a', NULL, 1, 100)).*;
+ SELECT (api.matrikel('søby',NULL, 1, 100)).*;
+ SELECT (api.matrikel('11aa',NULL, 1, 100)).*;
+ SELECT (api.matrikel('1320452',NULL, 1, 100)).*;
+ SELECT (api.matrikel('11aa 1320452',NULL, 1, 100)).*;
+ SELECT (api.matrikel('1320452 11aa kobbe',NULL, 1, 100)).*;
+ SELECT (api.matrikel('11aa søby',NULL, 1, 100)).*;
+ SELECT (api.matrikel('s',NULL, 1, 100)).*;
+ SELECT (api.matrikel('a 1 a', NULL, 1, 100)).*;
 
  */
