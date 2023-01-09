@@ -1,7 +1,7 @@
 Feature: Gsearch errorhandling test
 
   Background:
-    * url url + '/postdistrikt'
+    * url url + '/postnummer'
 
   Scenario: Empty q input
     Then param q = ''
@@ -12,9 +12,9 @@ Feature: Gsearch errorhandling test
     """
     {
         "status": "BAD_REQUEST",
-        "message": "getPostdistrikt.q: must not be blank",
+        "message": "getPostnummer.q: must not be blank",
         "errors": [
-            "jakarta.validation.ConstraintViolationException: getPostdistrikt.q: must not be blank"
+            "jakarta.validation.ConstraintViolationException: getPostnummer.q: must not be blank"
         ]
     }
     """
@@ -35,7 +35,7 @@ Feature: Gsearch errorhandling test
     """
 
   Scenario: Not exiting resource
-    Then url url + '/postdistrikt1'
+    Then url url + '/postnummer1'
     Then param q = 's'
     When method GET
     Then status 404
@@ -45,7 +45,7 @@ Feature: Gsearch errorhandling test
         "timestamp":#number,
         "status":404,
         "error":"Not Found",
-        "path":"/postdistrikt1"
+        "path":"/postnummer1"
     }
     """
 
@@ -59,9 +59,9 @@ Feature: Gsearch errorhandling test
     """
     {
         "status": "BAD_REQUEST",
-        "message": "getPostdistrikt.limit: must be less than or equal to 100",
+        "message": "getPostnummer.limit: must be less than or equal to 100",
         "errors": [
-            "jakarta.validation.ConstraintViolationException: getPostdistrikt.limit: must be less than or equal to 100"
+            "jakarta.validation.ConstraintViolationException: getPostnummer.limit: must be less than or equal to 100"
         ]
     }
     """

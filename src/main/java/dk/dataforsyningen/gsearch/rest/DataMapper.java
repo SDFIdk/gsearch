@@ -8,7 +8,7 @@ import dk.dataforsyningen.gsearch.datamodel.matrikelnummer;
 import dk.dataforsyningen.gsearch.datamodel.navngivenvej;
 import dk.dataforsyningen.gsearch.datamodel.opstillingskreds;
 import dk.dataforsyningen.gsearch.datamodel.politikreds;
-import dk.dataforsyningen.gsearch.datamodel.postdistrikt;
+import dk.dataforsyningen.gsearch.datamodel.postnummer;
 import dk.dataforsyningen.gsearch.datamodel.region;
 import dk.dataforsyningen.gsearch.datamodel.retskreds;
 import dk.dataforsyningen.gsearch.datamodel.sogn;
@@ -145,8 +145,8 @@ class DataMapper implements RowMapper<Object> {
         return data;
     }
 
-    private postdistrikt mapPostDistrikt(ResultSet rs, StatementContext ctx) throws SQLException {
-        postdistrikt data = new postdistrikt();
+    private postnummer mapPostDistrikt(ResultSet rs, StatementContext ctx) throws SQLException {
+        postnummer data = new postnummer();
         for (int i = 1; i <= meta.getColumnCount(); i++)
             data.add(meta.getColumnName(i), mapColumn(i, rs));
         return data;
