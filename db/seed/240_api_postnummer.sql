@@ -92,7 +92,7 @@ DECLARE
     max_rows integer;
     input_postnummernavn text;
     input_postnummer text;
-    postnummer_string text;
+    postnummernavn_string text;
     postnummernavn_string_plain text;
     postnummer_string text;
     query_string text;
@@ -128,7 +128,7 @@ BEGIN
     SELECT
         string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
     FROM
-        tokens INTO postnummer_string;
+        tokens INTO postnummernavn_string;
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_postnummernavn, ' ')) t
@@ -145,18 +145,18 @@ BEGIN
         string_agg(t, ':A | ') || ':A'
     FROM
         tokens INTO postnummer_string;
-    --RAISE NOTICE 'postnummer_string: %', postdistrikt_string;
+    --RAISE NOTICE 'postnummernavn_string: %', postdistrikt_string;
     --RAISE NOTICE 'postnummernavn_string_plain: %', postnummernavn_string_plain;
     --RAISE NOTICE 'postnummer_string: %', postnummer_string;
-    CASE WHEN postnummer_string IS NULL THEN
+    CASE WHEN postnummernavn_string IS NULL THEN
         SELECT
             postnummer_string INTO query_string;
     WHEN postnummer_string IS NULL THEN
         SELECT
-            postnummer_string INTO query_string;
+            postnummernavn_string INTO query_string;
         ELSE
             SELECT
-                postnummer_string || ' | ' || postnummer_string INTO query_string;
+                postnummernavn_string || ' | ' || postnummer_string INTO query_string;
     END CASE;
     CASE WHEN postnummernavn_string_plain IS NULL THEN
         SELECT
