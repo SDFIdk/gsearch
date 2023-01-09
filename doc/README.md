@@ -21,7 +21,7 @@ I hver ressource søges der efter bedst mulig match i et eller flere felter/attr
 * Navngiven vej: Der søges i DAR navngivenvej og postnummer
 * Opstillingskreds: Der DAGI opstillingskreds
 * Politikreds: Der søges i DAGI politikreds
-* Postdistrikt: Der søges i DAGI postnummerinddeling
+* Postnummer: Der søges i DAGI postnummerinddeling
 * Region: Der søges i regionsinddeling
 * Retskreds: Der søges i DAGI retskreds
 * Sogn: Der søges i DAGI sogneinddeling
@@ -95,7 +95,7 @@ Resultatet af en forespørgsel indeholder de forekomster, som matcher forespørg
 
 For adresse og husnummer indeholder response geometri i attributterne _'vejpunkt_geometri'_ og _'adgangspunkt_geometri'_. Øvrige data-ressourcer har to sæt geometri: _'bbox'_, der er en beregnet bounding box, og _'geometri'_ der er basisregisterets objektgeometri.
 
-For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postdistrikt, region, retskreds, sogn, anvendes den generaliserede _'D500'_ geometri.
+For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postnummer, region, retskreds, sogn, anvendes den generaliserede _'D500'_ geometri.
 
 **Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder. Output for hver ressource er i øvrigt dokumenteret i swagger-dokumentationen her [en URL svarende til https://gsearch.k8s-test-121.septima.dk/swagger-ui/index.html]
 
@@ -271,9 +271,9 @@ Syntaks eksempel som søger efter 'ø' med filter på geometri - Nørrejylland:
 
 <br/><br/>
 
-### Postdistrikt
+### Postnummer
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postdistrikt?limit=60&q=b HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postnummer?limit=60&q=b HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -282,7 +282,7 @@ Syntaks eksempel som søger efter 'b' og limit '60':
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postdistrikt?q=mari HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postnummer?q=mari HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -291,7 +291,7 @@ Syntaks eksempel som søger efter 'mari':
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postdistrikt?q=mari&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1%206049000.2,%20615000.3%206111000.4,%20735000.5%206111000.6,%20735000.7%206049000.8,%20615000.1%206049000.2))) HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postnummer?q=mari&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1%206049000.2,%20615000.3%206111000.4,%20735000.5%206111000.6,%20735000.7%206049000.8,%20615000.1%206049000.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
