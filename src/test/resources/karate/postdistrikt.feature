@@ -1,7 +1,7 @@
-Feature: Gsearch postdistrikt test
+Feature: Gsearch postnummer test
 
   Background:
-    * url url + '/postdistrikt'
+    * url url + '/postnummer'
 
   Scenario: Response matches columns database
     Then param q = '2605'
