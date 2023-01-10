@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class matrikelnummer {
+public class matrikel {
 
   private Map<String, Object> properties = new HashMap<String, Object>();
 
