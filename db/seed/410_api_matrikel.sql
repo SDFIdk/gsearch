@@ -1,12 +1,12 @@
 SELECT '410_api_matrikel.sql ' || now();
 
 
-DROP TYPE IF EXISTS api.matrikelCASCADE;
+DROP TYPE IF EXISTS api.matrikel CASCADE;
 
 CREATE TYPE api.matrikel AS (
     ejerlavsnavn text,
     ejerlavskode text,
-    matrikel text,
+    matrikelnummer text,
     visningstekst text,
     centroid_x text,
     centroid_y text,
