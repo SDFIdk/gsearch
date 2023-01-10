@@ -4,7 +4,7 @@ import dk.dataforsyningen.gsearch.datamodel.ResourceType;
 import dk.dataforsyningen.gsearch.datamodel.adresse;
 import dk.dataforsyningen.gsearch.datamodel.husnummer;
 import dk.dataforsyningen.gsearch.datamodel.kommune;
-import dk.dataforsyningen.gsearch.datamodel.matrikelnummer;
+import dk.dataforsyningen.gsearch.datamodel.matrikel;
 import dk.dataforsyningen.gsearch.datamodel.navngivenvej;
 import dk.dataforsyningen.gsearch.datamodel.opstillingskreds;
 import dk.dataforsyningen.gsearch.datamodel.politikreds;
@@ -117,8 +117,8 @@ class DataMapper implements RowMapper<Object> {
         return data;
     }
 
-    private matrikelnummer mapMatrikel(ResultSet rs, StatementContext ctx) throws SQLException {
-        matrikelnummer data = new matrikelnummer();
+    private matrikel mapMatrikel(ResultSet rs, StatementContext ctx) throws SQLException {
+        matrikel data = new matrikel();
         for (int i = 1; i <= meta.getColumnCount(); i++)
             data.add(meta.getColumnName(i), mapColumn(i, rs));
         return data;

@@ -55,13 +55,13 @@ Bør returnere
 Bør returnere
 * id til navngiven vej  // så man kan filtrere på den
 
-### Matrikelnummer
+### Matrikel
 Bør returnere
 * kommunekode // så man kan filtrere på kommune
 * jordstykkeId // så man kan arbejde videre med resultatet
 * SFE-nummer // ditto (SFE = BFE-nummer)
 
-// Matrikelnummer svarer strikt på q-parametren - for q=12 returneres kun jordstykker 
+// Matrikel svarer strikt på q-parametren - for q=12 returneres kun jordstykker 
 // med matrikelnummer '12' - ikke 12a, 12b eller 122 eller ... - er det bevidst? 
 // Mit synspunkt: så længe q starter med et ciffer og derefter evt. har et bogstav, 
 // skal response foreslå mulige matrikelnumre med flere tal/bogstaver. 

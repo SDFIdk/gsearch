@@ -5,7 +5,7 @@ import dk.dataforsyningen.gsearch.datamodel.Data;
 import dk.dataforsyningen.gsearch.datamodel.adresse;
 import dk.dataforsyningen.gsearch.datamodel.husnummer;
 import dk.dataforsyningen.gsearch.datamodel.kommune;
-import dk.dataforsyningen.gsearch.datamodel.matrikelnummer;
+import dk.dataforsyningen.gsearch.datamodel.matrikel;
 import dk.dataforsyningen.gsearch.datamodel.navngivenvej;
 import dk.dataforsyningen.gsearch.datamodel.opstillingskreds;
 import dk.dataforsyningen.gsearch.datamodel.politikreds;
@@ -217,7 +217,7 @@ public class Controller {
    */
   @GetMapping(path = "/matrikel", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(operationId = "Matrikel", tags = {"Gsearch"})
-  public List<matrikelnummer> getMatrikel(
+  public List<matrikel> getMatrikel(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
@@ -226,7 +226,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<matrikelnummer> result = getResult(q, "matrikelnummer", filter, limit);
+    List<matrikel> result = getResult(q, "matrikel", filter, limit);
     return result;
   }
 
