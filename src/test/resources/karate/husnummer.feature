@@ -1,11 +1,11 @@
 Feature: Gsearch husnummer test
 
   Background:
-    * url url + '/search'
+    * url url + '/husnummer'
 
   Scenario: Response matches columns database
     Then param q = 'Kocksvej'
-    And param resources = 'husnummer'
+    
     When method GET
     Then status 200
     And match response == '#[10]'
@@ -31,21 +31,21 @@ Feature: Gsearch husnummer test
 
   Scenario: Partial string
     Then param q = 'kock'
-    And param resources = 'husnummer'
+    
     When method GET
     Then status 200
     And match response == '#[10]'
 
   Scenario: Search is case insensitive
     Then param q = 'Kocksvej'
-    And param resources = 'husnummer'
+    
     When method GET
     Then status 200
     And def firstresponse = response
     And match firstresponse == '#[10]'
 
     Then param q = 'kocksvej'
-    And param resources = 'husnummer'
+    
     When method GET
     Then status 200
     And def secondresponse = response
@@ -54,7 +54,7 @@ Feature: Gsearch husnummer test
     Then match firstresponse == secondresponse
 
     Then param q = 'KOCKSVEJ'
-    And param resources = 'husnummer'
+    
     When method GET
     Then status 200
     And def thirdresponse = response
@@ -64,7 +64,7 @@ Feature: Gsearch husnummer test
 
 Scenario: Search streetname with number
     Then param q = 'kocksvej 1'
-    And param resources = 'husnummer'
+    
     When method GET
     Then status 200
     And match response == '#[10]'
@@ -72,7 +72,7 @@ Scenario: Search streetname with number
 
   Scenario: Search streetname with number and letter
     Then param q = 'kocksvej 1C'
-    And param resources = 'husnummer'
+    
     When method GET
     Then status 200
     And match response == '#[1]'
@@ -80,14 +80,14 @@ Scenario: Search streetname with number
 
   Scenario: Do not have a match on '.'
     Then param q = '.'
-    And param resources = 'husnummer'
+    
     When method GET
     Then status 200
     And match response == '#[0]'
 
   Scenario: Test maximum limit and one character search
     Then param q = 's'
-    And param resources = 'husnummer'
+    
     And param limit = '100'
     When method GET
     Then status 200
@@ -95,14 +95,14 @@ Scenario: Search streetname with number
 
   Scenario: Test that upper and lower case gives the same result
     Then param q = 'Ø'
-    And param resources = 'husnummer'
+    
     And param limit = '10'
     When method GET
     Then status 200
     And match response == '#[10]'
 
     Then param q = 'ø'
-    And param resources = 'husnummer'
+    
     And param limit = '10'
     When method GET
     Then status 200

@@ -4,11 +4,11 @@ import dk.dataforsyningen.gsearch.datamodel.ResourceType;
 import dk.dataforsyningen.gsearch.datamodel.adresse;
 import dk.dataforsyningen.gsearch.datamodel.husnummer;
 import dk.dataforsyningen.gsearch.datamodel.kommune;
-import dk.dataforsyningen.gsearch.datamodel.matrikelnummer;
+import dk.dataforsyningen.gsearch.datamodel.matrikel;
 import dk.dataforsyningen.gsearch.datamodel.navngivenvej;
 import dk.dataforsyningen.gsearch.datamodel.opstillingskreds;
 import dk.dataforsyningen.gsearch.datamodel.politikreds;
-import dk.dataforsyningen.gsearch.datamodel.postdistrikt;
+import dk.dataforsyningen.gsearch.datamodel.postnummer;
 import dk.dataforsyningen.gsearch.datamodel.region;
 import dk.dataforsyningen.gsearch.datamodel.retskreds;
 import dk.dataforsyningen.gsearch.datamodel.sogn;
@@ -66,7 +66,7 @@ class DataMapper implements RowMapper<Object> {
         if (resource.equals(ResourceType.KOMMUNE.toString())) {
             return mapKommune(rs, ctx);
         }
-        if (resource.equals(ResourceType.MATRIKELNUMMER.toString())) {
+        if (resource.equals(ResourceType.MATRIKEL.toString())) {
             return mapMatrikel(rs, ctx);
         }
         if (resource.equals(ResourceType.NAVNGIVENVEJ.toString())) {
@@ -78,7 +78,7 @@ class DataMapper implements RowMapper<Object> {
         if (resource.equals(ResourceType.POLITIKREDS.toString())) {
             return mapPolitikreds(rs, ctx);
         }
-        if (resource.equals(ResourceType.POSTDISTRIKT.toString())) {
+        if (resource.equals(ResourceType.POSTNUMMER.toString())) {
             return mapPostDistrikt(rs, ctx);
         }
         if (resource.equals(ResourceType.REGION.toString())) {
@@ -117,8 +117,8 @@ class DataMapper implements RowMapper<Object> {
         return data;
     }
 
-    private matrikelnummer mapMatrikel(ResultSet rs, StatementContext ctx) throws SQLException {
-        matrikelnummer data = new matrikelnummer();
+    private matrikel mapMatrikel(ResultSet rs, StatementContext ctx) throws SQLException {
+        matrikel data = new matrikel();
         for (int i = 1; i <= meta.getColumnCount(); i++)
             data.add(meta.getColumnName(i), mapColumn(i, rs));
         return data;
@@ -145,8 +145,8 @@ class DataMapper implements RowMapper<Object> {
         return data;
     }
 
-    private postdistrikt mapPostDistrikt(ResultSet rs, StatementContext ctx) throws SQLException {
-        postdistrikt data = new postdistrikt();
+    private postnummer mapPostDistrikt(ResultSet rs, StatementContext ctx) throws SQLException {
+        postnummer data = new postnummer();
         for (int i = 1; i <= meta.getColumnCount(); i++)
             data.add(meta.getColumnName(i), mapColumn(i, rs));
         return data;

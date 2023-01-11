@@ -1,26 +1,26 @@
 Feature: Gsearch errorhandling test
 
   Background:
-    * url url + '/search'
+    * url url + '/postnummer'
 
   Scenario: Empty q input
     Then param q = ''
-    And param resources = 'postdistrikt'
+    
     When method GET
     Then status 400
     And match response ==
     """
     {
         "status": "BAD_REQUEST",
-        "message": "gsearch.q: must not be blank",
+        "message": "getPostnummer.q: must not be blank",
         "errors": [
-            "javax.validation.ConstraintViolationException: gsearch.q: must not be blank"
+            "jakarta.validation.ConstraintViolationException: getPostnummer.q: must not be blank"
         ]
     }
     """
 
   Scenario: Missing q query parameter
-    And param resources = 'postdistrikt'
+    
     When method GET
     Then status 400
     And match response ==
@@ -34,56 +34,24 @@ Feature: Gsearch errorhandling test
     }
     """
 
-  Scenario: Missing resources query parameter
-    Then param q = 's'
-    When method GET
-    Then status 400
-    And match response ==
-    """
-    {
-        "status": "BAD_REQUEST",
-        "message": "Required request parameter 'resources' for method parameter type String is not present",
-        "errors": [
-            "org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'resources' for method parameter type String is not present"
-        ]
-    }
-    """
-
-  Scenario: Empty resources input
-    Then param q = 's'
-    And param resources = ''
-    When method GET
-    Then status 400
-    And match response ==
-    """
-    {
-        "status": "BAD_REQUEST",
-        "message": "gsearch.resources: must not be blank",
-        "errors": [
-            "javax.validation.ConstraintViolationException: gsearch.resources: must not be blank"
-        ]
-    }
-    """
-
   Scenario: Not exiting resource
+    Then url url + '/postnummer1'
     Then param q = 's'
-    And param resources = 'postdistrikt1'
     When method GET
-    Then status 400
+    Then status 404
     And match response ==
     """
     {
-        "status": "BAD_REQUEST",
-        "message": "Resource postdistrikt1 does not exist",
-        "errors": [
-            "java.lang.IllegalArgumentException: Resource postdistrikt1 does not exist"
-        ]
+        "timestamp":#number,
+        "status":404,
+        "error":"Not Found",
+        "path":"/postnummer1"
     }
     """
 
   Scenario: Exceed maximum limit
     Then param q = 's'
-    And param resources = 'postdistrikt'
+    
     And param limit = '101'
     When method GET
     Then status 400
@@ -91,9 +59,9 @@ Feature: Gsearch errorhandling test
     """
     {
         "status": "BAD_REQUEST",
-        "message": "gsearch.limit: must be less than or equal to 100",
+        "message": "getPostnummer.limit: must be less than or equal to 100",
         "errors": [
-            "javax.validation.ConstraintViolationException: gsearch.limit: must be less than or equal to 100"
+            "jakarta.validation.ConstraintViolationException: getPostnummer.limit: must be less than or equal to 100"
         ]
     }
     """

@@ -1,11 +1,11 @@
 Feature: Gsearch sogn test
 
     Background:
-    * url url + '/search'
+    * url url + '/sogn'
 
     Scenario: sogn
         Then param q = 'lund'
-        And param resources = 'sogn'
+        
         When method GET
         Then status 200
         And match response == '#[10]'
@@ -13,7 +13,7 @@ Feature: Gsearch sogn test
 
     Scenario: Response matches columns database
         Then param q = 'Birkerød'
-        And param resources = 'sogn'
+        
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -34,7 +34,7 @@ Feature: Gsearch sogn test
 
     Scenario: Partial string
         Then param q = 'All'
-        And param resources = 'sogn'
+        
         When method GET
         Then status 200
         And match response == '#[10]'
@@ -42,14 +42,14 @@ Feature: Gsearch sogn test
 
     Scenario: Search is case insensitive
         Then param q = 'Birkerød'
-        And param resources = 'sogn'
+        
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
         Then param q = 'birkerød'
-        And param resources = 'sogn'
+        
         When method GET
         Then status 200
         And def secondresponse = response
@@ -58,7 +58,7 @@ Feature: Gsearch sogn test
         Then match firstresponse == secondresponse
 
         Then param q = 'BIRKERØD'
-        And param resources = 'sogn'
+        
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -68,14 +68,14 @@ Feature: Gsearch sogn test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        And param resources = 'sogn'
+        
         When method GET
         Then status 200
         And match response == '#[0]'
 
     Scenario: Test maximum limit and one character search
         Then param q = 's'
-        And param resources = 'sogn'
+        
         And param limit = '100'
         When method GET
         Then status 200

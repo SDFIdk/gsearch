@@ -1,11 +1,11 @@
 Feature: Gsearch matrikel test
 
   Background:
-    * url url + '/search'
+    * url url + '/matrikel'
 
   Scenario: Response matches columns database
     Then param q = '2000154'
-    And param resources = 'matrikelnummer'
+    
     When method GET
     Then status 200
     And match response == '#[8]'
@@ -27,21 +27,21 @@ Feature: Gsearch matrikel test
 
   Scenario: Partial string
     Then param q = 'damhus'
-    And param resources = 'matrikelnummer'
+    
     When method GET
     Then status 200
     And match response == '#[8]'
 
   Scenario: Search is case insensitive
     Then param q = 'Damhussøen'
-    And param resources = 'matrikelnummer'
+    
     When method GET
     Then status 200
     And def firstresponse = response
     And match firstresponse == '#[8]'
 
     Then param q = 'damhussøen'
-    And param resources = 'matrikelnummer'
+    
     When method GET
     Then status 200
     And def secondresponse = response
@@ -50,7 +50,7 @@ Feature: Gsearch matrikel test
     Then match firstresponse == secondresponse
 
     Then param q = 'DAMHUSSØEN'
-    And param resources = 'matrikelnummer'
+    
     When method GET
     Then status 200
     And def thirdresponse = response
@@ -60,7 +60,7 @@ Feature: Gsearch matrikel test
 
   Scenario: Combine search using ejerlavsnavn og matrikelnummer
     Then param q = '2000154 7000a'
-    And param resources = 'matrikelnummer'
+    
     When method GET
     Then status 200
     And match response == '#[1]'
@@ -69,7 +69,7 @@ Feature: Gsearch matrikel test
 
   Scenario: Combine search using ejerlavskode and ejerlavsnavn
     Then param q = '2000154 utterslev'
-    And param resources = 'matrikelnummer'
+    
     When method GET
     Then status 200
     And match response == '#[10]'
@@ -77,14 +77,14 @@ Feature: Gsearch matrikel test
 
   Scenario: Do not have a match on '.'
     Then param q = '.'
-    And param resources = 'matrikelnummer'
+    
     When method GET
     Then status 200
     And match response == '#[0]'
 
   Scenario: Test maximum limit and one character search
     Then param q = 's'
-    And param resources = 'matrikelnummer'
+    
     And param limit = '100'
     When method GET
     Then status 200
