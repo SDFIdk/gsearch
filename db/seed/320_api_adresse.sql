@@ -223,7 +223,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input), ' ')) t
     )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':* && ') || ':*'
+        string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
     FROM
         tokens
     INTO query_string;
@@ -236,7 +236,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input), ' ')) t
     )
     SELECT
-        string_agg(t, ':* && ') || ':*'
+        string_agg(t, ':* & ') || ':*'
     FROM
         tokens
     INTO plain_query_string;
