@@ -29,7 +29,7 @@ COMMENT ON COLUMN api.matrikel.centroid_x IS 'Centroide X for matriklens geometr
 
 COMMENT ON COLUMN api.matrikel.centroid_y IS 'Centroide Y for matriklens geometri';
 
-COMMENT ON COLUMN api.matrikel.geometri IS 'Geometri i valgt koordinatsystem';
+COMMENT ON COLUMN api.matrikel.geometri IS 'Geometri i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.matrikel;
 

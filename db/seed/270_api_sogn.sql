@@ -23,7 +23,7 @@ COMMENT ON COLUMN api.sogn.sognenavn IS 'Navn på sogn';
 
 COMMENT ON COLUMN api.sogn.visningstekst IS 'Præsentationsform for et sogn';
 
-COMMENT ON COLUMN api.sogn.geometri IS 'Geometri i valgt koordinatsystem';
+COMMENT ON COLUMN api.sogn.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.sogn.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 

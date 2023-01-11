@@ -23,7 +23,7 @@ COMMENT ON COLUMN api.region.regionsnavn IS 'Navn på region';
 
 COMMENT ON COLUMN api.region.visningstekst IS 'Præsentationsform for en region';
 
-COMMENT ON COLUMN api.region.geometri IS 'Geometri i valgt koordinatsystem';
+COMMENT ON COLUMN api.region.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.region.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
