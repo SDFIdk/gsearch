@@ -26,7 +26,7 @@ COMMENT ON COLUMN api.politikreds.navn IS 'Navn på politikreds';
 
 COMMENT ON COLUMN api.politikreds.myndighedskode IS 'Politikredsens myndighedskode. Er unik for hver politikreds. 4 cifre.';
 
-COMMENT ON COLUMN api.politikreds.geometri IS 'Geometri i valgt koordinatsystem';
+COMMENT ON COLUMN api.politikreds.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.politikreds.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 

@@ -32,7 +32,7 @@ COMMENT ON COLUMN api.opstillingskreds.storkredsnummer IS 'Unik nummer for stork
 
 COMMENT ON COLUMN api.opstillingskreds.storkredsnavn IS 'Storkredsens unikke navn';
 
-COMMENT ON COLUMN api.opstillingskreds.geometri IS 'Geometri i valgt koordinatsystem';
+COMMENT ON COLUMN api.opstillingskreds.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.opstillingskreds.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 

@@ -33,7 +33,7 @@ COMMENT ON COLUMN api.stednavn.stednavn_type IS 'Featuretype på stednavn';
 
 COMMENT ON COLUMN api.stednavn.stednavn_subtype IS 'Topografitype på stednavn';
 
-COMMENT ON COLUMN api.stednavn.geometri IS 'Geometri i valgt koordinatsystem';
+COMMENT ON COLUMN api.stednavn.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.stednavn.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 

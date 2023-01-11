@@ -26,7 +26,7 @@ COMMENT ON COLUMN api.postnummer.visningstekst IS 'Præsentationsform for et pos
 
 COMMENT ON COLUMN api.postnummer.gadepostnummer IS 'Dækker postnummeret kun en gade';
 
-COMMENT ON COLUMN api.postnummer.geometri IS 'Geometri i valgt koordinatsystem';
+COMMENT ON COLUMN api.postnummer.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.postnummer.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
 
