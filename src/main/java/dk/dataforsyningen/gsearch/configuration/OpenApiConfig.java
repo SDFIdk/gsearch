@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -87,7 +87,7 @@ public class OpenApiConfig {
    * @return
    */
   @Bean
-  public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
+  public OpenApiCustomizer customerGlobalHeaderOpenApiCustomizer() {
     logger.info("Generating custom OpenAPI");
     return openApi -> {
       ComposedSchema data = new ComposedSchema();
@@ -113,10 +113,10 @@ public class OpenApiConfig {
    * Sorts the schemas alphabetically
    * https://github.com/springdoc/springdoc-openapi/issues/741
    *
-   * @return OpenApiCustomiser
+   * @return OpenApiCustomizer
    */
   @Bean
-  public OpenApiCustomiser sortSchemasAlphabetically() {
+  public OpenApiCustomizer sortSchemasAlphabetically() {
     return openApi -> {
       Map<String, Schema> schemas = openApi.getComponents().getSchemas();
       openApi.getComponents().setSchemas(new TreeMap<>(schemas));

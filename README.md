@@ -40,3 +40,22 @@ Run image exposed at port 8080 with:
 > docker run --add-host host.docker.internal:host-gateway --env-file dev.env -p 8080:8080 gsearch
 
 NOTE: dev.env specifies environment variables to local database and --add-hosts makes local postgresql instance available inside the container. This is not needed if connecting to an external database.
+
+## Moving from Geosearch to Gsearch
+
+| Geosearch | Gsearch |
+| - | - |
+| adresser | adresse |
+| matrikelnumre | matrikel |
+| matrikelnumre_udgaaet | - |
+| matrikelnumre_incl_udgaaet | - |
+| stednavn_v2 | - |
+| stednavn_v3 | stednavn |
+| kommuner | kommune |
+| opstillingskredse | opstillingskreds |
+| politikredse | politikreds |
+| postdistriker | postnummer |
+| regioner | region |
+| retskredse | retskreds |
+| sogne | sogn |
+

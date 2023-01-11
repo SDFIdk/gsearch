@@ -1,11 +1,11 @@
 Feature: Gsearch politikreds test
 
     Background:
-        * url url + '/politikreds'
+        * url url + '/search'
 
     Scenario: politikreds
         Then param q = 'Nordjylland'
-        
+        And param resources = 'politikreds'
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -27,7 +27,7 @@ Feature: Gsearch politikreds test
 
     Scenario: Partial string
         Then param q = 'nord'
-        
+        And param resources = 'politikreds'
         When method GET
         Then status 200
         And match response == '#[2]'
@@ -35,14 +35,14 @@ Feature: Gsearch politikreds test
 
     Scenario: Search is case insensitive
         Then param q = 'Nordjylland'
-        
+        And param resources = 'politikreds'
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
         Then param q = 'nordjylland'
-        
+        And param resources = 'politikreds'
         When method GET
         Then status 200
         And def secondresponse = response
@@ -51,7 +51,7 @@ Feature: Gsearch politikreds test
         Then match firstresponse == secondresponse
 
         Then param q = 'NORDJYLLAND'
-        
+        And param resources = 'politikreds'
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -61,7 +61,7 @@ Feature: Gsearch politikreds test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        
+        And param resources = 'politikreds'
         When method GET
         Then status 200
         And match response == '#[0]'

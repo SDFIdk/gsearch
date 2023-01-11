@@ -1,11 +1,19 @@
-Feature: Gsearch region test
+Feature: Gsearch sogn test
 
     Background:
-        * url url + '/region'
+    * url url + '/search'
+
+    Scenario: sogn
+        Then param q = 'lund'
+        And param resources = 'sogn'
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+
 
     Scenario: Response matches columns database
-        Then param q = 'hovedstaden'
-        
+        Then param q = 'Birkerød'
+        And param resources = 'sogn'
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -14,34 +22,34 @@ Feature: Gsearch region test
         And match response contains deep
         """
             {
+                "sognenavn": '#string',
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',
-                "regionskode": '#string',
-                "regionsnavn": '#string',
+                "sognekode": '#string',
                 "rang1": '#string',
                 "rang2": '#string'
             }
         """
 
     Scenario: Partial string
-        Then param q = 'region'
-        
+        Then param q = 'All'
+        And param resources = 'sogn'
         When method GET
         Then status 200
-        And match response == '#[5]'
-        And match response.[*].regionsnavn contains deep ['Region Hovedstaden', 'Region Midtjylland', 'Region Nordjylland', 'Region Sjælland', 'Region Syddanmark']
+        And match response == '#[10]'
+        And match response.[*].sognenavn contains deep ['Allinge-Sandvig', 'Allehelgens', 'Aller', 'Allerslev', 'Allerslev', 'Allerup', 'Allested', 'Allesø', 'Alling', 'Bregninge-Bjergsted-Alleshave']
 
     Scenario: Search is case insensitive
-        Then param q = 'Hovedstaden'
-        
+        Then param q = 'Birkerød'
+        And param resources = 'sogn'
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
-        Then param q = 'hovedstaden'
-        
+        Then param q = 'birkerød'
+        And param resources = 'sogn'
         When method GET
         Then status 200
         And def secondresponse = response
@@ -49,8 +57,8 @@ Feature: Gsearch region test
 
         Then match firstresponse == secondresponse
 
-        Then param q = 'HOVEDSTADEN'
-        
+        Then param q = 'BIRKERØD'
+        And param resources = 'sogn'
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -60,7 +68,15 @@ Feature: Gsearch region test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        
+        And param resources = 'sogn'
         When method GET
         Then status 200
         And match response == '#[0]'
+
+    Scenario: Test maximum limit and one character search
+        Then param q = 's'
+        And param resources = 'sogn'
+        And param limit = '100'
+        When method GET
+        Then status 200
+        And match response == '#[100]'
