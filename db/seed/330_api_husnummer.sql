@@ -104,7 +104,7 @@ ALTER TABLE basic.husnummer
 ALTER TABLE basic.husnummer
     ADD COLUMN textsearchable_plain_col tsvector
     GENERATED ALWAYS AS (textsearchable_plain_col_vej ||
-                         setweight(to_tsvector('simple', husnummertekst), 'D'))
+                         setweight(to_tsvector('simple', husnummertekst), 'D') ||
                          setweight(to_tsvector('simple', postnummer), 'D') ||
                          setweight(to_tsvector('simple', postnummernavn), 'D'))
     STORED;
@@ -115,7 +115,7 @@ ALTER TABLE basic.husnummer
 ALTER TABLE basic.husnummer
     ADD COLUMN textsearchable_unaccent_col tsvector
     GENERATED ALWAYS AS (textsearchable_unaccent_col_vej ||
-                         setweight(to_tsvector('simple', husnummertekst), 'D'))
+                         setweight(to_tsvector('simple', husnummertekst), 'D') ||
                          setweight(to_tsvector('simple', postnummer), 'D') ||
                          setweight(to_tsvector('simple', postnummernavn), 'D'))
     STORED;
@@ -126,7 +126,7 @@ ALTER TABLE basic.husnummer
 ALTER TABLE basic.husnummer
     ADD COLUMN textsearchable_phonetic_col tsvector
     GENERATED ALWAYS AS (textsearchable_phonetic_col_vej ||
-                         setweight(to_tsvector('simple', husnummertekst), 'D'))
+                         setweight(to_tsvector('simple', husnummertekst), 'D') ||
                          setweight(to_tsvector('simple', postnummer), 'D') ||
                          setweight(to_tsvector('simple', postnummernavn), 'D'))
     STORED;
