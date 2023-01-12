@@ -119,8 +119,8 @@ ALTER TABLE basic.navngivenvej
 ALTER TABLE basic.navngivenvej
     ADD COLUMN textsearchable_plain_col tsvector
     GENERATED ALWAYS AS (textsearchable_plain_col_vej ||
-                         setweight(to_tsvector('simple', basic.array_to_string(postnumre)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string(postnummernavn)), 'D'))
+                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnumre)), 'D') ||
+                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavn)), 'D'))
     STORED;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
@@ -130,8 +130,8 @@ ALTER TABLE basic.navngivenvej
 ALTER TABLE basic.navngivenvej
     ADD COLUMN textsearchable_unaccent_col tsvector
     GENERATED ALWAYS AS (textsearchable_unaccent_col_vej  ||
-                         setweight(to_tsvector('simple', basic.array_to_string(postnumre)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string(postnummernavn)), 'D'))
+                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnumre)), 'D') ||
+                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavn)), 'D'))
 
     STORED;
 
@@ -142,8 +142,8 @@ ALTER TABLE basic.navngivenvej
 ALTER TABLE basic.navngivenvej
     ADD COLUMN textsearchable_phonetic_col tsvector
     GENERATED ALWAYS AS (textsearchable_phonetic_col_vej ||
-                         setweight(to_tsvector('simple', basic.array_to_string(postnumre)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string(postnummernavn)), 'D'))
+                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnumre)), 'D') ||
+                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavn)), 'D'))
 
     STORED;
 
