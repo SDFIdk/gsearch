@@ -83,9 +83,9 @@ SELECT
     h.postnummer,
     h.postnummernavn,
     h.navngivenvej_id,
-    nv.textsearchable_plain_col AS textsearchable_plain_col_vej,
-    nv.textsearchable_unaccent_col AS textsearchable_unaccent_col_vej,
-    nv.textsearchable_phonetic_col AS textsearchable_phonetic_col_vej,
+    nv.textsearchable_plain_col_vej,
+    nv.textsearchable_unaccent_col_vej,
+    nv.textsearchable_phonetic_col_vej,
     ROW_NUMBER() OVER (PARTITION BY h.navngivenvej_id ORDER BY NULLIF ((substring(h.husnummertekst::text FROM '[0-9]*')), '')::int,
         substring(h.husnummertekst::text FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering,
         st_multi (h.adgangspunkt_geometri) AS adgangspunkt_geometri,
@@ -103,7 +103,10 @@ ALTER TABLE basic.husnummer
 
 ALTER TABLE basic.husnummer
     ADD COLUMN textsearchable_plain_col tsvector
-    GENERATED ALWAYS AS (textsearchable_plain_col_vej || setweight(to_tsvector('simple', husnummertekst), 'D'))
+    GENERATED ALWAYS AS (textsearchable_plain_col_vej ||
+                         setweight(to_tsvector('simple', husnummertekst), 'D') ||
+                         setweight(to_tsvector('simple', postnummer), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavn), 'D'))
     STORED;
 
 ALTER TABLE basic.husnummer
@@ -111,7 +114,10 @@ ALTER TABLE basic.husnummer
 
 ALTER TABLE basic.husnummer
     ADD COLUMN textsearchable_unaccent_col tsvector
-    GENERATED ALWAYS AS (textsearchable_unaccent_col_vej || setweight(to_tsvector('simple', husnummertekst), 'D'))
+    GENERATED ALWAYS AS (textsearchable_unaccent_col_vej ||
+                         setweight(to_tsvector('simple', husnummertekst), 'D') ||
+                         setweight(to_tsvector('simple', postnummer), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavn), 'D'))
     STORED;
 
 ALTER TABLE basic.husnummer
@@ -119,7 +125,10 @@ ALTER TABLE basic.husnummer
 
 ALTER TABLE basic.husnummer
     ADD COLUMN textsearchable_phonetic_col tsvector
-    GENERATED ALWAYS AS (textsearchable_phonetic_col_vej || setweight(to_tsvector('simple', husnummertekst), 'D'))
+    GENERATED ALWAYS AS (textsearchable_phonetic_col_vej ||
+                         setweight(to_tsvector('simple', husnummertekst), 'D') ||
+                         setweight(to_tsvector('simple', postnummer), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavn), 'D'))
     STORED;
 
 
@@ -164,11 +173,7 @@ CREATE OR REPLACE FUNCTION api.husnummer (input_tekst text, filters text, sortop
     AS $function$
 DECLARE
     max_rows integer;
-    input_vejnavn text;
-    input_husnummertekst text := '1=1';
-    vej_query_string text;
-    plain_vej_query_string text;
-    husnummertekst_query_string text;
+    input text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -185,74 +190,39 @@ BEGIN
         input_tekst = '';
     END IF;
 
+
     -- Get vejnavn from input
     SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[1])
-    INTO input_vejnavn;
-
-    -- Get husnummer from input
-    SELECT
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+) ?(.*)'))[2])
-    INTO input_husnummertekst;
+        btrim(input_tekst)
+    INTO input;
 
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
         SELECT
             -- Fjerner husnummer fra input_tekst og splitter op i temp-tabel hver hvert vejnavn-ord i
             -- hver sin raekke.
-            UNNEST(string_to_array(btrim(input_vejnavn), ' ')) t
+            UNNEST(string_to_array(btrim(input), ' ')) t
     )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
+        string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
     FROM
         tokens
-    INTO vej_query_string;
+    INTO query_string;
 
 
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
             -- Splitter op i temp-tabel hver hvert vejnavn-ord i hver sin raekke.
-            UNNEST(string_to_array(btrim(input_vejnavn), ' ')) t
+            UNNEST(string_to_array(btrim(input), ' ')) t
     )
     SELECT
-        string_agg(t, ':* <-> ') || ':*'
+        string_agg(t, ':* & ') || ':*'
     FROM
         tokens
-    INTO plain_vej_query_string;
+    INTO plain_query_string;
 
 
-    WITH tokens AS (
-        SELECT
-            UNNEST(string_to_array(btrim(input_husnummertekst), ' ')) t
-    )
-    SELECT
-        string_agg(t, ' <-> ') || ':*'
-    FROM
-        tokens
-    INTO husnummertekst_query_string;
-
-
-    IF husnummertekst_query_string IS NOT NULL THEN
-        SELECT
-            vej_query_string || ' <-> ' || husnummertekst_query_string
-        INTO query_string;
-    ELSE
-        SELECT
-            vej_query_string
-        INTO query_string;
-    END IF;
-
-
-    IF husnummertekst_query_string IS NOT NULL THEN
-        SELECT
-            plain_vej_query_string || ' <-> ' || husnummertekst_query_string
-        INTO plain_query_string;
-    ELSE
-        SELECT
-            plain_vej_query_string
-        INTO plain_query_string;
-    END IF;
 
 -- Hvis en input_tekst kun indeholder bogstaver og har over 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
