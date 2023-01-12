@@ -85,8 +85,8 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 2)), 'B') ||
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 3)), 'C') ||
                          setweight(to_tsvector('simple', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
-                         setweight(to_tsvector('simple', postnummer), 'D') ||
-                         setweight(to_tsvector('simple', postnummernavn), 'D'))
+                         setweight(to_tsvector('simple', basic.array_to_string(postnumre)), 'D') ||
+                         setweight(to_tsvector('simple', basic.array_to_string(postnummernavn)), 'D'))
     STORED;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
@@ -99,8 +99,8 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 2)), 'B') ||
                          setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 3)), 'C') ||
                          setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
-                         setweight(to_tsvector('simple', postnummer), 'D') ||
-                         setweight(to_tsvector('simple', postnummernavn), 'D'))
+                         setweight(to_tsvector('simple', basic.array_to_string(postnumre)), 'D') ||
+                         setweight(to_tsvector('simple', basic.array_to_string(postnummernavn)), 'D'))
 
     STORED;
 
@@ -114,8 +114,8 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 2), 2)), 'B') ||
                          setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 3), 2)), 'C') ||
                          setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (vejnavn, 4)), 'D') ||
-                         setweight(to_tsvector('simple', postnummer), 'D') ||
-                         setweight(to_tsvector('simple', postnummernavn), 'D'))
+                         setweight(to_tsvector('simple', basic.array_to_string(postnumre)), 'D') ||
+                         setweight(to_tsvector('simple', basic.array_to_string(postnummernavn)), 'D'))
 
     STORED;
 
