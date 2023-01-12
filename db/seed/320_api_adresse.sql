@@ -100,9 +100,9 @@ SELECT
     a.postnummernavn,
     a.kommunekode,
     a.kommunenavn,
-    nv.textsearchable_plain_col AS textsearchable_plain_col_vej,
-    nv.textsearchable_unaccent_col AS textsearchable_unaccent_col_vej,
-    nv.textsearchable_phonetic_col AS textsearchable_phonetic_col_vej,
+    nv.textsearchable_plain_col_vej,
+    nv.textsearchable_unaccent_col_vej,
+    nv.textsearchable_phonetic_col_vej,
     a.navngivenvej_id,
     a.husnummer_sortering,
     ROW_NUMBER() OVER (PARTITION BY a.id ORDER BY CASE lower(a.etagebetegnelse)
