@@ -84,7 +84,9 @@ ALTER TABLE basic.navngivenvej
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', split_part(vejnavn, ' ', 1)), 'A') ||
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 2)), 'B') ||
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 3)), 'C') ||
-                         setweight(to_tsvector('simple', basic.split_and_endsubstring (vejnavn, 4)), 'D'))
+                         setweight(to_tsvector('simple', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
+                         setweight(to_tsvector('simple', postnummer), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavn), 'D'))
     STORED;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
@@ -96,7 +98,10 @@ ALTER TABLE basic.navngivenvej
     GENERATED ALWAYS AS (setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 1)), 'A') ||
                          setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 2)), 'B') ||
                          setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 3)), 'C') ||
-                         setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (vejnavn, 4)), 'D'))
+                         setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
+                         setweight(to_tsvector('simple', postnummer), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavn), 'D'))
+
     STORED;
 
 -- phonetic textsearchable column: christian -> kristian, k
@@ -108,7 +113,10 @@ ALTER TABLE basic.navngivenvej
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 1), 2)), 'A') ||
                          setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 2), 2)), 'B') ||
                          setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 3), 2)), 'C') ||
-                         setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (vejnavn, 4)), 'D'))
+                         setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (vejnavn, 4)), 'D') ||
+                         setweight(to_tsvector('simple', postnummer), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavn), 'D'))
+
     STORED;
 
 CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_plain_col);
@@ -149,7 +157,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input_tekst), ' ')) t
 )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
+        string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
     FROM
         tokens INTO query_string;
     -- build the plain version of the query string for ranking purposes
@@ -158,7 +166,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input_tekst), ' ')) t
 )
     SELECT
-        string_agg(t, ':* <-> ') || ':*'
+        string_agg(t, ':* & ') || ':*'
     FROM
         tokens INTO plain_query_string;
 
