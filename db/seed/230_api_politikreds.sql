@@ -28,7 +28,7 @@ COMMENT ON COLUMN api.politikreds.myndighedskode IS 'Politikredsens myndighedsko
 
 COMMENT ON COLUMN api.politikreds.geometri IS 'Geometri i EPSG:25832';
 
-COMMENT ON COLUMN api.politikreds.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
+COMMENT ON COLUMN api.politikreds.bbox IS 'Geometriens boundingbox i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.politikreds;
 

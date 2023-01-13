@@ -28,7 +28,7 @@ COMMENT ON COLUMN api.retskreds.myndighedskode IS 'Retskredsens myndighedskode. 
 
 COMMENT ON COLUMN api.retskreds.geometri IS 'Geometri i EPSG:25832';
 
-COMMENT ON COLUMN api.retskreds.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
+COMMENT ON COLUMN api.retskreds.bbox IS 'Geometriens boundingbox i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.retskreds;
 

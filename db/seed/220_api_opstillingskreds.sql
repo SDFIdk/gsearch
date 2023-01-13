@@ -34,7 +34,7 @@ COMMENT ON COLUMN api.opstillingskreds.storkredsnavn IS 'Storkredsens unikke nav
 
 COMMENT ON COLUMN api.opstillingskreds.geometri IS 'Geometri i EPSG:25832';
 
-COMMENT ON COLUMN api.opstillingskreds.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
+COMMENT ON COLUMN api.opstillingskreds.bbox IS 'Geometriens boundingbox i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.opstillingskreds;
 

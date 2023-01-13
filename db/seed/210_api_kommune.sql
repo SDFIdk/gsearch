@@ -25,7 +25,7 @@ COMMENT ON COLUMN api.kommune.visningstekst IS 'Præsentationsform for en kommun
 
 COMMENT ON COLUMN api.kommune.geometri IS 'Geometri i EPSG:25832';
 
-COMMENT ON COLUMN api.kommune.bbox IS 'Geometriens boundingbox i valgt koordinatsystem';
+COMMENT ON COLUMN api.kommune.bbox IS 'Geometriens boundingbox i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.kommune;
 
