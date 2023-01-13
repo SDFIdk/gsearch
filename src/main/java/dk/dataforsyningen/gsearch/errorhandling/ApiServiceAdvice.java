@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import org.apache.catalina.connector.ClientAbortException;
 import org.geotools.filter.text.cql2.CQLException;
+import org.jdbi.v3.core.ConnectionException;
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
 import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
@@ -39,48 +40,6 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(ApiServiceAdvice.class);
     private static final String ERROR_STRING = "FEJL!";
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    ResponseEntity<ErrorResponse> handleEmptyResultDataAccessException(
-        EmptyResultDataAccessException exception) {
-        String exceptionCause = getRootCause(exception).toString();
-
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, exception.getLocalizedMessage(), exceptionCause);
-        logger.debug(ERROR_STRING, exception);
-        logger.debug(ERROR_STRING + errorResponse.getErrors());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(UnableToExecuteStatementException.class)
-    ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
-        UnableToExecuteStatementException exception) {
-        String exceptionCause = getRootCause(exception).toString();
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Input invalid");
-        logger.info(ERROR_STRING, exception);
-        logger.info(ERROR_STRING + exceptionCause);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(CQLException.class)
-    ResponseEntity<ErrorResponse> handleCQLException(
-        CQLException exception) {
-        String exceptionCause = getRootCause(exception).toString();
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Input invalid");
-        logger.info(ERROR_STRING, exception);
-        logger.info(ERROR_STRING + exceptionCause);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PSQLException.class)
-    ResponseEntity<ErrorResponse> handlePSQLException(
-        PSQLException exception) {
-        String exceptionCause = getRootCause(exception).toString();
-        ErrorResponse errorResponse =
-            new ErrorResponse(HttpStatus.BAD_REQUEST, exceptionCause);
-        logger.info(ERROR_STRING, exception);
-        logger.info(ERROR_STRING, exceptionCause);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
     /**
      * Indicates that the client closed the connection, so it does not make sense to return af response
      * to the client
@@ -104,6 +63,27 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
 
+    @ExceptionHandler(CQLException.class)
+    ResponseEntity<ErrorResponse> handleCQLException(
+        CQLException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Input invalid");
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    ResponseEntity<ErrorResponse> handleEmptyResultDataAccessException(
+        EmptyResultDataAccessException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, exception.getLocalizedMessage(), exceptionCause);
+        logger.debug(ERROR_STRING, exception);
+        logger.debug(ERROR_STRING + errorResponse.getErrors());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception exception) {
         String exceptionCause = getRootCause(exception).toString();
@@ -113,6 +93,27 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         logger.debug(ERROR_STRING, exception);
         logger.debug(ERROR_STRING + errorResponse.getErrors());
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
+    }
+
+    @ExceptionHandler(UnableToExecuteStatementException.class)
+    ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
+        UnableToExecuteStatementException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Input invalid");
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PSQLException.class)
+    ResponseEntity<ErrorResponse> handlePSQLException(
+        PSQLException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse =
+            new ErrorResponse(HttpStatus.BAD_REQUEST, exceptionCause);
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING, exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     /**
