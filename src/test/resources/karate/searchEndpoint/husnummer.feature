@@ -15,7 +15,7 @@ Feature: Gsearch husnummer test
     {
       "vejkode": '#string',
       "visningstekst": '#string',
-      "adgangspunkt_geometri": '#(geometriSchema)',
+      "geometri": '#(geometriSchema)',
       "husnummertekst": '#string',
       "vejnavn": '#string',
       "kommunekode": '#string',

@@ -15,7 +15,7 @@ Feature: Gsearch adresse test
         {
           "vejkode": '#string',
           "etagebetegnelse": '#string',
-          "adgangspunkt_geometri": '#(geometriSchema)',
+          "geometri": '#(geometriSchema)',
           "husnummer": '#string',
           "vejnavn": '#string',
           "kommunekode": '#string',
