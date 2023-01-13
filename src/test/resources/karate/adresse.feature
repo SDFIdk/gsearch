@@ -5,7 +5,7 @@ Feature: Gsearch adresse test
 
     Scenario: Response matches columns database
         Then param q = 'kocksvej'
-        
+
         When method GET
         Then status 200
         And match response == '#[10]'
@@ -15,7 +15,7 @@ Feature: Gsearch adresse test
         {
           "vejkode": '#string',
           "etagebetegnelse": '#string',
-          "adgangspunkt_geometri": '#(geometriSchema)',
+          "geometri": '#(geometriSchema)',
           "husnummer": '#string',
           "vejnavn": '#string',
           "kommunekode": '#string',
@@ -33,20 +33,20 @@ Feature: Gsearch adresse test
 
     Scenario: Partial string
         Then param q = 'kocks'
-        
+
         When method GET
         Then status 200
         And match response == '#[10]'
 
     Scenario: Search is case insensitive
         Then param q = 'Kocksvej'
-        
+
         When method GET
         Then status 200
         And match response == '#[10]'
 
         Then param q = 'kocksvej'
-        
+
         When method GET
         Then status 200
         And def secondresponse = response
@@ -55,7 +55,7 @@ Feature: Gsearch adresse test
         Then match response == secondresponse
 
         Then param q = 'KOCKSVEJ'
-        
+
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -65,7 +65,7 @@ Feature: Gsearch adresse test
 
     Scenario: Like search on hc andersen returns H.C. Andersen and H.C. Andersens
         Then param q = 'hc andersen'
-        
+
         When method GET
         Then status 200
         And match response == '#[10]'
@@ -74,7 +74,7 @@ Feature: Gsearch adresse test
 
     Scenario: Search steetname with number
         Then param q = 'kocksvej 1'
-        
+
         When method GET
         Then status 200
         And match response == '#[10]'
@@ -82,7 +82,7 @@ Feature: Gsearch adresse test
 
     Scenario: Search steetname with number and letter
         Then param q = 'kocksvej 1C'
-        
+
         When method GET
         Then status 200
         And match response == '#[2]'
@@ -90,14 +90,14 @@ Feature: Gsearch adresse test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        
+
         When method GET
         Then status 200
         And match response == '#[0]'
 
     Scenario: Test maximum limit and one character search
         Then param q = 's'
-        
+
         And param limit = '100'
         When method GET
         Then status 200
@@ -105,14 +105,14 @@ Feature: Gsearch adresse test
 
     Scenario: Test that upper and lower case gives the same result
         Then param q = 'Ø'
-        
+
         And param limit = '10'
         When method GET
         Then status 200
         And match response == '#[10]'
 
         Then param q = 'ø'
-        
+
         And param limit = '10'
         When method GET
         Then status 200
