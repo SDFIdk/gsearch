@@ -52,6 +52,17 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         logger.info(ERROR_STRING, exceptionCause);
     }
 
+    @ExceptionHandler(ConnectionException.class)
+    ResponseEntity<ErrorResponse> handleConnectionException(
+        ConnectionException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Connection issues");
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     ResponseEntity<ErrorResponse> handleConstraintViolationException(Exception exception) {
         String exceptionCause = getRootCause(exception).toString();
