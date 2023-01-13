@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.apache.catalina.connector.ClientAbortException;
 import org.geotools.filter.text.cql2.CQLException;
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
 import org.postgresql.util.PSQLException;
@@ -77,6 +78,18 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         logger.info(ERROR_STRING, exception);
         logger.info(ERROR_STRING + errorResponse.getErrors());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Indicates that the client closed the connection, so it does not make sense to return af response
+     * to the client
+     * @param exception
+     */
+    @ExceptionHandler(ClientAbortException.class)
+    public void handleClientAbortException(ClientAbortException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING, exceptionCause);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
