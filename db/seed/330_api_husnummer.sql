@@ -15,7 +15,7 @@ CREATE TYPE api.husnummer AS (
     postnummer text,
     postnummernavn text,
     visningstekst text,
-    adgangspunkt_geometri geometry,
+    geometri geometry,
     vejpunkt_geometri geometry,
     rang1 double precision,
     rang2 double precision
@@ -43,7 +43,7 @@ COMMENT ON COLUMN api.husnummer.visningstekst IS 'Adgangsadresse for et husnumme
 
 COMMENT ON COLUMN api.husnummer.vejpunkt_geometri IS 'Geometri for vejpunkt i EPSG:25832';
 
-COMMENT ON COLUMN api.husnummer.adgangspunkt_geometri IS 'Geometri for adgangspunkt i EPSG:25832';
+COMMENT ON COLUMN api.husnummer.geometri IS 'Geometri for adgangspunkt i EPSG:25832';
 
 CREATE COLLATION IF NOT EXISTS husnummer_collation (provider = icu, locale = 'en@colNumeric=yes');
 
@@ -62,7 +62,7 @@ WITH husnumre AS (
         k.navn AS kommunenavn,
         p.postnr AS postnummer,
         p.navn AS postnummernavn,
-        st_force2d (COALESCE(ap.geometri)) AS adgangspunkt_geometri,
+        st_force2d (COALESCE(ap.geometri)) AS geometri,
         st_force2d (COALESCE(ap2.geometri)) AS vejpunkt_geometri
     FROM
         dar.husnummer h
@@ -88,7 +88,7 @@ SELECT
     nv.textsearchable_phonetic_col_vej,
     ROW_NUMBER() OVER (PARTITION BY h.navngivenvej_id ORDER BY NULLIF ((substring(h.husnummertekst::text FROM '[0-9]*')), '')::int,
         substring(h.husnummertekst::text FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering,
-        st_multi (h.adgangspunkt_geometri) AS adgangspunkt_geometri,
+        st_multi (h.geometri) AS geometri,
     st_multi (h.vejpunkt_geometri) AS vejpunkt_geometri
 INTO basic.husnummer
 FROM
@@ -260,7 +260,7 @@ BEGIN
                 postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
-                adgangspunkt_geometri,
+                geometri,
                 0::float AS rang1,
                 0::float AS rang2
             FROM
@@ -291,7 +291,7 @@ BEGIN
                 postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
-                adgangspunkt_geometri,
+                geometri,
                 basic.combine_rank(
                     $2,
                     $2,
