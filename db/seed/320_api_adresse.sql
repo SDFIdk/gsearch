@@ -129,8 +129,8 @@ SELECT
         ELSE
             NULLIF ((substring(a.doerbetegnelse FROM '^[^0-9]*([0-9]+)')), '')::int
         END) AS sortering,
-        st_multi (geometri) AS geometri,
-    st_multi (vejpunkt_geometri) AS vejpunkt_geometri INTO basic.adresse
+        st_multi (a.geometri) AS geometri,
+    st_multi (a.vejpunkt_geometri) AS vejpunkt_geometri INTO basic.adresse
 FROM
     adresser a
     JOIN basic.navngivenvej nv ON a.navngivenvej_id = nv.id;
