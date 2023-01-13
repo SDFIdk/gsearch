@@ -42,11 +42,11 @@ substring(lower(vejnavn) FROM 1 FOR a)
     WITH a AS (SELECT generate_series(1,3) a)
 INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     SELECT
-    'matrikelnummer',
+    'matrikel',
     substring(lower(ejerlavsnavn) FROM 1 FOR a),
     count(*)
     FROM
-    basic.matrikelnummer am
+    basic.matrikel am
     CROSS JOIN a
     GROUP BY
 substring(lower(ejerlavsnavn) FROM 1 FOR a)

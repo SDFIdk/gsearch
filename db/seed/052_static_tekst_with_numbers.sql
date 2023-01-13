@@ -26,7 +26,7 @@ WHERE vejnavn ~ '\d';
 
 INSERT
 INTO basic.tekst_med_tal (ressource, tekstelement)
-SELECT DISTINCT 'matrikelnummer',
+SELECT DISTINCT 'matrikel',
                 vejnavn
 FROM basic.adresse am
 WHERE vejnavn ~ '\d';
