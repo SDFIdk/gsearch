@@ -74,9 +74,10 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     ResponseEntity<ErrorResponse> handlePSQLException(
         PSQLException exception) {
         String exceptionCause = getRootCause(exception).toString();
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
+        ErrorResponse errorResponse =
+            new ErrorResponse(HttpStatus.BAD_REQUEST, exceptionCause);
         logger.info(ERROR_STRING, exception);
-        logger.info(ERROR_STRING + errorResponse.getErrors());
+        logger.info(ERROR_STRING, exceptionCause);
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
