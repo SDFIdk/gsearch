@@ -41,9 +41,9 @@ COMMENT ON COLUMN api.husnummer.postnummernavn IS 'Postdistrikt for et husnummer
 
 COMMENT ON COLUMN api.husnummer.visningstekst IS 'Adgangsadresse for et husnummer';
 
-COMMENT ON COLUMN api.husnummer.vejpunkt_geometri IS 'Geometri for vejpunkt i valgt koordinatsystem';
+COMMENT ON COLUMN api.husnummer.vejpunkt_geometri IS 'Geometri for vejpunkt i EPSG:25832';
 
-COMMENT ON COLUMN api.husnummer.adgangspunkt_geometri IS 'Geometri for adgangspunkt i valgt koordinatsystem';
+COMMENT ON COLUMN api.husnummer.adgangspunkt_geometri IS 'Geometri for adgangspunkt i EPSG:25832';
 
 CREATE COLLATION IF NOT EXISTS husnummer_collation (provider = icu, locale = 'en@colNumeric=yes');
 

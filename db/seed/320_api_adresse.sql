@@ -45,9 +45,9 @@ COMMENT ON COLUMN api.adresse.postnummernavn IS 'Postdistrikt på adresse';
 
 COMMENT ON COLUMN api.adresse.visningstekst IS 'Fulde adresse';
 
-COMMENT ON COLUMN api.adresse.vejpunkt_geometri IS 'Geometri for vejpunkt i valgt koordinatsystem';
+COMMENT ON COLUMN api.adresse.vejpunkt_geometri IS 'Geometri for vejpunkt i EPSG:25832';
 
-COMMENT ON COLUMN api.adresse.adgangspunkt_geometri IS 'Geometri for adgangspunkt i valgt koordinatsystem';
+COMMENT ON COLUMN api.adresse.adgangspunkt_geometri IS 'Geometri for adgangspunkt i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.adresse;
 

@@ -29,7 +29,7 @@ COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer for navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.postnummernavne IS 'Alle postnummernavne den navngiven vej befinder sig i';
 
-COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej. Kan enten være en linje eller en polygon';
+COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej. Geometri i EPSG:25832. Kan enten være en linje eller en polygon';
 
 COMMENT ON COLUMN api.navngivenvej.bbox IS 'Geometriens boundingbox';
 
