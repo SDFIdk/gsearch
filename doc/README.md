@@ -8,6 +8,8 @@
 
 ## Generelt
 
+**GSearch** opdateres på ugeligt basis, det planlagt at opdatere data på dagligbasis se [issue 92](https://github.com/SDFIdk/gsearch/issues/92) for opdatering.
+
 **GSearch** kan søge i 12 data-ressourcer: adresse, husnummer, kommune, matrikel, navngiven vej, opstillingskreds, politikreds, politidistrikt, region, retskreds, sogn og stednavn.
 
 Datakilder for ressourcerne er de fire autoritative grunddataregistre: Danmarks Adresseregister (DAR), Danmarks Administrative, Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne (DS), som alle udstilles via Datafordeleren.
