@@ -90,6 +90,24 @@ FROM
     matrikelnumre m
     JOIN ejerlavsnavn_dups e ON e.ejerlavsnavn = m.ejerlavsnavn;
 
+
+
+-- Inserts into tekst_forekomst
+    WITH a AS (SELECT generate_series(1,3) a)
+INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
+    SELECT
+    'matrikel',
+    substring(lower(ejerlavsnavn) FROM 1 FOR a),
+    count(*)
+    FROM
+    basic.matrikel am
+    CROSS JOIN a
+    GROUP BY
+substring(lower(ejerlavsnavn) FROM 1 FOR a)
+    HAVING
+    count(1) > 1000;
+
+
 ALTER TABLE basic.matrikel
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 

@@ -135,6 +135,23 @@ FROM
     adresser a
     JOIN basic.navngivenvej nv ON a.navngivenvej_id = nv.id;
 
+
+-- Inserts into tekst_forekomst
+WITH a AS (SELECT generate_series(1,3) a)
+    INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
+    SELECT
+    'adresse',
+    substring(lower(vejnavn) FROM 1 FOR a),
+    count(*)
+    FROM
+    basic.adresse am
+    CROSS JOIN a
+    GROUP BY
+    substring(lower(vejnavn) FROM 1 FOR a)
+    HAVING
+    count(1) > 1000;
+
+
 -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
 -- append husnummer, etage, and dør
 ALTER TABLE basic.adresse
