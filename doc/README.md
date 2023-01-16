@@ -97,7 +97,7 @@ For adresse og husnummer indeholder response geometri i attributterne _'vejpunkt
 
 For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postnummer, region, retskreds, sogn, anvendes den generaliserede _'D500'_ geometri.
 
-**Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder. Output for hver ressource er i øvrigt dokumenteret i swagger-dokumentationen her [en URL svarende til https://gsearch.k8s-test-121.septima.dk/swagger-ui/index.html]
+**Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder. Output for hver ressource er i øvrigt dokumenteret under [schemas](https://docs.dataforsyningen.dk/#gsearch-schemas).
 
 <h2 id="gsearch-eksempler">Eksempler</h2>
 
