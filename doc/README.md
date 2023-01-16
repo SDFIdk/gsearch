@@ -8,6 +8,8 @@
 
 ## Generelt
 
+**GSearch** opdateres på ugeligt basis, det planlagt at opdatere data på dagligbasis se [issue 92](https://github.com/SDFIdk/gsearch/issues/92) for opdatering.
+
 **GSearch** kan søge i 12 data-ressourcer: adresse, husnummer, kommune, matrikel, navngiven vej, opstillingskreds, politikreds, politidistrikt, region, retskreds, sogn og stednavn.
 
 Datakilder for ressourcerne er de fire autoritative grunddataregistre: Danmarks Adresseregister (DAR), Danmarks Administrative, Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne (DS), som alle udstilles via Datafordeleren.
@@ -97,7 +99,7 @@ For adresse og husnummer indeholder response geometri i attributterne _'vejpunkt
 
 For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postnummer, region, retskreds, sogn, anvendes den generaliserede _'D500'_ geometri.
 
-**Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder. Output for hver ressource er i øvrigt dokumenteret i swagger-dokumentationen her [en URL svarende til https://gsearch.k8s-test-121.septima.dk/swagger-ui/index.html]
+**Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder. Output for hver ressource er i øvrigt dokumenteret under [schemas](https://docs.dataforsyningen.dk/#gsearch-schemas).
 
 <h2 id="gsearch-eksempler">Eksempler</h2>
 
