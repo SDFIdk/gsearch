@@ -121,5 +121,21 @@ Feature: Gsearch adresse test
 
         And match response == secondResponse
 
+    Scenario: Search steetname that has numbers in it
+        Then param q = 'Haveforeningen af 10. maj 1918'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[*].vejnavn contains deep ['Haveforeningen af 10. maj 1918']
+
+    Scenario: Search steetname that has numbers in it
+        Then param q = '2.Tværvej'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[*].vejnavn contains deep ['2.Tværvej']
+
 
 
