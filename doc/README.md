@@ -1,18 +1,16 @@
 # GSearch dokumentation
 
-**GSearch** er et REST-api som udstiller en metode til at søge i adresser, matrikelnumre og en række andre geografiske navne. Api'et tilbyder funktionalitet, som kan implementeres i en brugerapplikation i form af et søgefelt med autocomplete/typeahead funktion.
-
-**GSearch** har i princippet samme funktionalitet og virkemåde som SDFI's nuværende søgekomponent, _GeoSearch_, men med en række forbedringer, bl.a. i muligheden af at sætte filtre, der kan fokusere og dermed optimere søgningen.
+**GSearch** er et REST-api som udstiller en metode til at søge i adresser, matrikelnumre og Danmarks administrative geografiske inddeling og danske stednavne. Api'et tilbyder funktionalitet, som kan implementeres i en brugerapplikation i form af et søgefelt med autocomplete/typeahead funktion.
 
 **GSearch** tekstsøgning håndterer typiske stave- og skrivevarianter og fonetiske ligheder i de navne der søges i, som fx Ågade/Aagade, Gl. Byvej/Gammel Byvej, Vester/Vestre, Ringkøbing/Ringkjøbing, Kathrine/Cathrine o.l.
 
 ## Generelt
 
-**GSearch** opdateres på ugeligt basis, det planlagt at opdatere data på dagligbasis se [issue 92](https://github.com/SDFIdk/gsearch/issues/92) for opdatering.
+**GSearch** opdateres på ugenligt basis, det planlagt at opdatere data på dagligbasis se [issue 92](https://github.com/SDFIdk/gsearch/issues/92) for opdatering. Bemærk særligt at data fra DAR ikke har samme høje opdateringfrekvens som i andre sammenhænge.
 
-**GSearch** kan søge i 12 data-ressourcer: adresse, husnummer, kommune, matrikel, navngiven vej, opstillingskreds, politikreds, politidistrikt, region, retskreds, sogn og stednavn.
+**GSearch** kan søge i  de resourcer listet nedenfor.
 
-Datakilder for ressourcerne er de fire autoritative grunddataregistre: Danmarks Adresseregister (DAR), Danmarks Administrative, Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne (DS), som alle udstilles via Datafordeleren.
+Datakilder for ressourcerne er de fire autoritative grunddataregistre: Danmarks Adresseregister (DAR), Danmarks Administrative, Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne, som udstilles via Datafordeler.dk.
 
 I hver ressource søges der efter bedst mulig match i et eller flere felter/attributter som følger:
 
@@ -21,13 +19,13 @@ I hver ressource søges der efter bedst mulig match i et eller flere felter/attr
 * Kommune: Der søges i DAGI kommuneinddeling
 * Matrikel: Der søges i MAT matrikelnummer
 * Navngiven vej: Der søges i DAR navngivenvej og postnummer
-* Opstillingskreds: Der DAGI opstillingskreds
+* Opstillingskreds: Der søges i DAGI opstillingskreds
 * Politikreds: Der søges i DAGI politikreds
 * Postnummer: Der søges i DAGI postnummerinddeling
-* Region: Der søges i regionsinddeling
+* Region: Der søges i DAGI regionsinddeling
 * Retskreds: Der søges i DAGI retskreds
 * Sogn: Der søges i DAGI sogneinddeling
-* Stednavn: Der søges i stednavneregisteret på tværs af alle stednavne
+* Stednavn: Der søges i danske stednavne
 
 ## Request syntax
 **URL** til GSearch er `https://api.dataforsyningen.dk/rest/gsearch/v1.0/search`
@@ -62,7 +60,7 @@ Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open 
 
 Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx _'bbox'_ og _'geometri'_.
 
-**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så `'` fx encodes til `%27` og at udtrykken er defineret som tekst.
+**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så `'` fx encodes til `%27` og at udtrykket er defineret som tekst.
 
 **NB** Attributter i retursvaret, der udgør et array, kan ikke benyttes som filter. Det gælder fx attributten _'postnummer'_ i ressourcen _'navngivenvej'_.
 
@@ -78,7 +76,7 @@ Brug af geometri som filter vil være relevant når man ønsker at begrænse sø
 
 Det spatiale referencesystem i et geometrifilter skal angives som _'SRID=25832'_.
 
-Adresser og husnumre har ikke geometri i _'bbox'_ eller _'geometri'_, Geometri findes hér i _'vejpunkt_geometri'_ og _'adgangspunkt_geometri'_, som derfor kan anvendes i et geografisk filter.
+Adresser og husnumre har ikke geometri i _'bbox'_, de har dog en ekstra _'vejpunkt_geometri'_ udover _'geometri'_, som begge kan anvendes i et geografisk filter.
 
 _Eksempel_ på filter med geometri for stednavne inden for et område i Sønderjylland
 
@@ -95,9 +93,9 @@ Resultatet af en forespørgsel indeholder de forekomster, som matcher forespørg
 
 **Objektgeometri:** Objektgeometri er inkluderet i response som GeoJSON i referencesystem EPSG:25832 (ETRS89 UTM Zone 32).
 
-For adresse og husnummer indeholder response geometri i attributterne _'vejpunkt_geometri'_ og _'adgangspunkt_geometri'_. Øvrige data-ressourcer har to sæt geometri: _'bbox'_, der er en beregnet bounding box, og _'geometri'_ der er basisregisterets objektgeometri.
+For adresse og husnummer indeholder response geometri i attributterne _'vejpunkt_geometri'_ og _'geometri'_. Øvrige data-ressourcer har to sæt geometri: _'bbox'_, der er en beregnet bounding box, og _'geometri'_ der er basisregisterets objektgeometri.
 
-For DAGI-objekterne, dvs. kommune, kommune, opstillingskreds, politikreds, postnummer, region, retskreds, sogn, anvendes den generaliserede _'D500'_ geometri.
+For DAGI-objekterne; Postnummer bliver returneret i skala 1:10.000 (referenceskala). Kommune, opstillingskreds, politikreds, region, retskreds, sogn returneres i skala 1:500.000 (generaliseret version).
 
 **Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder. Output for hver ressource er i øvrigt dokumenteret under [schemas](https://docs.dataforsyningen.dk/#gsearch-schemas).
 
