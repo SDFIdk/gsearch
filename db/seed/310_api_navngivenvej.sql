@@ -62,6 +62,23 @@ GROUP BY
     v.id,
     v.vejnavn;
 
+
+-- Inserts into the tekst_forekomst table
+    WITH a AS (SELECT generate_series(1,3) a)
+INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
+    SELECT
+    'navngivenvej',
+    substring(lower(vejnavn) FROM 1 FOR a),
+    count(*)
+    FROM
+    basic.navngivenvej am
+    CROSS JOIN a
+    GROUP BY
+substring(lower(vejnavn) FROM 1 FOR a)
+    HAVING
+    count(1) > 1000;
+
+
 -- textsearchable column using predefined custom config consisting of a collection of FTS dictionaries - see 012_init_configuration.sql
 -- use either this or one below.
 -- ALTER TABLE api.navngivenvej DROP COLUMN IF EXISTS textsearchable_index_col;

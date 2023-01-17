@@ -135,6 +135,22 @@ GROUP BY
     type,
     subtype;
 
+
+-- Inserts into tekst_forekomst
+    WITH a AS (SELECT generate_series(1,3) a)
+INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
+    SELECT
+    'stednavn',
+    substring(lower(skrivemaade) FROM 1 FOR a),
+    count(*)
+    FROM
+    basic.stednavn am
+    CROSS JOIN a
+    GROUP BY
+    substring(lower(skrivemaade) FROM 1 FOR a)
+    HAVING
+    count(1) > 1000;
+
 ALTER TABLE basic.stednavn
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 

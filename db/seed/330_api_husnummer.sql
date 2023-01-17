@@ -95,8 +95,24 @@ FROM
     husnumre h
     JOIN basic.navngivenvej nv ON h.navngivenvej_id = nv.id;
 
+
+-- Inserts into tekst_forekomst
+    WITH a AS (SELECT generate_series(1,3) a)
+INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
+    SELECT
+    'husnummer',
+    substring(lower(vejnavn) FROM 1 FOR a),
+    count(*)
+    FROM
+    basic.husnummer am
+    CROSS JOIN a
+    GROUP BY
+substring(lower(vejnavn) FROM 1 FOR a)
+    HAVING
+    count(1) > 1000;
 ALTER TABLE basic.husnummer
     ALTER COLUMN husnummertekst TYPE TEXT COLLATE husnummer_collation;
+
 
 ALTER TABLE basic.husnummer
     DROP COLUMN IF EXISTS textsearchable_plain_col;
