@@ -12,9 +12,7 @@ CREATE TYPE api.navngivenvej AS (
     postnummer text,
     postnummernavne text,
     geometri geometry,
-    bbox geometry,
-    rang1 double precision,
-    rang2 double precision
+    bbox geometry
 );
 
 COMMENT ON TYPE api.navngivenvej IS 'Navngivenvej';
@@ -65,7 +63,7 @@ GROUP BY
 
 -- Inserts into the tekst_forekomst table
     WITH a AS (SELECT generate_series(1,3) a)
-INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
+    INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     SELECT
     'navngivenvej',
     substring(lower(vejnavn) FROM 1 FOR a),
@@ -74,9 +72,10 @@ INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     basic.navngivenvej am
     CROSS JOIN a
     GROUP BY
-substring(lower(vejnavn) FROM 1 FOR a)
+    substring(lower(vejnavn) FROM 1 FOR a)
     HAVING
-    count(1) > 1000;
+    count(1) > 1000
+    ON CONFLICT DO NOTHING;
 
 
 -- textsearchable column using predefined custom config consisting of a collection of FTS dictionaries - see 012_init_configuration.sql
@@ -246,33 +245,30 @@ BEGIN
         WHERE
             ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
         stmt = format(E'SELECT
-            id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavne, '',''), geometri, bbox,
-            0::float AS rang1,
-            0::float AS rang2
+                id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavne, '',''), geometri, bbox
             FROM
-            basic.navngivenvej
+                basic.navngivenvej
             WHERE
-            lower(vejnavn) >= lower(''%s'') AND lower(vejnavn) <= lower(''%s'') || ''å''
+                lower(vejnavn) >= lower(''%s'') AND lower(vejnavn) <= lower(''%s'') || ''å''
             ORDER BY
-            lower(vejnavn)
+                lower(vejnavn)
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE '%', stmt;
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
     ELSE
         stmt = format(E'SELECT
-            id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavne, '',''), geometri, bbox,
-            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rang1,
-            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rang2
+                id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavne, '',''), geometri, bbox
             FROM
-            basic.navngivenvej
+                basic.navngivenvej
             WHERE (
                 textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-            rang1 desc, rang2 desc,
-            vejnavn
+                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
+                ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
+                vejnavn
             LIMIT $3;', filters);
         --RAISE NOTICE '%', stmt;
         RETURN QUERY EXECUTE stmt

@@ -16,9 +16,7 @@ CREATE TYPE api.husnummer AS (
     postnummernavn text,
     visningstekst text,
     geometri geometry,
-    vejpunkt_geometri geometry,
-    rang1 double precision,
-    rang2 double precision
+    vejpunkt_geometri geometry
 );
 
 COMMENT ON TYPE api.husnummer IS 'Husnummer';
@@ -109,7 +107,9 @@ INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     GROUP BY
 substring(lower(vejnavn) FROM 1 FOR a)
     HAVING
-    count(1) > 1000;
+    count(1) > 1000
+    ON CONFLICT DO NOTHING;
+
 ALTER TABLE basic.husnummer
     ALTER COLUMN husnummertekst TYPE TEXT COLLATE husnummer_collation;
 
@@ -276,9 +276,7 @@ BEGIN
                 postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
-                geometri,
-                0::float AS rang1,
-                0::float AS rang2
+                geometri
             FROM
                 basic.husnummer
             WHERE
@@ -307,19 +305,7 @@ BEGIN
                 postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
-                geometri,
-                basic.combine_rank(
-                    $2,
-                    $2,
-                    textsearchable_plain_col,
-                    textsearchable_unaccent_col,
-                    ''simple''::regconfig,
-                    ''basic.septima_fts_config''::regconfig
-                ) AS rang1,
-                ts_rank_cd(
-                    textsearchable_phonetic_col,
-                    to_tsquery(''simple'',$1)
-                )::double precision AS rang2
+                geometri
             FROM
                 basic.husnummer
             WHERE
@@ -329,8 +315,18 @@ BEGIN
                 %s
             ORDER BY
                 husnummertekst,
-                rang1 desc,
-                rang2 desc,
+                basic.combine_rank(
+                    $2,
+                    $2,
+                    textsearchable_plain_col,
+                    textsearchable_unaccent_col,
+                    ''simple''::regconfig,
+                    ''basic.septima_fts_config''::regconfig
+                ) desc,
+                ts_rank_cd(
+                    textsearchable_phonetic_col,
+                    to_tsquery(''simple'',$1)
+                )::double precision desc,
                 visningstekst
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt

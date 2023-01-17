@@ -13,9 +13,7 @@ CREATE TYPE api.opstillingskreds AS (
     storkredsnummer text,
     storkredsnavn text,
     geometri geometry,
-    bbox geometry,
-    rang1 double precision,
-    rang2 double precision
+    bbox geometry
 );
 
 COMMENT ON TYPE api.opstillingskreds IS 'Opstillingskreds';
@@ -152,19 +150,18 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            opstillingskredsnummer::text, opstillingskredsnavn::text, visningstekst,
-            valgkredsnummer::text, storkredsnummer::text, storkredsnavn::text, geometri, bbox::geometry,
-            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rang1,
-            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rang2
+                opstillingskredsnummer::text, opstillingskredsnavn::text, visningstekst,
+                valgkredsnummer::text, storkredsnummer::text, storkredsnavn::text, geometri, bbox::geometry
             FROM
-            basic.opstillingskreds
+                basic.opstillingskreds
             WHERE (
                 textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-            rang1 desc, rang2 desc,
-            opstillingskredsnavn
+                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
+                ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
+                opstillingskredsnavn
             LIMIT $3;', filters);
     RETURN QUERY EXECUTE stmt
     USING query_string, plain_query_string, rowlimit;

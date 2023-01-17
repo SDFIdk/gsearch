@@ -16,9 +16,7 @@ CREATE TYPE api.adresse AS (
     postnummernavn text,
     visningstekst text,
     geometri geometry,
-    vejpunkt_geometri geometry,
-    rang1 double precision,
-    rang2 double precision
+    vejpunkt_geometri geometry
 );
 
 COMMENT ON TYPE api.adresse IS 'Adresse';
@@ -149,7 +147,8 @@ WITH a AS (SELECT generate_series(1,3) a)
     GROUP BY
     substring(lower(vejnavn) FROM 1 FOR a)
     HAVING
-    count(1) > 1000;
+    count(1) > 1000
+    ON CONFLICT DO NOTHING;
 
 
 -- USE TEXTSEARCHABLE COLUMNS FROM NAVNGIVENVEJ INSTEAD OF RECOMPUTING THEM
@@ -298,9 +297,7 @@ BEGIN
                 postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
-                geometri,
-                0::float AS rang1,
-                0::float AS rang2
+                geometri
             FROM
                 basic.adresse
             WHERE
@@ -330,19 +327,7 @@ BEGIN
                 postnummernavn::text,
                 visningstekst::text,
                 vejpunkt_geometri,
-                geometri,
-                basic.combine_rank(
-                    $2,
-                    $2,
-                    textsearchable_plain_col,
-                    textsearchable_unaccent_col,
-                    ''simple''::regconfig,
-                    ''basic.septima_fts_config''::regconfig
-                ) AS rang1,
-                ts_rank_cd(
-                    textsearchable_phonetic_col,
-                    to_tsquery(''simple'',$1)
-                )::double precision AS rang2
+                geometri
             FROM
                 basic.adresse
             WHERE (
@@ -351,8 +336,18 @@ BEGIN
             )
             AND %s
             ORDER BY
-                rang1 desc,
-                rang2 desc,
+                basic.combine_rank(
+                    $2,
+                    $2,
+                    textsearchable_plain_col,
+                    textsearchable_unaccent_col,
+                    ''simple''::regconfig,
+                    ''basic.septima_fts_config''::regconfig
+                ) desc,
+                ts_rank_cd(
+                    textsearchable_phonetic_col,
+                    to_tsquery(''simple'',$1)
+                )::double precision desc,
                 lower(vejnavn),
                 navngivenvej_id,
                 husnummer_sortering,

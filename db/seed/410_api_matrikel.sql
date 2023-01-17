@@ -10,9 +10,7 @@ CREATE TYPE api.matrikel AS (
     visningstekst text,
     centroid_x text,
     centroid_y text,
-    geometri geometry,
-    rang1 double precision,
-    rang2 double precision
+    geometri geometry
 );
 
 COMMENT ON TYPE api.matrikel IS 'Matrikelnummer';
@@ -105,7 +103,8 @@ INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     GROUP BY
 substring(lower(ejerlavsnavn) FROM 1 FOR a)
     HAVING
-    count(1) > 1000;
+    count(1) > 1000
+    ON CONFLICT DO NOTHING;
 
 
 ALTER TABLE basic.matrikel
@@ -270,9 +269,7 @@ BEGIN
                 visningstekst::text,
                 ST_X((ST_DUMP(centroide_geometri)).geom)::text,
                 ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
-                geometri,
-                0::float AS rang1,
-                0::float AS rang2
+                geometri
             FROM
                 basic.matrikel
             WHERE
@@ -294,19 +291,7 @@ BEGIN
             visningstekst::text,
             ST_X((ST_DUMP(centroide_geometri)).geom)::text,
             ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
-            geometri,
-            basic.combine_rank(
-                $2,
-                $2,
-                textsearchable_plain_col,
-                textsearchable_unaccent_col,
-                ''simple''::regconfig,
-                ''basic.septima_fts_config''::regconfig
-            ) AS rang1,
-            ts_rank_cd(
-                textsearchable_phonetic_col,
-                to_tsquery(''simple'',$1)
-            )::double precision AS rang2
+            geometri
         FROM
             basic.matrikel
         WHERE (
@@ -315,8 +300,18 @@ BEGIN
         )
         AND %s
         ORDER BY
-            rang1 desc,
-            rang2 desc,
+            basic.combine_rank(
+                $2,
+                $2,
+                textsearchable_plain_col,
+                textsearchable_unaccent_col,
+                ''simple''::regconfig,
+                ''basic.septima_fts_config''::regconfig
+            ) desc,
+            ts_rank_cd(
+                textsearchable_phonetic_col,
+                to_tsquery(''simple'',$1)
+            )::double precision desc,
             matrikelnummer,
             visningstekst
         LIMIT $3  ;', filters); RETURN QUERY EXECUTE stmt

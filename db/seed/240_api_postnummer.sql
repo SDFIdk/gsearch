@@ -11,9 +11,7 @@ CREATE TYPE api.postnummer AS (
     visningstekst text,
     gadepostnummer bool,
     geometri geometry,
-    bbox geometry,
-    rang1 double precision,
-    rang2 double precision
+    bbox geometry
 );
 
 COMMENT ON TYPE api.postnummer IS 'Postdistrikt';
@@ -186,18 +184,17 @@ BEGIN
     --RAISE NOTICE 'query_string: %', query_string; RAISE NOTICE 'plain_query_string: %', plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            postnummer::text, postnummernavn::text, visningstekst, ergadepostnummer, geometri, bbox::geometry,
-            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rang1,
-            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rang2
+            postnummer::text, postnummernavn::text, visningstekst, ergadepostnummer, geometri, bbox::geometry
             FROM
-            basic.postnummer
+                basic.postnummer
             WHERE (
                 textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-            rang1 desc, rang2 desc,
-            postnummernavn
+                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
+                ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
+                postnummernavn
             LIMIT $3
             ;', filters); RETURN QUERY EXECUTE stmt
     USING query_string, plain_query_string, rowlimit;

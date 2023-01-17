@@ -12,9 +12,7 @@ CREATE TYPE api.stednavn AS (
     stednavn_type text,
     stednavn_subtype text,
     geometri geometry,
-    bbox geometry,
-    rang1 double precision,
-    rang2 double precision
+    bbox geometry
 );
 
 COMMENT ON TYPE api.stednavn IS 'Stednavn';
@@ -149,7 +147,8 @@ INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     GROUP BY
     substring(lower(skrivemaade) FROM 1 FOR a)
     HAVING
-    count(1) > 1000;
+    count(1) > 1000
+    ON CONFLICT DO NOTHING;
 
 ALTER TABLE basic.stednavn
     DROP COLUMN IF EXISTS textsearchable_plain_col;
@@ -256,16 +255,14 @@ BEGIN
         WHERE
             ressource = 'stednavn' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
         stmt = format(E'SELECT
-            id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
-            skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
-            0::float AS rang1,
-            0::float AS rang2
+                id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
+                skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox
             FROM
-            basic.stednavn
+                basic.stednavn
             WHERE
-            lower(visningstekst) >= lower(''%s'') AND lower(visningstekst) <= lower(''%s'') || ''å''
+                lower(visningstekst) >= lower(''%s'') AND lower(visningstekst) <= lower(''%s'') || ''å''
             ORDER BY
-            lower(visningstekst)
+                lower(visningstekst)
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE '%', stmt;
         RETURN QUERY EXECUTE stmt
@@ -273,19 +270,18 @@ BEGIN
     ELSE
         -- Execute and return the result
         stmt = format(E'SELECT
-            id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
-            skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox,
-            basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) AS rang1,
-            ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision AS rang2
+                id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
+                skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox
             FROM
-            basic.stednavn
+                basic.stednavn
             WHERE (
                 textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-            rang1 desc, rang2 desc,
-            visningstekst
+                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
+                ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
+                visningstekst
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
