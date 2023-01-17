@@ -14,7 +14,7 @@ CREATE TYPE api.postnummer AS (
     bbox geometry
 );
 
-COMMENT ON TYPE api.postnummer IS 'Postdistrikt';
+COMMENT ON TYPE api.postnummer IS 'Postnummer';
 
 COMMENT ON COLUMN api.postnummer.postnummer IS 'Postnummer';
 
