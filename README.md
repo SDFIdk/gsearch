@@ -43,19 +43,22 @@ NOTE: dev.env specifies environment variables to local database and --add-hosts 
 
 ## Moving from Geosearch to Gsearch
 
+**GSearch** har i princippet samme funktionalitet og virkemåde som SDFI's nuværende søgekomponent, _GeoSearch_, men med en række forbedringer, bl.a. i muligheden af at sætte filtre, der kan fokusere og dermed optimere søgningen.
+
 | Geosearch | Gsearch |
 | - | - |
+| - | husnummer |
+| - | navngivenvej |
 | adresser | adresse |
-| matrikelnumre | matrikel |
-| matrikelnumre_udgaaet | - |
-| matrikelnumre_incl_udgaaet | - |
-| stednavn_v2 | - |
-| stednavn_v3 | stednavn |
 | kommuner | kommune |
+| matrikelnumre | matrikel |
+| matrikelnumre_incl_udgaaet | - |
+| matrikelnumre_udgaaet | - |
 | opstillingskredse | opstillingskreds |
 | politikredse | politikreds |
 | postdistriker | postnummer |
 | regioner | region |
 | retskredse | retskreds |
 | sogne | sogn |
-
+| stednavn_v2 | - |
+| stednavn_v3 | stednavn |
