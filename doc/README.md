@@ -28,9 +28,9 @@ I hver ressource søges der efter bedst mulig match i et eller flere felter/attr
 * Stednavn: Der søges i danske stednavne
 
 ## Request syntax
-**URL** til GSearch er `https://api.dataforsyningen.dk/rest/gsearch/v1.0/search`
+**URL** til GSearch er `https://api.dataforsyningen.dk/rest/gsearch/v1.0/{resource}`
 
-**Søgning:** De centrale inputparametre er _'resources'_, som angiver hvilken data-ressource der skal søges i og _'q'_, der er en tekststreng som angiver hvad der skal søges efter.
+**Søgning:** Den centrale inputparameter er _'q'_, der er en tekststreng som angiver hvad der skal søges efter.
 
 _Eksempel,_ hvor der søges efter navngivne veje med 'lærke'
 
