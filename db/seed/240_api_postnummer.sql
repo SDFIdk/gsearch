@@ -16,7 +16,7 @@ CREATE TYPE api.postnummer AS (
     rang2 double precision
 );
 
-COMMENT ON TYPE api.postnummer IS 'Postdistrikt';
+COMMENT ON TYPE api.postnummer IS 'Postnummer';
 
 COMMENT ON COLUMN api.postnummer.postnummer IS 'Postnummer';
 
