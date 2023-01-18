@@ -35,7 +35,7 @@ COMMENT ON COLUMN api.husnummer.husnummertekst IS 'Husnummertekst evt. med bogst
 
 COMMENT ON COLUMN api.husnummer.postnummer IS 'Postnummer for et husnummer';
 
-COMMENT ON COLUMN api.husnummer.postnummernavn IS 'Postdistrikt for et husnummer';
+COMMENT ON COLUMN api.husnummer.postnummernavn IS 'Postnummernavn for et husnummer';
 
 COMMENT ON COLUMN api.husnummer.visningstekst IS 'Adgangsadresse for et husnummer';
 

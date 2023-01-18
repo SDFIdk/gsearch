@@ -18,9 +18,9 @@ COMMENT ON TYPE api.postnummer IS 'Postnummer';
 
 COMMENT ON COLUMN api.postnummer.postnummer IS 'Postnummer';
 
-COMMENT ON COLUMN api.postnummer.postnummernavn IS 'Navn på postdistrikt';
+COMMENT ON COLUMN api.postnummer.postnummernavn IS 'Navn på postnummernavn';
 
-COMMENT ON COLUMN api.postnummer.visningstekst IS 'Præsentationsform for et postdistrikt';
+COMMENT ON COLUMN api.postnummer.visningstekst IS 'Præsentationsform for et postnummernavn';
 
 COMMENT ON COLUMN api.postnummer.gadepostnummer IS 'Dækker postnummeret kun en gade';
 
@@ -158,7 +158,7 @@ BEGIN
         string_agg(t, ':A | ') || ':A'
     FROM
         tokens INTO postnummer_string;
-    --RAISE NOTICE 'postnummernavn_string: %', postdistrikt_string;
+    --RAISE NOTICE 'postnummernavn_string: %', postnummernavn_string;
     --RAISE NOTICE 'postnummernavn_string_plain: %', postnummernavn_string_plain;
     --RAISE NOTICE 'postnummer_string: %', postnummer_string;
     CASE WHEN postnummernavn_string IS NULL THEN
