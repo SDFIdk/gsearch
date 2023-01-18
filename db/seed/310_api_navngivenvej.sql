@@ -10,7 +10,7 @@ CREATE TYPE api.navngivenvej AS (
     vejnavn text,
     visningstekst text,
     postnummer text,
-    postnummernavne text,
+    postnummernavn text,
     geometri geometry,
     bbox geometry
 );
@@ -23,9 +23,9 @@ COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
 
 COMMENT ON COLUMN api.navngivenvej.visningstekst IS 'Præsentationsform for et navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Alle postnumre for navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.postnummernavne IS 'Alle postnummernavne den navngiven vej befinder sig i';
+COMMENT ON COLUMN api.navngivenvej.postnummernavn IS 'Alle postnummernavne for navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej. Geometri i EPSG:25832. Kan enten være en linje eller en polygon';
 
@@ -38,7 +38,7 @@ WITH vejnavne AS (
         n.id AS id,
         n.vejnavn,
         p.postnr AS postnummer,
-        p.navn AS postnummernavne,
+        p.navn AS postnummernavn,
         n.geometri AS geometri
     FROM
         dar.navngivenvej n
@@ -50,7 +50,7 @@ WITH vejnavne AS (
         v.id,
         coalesce(v.vejnavn, '') AS vejnavn,
     array_agg(DISTINCT v.postnummer) AS postnumre,
-    array_agg(DISTINCT v.postnummernavne) AS postnummernavne,
+    array_agg(DISTINCT v.postnummernavn) AS postnummernavn,
     st_multi (st_union (geometri)) AS geometri,
     st_envelope (st_collect (v.geometri)) AS bbox
 INTO basic.navngivenvej
@@ -139,7 +139,7 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 3)), 'C') ||
                          setweight(to_tsvector('simple', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
                          setweight(to_tsvector('simple', basic.array_to_string_immutable(postnumre)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavne)), 'D'))
+                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavn)), 'D'))
     STORED;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
@@ -153,7 +153,7 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 3)), 'C') ||
                          setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
                          setweight(to_tsvector('simple', basic.array_to_string_immutable(postnumre)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavne)), 'D'))
+                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavn)), 'D'))
 
     STORED;
 
@@ -168,7 +168,7 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 3), 2)), 'C') ||
                          setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (vejnavn, 4)), 'D') ||
                          setweight(to_tsvector('simple', basic.array_to_string_immutable(postnumre)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavne)), 'D'))
+                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavn)), 'D'))
 
     STORED;
 
@@ -245,7 +245,7 @@ BEGIN
         WHERE
             ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
         stmt = format(E'SELECT
-                id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavne, '',''), geometri, bbox
+                id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavn, '',''), geometri, bbox
             FROM
                 basic.navngivenvej
             WHERE
@@ -258,7 +258,7 @@ BEGIN
         USING query_string, plain_query_string, rowlimit;
     ELSE
         stmt = format(E'SELECT
-                id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavne, '',''), geometri, bbox
+                id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavn, '',''), geometri, bbox
             FROM
                 basic.navngivenvej
             WHERE (
