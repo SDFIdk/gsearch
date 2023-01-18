@@ -39,7 +39,7 @@ COMMENT ON COLUMN api.adresse.doerbetegnelse IS 'Dørbetegnelse for adresse';
 
 COMMENT ON COLUMN api.adresse.postnummer IS 'Postnummer på adresse';
 
-COMMENT ON COLUMN api.adresse.postnummernavn IS 'Postdistrikt på adresse';
+COMMENT ON COLUMN api.adresse.postnummernavn IS 'Postnummernavn på adresse';
 
 COMMENT ON COLUMN api.adresse.visningstekst IS 'Fulde adresse';
 
