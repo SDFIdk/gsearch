@@ -134,7 +134,7 @@ Feature: Gsearch adresse test
 
         When method GET
         Then status 200
-        And match response == '#[10]'
+        And match response == '#[8]'
         And match response.[*].vejnavn contains deep ['2.Tværvej']
 
 

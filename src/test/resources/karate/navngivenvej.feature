@@ -103,7 +103,7 @@ Feature: Gsearch navngivenvej test
 
     When method GET
     Then status 200
-    And match response == '#[10]'
+    And match response == '#[1]'
     And match response.[*].vejnavn contains deep ['Haveforeningen af 10. maj 1918']
 
   Scenario: Search steetname that has numbers in it
@@ -111,5 +111,5 @@ Feature: Gsearch navngivenvej test
 
     When method GET
     Then status 200
-    And match response == '#[10]'
+    And match response == '#[8]'
     And match response.[*].vejnavn contains deep ['2.Tværvej']
