@@ -68,9 +68,6 @@ public class OpenApiConfig {
    */
   ComposedSchema getSchema(String resourceType) {
     ComposedSchema schema = new ComposedSchema();
-    ObjectSchema data = new ObjectSchema();
-    data.set$ref("#/components/schemas/Data");
-    schema.setType("object");
     schema.properties(getProperties(resourceType));
     return schema;
   }
@@ -84,19 +81,8 @@ public class OpenApiConfig {
   public OpenApiCustomizer customerGlobalHeaderOpenApiCustomizer() {
     logger.info("Generating custom OpenAPI");
     return openApi -> {
-      ComposedSchema data = new ComposedSchema();
 
-      // Add what datatypes Data can be one of
-      for (String resourceType : resourceTypes.getTypes()) {
-        ObjectSchema ref = new ObjectSchema();
-        ref.set$ref("#/components/schemas/" + resourceType);
-        data.addOneOfItem(ref);
-      }
-
-      // Add data to Data object and as an attribut to all the others schemas
-      openApi.getComponents().getSchemas().get("Data").getProperties().put("data", data);
-
-      // Add all other schemas than Data
+      // Add all schemas
       for (String resourceType : resourceTypes.getTypes()) {
         openApi.getComponents().addSchemas(resourceType, getSchema(resourceType));
       }

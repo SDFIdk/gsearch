@@ -1,7 +1,6 @@
 package dk.dataforsyningen.gsearch.rest;
 
 import dk.dataforsyningen.gsearch.ResourceTypes;
-import dk.dataforsyningen.gsearch.datamodel.Data;
 import dk.dataforsyningen.gsearch.datamodel.adresse;
 import dk.dataforsyningen.gsearch.datamodel.husnummer;
 import dk.dataforsyningen.gsearch.datamodel.kommune;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.StringUtils;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
@@ -93,14 +91,14 @@ public class Controller {
    * Transform request to database query, execute query and return the result
    *
    * @param q
-   * @param resources
+   * @param resource
    * @param filter
    * @param limit
    * @return
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  private <T> List<T> getResult(String q, String resources, Optional<String> filter, Integer limit)
+  private <T> List<T> getResult(String q, String resource, Optional<String> filter, Integer limit)
       throws FilterToSQLException, CQLException {
 
     String where = null;
@@ -114,23 +112,13 @@ public class Controller {
       logger.debug("where: " + where);
     }
 
-    String[] requestedTypes = resources.split(",");
-
-      for (int i = 0; i < requestedTypes.length; i++) {
-          if (!resourceTypes.getTypes().contains(requestedTypes[i])) {
-              throw new IllegalArgumentException(
-                  "Resource " + requestedTypes[i] + " does not exist");
-          }
-      }
-
     // NOTE: Hack correct SRID
     String finalWhere = where == null ? null : where.replaceAll("', null", "', 25832");
     logger.debug("finalWhere: " + finalWhere);
 
     // Map requested types into results via query in parallel
     // Concatenate into single list of results
-    List<T> result = (List<T>) Stream.of(requestedTypes)
-        .parallel()
+    List<T> result = (List<T>) Stream.of(resource)
         .map(resourceType -> getData(q, resourceType, finalWhere, limit))
         .flatMap(List::stream)
         .collect(Collectors.toList());
@@ -417,38 +405,6 @@ public class Controller {
       throws FilterToSQLException, CQLException {
 
     List<stednavn> result = getResult(q, "stednavn", filter, limit);
-    return result;
-  }
-
-  /**
-   * @param q
-   * @param resources
-   * @param filter
-   * @param limit
-   * @return
-   * @throws CQLException
-   * @throws FilterToSQLException
-   */
-  @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(tags = {"Gsearch"})
-  public List<Data> gsearch(
-      @Parameter(description = "Søgestreng")
-      @RequestParam(value = "q", required = true) @NotBlank String q,
-      @Parameter(description = "Er en kommasepareret liste på 'resources' navn. Se Schemas for deltajeret beskrivelse af resourcer.")
-      @RequestParam(value = "resources", required = true) @NotBlank String resources,
-      @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
-      @RequestParam(required = false) Optional<String> filter,
-      @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
-      throws FilterToSQLException, CQLException {
-
-    // filter (CQL) is not compatible with requesting multiple resources at the same time
-    if (StringUtils.containsAny(resources, ",") && filter.isPresent()) {
-      throw new IllegalArgumentException(
-          "Defined query parameter filter and multiple resources is incompatible");
-    }
-
-    List<Data> result = getResult(q, resources, filter, limit);
     return result;
   }
 }
