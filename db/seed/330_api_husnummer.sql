@@ -275,8 +275,8 @@ BEGIN
                 postnummer::text,
                 postnummernavn::text,
                 visningstekst::text,
-                vejpunkt_geometri,
-                geometri
+                geometri,
+                vejpunkt_geometri
             FROM
                 basic.husnummer
             WHERE
@@ -304,8 +304,8 @@ BEGIN
                 postnummer::text,
                 postnummernavn::text,
                 visningstekst::text,
-                vejpunkt_geometri,
-                geometri
+                geometri,
+                vejpunkt_geometri
             FROM
                 basic.husnummer
             WHERE
