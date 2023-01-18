@@ -79,7 +79,7 @@ class DataMapper implements RowMapper<Object> {
             return mapPolitikreds(rs, ctx);
         }
         if (resource.equals(ResourceType.POSTNUMMER.toString())) {
-            return mapPostDistrikt(rs, ctx);
+            return mapPostnummer(rs, ctx);
         }
         if (resource.equals(ResourceType.REGION.toString())) {
             return mapRegion(rs, ctx);
@@ -145,7 +145,7 @@ class DataMapper implements RowMapper<Object> {
         return data;
     }
 
-    private postnummer mapPostDistrikt(ResultSet rs, StatementContext ctx) throws SQLException {
+    private postnummer mapPostnummer(ResultSet rs, StatementContext ctx) throws SQLException {
         postnummer data = new postnummer();
         for (int i = 1; i <= meta.getColumnCount(); i++)
             data.add(meta.getColumnName(i), mapColumn(i, rs));
