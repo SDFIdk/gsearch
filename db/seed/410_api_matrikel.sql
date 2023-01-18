@@ -89,9 +89,8 @@ FROM
     JOIN ejerlavsnavn_dups e ON e.ejerlavsnavn = m.ejerlavsnavn;
 
 
-
 -- Inserts into tekst_forekomst
-    WITH a AS (SELECT generate_series(1,3) a)
+    WITH a AS (SELECT generate_series(1,9) a)
 INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     SELECT
     'matrikel',

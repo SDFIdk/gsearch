@@ -135,7 +135,7 @@ FROM
 
 
 -- Inserts into tekst_forekomst
-WITH a AS (SELECT generate_series(1,3) a)
+WITH a AS (SELECT generate_series(1,9) a)
     INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     SELECT
     'adresse',
@@ -231,8 +231,6 @@ BEGIN
         btrim(input_tekst)
     INTO input;
 
-
-
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
         SELECT
@@ -256,8 +254,6 @@ BEGIN
     FROM
         tokens
     INTO plain_query_string;
-
-
 
 -- Hvis en input_tekst kun indeholder bogstaver og har over 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
