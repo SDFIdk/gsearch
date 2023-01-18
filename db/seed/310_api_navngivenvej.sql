@@ -178,7 +178,7 @@ CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_unaccent_col);
 
 CREATE INDEX ON basic.navngivenvej USING GIN (textsearchable_phonetic_col);
 
-CREATE INDEX ON basic.navngivenvej (lower((vejnavn)::varchar));
+CREATE INDEX ON basic.navngivenvej (lower(vejnavn));
 
 DROP FUNCTION IF EXISTS api.navngivenvej (text, text, int, int);
 

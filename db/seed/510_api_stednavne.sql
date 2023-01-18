@@ -189,7 +189,7 @@ CREATE INDEX ON basic.stednavn USING GIN (textsearchable_unaccent_col);
 
 CREATE INDEX ON basic.stednavn USING GIN (textsearchable_phonetic_col);
 
-CREATE INDEX ON basic.stednavn (lower((visningstekst)::varchar));
+CREATE INDEX ON basic.stednavn (lower(visningstekst));
 
 DROP FUNCTION IF EXISTS api.stednavn (text, text, int, int);
 

@@ -145,7 +145,7 @@ CREATE INDEX ON basic.matrikel USING GIN (textsearchable_phonetic_col);
 
 CREATE INDEX ON basic.matrikel (matrikelnummer, visningstekst);
 
-CREATE INDEX ON basic.matrikel (lower((ejerlavsnavn)::varchar));
+CREATE INDEX ON basic.matrikel (lower(ejerlavsnavn));
 
 DROP FUNCTION IF EXISTS api.matrikel(text, text, int, int);
 
