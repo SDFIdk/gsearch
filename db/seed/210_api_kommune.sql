@@ -50,7 +50,7 @@ SELECT
     st_multi (st_union (k.geometri)) AS geometri,
     st_extent (k.geometri) AS bbox INTO basic.kommune
 FROM
-    kommuner ktz
+    kommuner k
 GROUP BY
     k.kommunekode,
     k.navn,
