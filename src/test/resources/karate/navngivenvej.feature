@@ -5,7 +5,7 @@ Feature: Gsearch navngivenvej test
 
   Scenario: Response matches columns database
     Then param q = 'Kocksvej'
-    
+
     When method GET
     Then status 200
     And match response == '#[9]'
@@ -17,31 +17,29 @@ Feature: Gsearch navngivenvej test
       "postnummer": '#string',
       "visningstekst": '#string',
       "vejnavn": '#string',
-      "postnummernavne": '#string',
+      "postnummernavn": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
-      "id": '#string',
-      "rang1": '#string',
-      "rang2": '#string'
+      "id": '#string'
     }
     """
 
   Scenario: Partial string
     Then param q = 'kock'
-    
+
     When method GET
     Then status 200
     And match response == '#[10]'
 
   Scenario: Search is case insensitive
     Then param q = 'Kocksvej'
-    
+
     When method GET
     Then status 200
     And match response == '#[9]'
 
     Then param q = 'kocksvej'
-    
+
     When method GET
     Then status 200
     And def secondresponse = response
@@ -50,7 +48,7 @@ Feature: Gsearch navngivenvej test
     Then match response == secondresponse
 
     Then param q = 'KOCKSVEJ'
-    
+
     When method GET
     Then status 200
     And def thirdresponse = response
@@ -60,14 +58,14 @@ Feature: Gsearch navngivenvej test
 
   Scenario: Do not have a match on '.'
     Then param q = '.'
-    
+
     When method GET
     Then status 200
     And match response == '#[0]'
 
   Scenario: Test maximum limit and one character search
     Then param q = 's'
-    
+
     And param limit = '100'
     When method GET
     Then status 200
@@ -75,14 +73,14 @@ Feature: Gsearch navngivenvej test
 
   Scenario: Test that upper and lower case gives the same result
     Then param q = 'Ø'
-    
+
     And param limit = '10'
     When method GET
     Then status 200
     And match response == '#[10]'
 
     Then param q = 'ø'
-    
+
     And param limit = '10'
     When method GET
     Then status 200

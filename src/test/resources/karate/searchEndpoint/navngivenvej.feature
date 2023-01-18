@@ -20,9 +20,7 @@ Feature: Gsearch navngivenvej test
       "postnummernavne": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
-      "id": '#string',
-      "rang1": '#string',
-      "rang2": '#string'
+      "id": '#string'
     }
     """
 

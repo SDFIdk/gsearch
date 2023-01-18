@@ -19,9 +19,7 @@ Feature: Gsearch politikreds test
         "politikredsnummer": '#string',
         "geometri": '#(geometriSchema)',
         "politikredsnummer": '#string',
-        "myndighedskode": '#string',
-        "rang1": '#string',
-        "rang2": '#string'
+        "myndighedskode": '#string'
         }
         """
 

@@ -5,7 +5,7 @@ Feature: Gsearch stednavn test
 
     Scenario: Response matches columns database
         Then param q = 'valbyparken'
-        
+
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -22,15 +22,13 @@ Feature: Gsearch stednavn test
                 "stednavn_subtype": '#string',
                 "stednavn_type": '#string',
                 "geometri": '#(geometriSchema)',
-                "id": '#string',
-                "rang1": '#string',
-                "rang2": '#string'
+                "id": '#string'
             }
         """
 
     Scenario: Partial string
         Then param q = 'valby g'
-        
+
         When method GET
         Then status 200
         And match response == '#[6]'
@@ -38,14 +36,14 @@ Feature: Gsearch stednavn test
 
     Scenario: Search is case insensitive
         Then param q = 'Valbyparken'
-        
+
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
         Then param q = 'valbyparken'
-        
+
         When method GET
         Then status 200
         And def secondresponse = response
@@ -54,7 +52,7 @@ Feature: Gsearch stednavn test
         Then match firstresponse == secondresponse
 
         Then param q = 'VALBYPARKEN'
-        
+
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -64,7 +62,7 @@ Feature: Gsearch stednavn test
 
     Scenario: Combined search
         Then param q = 'valby naturareal'
-        
+
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -72,14 +70,14 @@ Feature: Gsearch stednavn test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        
+
         When method GET
         Then status 200
         And match response == '#[0]'
 
     Scenario: Test maximum limit and one character search
         Then param q = 's'
-        
+
         And param limit = '100'
         When method GET
         Then status 200
@@ -88,14 +86,14 @@ Feature: Gsearch stednavn test
 
     Scenario: Test that upper and lower case gives the same result
         Then param q = 'Ø'
-        
+
         And param limit = '10'
         When method GET
         Then status 200
         And match response == '#[10]'
 
         Then param q = 'ø'
-        
+
         And param limit = '10'
         When method GET
         Then status 200
@@ -106,7 +104,7 @@ Feature: Gsearch stednavn test
 
     Scenario: Find a stednavn that only has an uofficielt skrivemaade
         Then param q = 'Chokola'
-        
+
         And param limit = '10'
         When method GET
         Then status 200

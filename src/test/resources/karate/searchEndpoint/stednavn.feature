@@ -22,9 +22,7 @@ Feature: Gsearch stednavn test
                 "stednavn_subtype": '#string',
                 "stednavn_type": '#string',
                 "geometri": '#(geometriSchema)',
-                "id": '#string',
-                "rang1": '#string',
-                "rang2": '#string'
+                "id": '#string'
             }
         """
 

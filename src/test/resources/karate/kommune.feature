@@ -5,7 +5,7 @@ Background:
 
 Scenario: Response matches columns database
     Then param q = 'Albertslund'
-    
+
     When method GET
     Then status 200
     And match response == '#[1]'
@@ -18,29 +18,27 @@ Scenario: Response matches columns database
       "visningstekst": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
-      "kommunekode": '#string',
-      "rang1": '#string',
-      "rang2": '#string'
+      "kommunekode": '#string'
     }
     """
 
 Scenario: Partial string
     Then param q = 'køben'
-    
+
     When method GET
     Then status 200
     And match response == '#[1]'
 
 Scenario: Search is case insensitive
     Then param q = 'København'
-    
+
     When method GET
     Then status 200
     And def firstresponse = response
     And match firstresponse == '#[1]'
 
     Then param q = 'københavn'
-    
+
     When method GET
     Then status 200
     And def secondresponse = response
@@ -49,7 +47,7 @@ Scenario: Search is case insensitive
     Then match firstresponse == secondresponse
 
     Then param q = 'KØBENHAVN'
-    
+
     When method GET
     Then status 200
     And def thirdresponse = response
@@ -59,7 +57,7 @@ Scenario: Search is case insensitive
 
 Scenario: Like search on nord returns Norddjurs and Nordfyns
     Then param q = 'nord'
-    
+
     When method GET
     Then status 200
     And match response == '#[2]'
@@ -68,7 +66,7 @@ Scenario: Like search on nord returns Norddjurs and Nordfyns
 
 Scenario: Get København from using the kommunekode as search input
     Then param q = '0101'
-    
+
     When method GET
     Then status 200
     And match response == '#[1]'
@@ -77,7 +75,7 @@ Scenario: Get København from using the kommunekode as search input
 
 Scenario: Combined search, Get København from using the kommunekode as search input and Herlev as tekst input
     Then param q = '0101 herlev'
-    
+
     When method GET
     Then status 200
     And match response == '#[2]'
@@ -85,14 +83,14 @@ Scenario: Combined search, Get København from using the kommunekode as search i
 
 Scenario: Do not have a match on '.'
     Then param q = '.'
-    
+
     When method GET
     Then status 200
     And match response == '#[0]'
 
 Scenario: Test maximum limit and one character search
     Then param q = 'h'
-    
+
     And param limit = '100'
     When method GET
     Then status 200

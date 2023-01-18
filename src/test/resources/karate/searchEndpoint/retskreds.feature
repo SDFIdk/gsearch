@@ -19,9 +19,7 @@ Feature: Gsearch retskreds test
                 "retkredsnavn": '#string',
                 "geometri": '#(geometriSchema)',
                 "retskredsnummer": '#string',
-                "myndighedskode": '#string',
-                "rang1": '#string',
-                "rang2": '#string'
+                "myndighedskode": '#string'
             }
         """
 

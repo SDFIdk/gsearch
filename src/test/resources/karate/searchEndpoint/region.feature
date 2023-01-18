@@ -18,9 +18,7 @@ Feature: Gsearch region test
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',
                 "regionskode": '#string',
-                "regionsnavn": '#string',
-                "rang1": '#string',
-                "rang2": '#string'
+                "regionsnavn": '#string'
             }
         """
 

@@ -25,9 +25,7 @@ Feature: Gsearch adresse test
           "postnummer": '#string',
           "vejpunkt_geometri": '#(geometriSchema)',
           "id": '#string',
-          "postnummernavn": '#string',
-          "rang1": '#string',
-          "rang2": '#string'
+          "postnummernavn": '#string'
         }
         """
 

@@ -18,9 +18,7 @@ Scenario: Response matches columns database
       "visningstekst": '#string',
       "bbox": '#(bboxSchema)',
       "geometri": '#(geometriSchema)',
-      "kommunekode": '#string',
-      "rang1": '#string',
-      "rang2": '#string'
+      "kommunekode": '#string'
     }
     """
 

@@ -19,9 +19,7 @@ Feature: Gsearch matrikel test
       "geometri": '#(geometriSchema)',
       "centroid_x": '#string',
       "centroid_y": '#string',
-      "matrikelnummer": '#string',
-      "rang1": '#string',
-      "rang2": '#string'
+      "matrikelnummer": '#string'
     }
     """
 

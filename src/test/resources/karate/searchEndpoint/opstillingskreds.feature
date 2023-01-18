@@ -21,9 +21,7 @@ Feature: Gsearch opstillingskreds test
       "geometri": '#(geometriSchema)',
       "opstillingskredsnummer": '#string',
       "storkredsnummer": '#string',
-      "storkredsnavn": '#string',
-      "rang1": '#string',
-      "rang2": '#string'
+      "storkredsnavn": '#string'
     }
     """
 

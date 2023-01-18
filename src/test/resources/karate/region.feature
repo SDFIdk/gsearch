@@ -5,7 +5,7 @@ Feature: Gsearch region test
 
     Scenario: Response matches columns database
         Then param q = 'hovedstaden'
-        
+
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -18,15 +18,13 @@ Feature: Gsearch region test
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',
                 "regionskode": '#string',
-                "regionsnavn": '#string',
-                "rang1": '#string',
-                "rang2": '#string'
+                "regionsnavn": '#string'
             }
         """
 
     Scenario: Partial string
         Then param q = 'region'
-        
+
         When method GET
         Then status 200
         And match response == '#[5]'
@@ -34,14 +32,14 @@ Feature: Gsearch region test
 
     Scenario: Search is case insensitive
         Then param q = 'Hovedstaden'
-        
+
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
         Then param q = 'hovedstaden'
-        
+
         When method GET
         Then status 200
         And def secondresponse = response
@@ -50,7 +48,7 @@ Feature: Gsearch region test
         Then match firstresponse == secondresponse
 
         Then param q = 'HOVEDSTADEN'
-        
+
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -60,7 +58,7 @@ Feature: Gsearch region test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        
+
         When method GET
         Then status 200
         And match response == '#[0]'

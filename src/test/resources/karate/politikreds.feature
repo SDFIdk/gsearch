@@ -5,7 +5,7 @@ Feature: Gsearch politikreds test
 
     Scenario: politikreds
         Then param q = 'Nordjylland'
-        
+
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -19,15 +19,13 @@ Feature: Gsearch politikreds test
         "politikredsnummer": '#string',
         "geometri": '#(geometriSchema)',
         "politikredsnummer": '#string',
-        "myndighedskode": '#string',
-        "rang1": '#string',
-        "rang2": '#string'
+        "myndighedskode": '#string'
         }
         """
 
     Scenario: Partial string
         Then param q = 'nord'
-        
+
         When method GET
         Then status 200
         And match response == '#[2]'
@@ -35,14 +33,14 @@ Feature: Gsearch politikreds test
 
     Scenario: Search is case insensitive
         Then param q = 'Nordjylland'
-        
+
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
         Then param q = 'nordjylland'
-        
+
         When method GET
         Then status 200
         And def secondresponse = response
@@ -51,7 +49,7 @@ Feature: Gsearch politikreds test
         Then match firstresponse == secondresponse
 
         Then param q = 'NORDJYLLAND'
-        
+
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -61,7 +59,7 @@ Feature: Gsearch politikreds test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        
+
         When method GET
         Then status 200
         And match response == '#[0]'

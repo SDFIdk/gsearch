@@ -26,9 +26,7 @@ Feature: Gsearch sogn test
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',
-                "sognekode": '#string',
-                "rang1": '#string',
-                "rang2": '#string'
+                "sognekode": '#string'
             }
         """
 

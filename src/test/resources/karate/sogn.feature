@@ -5,7 +5,7 @@ Feature: Gsearch sogn test
 
     Scenario: sogn
         Then param q = 'lund'
-        
+
         When method GET
         Then status 200
         And match response == '#[10]'
@@ -13,7 +13,7 @@ Feature: Gsearch sogn test
 
     Scenario: Response matches columns database
         Then param q = 'Birkerød'
-        
+
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -26,15 +26,13 @@ Feature: Gsearch sogn test
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',
-                "sognekode": '#string',
-                "rang1": '#string',
-                "rang2": '#string'
+                "sognekode": '#string'
             }
         """
 
     Scenario: Partial string
         Then param q = 'All'
-        
+
         When method GET
         Then status 200
         And match response == '#[10]'
@@ -42,14 +40,14 @@ Feature: Gsearch sogn test
 
     Scenario: Search is case insensitive
         Then param q = 'Birkerød'
-        
+
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
         Then param q = 'birkerød'
-        
+
         When method GET
         Then status 200
         And def secondresponse = response
@@ -58,7 +56,7 @@ Feature: Gsearch sogn test
         Then match firstresponse == secondresponse
 
         Then param q = 'BIRKERØD'
-        
+
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -68,14 +66,14 @@ Feature: Gsearch sogn test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        
+
         When method GET
         Then status 200
         And match response == '#[0]'
 
     Scenario: Test maximum limit and one character search
         Then param q = 's'
-        
+
         And param limit = '100'
         When method GET
         Then status 200

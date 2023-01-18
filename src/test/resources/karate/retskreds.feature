@@ -5,7 +5,7 @@ Feature: Gsearch retskreds test
 
     Scenario: Response matches columns database
         Then param q = 'aalborg'
-        
+
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -19,15 +19,13 @@ Feature: Gsearch retskreds test
                 "retkredsnavn": '#string',
                 "geometri": '#(geometriSchema)',
                 "retskredsnummer": '#string',
-                "myndighedskode": '#string',
-                "rang1": '#string',
-                "rang2": '#string'
+                "myndighedskode": '#string'
             }
         """
 
     Scenario: Partial string
         Then param q = 'retten i aa'
-        
+
         When method GET
         Then status 200
         And match response == '#[2]'
@@ -35,14 +33,14 @@ Feature: Gsearch retskreds test
 
     Scenario: Search is case insensitive
         Then param q = 'Glostrup'
-        
+
         When method GET
         Then status 200
         And def firstresponse = response
         And match firstresponse == '#[1]'
 
         Then param q = 'glostrup'
-        
+
         When method GET
         Then status 200
         And def secondresponse = response
@@ -51,7 +49,7 @@ Feature: Gsearch retskreds test
         Then match firstresponse == secondresponse
 
         Then param q = 'GLOSTRUP'
-        
+
         When method GET
         Then status 200
         And def thirdresponse = response
@@ -61,14 +59,14 @@ Feature: Gsearch retskreds test
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
-        
+
         When method GET
         Then status 200
         And match response == '#[0]'
 
     Scenario: Test maximum limit and one character search
         Then param q = 'r'
-        
+
         And param limit = '100'
         When method GET
         Then status 200

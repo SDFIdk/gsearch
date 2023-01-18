@@ -5,7 +5,7 @@ Feature: Gsearch matrikel test
 
   Scenario: Response matches columns database
     Then param q = '2000154'
-    
+
     When method GET
     Then status 200
     And match response == '#[8]'
@@ -19,29 +19,27 @@ Feature: Gsearch matrikel test
       "geometri": '#(geometriSchema)',
       "centroid_x": '#string',
       "centroid_y": '#string',
-      "matrikelnummer": '#string',
-      "rang1": '#string',
-      "rang2": '#string'
+      "matrikelnummer": '#string'
     }
     """
 
   Scenario: Partial string
     Then param q = 'damhus'
-    
+
     When method GET
     Then status 200
     And match response == '#[8]'
 
   Scenario: Search is case insensitive
     Then param q = 'Damhussøen'
-    
+
     When method GET
     Then status 200
     And def firstresponse = response
     And match firstresponse == '#[8]'
 
     Then param q = 'damhussøen'
-    
+
     When method GET
     Then status 200
     And def secondresponse = response
@@ -50,7 +48,7 @@ Feature: Gsearch matrikel test
     Then match firstresponse == secondresponse
 
     Then param q = 'DAMHUSSØEN'
-    
+
     When method GET
     Then status 200
     And def thirdresponse = response
@@ -60,7 +58,7 @@ Feature: Gsearch matrikel test
 
   Scenario: Combine search using ejerlavsnavn og matrikelnummer
     Then param q = '2000154 7000a'
-    
+
     When method GET
     Then status 200
     And match response == '#[1]'
@@ -69,7 +67,7 @@ Feature: Gsearch matrikel test
 
   Scenario: Combine search using ejerlavskode and ejerlavsnavn
     Then param q = '2000154 utterslev'
-    
+
     When method GET
     Then status 200
     And match response == '#[10]'
@@ -77,7 +75,7 @@ Feature: Gsearch matrikel test
 
   Scenario: Do not have a match on '.'
     Then param q = '.'
-    
+
     When method GET
     Then status 200
     And match response == '#[0]'
