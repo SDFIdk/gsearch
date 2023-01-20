@@ -95,7 +95,7 @@ FROM
 
 
 -- Inserts into tekst_forekomst
-    WITH a AS (SELECT generate_series(1,9) a)
+    WITH a AS (SELECT generate_series(1,8) a)
 INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     SELECT
     'husnummer',
