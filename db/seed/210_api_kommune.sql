@@ -40,9 +40,9 @@ WITH kommuner AS (
 SELECT
     (
         CASE WHEN k.kommunekode = '0101' THEN
-            k.navn || 's kommune'
+            k.navn || 's Kommune'
         ELSE
-            k.navn || ' kommune'
+            k.navn || ' Kommune'
         END) AS visningstekst,
     coalesce(k.kommunekode, '') AS kommunekode,
     coalesce(k.navn, '') AS kommunenavn,
