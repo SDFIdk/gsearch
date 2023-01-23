@@ -5,11 +5,6 @@
 
 // Enkelte bemærkninger om fundne fejl/problemer er ikke resultat af en systematisk test
 
-### Bør droppes** 
-I alle output droppes:
-* rang1
-* rang2
-
 ### Kildedato
 // Har det været overvejet om der skal være et tidsstempel på hvert response, som angiver 
 // hvornår det pågældende kilderegister senest er access'et?
@@ -70,7 +65,7 @@ Bør returnere
 // response skal foreslå de ejerlav, hvori dette matrikelnummer findes. 
 
 Præsentationsfelt er forkert:
-* praesentation bør ikke være: _"Birkerød By, Bistrup - 129av"_ men _"129av, Birkerød By, Bistrup"_ 
+* visningstekst bør ikke være: _"Birkerød By, Bistrup - 129av"_ men _"129av, Birkerød By, Bistrup"_ 
 
 ### Kommune
 Bør returnere
@@ -78,8 +73,8 @@ Bør returnere
 * udenforkommuneinddeling (true/false) // som er false for alle undtagen _0411 Christiansø_
 
 Response attributværdier rettes:
-**praesentation** I response er _"kommune"_ med lille _"k"_ - korrekt retskrivning er _"Kommune"_
-**Christiansø** har praesentation _"Christiansø kommune"_ - bør bare være _"Christiansø"_
+**visningstekst** I response er _"kommune"_ med lille _"k"_ - korrekt retskrivning er _"Kommune"_
+**Christiansø** har visningstekst _"Christiansø kommune"_ - bør bare være _"Christiansø"_
 
 ## Opstillingskreds
 Bør returnere
