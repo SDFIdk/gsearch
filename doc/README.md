@@ -82,6 +82,7 @@ Brug af geometri som filter vil være relevant, når man ønsker at begrænse s�
 Det spatiale referencesystem i et geometrifilter skal angives som `SRID=25832`.
 
 Adresser og husnumre har ikke geometri i `bbox`, de har dog en ekstra `vejpunkt_geometri` udover `geometri` (indeholder geometrien fra adgangspunkt_geometri), som begge kan anvendes i et geografisk filter.
+Matrikel har hellere ikke geometri i `bbox`, men de har to ekstra `centroid_x` og `centroid_y` udover `geometri`, som alle tre kan anvendes i et geografisk filter.
 
 _Eksempel:_ Filter med geometri for stednavne inden for et område i Sønderjylland.
 
@@ -98,7 +99,8 @@ Resultatet af en forespørgsel indeholder de forekomster, som matcher forespørg
 
 **Objektgeometri:** Objektgeometri er inkluderet i response som GeoJSON i referencesystemet EPSG:25832 (ETRS89 UTM Zone 32).
 
-For adresse- og husnummer ressourcerne indeholder response geometri i attributterne `geometri` (indeholder geometrien fra adgangspunkt_geometri) og `vejpunkt_geometri`.
+For adresse- og husnummer ressourcerne indeholder response geometrier i attributterne `geometri` (indeholder geometrien fra adgangspunkt_geometri) og `vejpunkt_geometri`.
+For matrikel indeholder response geomtrier i attributterne `centroid_x`, `centroid_y` og `geometri`.
 Øvrige data-ressourcer har to sæt geometrier: `bbox`, der er en beregnet bounding box, og `geometri` der er basisregisterets objektgeometri.
 
 For DAGI-objekterne; Postnummer bliver returneret i skala 1:10.000 (referenceskala). Kommune, opstillingskreds, politikreds, region, retskreds, sogn returneres i skala 1:500.000 (generaliseret version).
