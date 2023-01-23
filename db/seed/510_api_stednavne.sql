@@ -216,24 +216,30 @@ BEGIN
         input_tekst = '';
     END IF;
 
+
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(replace(input_tekst, '-', ' ')), ' ')) t
     )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
+            string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     FROM
-        tokens INTO query_string;
-    
+        tokens
+    INTO
+        query_string;
+
+
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(input_tekst), ' ')) t
     )
     SELECT
-        string_agg(t, ':* <-> ') || ':*'
+            string_agg(t, ':* <-> ') || ':*'
     FROM
-        tokens INTO plain_query_string;
+        tokens
+    INTO
+        plain_query_string;
 
 -- Hvis en input_tekst kun indeholder bogstaver og har over 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
@@ -249,20 +255,32 @@ BEGIN
 
 -- Et par linjer nede herfra, tilfoejes der et `|| ''å''`. Det er et hack,
 -- for at representere den alfanumerisk sidste vej, der starter med `%s`
+
     IF (
         SELECT
             COALESCE(forekomster, 0)
         FROM
             basic.tekst_forekomst
         WHERE
-            ressource = 'stednavn' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
+            ressource = 'stednavn'
+        AND lower(input_tekst) = tekstelement) > 1000
+        AND filters = '1=1'
+    THEN
         stmt = format(E'SELECT
-                id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
-                skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox
+                id::text,
+                skrivemaade::text,
+                visningstekst::text,
+                skrivemaade::text AS skrivemaade_officiel,
+                skrivemaade_uofficiel::text,
+                stednavn_type::text,
+                stednavn_subtype::text,
+                geometri,
+                bbox
             FROM
                 basic.stednavn
             WHERE
-                lower(visningstekst) >= lower(''%s'') AND lower(visningstekst) <= lower(''%s'') || ''å''
+                lower(visningstekst) >= lower(''%s'')
+                AND lower(visningstekst) <= lower(''%s'') || ''å''
             ORDER BY
                 lower(visningstekst)
             LIMIT $3;', input_tekst, input_tekst);
@@ -270,10 +288,17 @@ BEGIN
         RETURN QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
     ELSE
-        -- Execute and return the result
+-- Execute and return the result
         stmt = format(E'SELECT
-                id::text, skrivemaade::text, visningstekst::text, skrivemaade::text AS skrivemaade_officiel,
-                skrivemaade_uofficiel::text, stednavn_type::text, stednavn_subtype::text, geometri, bbox
+                id::text,
+                skrivemaade::text,
+                visningstekst::text,
+                skrivemaade::text AS skrivemaade_officiel,
+                skrivemaade_uofficiel::text,
+                stednavn_type::text,
+                stednavn_subtype::text,
+                geometri,
+                bbox
             FROM
                 basic.stednavn
             WHERE (
