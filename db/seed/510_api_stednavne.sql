@@ -41,7 +41,7 @@ WITH stednavne AS (
     SELECT
         objectid,
         id_lokalid,
-        coalesce(presentationstring, '') AS visningstekst,
+        coalesce(visningstekst, '') AS visningstekst,
         navnestatus,
         skrivemaade,
         type,
@@ -74,7 +74,7 @@ agg_stednavne AS (
         su.objectid,
         id_lokalid,
         navnefoelgenummer,
-        presentationstring as visningstekst,
+        visningstekst as visningstekst,
         navnestatus,
         o.skrivemaade AS skrivemaade,
         u.skrivemaade AS uofficielle_skrivemaader,
