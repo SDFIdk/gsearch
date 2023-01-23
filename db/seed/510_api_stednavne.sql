@@ -215,19 +215,21 @@ BEGIN
     IF btrim(input_tekst) = ANY ('{.,-, '', \,}') THEN
         input_tekst = '';
     END IF;
+
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(replace(input_tekst, '-', ' ')), ' ')) t
-)
+    )
     SELECT
         string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     FROM
         tokens INTO query_string;
+    
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(input_tekst), ' ')) t
-)
+    )
     SELECT
         string_agg(t, ':* <-> ') || ':*'
     FROM
