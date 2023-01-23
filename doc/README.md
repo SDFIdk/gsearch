@@ -1,18 +1,24 @@
 # GSearch dokumentation
 
-**GSearch** er et REST-api som udstiller en metode til at søge i adresser, matrikelnumre og Danmarks administrative geografiske inddeling og danske stednavne. Api'et tilbyder funktionalitet, som kan implementeres i en brugerapplikation i form af et søgefelt med autocomplete/typeahead funktion.
+**GSearch** er et REST-api som udstiller forskellige endpoints til at søge i adresser, matrikelnumre og Danmarks administrative geografiske inddeling og danske stednavne. 
+API'et tilbyder funktionalitet, som kan implementeres i en brugerapplikation i form af et søgefelt med autocomplete/typeahead funktion. 
+Der kan ses en demo af sådan en implementation her [GSearch-UI](https://sdfidk.github.io/gsearch-ui/). 
+Hvordan GSearch-UI kan installeres som en NPM pakke, kan læses mere om på dets [Github repository](https://github.com/SDFIdk/gsearch-ui#installation).
 
-**GSearch** tekstsøgning håndterer typiske stave- og skrivevarianter og fonetiske ligheder i de navne der søges i, som fx Ågade/Aagade, Gl. Byvej/Gammel Byvej, Vester/Vestre, Ringkøbing/Ringkjøbing, Kathrine/Cathrine o.l.
+
+**GSearch** tekstsøgning håndterer typiske stave- og skrivevarianter og fonetiske ligheder i de navne der søges i, som fx Ågade/Aagade, Gl. Byvej/Gammel Byvej, Vester/Vestre, Ringkøbing/Ringkjøbing, Kathrine/Cathrine og lignende.
 
 ## Generelt
 
-**GSearch** opdateres på ugenligt basis, det planlagt at opdatere data på dagligbasis se [issue 92](https://github.com/SDFIdk/gsearch/issues/92) for opdatering. Bemærk særligt at data fra DAR ikke har samme høje opdateringfrekvens som i andre sammenhænge.
+**GSearch** opdateres på ugentligt basis. Der er planlagt at opdatere data på daglig basis se [issue 92](https://github.com/SDFIdk/gsearch/issues/92) for opdatering. 
+Bemærk særligt at data fra DAR ikke har samme høje opdateringsfrekvens som i andre sammenhænge.
 
-**GSearch** kan søge i  de resourcer listet nedenfor.
+**GSearch** kan søge i de ressourcer listet nedenfor.
 
-Datakilder for ressourcerne er de fire autoritative grunddataregistre: Danmarks Adresseregister (DAR), Danmarks Administrative, Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne, som udstilles via Datafordeler.dk.
+Datakilder for ressourcerne er de fire autoritative grunddataregistre: 
+Danmarks Adresseregister (DAR), Danmarks Administrative, Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne, som udstilles via Datafordeler.dk.
 
-I hver ressource søges der efter bedst mulig match i et eller flere felter/attributter som følger:
+I hvert endpoint søges der efter bedst mulig match i et eller flere felter/attributter som følger:
 
 * Adresse: Der søges i DAR adresse, husnummer, navngivenvej, postnummer
 * Husnummer: Der søges i DAR husnummer
@@ -30,70 +36,70 @@ I hver ressource søges der efter bedst mulig match i et eller flere felter/attr
 ## Request syntax
 **URL** til GSearch er `https://api.dataforsyningen.dk/rest/gsearch/v1.0/{resource}`
 
-**Søgning:** Den centrale inputparameter er _'q'_, der er en tekststreng som angiver hvad der skal søges efter.
+**Søgning:** Den centrale inputparameter er `q`, der er en tekststreng som angiver hvad der skal søges efter.
 
-_Eksempel,_ hvor der søges efter navngivne veje med 'lærke'
+_Eksempel:_ Søges efter navngivne veje med `lærke`.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&q=Lærke HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/navngivenvej?q=Lærke HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-
-Parameteren _'resources'_ _kan_ definere mere end én data-ressource. I så fald skal man være opmærksom på at den supplerende parameter _'filter'_ ikke kan anvendes.
 
 **Supplerende request parametre** kan anvendes til at målrette søgningen hhv. begrænse antallet af svar i response:
 
-_Parametren 'limit'_ begrænser det mulige antal svar i response. Maksimum er 100; default værdi er 10.
+_Parametren_ `limit` begrænser det mulige antal svar i response. Maksimum er 100; default værdi er 10.
 
-_Eksempel,_ hvor der der søges efter navngivne veje med 'vinkel' og en limit på 90
+_Eksempel:_ Søges efter navngivne veje med 'vinkel' og en limit på 90.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=navngivenvej&q=vinkel&limit=90 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/navngivenvej?q=vinkel&limit=90 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
+
 ### Filter
-_Parametren 'filters'_ angiver hvilken del af data-ressourcen, der søges i.
+_Parametren_ `filter` angiver hvilken del af data-ressourcen, der søges i.
 
-Filtre skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums <https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html>
+`Filter` skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial Consortiums https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html.
 
-Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx _'bbox'_ og _'geometri'_.
+Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx `bbox` og `geometri`.
 
 **NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så `'` fx encodes til `%27` og at udtrykket er defineret som tekst.
 
-**NB** Attributter i retursvaret, der udgør et array, kan ikke benyttes som filter. Det gælder fx attributten _'postnummer'_ i ressourcen _'navngivenvej'_.
+**NB** Attributter i retursvaret, der udgør et array, kan ikke benyttes som filter. Det gælder fx attributten `postnummer` i ressourcen `navngivenvej`.
 
-_Eksempel_ på simpelt filter på husnummer: kommunekode '0461', dvs. Odense, bemærk brugen af `%27` som erstatning for `'`.
+_Eksempel:_ Simpelt filter på husnummer: kommunekode '0461', dvs. Odense, bemærk brugen af `%27` som erstatning for `'`.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=husnummer&q=lærke&filter=kommunekode=%270461%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?q=lærke&filter=kommunekode=%270461%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Brug af geometri som filter vil være relevant når man ønsker at begrænse søgningen inden for en polygon, der fx kan repræsentere et kortudsnit i brugerapplikationen.
+Brug af geometri som filter vil være relevant, når man ønsker at begrænse søgningen inden for en polygon, der fx kan repræsentere et kortudsnit i brugerapplikationen.
 
-Det spatiale referencesystem i et geometrifilter skal angives som _'SRID=25832'_.
+Det spatiale referencesystem i et geometrifilter skal angives som `SRID=25832`.
 
-Adresser og husnumre har ikke geometri i _'bbox'_, de har dog en ekstra _'vejpunkt_geometri'_ udover _'geometri'_, som begge kan anvendes i et geografisk filter.
+Adresser og husnumre har ikke geometri i `bbox`, de har dog en ekstra `vejpunkt_geometri` udover `geometri`, som begge kan anvendes i et geografisk filter.
 
-_Eksempel_ på filter med geometri for stednavne inden for et område i Sønderjylland
+_Eksempel:_ Filter med geometri for stednavne inden for et område i Sønderjylland.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/search?resources=stednavn&q=ben&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
 ## Response
-Resultatet af en forespørgsel indeholder de forekomster, som matcher forespørgslen bedst muligt. Antallet af forekomster begrænses af parmereten _'limit'_ (se ovenfor).Response er formateret som JSON.
+Resultatet af en forespørgsel indeholder de forekomster, som matcher forespørgslen bedst muligt. Antallet af forekomster begrænses af parameteren `limit` (se ovenfor). Response er formateret som JSON.
 
-**Indhold:** Response indeholder altid det fundne objekts autoritative _'id'_ samt en tekststreng _'praesentation'_ der fungerer som visuel repræsentation af objektet og som eksempelvis kan implementeres i en liste med søgeresultater, efterhånden som brugeren føjer tegn til søgestrengen.
+**Indhold:** Response indeholder altid det fundne objekts autoritative `id` samt en tekststreng `visningstekst`, der fungerer som visuel repræsentation af objektet og som eksempelvis kan implementeres i en liste med søgeresultater, efterhånden som brugeren føjer tegn til søgestrengen.
 
-**Objektgeometri:** Objektgeometri er inkluderet i response som GeoJSON i referencesystem EPSG:25832 (ETRS89 UTM Zone 32).
+**Objektgeometri:** Objektgeometri er inkluderet i response som GeoJSON i referencesystemet EPSG:25832 (ETRS89 UTM Zone 32).
 
-For adresse og husnummer indeholder response geometri i attributterne _'vejpunkt_geometri'_ og _'geometri'_. Øvrige data-ressourcer har to sæt geometri: _'bbox'_, der er en beregnet bounding box, og _'geometri'_ der er basisregisterets objektgeometri.
+For adresse- og husnummer ressourcerne indeholder response geometri i attributterne `geometri` (indeholder geometrien fra adgangspunkt_geometri) og `vejpunkt_geometri`.
+Øvrige data-ressourcer har to sæt geometri: `bbox`, der er en beregnet bounding box, og `geometri` der er basisregisterets objektgeometri.
 
 For DAGI-objekterne; Postnummer bliver returneret i skala 1:10.000 (referenceskala). Kommune, opstillingskreds, politikreds, region, retskreds, sogn returneres i skala 1:500.000 (generaliseret version).
 
@@ -116,7 +122,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=30&q=fle&filt
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'fle' med med limit=30 og filter på kommunekode 0360, dvs. Lolland Kommune:
+Syntaks eksempel som søger efter 'fle' med med `limit=30` og `filter` på `kommunekode` '0360', dvs. Lolland Kommune:
 
 <br/><br/>
 
@@ -125,7 +131,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=100&q=skanse&
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'skanse' med limit=100 og filter på vejpunkt_geometri - et område i Sønderjylland:
+Syntaks eksempel som søger efter 'skanse' med `limit=100` og filter på `vejpunkt_geometri` - et område i Sønderjylland:
 
 <br/><br/>
 
@@ -144,16 +150,16 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=30&q=fl&fil
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'fl' med med limit=30 og filter på kommunekode 0376, dvs. Guldborgsund Kommune:
+Syntaks eksempel som søger efter 'fl' med med `limit=30` og `filter` på `kommunekode` '0376', dvs. Guldborgsund Kommune:
 
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=100&q=fjordbak&filter=INTERSECTS(adgangspunkt_geometri,SRID=25832%3BPOLYGON((615000.1%206049000.2,%20615000.3%206111000.4,%20735000.5%206111000.6,%20735000.7%206049000.8,%20615000.1%206049000.2))) HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=100&q=fjordbak&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1%206049000.2,%20615000.3%206111000.4,%20735000.5%206111000.6,%20735000.7%206049000.8,%20615000.1%206049000.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'fjordbak' med limit=100 og filter på adgangspunkt_geometri - Lolland-Falster:
+Syntaks eksempel som søger efter 'fjordbak' med `limit=100` og `filter` på `geometri` - Lolland-Falster:
 
 <br/><br/>
 
@@ -172,7 +178,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a&filter=kommunek
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'a' med filter på kommunekode '0851':
+Syntaks eksempel som søger efter 'a' med `filter` på `kommunekode` '0851', dvs. Aalborg Kommune:
 
 <br/><br/>
 
@@ -181,7 +187,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=l&filter=INTERSEC
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'l' med filter på geometri - Lolland-Falster:
+Syntaks eksempel som søger efter 'l' med `filter` på `geometri` - Lolland-Falster:
 
 <br/><br/>
 
@@ -201,7 +207,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=123ab&filter=eje
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter '123ab' med filter på ejerlavskode '130653':
+Syntaks eksempel som søger efter '123ab' med `filter` på `ejerlavskode` '130653':
 
 <br/><br/>
 
@@ -210,7 +216,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=22&filter=INTERS
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter '22' med filter på geometri - Lolland-Falster:
+Syntaks eksempel som søger efter '22' med `filter` på `geometri` - Lolland-Falster:
 
 <br/><br/>
 
@@ -220,7 +226,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/navngivenvej?limit=100&q=kr
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks-eksempel som søger efter 'krin' med limit=100 (>100 resultater):
+Syntaks-eksempel som søger efter 'krin' med `limit=100` (>100 resultater):
 
 <br/><br/>
 
@@ -229,7 +235,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/navngivenvej?q=birk&filter=
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'birk' med filter på geometri - et område i Sønderjylland:
+Syntaks eksempel som søger efter 'birk' med `filter` på `geometri` - et område i Sønderjylland:
 
 <br/><br/>
 
@@ -267,7 +273,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/politikreds?q=ø&filter=INT
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'ø' med filter på geometri - Nørrejylland:
+Syntaks eksempel som søger efter 'ø' med `filter` på `geometri` - Nørrejylland:
 
 <br/><br/>
 
@@ -277,7 +283,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postnummer?limit=60&q=b HTT
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'b' og limit '60':
+Syntaks eksempel som søger efter 'b' og `limit=60`:
 
 <br/><br/>
 
@@ -295,7 +301,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postnummer?q=mari&filter=IN
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'mar'og filter på geometri - Lolland-Falster:
+Syntaks eksempel som søger efter 'mar'og `filter` på `geometri` - Lolland-Falster:
 
 <br/><br/>
 
@@ -314,7 +320,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/region?q=regi HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'regi' (og returnerer alle fem):
+Syntaks eksempel som søger efter 'regi':
 
 <br/><br/>
 
@@ -333,7 +339,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/retskreds?q=a HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'a' (og returnerer alle fem):
+Syntaks eksempel som søger efter 'a':
 
 <br/><br/>
 
@@ -361,7 +367,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/sogn?q=r&filter=INTERSECTS(
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'r' og med filter på geometri - Odsherred:
+Syntaks eksempel som søger efter 'r' og med `filter` på `geometri` - Odsherred:
 
 <br/><br/>
 
@@ -389,7 +395,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=katte&filter=ste
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'katte' og med filter på type af stednavn 'bebyggelse':
+Syntaks eksempel som søger efter 'katte' og med `filter` på type af stednavn 'bebyggelse':
 
 <br/><br/>
 
@@ -398,7 +404,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=katte&filter=ste
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'katte' og med filter på type af stednavn 'moseSump':
+Syntaks eksempel som søger efter 'katte' og med `filter` på type af stednavn 'moseSump':
 
 <br/><br/>
 
@@ -407,7 +413,7 @@ GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=steng&filter=INT
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'steng' og med filter på geometri - Odsherred:
+Syntaks eksempel som søger efter 'steng' og med `filter` på `geometri` - Odsherred:
 
 <br/><br/>
 
