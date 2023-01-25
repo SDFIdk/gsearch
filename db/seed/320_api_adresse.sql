@@ -210,6 +210,7 @@ CREATE OR REPLACE FUNCTION api.adresse (input_tekst text, filters text, sortopti
 DECLARE
     max_rows integer;
     input text;
+    input_fonetik text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -228,8 +229,12 @@ BEGIN
 
 
     SELECT
-        btrim(input_tekst)
+        regexp_replace(input_tekst, '\s+', ' ', 'g')
     INTO input;
+
+    SELECT
+        regexp_replace(fonetik.fnfonetik (input, 2), '\s+', ' ', 'g')
+    INTO input_fonetik;
 
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
@@ -237,7 +242,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input), ' ')) t
     )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
+        string_agg(input_fonetik, ':* & ') || ':*'
     FROM
         tokens
     INTO query_string;

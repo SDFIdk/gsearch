@@ -95,6 +95,7 @@ CREATE OR REPLACE FUNCTION api.region (input_tekst text, filters text, sortoptio
     AS $function$
 DECLARE
     max_rows integer;
+    input_fonetik text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -110,20 +111,29 @@ BEGIN
     IF btrim(input_tekst) = ANY ('{.,-, '', \,}') THEN
         input_tekst = '';
     END IF;
+
+    SELECT
+        regexp_replace(input_tekst, '\s+', ' ', 'g')
+    INTO input_tekst;
+
+    SELECT
+        regexp_replace(fonetik.fnfonetik (input_tekst, 2), '\s+', ' ', 'g')
+    INTO input_fonetik;
+
     -- Build the query_string
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(input_tekst), ' ')) t
-)
+            )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
+        string_agg(input_fonetik, ':* <-> ') || ':*'
     FROM
         tokens INTO query_string;
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(input_tekst), ' ')) t
-)
+            )
     SELECT
         string_agg(t, ':* <-> ') || ':*'
     FROM

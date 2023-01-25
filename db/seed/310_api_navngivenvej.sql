@@ -188,6 +188,7 @@ CREATE OR REPLACE FUNCTION api.navngivenvej (input_tekst text, filters text, sor
     STABLE
     AS $function$
 DECLARE
+    input_fonetik text;
     max_rows integer;
     query_string text;
     plain_query_string text;
@@ -204,6 +205,15 @@ BEGIN
     IF btrim(input_tekst) = ANY ('{.,-, '', \,}') THEN
         input_tekst = '';
     END IF;
+
+    SELECT
+        regexp_replace(input_tekst, '\s+', ' ', 'g')
+    INTO input_tekst;
+
+    SELECT
+        regexp_replace(fonetik.fnfonetik (input_tekst, 2), '\s+', ' ', 'g')
+    INTO input_fonetik;
+
     -- Build the query_string
     WITH tokens AS (
         SELECT

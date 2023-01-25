@@ -106,6 +106,7 @@ DECLARE
     max_rows integer;
     input_kommunenavn text;
     input_kommunekode text;
+    input_kommunenavn_fonetik text;
     kommunenavn_string text;
     kommunenavn_string_plain text;
     kommunekode_string text;
@@ -125,25 +126,35 @@ BEGIN
     IF btrim(input_tekst) = ANY ('{.,-, '', \,}') THEN
         input_tekst = '';
     END IF;
+
     SELECT
         -- matches non-digits
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1])
+       regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '\s+', ' ', 'g')
     INTO input_kommunenavn;
+
     SELECT
         -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
-        btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) INTO input_kommunekode;
-    WITH tokens AS (
-        SELECT
-            UNNEST(string_to_array(input_kommunenavn, ' ')) t
-)
+        regexp_replace(btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) , '\s+', ' ', 'g')
+    INTO input_kommunekode;
+
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
-    FROM
-        tokens INTO kommunenavn_string;
+        regexp_replace(fonetik.fnfonetik (input_kommunenavn, 2), '\s+', ' ', 'g')
+    INTO input_kommunenavn_fonetik;
+
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_kommunenavn, ' ')) t
-)
+            )
+    SELECT
+        string_agg(input_kommunenavn_fonetik;, ':BCD* <-> ') || ':BCD*'
+    FROM
+        tokens
+    INTO kommunenavn_string;
+
+    WITH tokens AS (
+        SELECT
+            UNNEST(string_to_array(input_kommunenavn, ' ')) t
+            )
     SELECT
         string_agg(t, ':BCD* <-> ') || ':BCD*'
     FROM
@@ -151,7 +162,7 @@ BEGIN
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_kommunekode, ' ')) t
-)
+            )
     SELECT
         string_agg(t, ':A | ') || ':A'
     FROM

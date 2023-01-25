@@ -157,6 +157,7 @@ CREATE OR REPLACE FUNCTION api.matrikel(input_tekst text, filters text, sortopti
 DECLARE
     max_rows integer;
     input_ejerlavsnavn text;
+    input_ejerlavsnavn_fonetisk text;
     input_ejerlavskode_matrikel text;
     ejerlavsnavn_string text;
     ejerlavsnavn_string_plain text;
@@ -179,8 +180,12 @@ BEGIN
 
     SELECT
         -- matches non-digits
-        btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1])
+        regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '\s+', ' ', 'g')
     INTO input_ejerlavsnavn;
+
+    SELECTx
+        regexp_replace(fonetik.fnfonetik (input_ejerlavsnavn, 2), '\s+', ' ', 'g')
+    INTO input_ejerlavsnavn_fonetik;
 
     SELECT
         -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
@@ -202,7 +207,7 @@ BEGIN
             UNNEST(string_to_array(input_ejerlavsnavn, ' ')) t
     )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
+        string_agg(input_ejerlavsnavn_fonetik, ':* <-> ') || ':*'
     FROM
         tokens INTO ejerlavsnavn_string;
 
