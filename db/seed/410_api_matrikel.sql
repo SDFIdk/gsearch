@@ -179,11 +179,12 @@ BEGIN
     END IF;
 
     SELECT
-        -- matches non-digits
+        -- matches non-digits and replaces multiple whitespaces with a single whitespace inside of words
         regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '\s+', ' ', 'g')
     INTO input_ejerlavsnavn;
 
     SELECT
+        -- replaces multiple whitespaces with a single whitespace inside of words
         regexp_replace(fonetik.fnfonetik (input_ejerlavsnavn, 2), '\s+', ' ', 'g')
     INTO input_ejerlavsnavn_fonetik;
 

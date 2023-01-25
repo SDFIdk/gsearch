@@ -207,13 +207,14 @@ BEGIN
         input_tekst = '';
     END IF;
 
-
     -- Get vejnavn from input
     SELECT
+        -- replaces multiple whitespaces with a single whitespace inside of words
         regexp_replace(input_tekst, '\s+', ' ', 'g')
     INTO input;
 
     SELECT
+        -- replaces multiple whitespaces with a single whitespace inside of words
         regexp_replace(fonetik.fnfonetik (input, 2), '\s+', ' ', 'g')
     INTO input_fonetik;
 
@@ -229,7 +230,6 @@ BEGIN
     FROM
         tokens
     INTO query_string;
-
 
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (

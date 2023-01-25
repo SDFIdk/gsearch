@@ -119,10 +119,12 @@ BEGIN
     END IF;
 
     SELECT
+        -- replaces multiple whitespaces with a single whitespace inside of words
         regexp_replace(input_tekst, '\s+', ' ', 'g')
     INTO input_tekst;
 
     SELECT
+        -- replaces multiple whitespaces with a single whitespace inside of words
         regexp_replace(fonetik.fnfonetik (input_tekst, 2), '\s+', ' ', 'g')
     INTO input_fonetik;
 
