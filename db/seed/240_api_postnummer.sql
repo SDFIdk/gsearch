@@ -148,7 +148,7 @@ BEGIN
             UNNEST(string_to_array(input_postnummernavn, ' ')) t
 )
     SELECT
-        string_agg(input_postnummernavn_fonetik (t, 2), ':BCD* <-> ') || ':BCD*'
+        string_agg(input_postnummernavn_fonetik, ':BCD* <-> ') || ':BCD*'
     FROM
         tokens INTO postnummernavn_string;
     WITH tokens AS (

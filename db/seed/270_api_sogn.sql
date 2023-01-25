@@ -114,7 +114,7 @@ BEGIN
 
     SELECT
         regexp_replace(input_tekst, '\s+', ' ', 'g')
-    INTO input;
+    INTO input_tekst;
 
     SELECT
         regexp_replace(fonetik.fnfonetik (input_tekst, 2), '\s+', ' ', 'g')

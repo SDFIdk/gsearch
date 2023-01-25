@@ -220,7 +220,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input_tekst), ' ')) t
 )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
+        string_agg(input_fonetik, ':* & ') || ':*'
     FROM
         tokens INTO query_string;
     -- build the plain version of the query string for ranking purposes

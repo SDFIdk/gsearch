@@ -146,7 +146,7 @@ BEGIN
             UNNEST(string_to_array(input_kommunenavn, ' ')) t
             )
     SELECT
-        string_agg(input_kommunenavn_fonetik;, ':BCD* <-> ') || ':BCD*'
+        string_agg(input_kommunenavn_fonetik, ':BCD* <-> ') || ':BCD*'
     FROM
         tokens
     INTO kommunenavn_string;
