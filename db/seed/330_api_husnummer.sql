@@ -190,7 +190,6 @@ CREATE OR REPLACE FUNCTION api.husnummer (input_tekst text, filters text, sortop
 DECLARE
     max_rows integer;
     input text;
-    input_fonetik text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -210,12 +209,8 @@ BEGIN
 
     -- Get vejnavn from input
     SELECT
-        regexp_replace(input_tekst, '\s+', ' ', 'g')
+        regexp_replace(input_tekst, '[-.,\s]+', ' ', 'g')
     INTO input;
-
-    SELECT
-        regexp_replace(fonetik.fnfonetik (input, 2), '\s+', ' ', 'g')
-    INTO input_fonetik;
 
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
@@ -225,7 +220,7 @@ BEGIN
             UNNEST(string_to_array(btrim(input), ' ')) t
     )
     SELECT
-        string_agg(input_fonetik, ':* & ') || ':*'
+        string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
     FROM
         tokens
     INTO query_string;

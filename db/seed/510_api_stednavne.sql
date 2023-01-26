@@ -199,7 +199,6 @@ CREATE OR REPLACE FUNCTION api.stednavn (input_tekst text, filters text, sortopt
     STABLE
     AS $function$
 DECLARE
-    input_fonetik text;
     max_rows integer;
     query_string text;
     plain_query_string text;
@@ -218,19 +217,15 @@ BEGIN
     END IF;
 
     SELECT
-        regexp_replace(input_tekst, '\s+', ' ', 'g')
+        regexp_replace(input_tekst, '[-.,\s]+', ' ', 'g')
     INTO input_tekst;
-
-    SELECT
-        regexp_replace(fonetik.fnfonetik (input_tekst, 2), '\s+', ' ', 'g')
-    INTO input_fonetik;
 
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(replace(input_tekst, '-', ' ')), ' ')) t
     )
     SELECT
-            string_agg(input_fonetik, ':* <-> ') || ':*'
+            string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     FROM
         tokens
     INTO

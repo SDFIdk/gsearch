@@ -106,7 +106,6 @@ DECLARE
     max_rows integer;
     input_kommunenavn text;
     input_kommunekode text;
-    input_kommunenavn_fonetik text;
     kommunenavn_string text;
     kommunenavn_string_plain text;
     kommunekode_string text;
@@ -129,7 +128,7 @@ BEGIN
 
     SELECT
         -- matches non-digits
-       regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '\s+', ' ', 'g')
+       regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '[-.,\s]+', ' ', 'g')
     INTO input_kommunenavn;
 
     SELECT
@@ -137,16 +136,12 @@ BEGIN
         regexp_replace(btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) , '\s+', ' ', 'g')
     INTO input_kommunekode;
 
-    SELECT
-        regexp_replace(fonetik.fnfonetik (input_kommunenavn, 2), '\s+', ' ', 'g')
-    INTO input_kommunenavn_fonetik;
-
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_kommunenavn, ' ')) t
             )
     SELECT
-        string_agg(input_kommunenavn_fonetik, ':BCD* <-> ') || ':BCD*'
+        string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
     FROM
         tokens
     INTO kommunenavn_string;

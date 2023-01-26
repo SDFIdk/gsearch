@@ -100,7 +100,6 @@ CREATE OR REPLACE FUNCTION api.politikreds (input_tekst text, filters text, sort
     STABLE
     AS $function$
 DECLARE
-    input_fonetik text;
     max_rows integer;
     query_string text;
     plain_query_string text;
@@ -120,19 +119,15 @@ BEGIN
     -- Build the query_string
 
     SELECT
-        regexp_replace(input_tekst, '\s+', ' ', 'g')
+        regexp_replace(input_tekst, '[-.,\s]+', ' ', 'g')
     INTO input_tekst;
-
-    SELECT
-        regexp_replace(fonetik.fnfonetik (input_tekst, 2), '\s+', ' ', 'g')
-    INTO input_fonetik;
 
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(btrim(input_tekst), ' ')) t
 )
     SELECT
-        string_agg(input_fonetik, ':* <-> ') || ':*'
+        string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
     FROM
         tokens INTO query_string;
     -- build the plain version of the query string for ranking purposes

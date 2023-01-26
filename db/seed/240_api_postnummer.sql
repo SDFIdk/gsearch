@@ -104,7 +104,6 @@ CREATE OR REPLACE FUNCTION api.postnummer (input_tekst text, filters text, sorto
 DECLARE
     max_rows integer;
     input_postnummernavn text;
-    input_postnummernavn_fonetik text;
     input_postnummer text;
     postnummernavn_string text;
     postnummernavn_string_plain text;
@@ -128,12 +127,8 @@ BEGIN
 
     SELECT
         -- matches non-digits
-        regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '\s+', ' ', 'g')
+        regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '[-.,\s]+', ' ', 'g')
     INTO input_postnummernavn;
-
-    SELECT
-        regexp_replace(fonetik.fnfonetik (input_postnummernavn, 2), '\s+', ' ', 'g')
-    INTO input_postnummernavn_fonetik;
 
     SELECT
         -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
@@ -146,23 +141,25 @@ BEGIN
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_postnummernavn, ' ')) t
-)
+            )
     SELECT
-        string_agg(input_postnummernavn_fonetik, ':BCD* <-> ') || ':BCD*'
+        string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
     FROM
         tokens INTO postnummernavn_string;
+
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_postnummernavn, ' ')) t
-)
+            )
     SELECT
         string_agg(t, ':BCD* <-> ') || ':BCD*'
     FROM
         tokens INTO postnummernavn_string_plain;
+
     WITH tokens AS (
         SELECT
             UNNEST(string_to_array(input_postnummer, ' ')) t
-)
+            )
     SELECT
         string_agg(t, ':A | ') || ':A'
     FROM
