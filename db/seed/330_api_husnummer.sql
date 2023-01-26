@@ -208,6 +208,7 @@ BEGIN
 
     -- Get vejnavn from input
     SELECT
+        -- removes repeated whitespace and '-',',','.'
         regexp_replace(input_tekst, '[-.,\s]+', ' ', 'g')
     INTO input;
 
