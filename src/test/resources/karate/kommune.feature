@@ -62,7 +62,7 @@ Scenario: Like search on nord returns Norddjurs and Nordfyns
     Then status 200
     And match response == '#[2]'
     And match response.[*].kommunenavn contains deep ['Norddjurs', 'Nordfyns']
-    And match response.[*].visningstekst contains deep ['Norddjurs kommune', 'Nordfyns kommune']
+    And match response.[*].visningstekst contains deep ['Norddjurs Kommune', 'Nordfyns Kommune']
 
 Scenario: Get København from using the kommunekode as search input
     Then param q = '0101'
@@ -102,5 +102,5 @@ Scenario: Test Christiansø do not have kommune added after the name
     When method GET
     Then status 200
     And match response == '#[1]'
-    And match response.[*].visningstekst == 'Christiansø'
+    And match response.[*].visningstekst == ['Christiansø']
 
