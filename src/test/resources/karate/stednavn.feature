@@ -89,7 +89,7 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[2]'
-        And match response.[*].retkredsnavn contains deep ['Retten i Aalborg', 'Retten i Århus']
+        And match response.[*].retkredsnavn contains deep ['Retten i Aalborg (Bygning i Aalborg)', 'Retten i Århus (Bygning i Aarhus C)']
 
     Scenario: Test that upper and lower case gives the same result
         Then param q = 'Ø'
