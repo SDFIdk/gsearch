@@ -126,8 +126,8 @@ BEGIN
     END IF;
 
     SELECT
-        -- matches non-digits and removes repeated whitespace and '-',',','.'
-        regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '[-.,\s]+', ' ', 'g')
+        -- matches non-digits and removes repeated whitespace and '-'
+        regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '[- \s]+', ' ', 'g')
     INTO input_postnummernavn;
 
     SELECT

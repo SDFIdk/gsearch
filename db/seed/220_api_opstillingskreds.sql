@@ -132,8 +132,8 @@ BEGIN
     END IF;
 
     SELECT
-           -- removes repeated whitespace and '-',',','.'
-        regexp_replace(input_tekst, '[-.,\s]+', ' ', 'g')
+           -- removes repeated whitespace and '-'
+        regexp_replace(input_tekst, '[- \s]+', ' ', 'g')
     INTO input_tekst;
 
     -- Build the query_string

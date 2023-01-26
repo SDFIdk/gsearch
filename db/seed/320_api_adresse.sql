@@ -227,8 +227,8 @@ BEGIN
     END IF;
 
     SELECT
-        -- removes repeated whitespace and '-',',','.'
-        regexp_replace(input_tekst, '[-.,\s]+', ' ', 'g')
+        -- removes repeated whitespace and '-'
+        regexp_replace(input_tekst, '[- \s]+', ' ', 'g')
     INTO input;
 
     -- Build the query_string (converting vejnavn of input to phonetic)
