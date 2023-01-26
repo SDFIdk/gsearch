@@ -1,6 +1,6 @@
 # GSearch dokumentation
 
-**GSearch** er et REST-api som udstiller forskellige endpoints til at søge i adresser, matrikelnumre og Danmarks administrative geografiske inddeling og danske stednavne. 
+**GSearch** er et REST-api som udstiller forskellige endpoints til at søge i adresser, matrikelnumre og Danmarks Administrative Geografiske Inddeling og Danske Stednavne. 
 API'et tilbyder funktionalitet, som kan implementeres i en brugerapplikation i form af et søgefelt med autocomplete/typeahead funktion. 
 Der kan ses en demo af sådan en implementation her [GSearch-UI](https://sdfidk.github.io/gsearch-ui/). 
 Hvordan GSearch-UI kan installeres som en NPM pakke, kan læses mere om på dets [Github repository](https://github.com/SDFIdk/gsearch-ui#installation).
@@ -16,7 +16,7 @@ Bemærk særligt at data fra DAR ikke har samme høje opdateringsfrekvens som i 
 **GSearch** kan søge i de ressourcer listet nedenfor.
 
 Datakilder for ressourcerne er de fire autoritative grunddataregistre: 
-Danmarks Adresseregister (DAR), Danmarks Administrative, Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne, som udstilles via Datafordeler.dk.
+Danmarks Adresseregister (DAR), Danmarks Administrative Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne, som udstilles via Datafordeler.dk.
 
 I hvert endpoint søges der efter bedst mulig match i et eller flere felter/attributter som følger:
 

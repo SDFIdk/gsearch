@@ -110,3 +110,28 @@ Feature: Gsearch stednavn test
         Then status 200
         And match response == '#[1]'
         And match response.[*].skrivemaade_uofficiel contains ['Chokoladekrydset']
+
+    Scenario: Search find the same adresse regards if there is - og multiple whitespaces
+        Then param q = 'Wakeup Copenhagen Bernstorffsgade'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+
+        Then param q = 'Wakeup Copenhagen - Bernstorffsgade'
+
+        When method GET
+        Then status 200
+        And def secondresponse = response
+        And match secondresponse == '#[1]'
+
+        Then match response == secondresponse
+
+        Then param q = 'Wakeup Copenhagen  Bernstorffsgade'
+
+        When method GET
+        Then status 200
+        And def thirdresponse = response
+        And match thirdresponse == '#[1]'
+
+        Then match thirdresponse == secondresponse

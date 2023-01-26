@@ -241,7 +241,6 @@ BEGIN
         tokens
     INTO query_string;
 
-
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
