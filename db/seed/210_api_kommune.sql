@@ -39,8 +39,15 @@ WITH kommuner AS (
 )
 SELECT
     (
-        CASE WHEN k.kommunekode = '0101' THEN
-            k.navn || 's Kommune'
+        CASE
+            WHEN
+                k.kommunekode = '0101'
+            THEN
+                k.navn || 's Kommune'
+            WHEN
+                k.kommunekode = '0411'
+            THEN
+                k.navn
         ELSE
             k.navn || ' Kommune'
         END) AS visningstekst,

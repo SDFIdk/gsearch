@@ -95,3 +95,12 @@ Scenario: Test maximum limit and one character search
     When method GET
     Then status 200
     And match response == '#[14]'
+
+Scenario: Test Christiansø do not have kommune added after the name
+    Then param q = 'Christiansø'
+
+    When method GET
+    Then status 200
+    And match response == '#[1]'
+    And match response.[*].visningstekst == 'Christiansø'
+
