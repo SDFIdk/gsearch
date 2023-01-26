@@ -83,6 +83,13 @@ Feature: Gsearch stednavn test
         Then status 200
         And match response == '#[100]'
 
+    Scenario: Partial string
+        Then param q = 'retten i aa'
+
+        When method GET
+        Then status 200
+        And match response == '#[2]'
+        And match response.[*].retkredsnavn contains deep ['Retten i Aalborg', 'Retten i Århus']
 
     Scenario: Test that upper and lower case gives the same result
         Then param q = 'Ø'
