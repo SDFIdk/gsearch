@@ -223,7 +223,7 @@ BEGIN
 
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(btrim(replace(input_tekst, '-', ' ')), ' ')) t
+            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
     )
     SELECT
             string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
