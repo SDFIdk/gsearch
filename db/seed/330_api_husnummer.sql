@@ -189,7 +189,6 @@ CREATE OR REPLACE FUNCTION api.husnummer (input_tekst text, filters text, sortop
     AS $function$
 DECLARE
     max_rows integer;
-    input text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -210,14 +209,14 @@ BEGIN
     SELECT
         -- removes repeated whitespace and '-'
         regexp_replace(input_tekst, '[- \s]+', ' ', 'g')
-    INTO input;
+    INTO input_tekst;
 
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
         SELECT
             -- Fjerner husnummer fra input_tekst og splitter op i temp-tabel hver hvert vejnavn-ord i
             -- hver sin raekke.
-            UNNEST(string_to_array(btrim(input), ' ')) t
+            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
     )
     SELECT
         string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
@@ -229,7 +228,7 @@ BEGIN
     WITH tokens AS (
         SELECT
             -- Splitter op i temp-tabel hver hvert vejnavn-ord i hver sin raekke.
-            UNNEST(string_to_array(btrim(input), ' ')) t
+            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
     )
     SELECT
         string_agg(t, ':* & ') || ':*'

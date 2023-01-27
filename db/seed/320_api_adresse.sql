@@ -209,7 +209,6 @@ CREATE OR REPLACE FUNCTION api.adresse (input_tekst text, filters text, sortopti
     AS $function$
 DECLARE
     max_rows integer;
-    input text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -229,12 +228,12 @@ BEGIN
     SELECT
         -- removes repeated whitespace and '-'
         regexp_replace(input_tekst, '[- \s]+', ' ', 'g')
-    INTO input;
+    INTO input_tekst;
 
     -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(btrim(input), ' ')) t
+            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
     )
     SELECT
         string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
@@ -246,7 +245,7 @@ BEGIN
     WITH tokens AS (
         SELECT
             -- Splitter op i temp-tabel hver hvert vejnavn-ord i hver sin raekke.
-            UNNEST(string_to_array(btrim(input), ' ')) t
+            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
     )
     SELECT
         string_agg(t, ':* & ') || ':*'
@@ -277,7 +276,7 @@ BEGIN
             basic.tekst_forekomst
         WHERE
             ressource = 'adresse'
-        AND lower(input) = tekstelement ) > 1000
+        AND lower(input_tekst) = tekstelement ) > 1000
         AND filters = '1=1'
     THEN
         stmt = format(E'SELECT
