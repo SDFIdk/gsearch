@@ -111,11 +111,6 @@ CREATE OR REPLACE FUNCTION api.kommune (input_tekst text, filters text, sortopti
     AS $function$
 DECLARE
     max_rows integer;
-    input_kommunenavn text;
-    input_kommunekode text;
-    kommunenavn_string text;
-    kommunenavn_string_plain text;
-    kommunekode_string text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -134,61 +129,33 @@ BEGIN
     END IF;
 
     SELECT
-        -- matches non-digits and removes repeated whitespace and '-'
-       regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '[- \s]+', ' ', 'g')
-    INTO input_kommunenavn;
+        -- removes repeated whitespace and '-'
+        regexp_replace(input_tekst, '[- \s]+', ' ', 'g')
+    INTO input_tekst;
 
-    SELECT
-        -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
-        regexp_replace(btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) , '\s+', ' ', 'g')
-    INTO input_kommunekode;
-
+    -- Build the query_string (converting input to phonetic)
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(input_kommunenavn, ' ')) t
-            )
+            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
+    )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
+            string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
     FROM
         tokens
-    INTO kommunenavn_string;
+    INTO query_string;
 
+    -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(input_kommunenavn, ' ')) t
-            )
+            -- Splitter op i temp-tabel hver hvert ord i hver sin raekke.
+            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
+    )
     SELECT
-        string_agg(t, ':BCD* <-> ') || ':BCD*'
+            string_agg(t, ':* & ') || ':*'
     FROM
-        tokens INTO kommunenavn_string_plain;
-    WITH tokens AS (
-        SELECT
-            UNNEST(string_to_array(input_kommunekode, ' ')) t
-            )
-    SELECT
-        string_agg(t, ':A | ') || ':A'
-    FROM
-        tokens INTO kommunekode_string;
-    CASE WHEN kommunenavn_string IS NULL THEN
-        SELECT
-            kommunekode_string INTO query_string;
-    WHEN kommunekode_string IS NULL THEN
-        SELECT
-            kommunenavn_string INTO query_string;
-        ELSE
-            SELECT
-                kommunenavn_string || ' | ' || kommunekode_string INTO query_string;
-    END CASE;
-    CASE WHEN kommunenavn_string_plain IS NULL THEN
-        SELECT
-            kommunekode_string INTO plain_query_string;
-    WHEN kommunekode_string IS NULL THEN
-        SELECT
-            kommunenavn_string_plain INTO plain_query_string;
-        ELSE
-            SELECT
-                kommunenavn_string_plain || ' | ' || kommunekode_string INTO plain_query_string;
-    END CASE;
+        tokens
+    INTO plain_query_string;
+
     -- Execute and return the result
     stmt = format(E'SELECT
                 kommunekode::text, kommunenavn::text, visningstekst, geometri, bbox::geometry
