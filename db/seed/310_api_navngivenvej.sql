@@ -238,6 +238,7 @@ BEGIN
 -- Dette gaelder for:
 -- - husnummer
 -- - adresse
+-- - matrikel
 -- - navngivenvej
 -- - stednavn
 
