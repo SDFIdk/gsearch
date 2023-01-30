@@ -108,8 +108,7 @@ For DAGI-objekterne; Postnummer bliver returneret i skala 1:10.000 (referenceska
 **Attributter i øvrigt:** Det øvrige indhold af objekt-attributter i response afhænger i øvrigt af data-ressourcen, som det fremgår af eksemplerne herunder. Output for hver ressource er i øvrigt dokumenteret under [schemas](https://docs.dataforsyningen.dk/#gsearch-schemas).
 
 <h2 id="gsearch-eksempler">Eksempler</h2>
-
-### adresse {dok_adresse}
+<h3 id="dok_adresse">adresse</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?q=flens HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -137,7 +136,7 @@ Syntaks eksempel som søger efter 'skanse' med `limit=100` og filter på `vejpun
 
 <br/><br/>
 
-### husnummer {dok_husnummer}
+<h3 id="dok_husnummer">husnummer</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?q=genvej HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -165,7 +164,7 @@ Syntaks eksempel som søger efter 'fjordbak' med `limit=100` og `filter` på `ge
 
 <br/><br/>
 
-### kommune {dok_kommune}
+<h3 id="dok_kommune">kommune</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -194,7 +193,7 @@ Syntaks eksempel som søger efter 'l' med `filter` på `geometri` - Lolland-Fals
 <br/><br/>
 
 
-### matrikel {dok_matrikel}
+<h3 id="dok_matrikel">matrikel</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=123ab HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -222,7 +221,7 @@ Syntaks eksempel som søger efter '22' med `filter` på `geometri` - Lolland-Fal
 
 <br/><br/>
 
-### navngivenvej {dok_navngivenvej}
+<h3 id="dok_navngivenvej">navngivenvej</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/navngivenvej?limit=100&q=krin HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -241,7 +240,7 @@ Syntaks eksempel som søger efter 'birk' med `filter` på `geometri` - et områd
 
 <br/><br/>
 
-### opstillingskreds {dok_opstillingskreds}
+<h3 id="dok_opstillingskreds">opstillingskreds </h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/opstillingskreds?q=vest HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -260,7 +259,7 @@ Syntaks eksempel som søger efter 'vest' med filter på storkreds '6':
 
 <br/><br/>
 
-### politikreds {dok_politikreds}
+<h3 id="dok_politikreds">politikred </h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/politikreds?q=vest HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -279,7 +278,7 @@ Syntaks eksempel som søger efter 'ø' med `filter` på `geometri` - Nørrejylla
 
 <br/><br/>
 
-### postnummer {dok_postnummer}
+<h3 id="dok_postnummer">postnummer</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postnummer?limit=60&q=b HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -307,7 +306,7 @@ Syntaks eksempel som søger efter 'mar'og `filter` på `geometri` - Lolland-Fals
 
 <br/><br/>
 
-### region {dok_region}
+<h3 id="dok_region">region</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/region?q=mid HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -326,7 +325,7 @@ Syntaks eksempel som søger efter 'regi':
 
 <br/><br/>
 
-### retskreds {dok_retskreds}
+<h3 id="dok_retskreds">retskreds</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/retskreds?q=mid HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -345,7 +344,7 @@ Syntaks eksempel som søger efter 'a':
 
 <br/><br/>
 
-### sogn {dok_sogn}
+<h3 id="dok_sogn">sogn</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/sogn?q=bis HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -373,7 +372,7 @@ Syntaks eksempel som søger efter 'r' og med `filter` på `geometri` - Odsherred
 
 <br/><br/>
 
-### stednavn {dok_stednavn}
+<h3 id="dok_stednavn">stednavn</h3>
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=kattebj HTTP/1.1
 Host: api.dataforsyningen.dk
