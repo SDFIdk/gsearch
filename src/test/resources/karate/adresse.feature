@@ -141,7 +141,7 @@ Feature: Gsearch adresse test
         When method GET
         Then status 200
         And match response == '#[6]'
-        And match response.[0].visningstekst == ['Rentemestervej 110, 2. th, 2400 København NV']
+        And match response.[0].visningstekst == "Rentemestervej 110, 2. th, 2400 København NV"
 
         Then param q = 'Rentemest 110, 2. th,'
 
@@ -151,4 +151,4 @@ Feature: Gsearch adresse test
         And match secondresponse == '#[6]'
 
         Then match response == secondresponse
-        And match response.[0].visningstekst == ['Rentemestervej 110, 2. th, 2400 København NV']
+        And match response.[0].visningstekst == "Rentemestervej 110, 2. th, 2400 København NV"
