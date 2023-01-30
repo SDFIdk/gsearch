@@ -135,7 +135,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/adresse", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Adresse", tags = {"Gsearch"})
+  @Operation(operationId = "adresse", tags = {"Gsearch"})
   public List<adresse> getAdresse(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -158,7 +158,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/husnummer", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Husnummer", tags = {"Gsearch"})
+  @Operation(operationId = "husnummer", tags = {"Gsearch"})
   public List<husnummer> getHusnummer(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -181,7 +181,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/kommune", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Kommune", tags = {"Gsearch"})
+  @Operation(operationId = "kommune", tags = {"Gsearch"})
   public List<kommune> getKommune(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -204,7 +204,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/matrikel", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Matrikel", tags = {"Gsearch"})
+  @Operation(operationId = "matrikel", tags = {"Gsearch"})
   public List<matrikel> getMatrikel(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -227,7 +227,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/navngivenvej", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Navngivenvej", tags = {"Gsearch"})
+  @Operation(operationId = "navngivenvej", tags = {"Gsearch"})
   public List<navngivenvej> getNavngivenvej(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -250,7 +250,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/opstillingskreds", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Opstillingskreds", tags = {"Gsearch"})
+  @Operation(operationId = "opstillingskreds", tags = {"Gsearch"})
   public List<opstillingskreds> getOpstillingskreds(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -273,7 +273,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/politikreds", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Politikreds", tags = {"Gsearch"})
+  @Operation(operationId = "politikreds", tags = {"Gsearch"})
   public List<politikreds> getPolitikreds(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -296,7 +296,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/postnummer", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Postnummer", tags = {"Gsearch"})
+  @Operation(operationId = "postnummer", tags = {"Gsearch"})
   public List<postnummer> getPostnummer(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -319,7 +319,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/region", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Region", tags = {"Gsearch"})
+  @Operation(operationId = "region", tags = {"Gsearch"})
   public List<region> getRegion(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -342,7 +342,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/retskreds", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Retskreds", tags = {"Gsearch"})
+  @Operation(operationId = "retskreds", tags = {"Gsearch"})
   public List<retskreds> getRetskreds(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -365,7 +365,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/sogn", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Sogn", tags = {"Gsearch"}, responses = {
+  @Operation(operationId = "sogn", tags = {"Gsearch"}, responses = {
       @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = sogn.class))),
       @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
       @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
@@ -391,7 +391,7 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/stednavn", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "Stednavn", tags = {"Gsearch"}, responses = {
+  @Operation(operationId = "stednavn", tags = {"Gsearch"}, responses = {
       @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = stednavn.class))),
       @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
       @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
