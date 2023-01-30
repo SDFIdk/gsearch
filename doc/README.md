@@ -1,8 +1,8 @@
 # GSearch dokumentation
 
-**GSearch** er et REST-api som udstiller forskellige endpoints til at søge i adresser, matrikelnumre og Danmarks Administrative Geografiske Inddeling og Danske Stednavne. 
-API'et tilbyder funktionalitet, som kan implementeres i en brugerapplikation i form af et søgefelt med autocomplete/typeahead funktion. 
-Der kan ses en demo af sådan en implementation her [GSearch-UI](https://sdfidk.github.io/gsearch-ui/). 
+**GSearch** er et REST-api som udstiller forskellige endpoints til at søge i adresser, matrikelnumre og Danmarks Administrative Geografiske Inddeling og Danske Stednavne.
+API'et tilbyder funktionalitet, som kan implementeres i en brugerapplikation i form af et søgefelt med autocomplete/typeahead funktion.
+Der kan ses en demo af sådan en implementation her [GSearch-UI](https://sdfidk.github.io/gsearch-ui/).
 Hvordan GSearch-UI kan installeres som en NPM pakke, kan læses mere om på dets [Github repository](https://github.com/SDFIdk/gsearch-ui#installation).
 
 
@@ -10,12 +10,12 @@ Hvordan GSearch-UI kan installeres som en NPM pakke, kan læses mere om på dets
 
 ## Generelt
 
-**GSearch** opdateres på ugentligt basis. Der er planlagt at opdatere data på daglig basis se [issue 92](https://github.com/SDFIdk/gsearch/issues/92) for opdatering. 
+**GSearch** opdateres på ugentligt basis. Der er planlagt at opdatere data på daglig basis se [issue 92](https://github.com/SDFIdk/gsearch/issues/92) for opdatering.
 Bemærk særligt at data fra DAR ikke har samme høje opdateringsfrekvens som i andre sammenhænge.
 
 **GSearch** kan søge i de ressourcer listet nedenfor.
 
-Datakilder for ressourcerne er de fire autoritative grunddataregistre: 
+Datakilder for ressourcerne er de fire autoritative grunddataregistre:
 Danmarks Adresseregister (DAR), Danmarks Administrative Geografiske Inddeling (DAGI), Matriklen (MAT) og Danske Stednavne, som udstilles via Datafordeler.dk.
 
 I hvert endpoint søges der efter bedst mulig match i et eller flere felter/attributter som følger:
@@ -109,7 +109,7 @@ For DAGI-objekterne; Postnummer bliver returneret i skala 1:10.000 (referenceska
 
 <h2 id="gsearch-eksempler">Eksempler</h2>
 
-### Adresse
+### adresse
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?q=flens HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -137,7 +137,7 @@ Syntaks eksempel som søger efter 'skanse' med `limit=100` og filter på `vejpun
 
 <br/><br/>
 
-### Husnummer
+### husnummer
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?q=genvej HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -165,7 +165,7 @@ Syntaks eksempel som søger efter 'fjordbak' med `limit=100` og `filter` på `ge
 
 <br/><br/>
 
-### Kommune
+### kommune
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -194,7 +194,7 @@ Syntaks eksempel som søger efter 'l' med `filter` på `geometri` - Lolland-Fals
 <br/><br/>
 
 
-### Matrikel
+### matrikel
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=123ab HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -222,7 +222,7 @@ Syntaks eksempel som søger efter '22' med `filter` på `geometri` - Lolland-Fal
 
 <br/><br/>
 
-### Navngivenvej
+### navngivenvej
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/navngivenvej?limit=100&q=krin HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -241,7 +241,7 @@ Syntaks eksempel som søger efter 'birk' med `filter` på `geometri` - et områd
 
 <br/><br/>
 
-### Opstillingskreds
+### opstillingskreds
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/opstillingskreds?q=vest HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -260,7 +260,7 @@ Syntaks eksempel som søger efter 'vest' med filter på storkreds '6':
 
 <br/><br/>
 
-### Politikreds
+### politikreds
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/politikreds?q=vest HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -279,7 +279,7 @@ Syntaks eksempel som søger efter 'ø' med `filter` på `geometri` - Nørrejylla
 
 <br/><br/>
 
-### Postnummer
+### postnummer
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/postnummer?limit=60&q=b HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -307,7 +307,7 @@ Syntaks eksempel som søger efter 'mar'og `filter` på `geometri` - Lolland-Fals
 
 <br/><br/>
 
-### Region
+### region
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/region?q=mid HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -326,7 +326,7 @@ Syntaks eksempel som søger efter 'regi':
 
 <br/><br/>
 
-### Retskreds
+### retskreds
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/retskreds?q=mid HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -345,7 +345,7 @@ Syntaks eksempel som søger efter 'a':
 
 <br/><br/>
 
-### Sogn
+### sogn
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/sogn?q=bis HTTP/1.1
 Host: api.dataforsyningen.dk
@@ -373,7 +373,7 @@ Syntaks eksempel som søger efter 'r' og med `filter` på `geometri` - Odsherred
 
 <br/><br/>
 
-### Stednavn
+### stednavn
 ```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=kattebj HTTP/1.1
 Host: api.dataforsyningen.dk
