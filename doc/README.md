@@ -95,7 +95,7 @@ Accept: application/json
 _Eksempel:_ Filter med geometri (BBOX) for stednavne inden for et område i Sønderjylland.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=BBOX(geometri,%20515000.1,6074200.2,%20555000.5,6104200.6) HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=BBOX(geometri, 515000.1,6074200.2, 555000.5,6104200.6, 'epsg:25832') HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
