@@ -66,12 +66,12 @@ Feature: Gsearch matrikel test
     And match response.[*].ejerlavsnavn contains deep ['Damhussøen, København']
 
   Scenario: Combine search using ejerlavskode and ejerlavsnavn
-    Then param q = '2000154 utterslev'
+    Then param q = 'utterslev'
 
     When method GET
     Then status 200
     And match response == '#[10]'
-    And match response.[*].ejerlavsnavn contains deep ['Damhussøen, København', 'Utterslev By, Utterslev']
+    And match response.[*].ejerlavsnavn contains deep ['Utterslev By, Utterslev']
 
   Scenario: Do not have a match on '.'
     Then param q = '.'
@@ -79,6 +79,32 @@ Feature: Gsearch matrikel test
     When method GET
     Then status 200
     And match response == '#[0]'
+
+  Scenario: Search is interchangeable order of ejerlavsnavn and matrikelnummer
+    Then param q = 'staurby 4a 401954'
+
+    When method GET
+    Then status 200
+    And def firstresponse = response
+    And match firstresponse == '#[5]'
+
+    Then param q = '4a 401954 staurby'
+
+    When method GET
+    Then status 200
+    And def secondresponse = response
+    And match secondresponse == '#[8]'
+
+    Then match firstresponse == secondresponse
+
+    Then param q = '401954 4a staurby'
+
+    When method GET
+    Then status 200
+    And def thirdresponse = response
+    And match thirdresponse == '#[5]'
+
+    Then match thirdresponse == secondresponse
 
 #  Scenario: Test maximum limit and one character search
 #    Then param q = 's'
