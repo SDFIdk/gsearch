@@ -71,10 +71,11 @@ ejerlavsnavn_dups AS (
         ejerlavsnavn
 )
 SELECT
-    m.ejerlavsnavn || CASE WHEN ejerlavsnavn_count > 1 THEN
-        ' (' || m.kommunenavn || ')' || ' - ' || m.matrikelnummer
-    ELSE
-        '' || ' - ' || m.matrikelnummer
+    m.matrikelnummer || ', ' || CASE WHEN ejerlavsnavn_count > 1
+        THEN
+            m.ejerlavsnavn || ' (' || m.kommunenavn || ')'
+        ELSE
+            m.ejerlavsnavn
     END AS visningstekst,
     m.ejerlavsnavn,
     m.ejerlavskode,
