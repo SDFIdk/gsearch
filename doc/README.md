@@ -79,15 +79,23 @@ Accept: application/json
 
 Brug af geometri som filter vil være relevant, når man ønsker at begrænse søgningen inden for en polygon, der fx kan repræsentere et kortudsnit i brugerapplikationen.
 
-Det spatiale referencesystem i et geometrifilter skal angives som `SRID=25832`.
+Det spatiale referencesystem i et geometrifilter skal angives i EPSG:25832 (ETRS89 UTM Zone 32).
 
 Adresser og husnumre har ikke geometri i `bbox`, de har dog en ekstra `vejpunkt_geometri` udover `geometri` (indeholder geometrien fra adgangspunkt_geometri), som begge kan anvendes i et geografisk filter.
 Matrikel har hellere ikke geometri i `bbox`, men de har to ekstra `centroid_x` og `centroid_y` udover `geometri`, som alle tre kan anvendes i et geografisk filter.
 
-_Eksempel:_ Filter med geometri for stednavne inden for et område i Sønderjylland.
+_Eksempel:_ Filter med geometri (POLYGON) for stednavne inden for et område i Sønderjylland.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=INTERSECTS(geometri,SRID=25832,POLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+
+_Eksempel:_ Filter med geometri (BBOX) for stednavne inden for et område i Sønderjylland.
+
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=BBOX(geometri,%20515000.1,6074200.2,%20555000.5,6104200.6) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
