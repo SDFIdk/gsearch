@@ -184,7 +184,7 @@ Syntaks eksempel som søger efter 'a' med `filter` på `kommunekode` '0851', dvs
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=l&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2))) HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=l&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1%206049000.2%2C%20615000.3%206111000.4%2C%20735000.5%206111000.6%2C%20735000.7%206049000.8%2C%20615000.1%206049000.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -327,11 +327,11 @@ Syntaks eksempel som søger efter 'regi':
 
 <h3 id="dok_retskreds">retskreds</h3>
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/retskreds?q=mid HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/retskreds?q=ros HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'mid':
+Syntaks eksempel som søger efter 'ros':
 
 <br/><br/>
 
