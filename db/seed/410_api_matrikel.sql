@@ -71,10 +71,11 @@ ejerlavsnavn_dups AS (
         ejerlavsnavn
 )
 SELECT
-    m.ejerlavsnavn || CASE WHEN ejerlavsnavn_count > 1 THEN
-        ' (' || m.kommunenavn || ')' || ' - ' || m.matrikelnummer
-    ELSE
-        '' || ' - ' || m.matrikelnummer
+    m.matrikelnummer || ', ' || CASE WHEN ejerlavsnavn_count > 1
+        THEN
+            m.ejerlavsnavn || ' (' || m.kommunenavn || ')'
+        ELSE
+            m.ejerlavsnavn
     END AS visningstekst,
     m.ejerlavsnavn,
     m.ejerlavskode,
@@ -156,11 +157,6 @@ CREATE OR REPLACE FUNCTION api.matrikel(input_tekst text, filters text, sortopti
     AS $function$
 DECLARE
     max_rows integer;
-    input_ejerlavsnavn text;
-    input_ejerlavskode_matrikel text;
-    ejerlavsnavn_string text;
-    ejerlavsnavn_string_plain text;
-    ejerlavskode_matrikel_string text;
     query_string text;
     plain_query_string text;
     stmt text;
@@ -178,63 +174,32 @@ BEGIN
     END IF;
 
     SELECT
-        -- matches non-digits and removes repeated whitespace and '-'
-        regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '[- \s]+', ' ', 'g')
-    INTO input_ejerlavsnavn;
+        -- removes repeated whitespace and '-'
+        regexp_replace(input_tekst, '[- \s]+', ' ', 'g')
+    INTO input_tekst;
 
-    SELECT
-        -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
-        btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
-    INTO input_ejerlavskode_matrikel;
-
+    -- Build the query_string (converting vejnavn of input to phonetic)
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(input_ejerlavsnavn, ' ')) t
+            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
     )
     SELECT
-        string_agg(t, ':* <-> ') || ':*'
+            string_agg(fonetik.fnfonetik (t, 2), ':* & ') || ':*'
     FROM
         tokens
-    INTO ejerlavsnavn_string_plain;
+    INTO query_string;
 
+    -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(input_ejerlavsnavn, ' ')) t
+            -- Splitter op i temp-tabel hver hvert vejnavn-ord i hver sin raekke.
+            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
     )
     SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':* <-> ') || ':*'
+            string_agg(t, ':* & ') || ':*'
     FROM
-        tokens INTO ejerlavsnavn_string;
-
-    WITH tokens AS (
-        SELECT
-            UNNEST(string_to_array(input_ejerlavskode_matrikel, ' ')) t
-    )
-    SELECT
-        string_agg(t, ' & ')
-    FROM
-        tokens INTO ejerlavskode_matrikel_string;
-    CASE WHEN ejerlavsnavn_string IS NULL THEN
-        SELECT
-            ejerlavskode_matrikel_string INTO query_string;
-    WHEN ejerlavskode_matrikel_string IS NULL THEN
-        SELECT
-            ejerlavsnavn_string INTO query_string;
-        ELSE
-            SELECT
-                ejerlavsnavn_string || ' | ' || ejerlavskode_matrikel_string INTO query_string;
-    END CASE;
-    CASE WHEN ejerlavsnavn_string_plain IS NULL THEN
-        SELECT
-            ejerlavskode_matrikel_string INTO plain_query_string;
-    WHEN ejerlavskode_matrikel_string IS NULL THEN
-        SELECT
-            ejerlavsnavn_string_plain INTO plain_query_string;
-        ELSE
-            SELECT
-                ejerlavsnavn_string_plain || ' | ' || ejerlavskode_matrikel_string INTO plain_query_string;
-    END CASE;
-
+        tokens
+    INTO plain_query_string;
 
 -- Hvis en soegning ender med at have over ca. 1000 resultater, kan soegningen tage lang tid.
 -- Dette er dog ofte soegninger, som ikke noedvendigvis giver mening. (fx. husnummer = 's'
@@ -259,7 +224,7 @@ BEGIN
             basic.tekst_forekomst
         WHERE
             ressource = 'matrikel'
-        AND lower(input_ejerlavsnavn) = tekstelement ) > 1000
+        AND lower(input_tekst) = tekstelement ) > 1000
         AND filters = '1=1'
     THEN
         stmt = format(E'SELECT
