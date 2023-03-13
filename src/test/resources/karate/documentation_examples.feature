@@ -62,12 +62,12 @@ Feature:
         And match response == '#[10]'
 
     Scenario: Example 7
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=100&q=skanse&filter=INTERSECTS(vejpunkt_geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=100&q=skanse&filter=INTERSECTS(vejpunkt_geometri,SRID=25832%3BPOLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2)))
         Given path 'adresse'
         Then param q = 'skanse'
 
         And param limit = '100'
-        And param filter = 'INTERSECTS(vejpunkt_geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))'
+        And param filter = 'INTERSECTS(vejpunkt_geometri,SRID=25832%3BPOLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))'
         When method GET
         Then status 200
         And match response == '#[24]'
@@ -93,12 +93,12 @@ Feature:
         And match response == '#[30]'
 
     Scenario: Example 10 
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=100&q=fjordbak&filter=INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=100&q=fjordbak&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
         Given path 'husnummer'
         Then param q = 'fjordbak'
 
         And param limit = '100'
-        And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))'
+        And param filter = 'INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))'
         When method GET
         Then status 200
         And match response == '#[45]'
@@ -111,7 +111,7 @@ Feature:
 
         When method GET
         Then status 200
-        And match response == '#[6]'
+        And match response == '#[7]'
 
     Scenario: Example 12
         # https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a&filter=kommunekode='0851'
@@ -124,12 +124,12 @@ Feature:
         And match response == '#[1]'
 
     Scenario: Example 13 
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=l&filter=INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=l&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
         Given path 'kommune'
         Then param q = 'l'
 
-        And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))'
-        #And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
+        And param filter = 'INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))'
+        #And param filter = 'INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
         When method GET
         Then status 200
         And match response == '#[2]'
@@ -155,21 +155,21 @@ Feature:
         And match response == '#[1]'
 
     Scenario: Example 16
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=22&filter=INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=22&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))
         Given path 'matrikel'
         Then param q = '22'
 
-        And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
+        And param filter = 'INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
         When method GET
         Then status 200
         And match response == '#[10]'
 
     Scenario: Example 17
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/navngivenvej?q=birk&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/navngivenvej?q=birk&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))
         Given path 'navngivenvej'
         Then param q = 'birk'
 
-        And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))'
+        And param filter = 'INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))'
         When method GET
         Then status 200
         And match response == '#[9]'
@@ -204,11 +204,11 @@ Feature:
         And match response == '#[3]'
 
     Scenario: Example 21
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/politikreds?q=ø&filter=INTERSECTS(geometri,SRID=25832;POLYGON((440000.1 6190000.2, 440000.3 6410000.4, 620000.5 6410000.6, 620000.7 6190000.8, 440000.1 6190000.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/politikreds?q=ø&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((440000.1 6190000.2, 440000.3 6410000.4, 620000.5 6410000.6, 620000.7 6190000.8, 440000.1 6190000.2)))
         Given path 'politikreds'
         Then param q = 'ø'
 
-        And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((440000.1 6190000.2, 440000.3 6410000.4, 620000.5 6410000.6, 620000.7 6190000.8, 440000.1 6190000.2)))'
+        And param filter = 'INTERSECTS(geometri,SRID=25832%3BPOLYGON((440000.1 6190000.2, 440000.3 6410000.4, 620000.5 6410000.6, 620000.7 6190000.8, 440000.1 6190000.2)))'
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -234,11 +234,11 @@ Feature:
         And match response == '#[2]'
 
     Scenario: Example 24
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/postnummer?q=mari&filter=INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/postnummer?q=mari&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
         Given path 'postnummer'
         Then param q = 'mari'
 
-        And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))'
+        And param filter = 'INTERSECTS(geometri,SRID=25832%3BPOLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))'
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -279,7 +279,7 @@ Feature:
 
         When method GET
         Then status 200
-        And match response == '#[1]'
+        And match response == '#[2]'
 
 
     Scenario: Example 29
@@ -301,11 +301,11 @@ Feature:
         And match response == '#[4]'
 
     Scenario: Example 31
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/sogn?q=r&filter=INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/sogn?q=r&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))
         Given path 'sogn'
         Then param q = 'r'
 
-        And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))'
+        And param filter = 'INTERSECTS(geometri,SRID=25832%3BPOLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))'
         When method GET
         Then status 200
         And match response == '#[5]'
@@ -351,11 +351,11 @@ Feature:
         And match response == '#[2]'
 
     Scenario: Example 36
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=steng&filter=INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=steng&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))
         Given path 'stednavn'
         Then param q = 'steng'
 
-        And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))'
+        And param filter = 'INTERSECTS(geometri,SRID=25832%3BPOLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))'
         When method GET
         Then status 200
         And match response == '#[4]'
