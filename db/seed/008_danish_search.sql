@@ -27,6 +27,14 @@ ALTER TEXT SEARCH DICTIONARY unaccent (RULES = 'unaccent_gsearch');
 
 -- set the configuration to use the dictionaries in order: unaccent -> xsyn -> simply
 ALTER TEXT SEARCH CONFIGURATION basic.septima_fts_config
-    ALTER MAPPING FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part, numword, numhword WITH unaccent,
+    ALTER MAPPING FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part WITH unaccent,
     xsyn,
     simple;
+
+-- drop mappings for hyphenated words. This results in hyphenated words being treated as a single word
+ALTER TEXT SEARCH CONFIGURATION basic.septima_fts_config
+    DROP MAPPING FOR hword_asciipart;
+
+ALTER TEXT SEARCH CONFIGURATION basic.septima_fts_config
+    DROP MAPPING FOR hword_part;
+
