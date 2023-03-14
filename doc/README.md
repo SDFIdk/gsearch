@@ -87,7 +87,7 @@ Matrikel har hellere ikke geometri i `bbox`, men de har to ekstra `centroid_x` o
 _Eksempel:_ Filter med geometri (POLYGON) for stednavne inden for et område i Sønderjylland.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=INTERSECTS(geometri,SRID=25832,POLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((515000.1%206074200.2,%20515000.3%206104200.4,%20555000.5%206104200.6,%20555000.7%206074200.8,%20515000.1%206074200.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -95,7 +95,7 @@ Accept: application/json
 _Eksempel:_ Filter med geometri (BBOX) for stednavne inden for et område i Sønderjylland.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=BBOX(geometri, 515000.1,6074200.2, 555000.5,6104200.6, 'epsg:25832') HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/stednavn?q=ben&filter=BBOX(geometri,%20515000.1,6074200.2,%20555000.5,6104200.6,%20%27epsg:25832%27) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
