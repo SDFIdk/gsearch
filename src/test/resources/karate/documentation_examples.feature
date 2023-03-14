@@ -111,7 +111,7 @@ Feature:
 
         When method GET
         Then status 200
-        And match response == '#[6]'
+        And match response == '#[7]'
 
     Scenario: Example 12
         # https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a&filter=kommunekode='0851'
@@ -279,7 +279,7 @@ Feature:
 
         When method GET
         Then status 200
-        And match response == '#[1]'
+        And match response == '#[2]'
 
 
     Scenario: Example 29
