@@ -27,8 +27,8 @@ Feature:
         Then param q = 'Lærke'
 
         And param filter = "kommunekode='0461'"
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[10]'
 
 
@@ -38,8 +38,8 @@ Feature:
         Then param q = 'ben'
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[3]'
 
     Scenario: Example 5
@@ -68,8 +68,8 @@ Feature:
 
         And param limit = '100'
         And param filter = 'INTERSECTS(vejpunkt_geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[24]'
 
     Scenario: Example 8
@@ -99,8 +99,8 @@ Feature:
 
         And param limit = '100'
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[45]'
 
 
@@ -130,8 +130,8 @@ Feature:
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))'
         #And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[2]'
 
 
@@ -160,8 +160,8 @@ Feature:
         Then param q = '22'
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[10]'
 
     Scenario: Example 17
@@ -170,8 +170,8 @@ Feature:
         Then param q = 'birk'
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[9]'
 
     Scenario: Example 18
@@ -209,8 +209,8 @@ Feature:
         Then param q = 'ø'
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((440000.1 6190000.2, 440000.3 6410000.4, 620000.5 6410000.6, 620000.7 6190000.8, 440000.1 6190000.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[1]'
 
 
@@ -239,8 +239,8 @@ Feature:
         Then param q = 'mari'
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[1]'
 
 
@@ -306,8 +306,8 @@ Feature:
         Then param q = 'r'
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[5]'
 
 
@@ -356,7 +356,7 @@ Feature:
         Then param q = 'steng'
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))'
+        And retry until responseStatus == 200
         When method GET
-        Then status 200
         And match response == '#[4]'
 
