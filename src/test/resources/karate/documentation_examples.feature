@@ -1,6 +1,6 @@
 Feature:
     Background:
-    * url url
+        * url url
 
     Scenario: Example 1 
         # https://api.dataforsyningen.dk/rest/gsearch/v1.0/navngivenvej?q=Lærke
@@ -92,7 +92,7 @@ Feature:
         Then status 200
         And match response == '#[30]'
 
-    Scenario: Example 10 
+    Scenario: Example 10
         # https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=100&q=fjordbak&filter=INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
         Given path 'husnummer'
         Then param q = 'fjordbak'
@@ -123,7 +123,7 @@ Feature:
         Then status 200
         And match response == '#[1]'
 
-    Scenario: Example 13 
+    Scenario: Example 13
         # https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=l&filter=INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
         Given path 'kommune'
         Then param q = 'l'
@@ -135,7 +135,7 @@ Feature:
         And match response == '#[2]'
 
 
-    Scenario: Example 14 
+    Scenario: Example 14
         # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=123ab
         Given path 'matrikel'
         Then param q = '123ab'

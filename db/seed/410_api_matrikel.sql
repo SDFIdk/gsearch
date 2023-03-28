@@ -100,8 +100,9 @@ INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     FROM
     basic.matrikel am
     CROSS JOIN a
+    WHERE ejerlavsnavn IS NOT null
     GROUP BY
-substring(lower(ejerlavsnavn) FROM 1 FOR a)
+    substring(lower(ejerlavsnavn) FROM 1 FOR a)
     HAVING
     count(1) > 1000
     ON CONFLICT DO NOTHING;
