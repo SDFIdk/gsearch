@@ -104,6 +104,7 @@ INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
     FROM
     basic.husnummer am
     CROSS JOIN a
+    WHERE vejnavn IS NOT null
     GROUP BY
 substring(lower(vejnavn) FROM 1 FOR a)
     HAVING

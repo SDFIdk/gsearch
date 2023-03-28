@@ -71,6 +71,7 @@ GROUP BY
     FROM
     basic.navngivenvej am
     CROSS JOIN a
+    WHERE vejnavn IS NOT null
     GROUP BY
     substring(lower(vejnavn) FROM 1 FOR a)
     HAVING
