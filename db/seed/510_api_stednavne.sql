@@ -135,20 +135,21 @@ GROUP BY
 
 
 -- Inserts into tekst_forekomst
-    WITH a AS (SELECT generate_series(1,8) a)
+WITH a AS (SELECT generate_series(1,8) a)
 INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
-    SELECT
+SELECT
     'stednavn',
     substring(lower(skrivemaade) FROM 1 FOR a),
     count(*)
-    FROM
+FROM
     basic.stednavn am
-    CROSS JOIN a
-    GROUP BY
+        CROSS JOIN a
+WHERE skrivemaade IS NOT null
+GROUP BY
     substring(lower(skrivemaade) FROM 1 FOR a)
-    HAVING
-    count(1) > 1000
-    ON CONFLICT DO NOTHING;
+HAVING
+        count(1) > 1000
+ON CONFLICT DO NOTHING;
 
 ALTER TABLE basic.stednavn
     DROP COLUMN IF EXISTS textsearchable_plain_col;
