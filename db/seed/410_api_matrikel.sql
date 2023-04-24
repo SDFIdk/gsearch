@@ -6,8 +6,8 @@ DROP TYPE IF EXISTS api.matrikel CASCADE;
 CREATE TYPE api.matrikel AS (
     ejerlavsnavn text,
     ejerlavskode text,
-    kommunekode text,
     kommunenavn text,
+    kommunekode text,
     matrikelnummer text,
     visningstekst text,
     centroid_x text,
@@ -21,9 +21,9 @@ COMMENT ON COLUMN api.matrikel.ejerlavsnavn IS 'Ejerlavsnavn for matrikel';
 
 COMMENT ON COLUMN api.matrikel.ejerlavskode IS 'Ejerlavskode for matrikel';
 
-COMMENT ON COLUMN api.matrikel.kommunekode IS 'Kommunekode for matrikel';
-
 COMMENT ON COLUMN api.matrikel.kommunenavn IS 'Kommunenavn for matrikel';
+
+COMMENT ON COLUMN api.matrikel.kommunekode IS 'Kommunekode for matrikel';
 
 COMMENT ON COLUMN api.matrikel.matrikelnummer IS 'Matrikelnummer';
 
@@ -41,8 +41,8 @@ WITH matrikelnumre AS (
     SELECT
         e.ejerlavsnavn,
         e.ejerlavskode::text,
-        k.kommunekode,
         k.kommunenavn,
+        k.kommunekode,
         j.matrikelnummer,
         c.geometri AS centroide_geometri,
         st_force2d (COALESCE(l.geometri)) AS geometri
@@ -86,8 +86,8 @@ SELECT
     END AS visningstekst,
     m.ejerlavsnavn,
     m.ejerlavskode,
-    m.kommunekode,
     m.kommunenavn,
+    m.kommunekode,
     m.matrikelnummer,
     m.centroide_geometri,
     e.textsearchable_plain_col_ejerlavsnavn,
@@ -240,8 +240,8 @@ BEGIN
         stmt = format(E'SELECT
                 ejerlavsnavn::text,
                 ejerlavskode::text,
-                kommunekode::text,
                 kommunenavn::text,
+                kommunekode::text,
                 matrikelnummer::text,
                 visningstekst::text,
                 ST_X((ST_DUMP(centroide_geometri)).geom)::text,
@@ -264,8 +264,8 @@ BEGIN
         stmt = format(E'SELECT
                 ejerlavsnavn::text,
                 ejerlavskode::text,
-                kommunekode::text,
                 kommunenavn::text,
+                kommunekode::text,
                 matrikelnummer::text,
                 visningstekst::text,
                 ST_X((ST_DUMP(centroide_geometri)).geom)::text,
