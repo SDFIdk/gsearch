@@ -33,10 +33,10 @@ DROP TABLE IF EXISTS basic.matrikel;
 
 WITH matrikelnumre AS (
     SELECT
-        coalesce(e.ejerlavsnavn, '') AS ejerlavsnavn,
-        coalesce(e.ejerlavskode::text, '') AS ejerlavskode,
-        coalesce(k.kommunenavn, '') AS kommunenavn,
-        coalesce(j.matrikelnummer, '') AS matrikelnummer,
+        e.ejerlavsnavn,
+        e.ejerlavskode,
+        k.kommunenavn,
+        j.matrikelnummer,
         c.geometri AS centroide_geometri,
         st_force2d (COALESCE(l.geometri)) AS geometri
     FROM
