@@ -40,7 +40,7 @@ DROP TABLE IF EXISTS basic.matrikel;
 WITH matrikelnumre AS (
     SELECT
         e.ejerlavsnavn,
-        e.ejerlavskode,
+        e.ejerlavskode::text,
         k.kommunekode,
         k.kommunenavn,
         j.matrikelnummer,
