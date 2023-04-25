@@ -10,6 +10,7 @@ CREATE TYPE api.postnummer AS (
     postnummernavn text,
     visningstekst text,
     gadepostnummer bool,
+    kommunekoder text,
     geometri geometry,
     bbox geometry
 );
@@ -23,6 +24,8 @@ COMMENT ON COLUMN api.postnummer.postnummernavn IS 'Navn på postnummernavn';
 COMMENT ON COLUMN api.postnummer.visningstekst IS 'Præsentationsform for et postnummernavn';
 
 COMMENT ON COLUMN api.postnummer.gadepostnummer IS 'Dækker postnummeret kun en gade';
+
+COMMENT ON COLUMN api.postnummer.kommunekoder IS 'Liste over kommunekoder i postnummeret';
 
 COMMENT ON COLUMN api.postnummer.geometri IS 'Geometri i EPSG:25832';
 
@@ -190,7 +193,13 @@ BEGIN
     --RAISE NOTICE 'query_string: %', query_string; RAISE NOTICE 'plain_query_string: %', plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            postnummer::text, postnummernavn::text, visningstekst, ergadepostnummer, geometri, bbox::geometry
+                postnummer::text,
+                postnummernavn::text,
+                visningstekst,
+                ergadepostnummer,
+                kommunekoder::text,
+                geometri,
+                bbox::geometry
             FROM
                 basic.postnummer
             WHERE (
@@ -199,13 +208,23 @@ BEGIN
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
-                ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
+                basic.combine_rank(
+                    $2,
+                    $2,
+                    textsearchable_plain_col,
+                    textsearchable_unaccent_col,
+                    ''simple''::regconfig,
+                    ''basic.septima_fts_config''::regconfig
+                ) desc,
+                    ts_rank_cd(
+                    textsearchable_phonetic_col,
+                    to_tsquery(''simple'',$1)
+                )::double precision desc,
                 postnummernavn
-            LIMIT $3
-            ;', filters); RETURN QUERY EXECUTE stmt
+            LIMIT $3 ;', filters);
+    RETURN QUERY EXECUTE stmt
     USING query_string, plain_query_string, rowlimit;
-    END
+END
 $function$;
 -- Test cases:
 /*
