@@ -11,6 +11,7 @@ CREATE TYPE api.navngivenvej AS (
     visningstekst text,
     postnumre text,
     postnummernavne text,
+    kommunekoder text,
     geometri geometry,
     bbox geometry
 );
@@ -27,8 +28,10 @@ COMMENT ON COLUMN api.navngivenvej.postnumre IS 'Alle postnumre for navngiven ve
 
 COMMENT ON COLUMN api.navngivenvej.postnummernavne IS 'Alle postnummernavne for navngiven vej';
 
+COMMENT ON COLUMN api.navngivenvej.kommunekoder IS 'Alle kommunekoder for navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej i EPSG:25832, linje eller polygon';
+
 COMMENT ON COLUMN api.navngivenvej.bbox IS 'Geometriens boundingbox';
 
 DROP TABLE IF EXISTS basic.navngivenvej;
@@ -39,11 +42,13 @@ WITH vejnavne AS (
         n.vejnavn,
         p.postnr AS postnumre,
         p.navn AS postnummernavne,
+        string_agg(k.kommunekode, ',') AS kommunekoder,
         n.geometri AS geometri
     FROM
         dar.navngivenvej n
         JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej_id = n.id)
         JOIN dar.postnummer p ON (nvp.postnummer_id = p.id)
+        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, n.geometri))
     GROUP BY
         n.id,
         n.vejnavn,
@@ -57,6 +62,7 @@ WITH vejnavne AS (
         coalesce(v.vejnavn, '') AS vejnavn,
         string_agg(DISTINCT v.postnumre, ',') AS postnumre,
         string_agg(DISTINCT v.postnummernavne, ',') AS postnummernavne,
+        v.kommunekoder,
         st_multi (st_union (geometri)) AS geometri,
         st_envelope (st_collect (v.geometri)) AS bbox
 INTO basic.navngivenvej
@@ -64,7 +70,8 @@ FROM
     vejnavne v
 GROUP BY
     v.id,
-    v.vejnavn;
+    v.vejnavn,
+    v.kommunekoder;
 
 
 -- Inserts into the tekst_forekomst table
@@ -264,6 +271,7 @@ BEGIN
                 visningstekst::text,
                 postnumre,
                 postnummernavne,
+                kommunekoder,
                 geometri,
                 bbox
             FROM
@@ -283,6 +291,7 @@ BEGIN
                 visningstekst::text,
                 postnumre,
                 postnummernavne,
+                kommunekoder,
                 geometri,
                 bbox
             FROM
