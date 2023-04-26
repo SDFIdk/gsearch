@@ -9,8 +9,8 @@ CREATE TYPE api.navngivenvej AS (
     id text,
     vejnavn text,
     visningstekst text,
-    postnummer text,
-    postnummernavn text,
+    postnumre text,
+    postnummernavne text,
     geometri geometry,
     bbox geometry
 );
@@ -23,9 +23,9 @@ COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
 
 COMMENT ON COLUMN api.navngivenvej.visningstekst IS 'Præsentationsform for et navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Alle postnumre for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postnumre IS 'Alle postnumre for navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.postnummernavn IS 'Alle postnummernavne for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postnummernavne IS 'Alle postnummernavne for navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej. Geometri i EPSG:25832. Kan enten være en linje eller en polygon';
 
@@ -37,22 +37,28 @@ WITH vejnavne AS (
     SELECT
         n.id AS id,
         n.vejnavn,
-        p.postnr AS postnummer,
-        p.navn AS postnummernavn,
+        p.postnr AS postnumre,
+        p.navn AS postnummernavne,
         n.geometri AS geometri
     FROM
         dar.navngivenvej n
         JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej_id = n.id)
-        JOIN dar.postnummer p ON (nvp.postnummer_id = p.id))
+        JOIN dar.postnummer p ON (nvp.postnummer_id = p.id)
+    GROUP BY
+        n.id,
+        n.vejnavn,
+        p.postnr,
+        p.navn,
+        n.geometri)
     --SELECT v.vejnavn || '(' || v.postnummer[1] || ' - ' || v.postnummer[-1] || ')' AS visningstekst,
     SELECT
         v.vejnavn AS visningstekst,
         v.id,
         coalesce(v.vejnavn, '') AS vejnavn,
-    array_agg(DISTINCT v.postnummer) AS postnumre,
-    array_agg(DISTINCT v.postnummernavn) AS postnummernavn,
-    st_multi (st_union (geometri)) AS geometri,
-    st_envelope (st_collect (v.geometri)) AS bbox
+        string_agg(DISTINCT v.postnumre, ',') AS postnumre,
+        string_agg(DISTINCT v.postnummernavne, ',') AS postnummernavne,
+        st_multi (st_union (geometri)) AS geometri,
+        st_envelope (st_collect (v.geometri)) AS bbox
 INTO basic.navngivenvej
 FROM
     vejnavne v
@@ -139,8 +145,8 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 2)), 'B') ||
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 3)), 'C') ||
                          setweight(to_tsvector('simple', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnumre)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavn)), 'D'))
+                         setweight(to_tsvector('simple', postnumre), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavne), 'D'))
     STORED;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
@@ -153,8 +159,8 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 2)), 'B') ||
                          setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 3)), 'C') ||
                          setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnumre)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavn)), 'D'))
+                         setweight(to_tsvector('simple', postnumre), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavne), 'D'))
 
     STORED;
 
@@ -168,8 +174,8 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 2), 2)), 'B') ||
                          setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 3), 2)), 'C') ||
                          setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (vejnavn, 4)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnumre)), 'D') ||
-                         setweight(to_tsvector('simple', basic.array_to_string_immutable(postnummernavn)), 'D'))
+                         setweight(to_tsvector('simple', postnumre), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavne), 'D'))
 
     STORED;
 
@@ -253,7 +259,13 @@ BEGIN
         WHERE
             ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
         stmt = format(E'SELECT
-                id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavn, '',''), geometri, bbox
+                id::text,
+                vejnavn::text,
+                visningstekst::text,
+                postnumre,
+                postnummernavne,
+                geometri,
+                bbox
             FROM
                 basic.navngivenvej
             WHERE
@@ -266,7 +278,13 @@ BEGIN
         USING query_string, plain_query_string, rowlimit;
     ELSE
         stmt = format(E'SELECT
-                id::text, vejnavn::text, visningstekst::text, array_to_string(postnumre, '','', ''*''), array_to_string(postnummernavn, '',''), geometri, bbox
+                id::text,
+                vejnavn::text,
+                visningstekst::text,
+                postnumre,
+                postnummernavne,
+                geometri,
+                bbox
             FROM
                 basic.navngivenvej
             WHERE (
@@ -275,12 +293,23 @@ BEGIN
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
-                ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
+                basic.combine_rank(
+                    $2,
+                    $2,
+                    textsearchable_plain_col,
+                    textsearchable_unaccent_col,
+                    ''simple''::regconfig,
+                    ''basic.septima_fts_config''::regconfig
+                ) desc,
+                ts_rank_cd(
+                    textsearchable_phonetic_col,
+                    to_tsquery(''simple'',$1)
+                )::double precision desc,
                 vejnavn
             LIMIT $3;', filters);
         --RAISE NOTICE '%', stmt;
-        RETURN QUERY EXECUTE stmt
+        RETURN
+        QUERY EXECUTE stmt
         USING query_string, plain_query_string, rowlimit;
     END IF;
 END
