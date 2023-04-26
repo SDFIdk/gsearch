@@ -1411,18 +1411,18 @@ WHERE
 
 -- Tilføj og populer kommunefilter på tabellen
 ALTER TABLE stednavne_udstilling.stednavne_udstilling
-    ADD COLUMN municipality_filter varchar;
+    ADD COLUMN kommunekoder text;
 
--- Opdater municipalityfilter på stednavne. ca. 11 minutter
+-- Opdater kommunekoder på stednavne. ca. 11 minutter
 UPDATE
 stednavne_udstilling.stednavne_udstilling
 SET
-    municipality_filter = t.municipality_filter
+    kommunekoder = t.kommunekoder
 FROM (
     SELECT
         s.objectid,
         s.navnefoelgenummer,
-        array_to_string(array_agg(k.kommunekode::text), ' '::text) AS municipality_filter
+        array_to_string(array_agg(k.kommunekode::text), ','::text) AS kommunekoder
     FROM
         stednavne_udstilling.stednavne_udstilling s
         JOIN dagi_500.kommuneinddeling k ON (st_intersects (s.geometri, k.geometri))
