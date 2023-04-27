@@ -1,6 +1,5 @@
 SELECT '210_api_kommune.sql ' || now();
 
-
 CREATE SCHEMA IF NOT EXISTS api;
 
 DROP TYPE IF EXISTS api.kommune CASCADE;
@@ -11,7 +10,7 @@ CREATE TYPE api.kommune AS (
     visningstekst text,
     geometri geometry,
     bbox geometry
-);
+    );
 
 COMMENT ON TYPE api.kommune IS 'Kommune';
 
@@ -36,7 +35,7 @@ WITH kommuner AS (
     FROM
         dagi_500.kommuneinddeling k
         LEFT JOIN dagi_500.regionsinddeling r ON k.regionlokalid = r.id_lokalid
-)
+    )
 SELECT
     (
         CASE
@@ -50,7 +49,8 @@ SELECT
                 k.navn
         ELSE
             k.navn || ' Kommune'
-        END) AS visningstekst,
+        END
+    ) AS visningstekst,
     coalesce(k.kommunekode, '') AS kommunekode,
     coalesce(k.navn, '') AS kommunenavn,
     k.regionskode,
@@ -170,25 +170,25 @@ BEGIN
     FROM
         tokens INTO kommunekode_string;
     CASE WHEN kommunenavn_string IS NULL THEN
-        SELECT
-            kommunekode_string INTO query_string;
-         WHEN kommunekode_string IS NULL THEN
-             SELECT
-                 kommunenavn_string INTO query_string;
-         ELSE
-             SELECT
-                         kommunenavn_string || ' | ' || kommunekode_string INTO query_string;
-        END CASE;
+    SELECT
+        kommunekode_string INTO query_string;
+    WHEN kommunekode_string IS NULL THEN
+    SELECT
+        kommunenavn_string INTO query_string;
+    ELSE
+    SELECT
+            kommunenavn_string || ' | ' || kommunekode_string INTO query_string;
+    END CASE;
     CASE WHEN kommunenavn_string_plain IS NULL THEN
-        SELECT
-            kommunekode_string INTO plain_query_string;
-         WHEN kommunekode_string IS NULL THEN
-             SELECT
-                 kommunenavn_string_plain INTO plain_query_string;
-         ELSE
-             SELECT
-                         kommunenavn_string_plain || ' | ' || kommunekode_string INTO plain_query_string;
-        END CASE;
+    SELECT
+        kommunekode_string INTO plain_query_string;
+    WHEN kommunekode_string IS NULL THEN
+    SELECT
+        kommunenavn_string_plain INTO plain_query_string;
+    ELSE
+    SELECT
+            kommunenavn_string_plain || ' | ' || kommunekode_string INTO plain_query_string;
+    END CASE;
     -- Execute and return the result
     stmt = format(E'SELECT
                 kommunekode::text,
