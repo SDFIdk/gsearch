@@ -49,7 +49,7 @@ SELECT
     (p.ergadepostnummer = 'true') AS ergadepostnummer,
     st_multi (st_union (p.geometri)) AS geometri,
     st_extent (p.geometri) AS bbox,
-    array_to_string(array_agg(k.kommunekode::text), ','::text) AS kommunekode INTO basic.postnummer
+    string_agg(k.kommunekode, ',') AS kommunekode INTO basic.postnummer
 FROM
     postnumre p
     LEFT JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, p.geometri))
