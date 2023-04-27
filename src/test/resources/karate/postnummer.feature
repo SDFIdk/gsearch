@@ -96,3 +96,11 @@ Feature: Gsearch postnummer test
     When method GET
     Then status 200
     And match response == '#[100]'
+
+  Scenario: Filter postnummer in like
+    Then param q = '2500'
+
+    And param filter = 'kommunekode like '%250101%25''
+    When method GET
+    Then status 200
+    And match response == '#[100]'

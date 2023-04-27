@@ -11,7 +11,7 @@ CREATE TYPE api.stednavn AS (
     skrivemaade_uofficiel text,
     stednavn_type text,
     stednavn_subtype text,
-    kommunekoder text,
+    kommunekode text,
     geometri geometry,
     bbox geometry
 );
@@ -32,7 +32,7 @@ COMMENT ON COLUMN api.stednavn.stednavn_type IS 'Featuretype på stednavn';
 
 COMMENT ON COLUMN api.stednavn.stednavn_subtype IS 'Topografitype på stednavn';
 
-COMMENT ON COLUMN api.stednavn.kommunekoder IS 'Liste af kommunekoder for stednavn';
+COMMENT ON COLUMN api.stednavn.kommunekode IS 'Kommunekode(r) for stednavn';
 
 COMMENT ON COLUMN api.stednavn.geometri IS 'Geometri i EPSG:25832';
 
@@ -49,7 +49,7 @@ WITH stednavne AS (
         skrivemaade,
         type,
         subtype,
-        kommunekoder,
+        kommunekode,
         st_force2d (geometri_udtyndet) AS geometri
     FROM
         stednavne_udstilling.stednavne_udstilling
@@ -83,7 +83,7 @@ agg_stednavne AS (
         u.skrivemaade AS uofficielle_skrivemaader,
         "type",
         subtype,
-        kommunekoder,
+        kommunekode,
         geometri_udtyndet as geometri
     FROM
         stednavne_udstilling.stednavne_udstilling su
@@ -100,7 +100,7 @@ agg_stednavne AS (
         u.skrivemaade,
         "type",
         subtype,
-        kommunekoder,
+        kommunekode,
         geometri_udtyndet
 )
 SELECT
@@ -122,7 +122,7 @@ SELECT
         END) AS skrivemaade_uofficiel_nohyphen,
     type AS stednavn_type,
     subtype AS stednavn_subtype,
-    kommunekoder,
+    kommunekode,
     st_multi (st_union (geometri)) AS geometri,
     st_envelope (st_collect (geometri)) AS bbox INTO basic.stednavn
 FROM
@@ -136,7 +136,7 @@ GROUP BY
     skrivemaade_uofficiel_nohyphen,
     type,
     subtype,
-    kommunekoder;
+    kommunekode;
 
 
 -- Inserts into tekst_forekomst
@@ -285,7 +285,7 @@ BEGIN
                 skrivemaade_uofficiel::text,
                 stednavn_type::text,
                 stednavn_subtype::text,
-                kommunekoder::text,
+                kommunekode::text,
                 geometri,
                 bbox
             FROM
@@ -309,7 +309,7 @@ BEGIN
                 skrivemaade_uofficiel::text,
                 stednavn_type::text,
                 stednavn_subtype::text,
-                kommunekoder::text,
+                kommunekode::text,
                 geometri,
                 bbox
             FROM

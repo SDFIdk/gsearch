@@ -9,9 +9,9 @@ CREATE TYPE api.navngivenvej AS (
     id text,
     vejnavn text,
     visningstekst text,
-    postnumre text,
-    postnummernavne text,
-    kommunekoder text,
+    postnummer text,
+    postnummernavn text,
+    kommunekode text,
     geometri geometry,
     bbox geometry
 );
@@ -24,11 +24,11 @@ COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
 
 COMMENT ON COLUMN api.navngivenvej.visningstekst IS 'Præsentationsform for et navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.postnumre IS 'Alle postnumre for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer(postnumre) for navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.postnummernavne IS 'Alle postnummernavne for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.postnummernavn IS 'Postnummernavn(e) for navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.kommunekoder IS 'Alle kommunekoder for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.kommunekode IS 'Kommunekode(r) for navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej i EPSG:25832, linje eller polygon';
 
@@ -40,9 +40,9 @@ WITH vejnavne AS (
     SELECT
         n.id AS id,
         n.vejnavn,
-        p.postnr AS postnumre,
-        p.navn AS postnummernavne,
-        string_agg(k.kommunekode, ',') AS kommunekoder,
+        p.postnr AS postnummer,
+        p.navn AS postnummernavn,
+        string_agg(k.kommunekode, ',') AS kommunekode,
         n.geometri AS geometri
     FROM
         dar.navngivenvej n
@@ -60,9 +60,9 @@ WITH vejnavne AS (
         v.vejnavn AS visningstekst,
         v.id,
         coalesce(v.vejnavn, '') AS vejnavn,
-        string_agg(DISTINCT v.postnumre, ',') AS postnumre,
-        string_agg(DISTINCT v.postnummernavne, ',') AS postnummernavne,
-        v.kommunekoder,
+        string_agg(DISTINCT v.postnummer, ',') AS postnummer,
+        string_agg(DISTINCT v.postnummernavn, ',') AS postnummernavn,
+        v.kommunekode,
         st_multi (st_union (geometri)) AS geometri,
         st_envelope (st_collect (v.geometri)) AS bbox
 INTO basic.navngivenvej
@@ -71,7 +71,7 @@ FROM
 GROUP BY
     v.id,
     v.vejnavn,
-    v.kommunekoder;
+    v.kommunekode;
 
 
 -- Inserts into the tekst_forekomst table
@@ -152,8 +152,8 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 2)), 'B') ||
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 3)), 'C') ||
                          setweight(to_tsvector('simple', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
-                         setweight(to_tsvector('simple', postnumre), 'D') ||
-                         setweight(to_tsvector('simple', postnummernavne), 'D'))
+                         setweight(to_tsvector('simple', postnummer), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavn), 'D'))
     STORED;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
@@ -166,8 +166,8 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 2)), 'B') ||
                          setweight(to_tsvector('basic.septima_fts_config', split_part(vejnavn, ' ', 3)), 'C') ||
                          setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (vejnavn, 4)), 'D') ||
-                         setweight(to_tsvector('simple', postnumre), 'D') ||
-                         setweight(to_tsvector('simple', postnummernavne), 'D'))
+                         setweight(to_tsvector('simple', postnummer), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavn), 'D'))
 
     STORED;
 
@@ -181,8 +181,8 @@ ALTER TABLE basic.navngivenvej
                          setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 2), 2)), 'B') ||
                          setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(vejnavn, ' ', 3), 2)), 'C') ||
                          setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (vejnavn, 4)), 'D') ||
-                         setweight(to_tsvector('simple', postnumre), 'D') ||
-                         setweight(to_tsvector('simple', postnummernavne), 'D'))
+                         setweight(to_tsvector('simple', postnummer), 'D') ||
+                         setweight(to_tsvector('simple', postnummernavn), 'D'))
 
     STORED;
 
@@ -269,9 +269,9 @@ BEGIN
                 id::text,
                 vejnavn::text,
                 visningstekst::text,
-                postnumre,
-                postnummernavne,
-                kommunekoder,
+                postnummer,
+                postnummernavn,
+                kommunekode,
                 geometri,
                 bbox
             FROM
@@ -289,9 +289,9 @@ BEGIN
                 id::text,
                 vejnavn::text,
                 visningstekst::text,
-                postnumre,
-                postnummernavne,
-                kommunekoder,
+                postnummer,
+                postnummernavn,
+                kommunekode,
                 geometri,
                 bbox
             FROM

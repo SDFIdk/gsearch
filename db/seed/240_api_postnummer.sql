@@ -10,7 +10,7 @@ CREATE TYPE api.postnummer AS (
     postnummernavn text,
     visningstekst text,
     gadepostnummer bool,
-    kommunekoder text,
+    kommunekode text,
     geometri geometry,
     bbox geometry
 );
@@ -25,7 +25,7 @@ COMMENT ON COLUMN api.postnummer.visningstekst IS 'Præsentationsform for et pos
 
 COMMENT ON COLUMN api.postnummer.gadepostnummer IS 'Dækker postnummeret kun en gade';
 
-COMMENT ON COLUMN api.postnummer.kommunekoder IS 'Liste over kommunekoder i postnummeret';
+COMMENT ON COLUMN api.postnummer.kommunekode IS 'Kommunekode(r) for postnummeret';
 
 COMMENT ON COLUMN api.postnummer.geometri IS 'Geometri i EPSG:25832';
 
@@ -49,7 +49,7 @@ SELECT
     (p.ergadepostnummer = 'true') AS ergadepostnummer,
     st_multi (st_union (p.geometri)) AS geometri,
     st_extent (p.geometri) AS bbox,
-    array_to_string(array_agg(k.kommunekode::text), ','::text) AS kommunekoder INTO basic.postnummer
+    array_to_string(array_agg(k.kommunekode::text), ','::text) AS kommunekode INTO basic.postnummer
 FROM
     postnumre p
     LEFT JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, p.geometri))
@@ -197,7 +197,7 @@ BEGIN
                 postnummernavn::text,
                 visningstekst,
                 ergadepostnummer,
-                kommunekoder::text,
+                kommunekode::text,
                 geometri,
                 bbox::geometry
             FROM
