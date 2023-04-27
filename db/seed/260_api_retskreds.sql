@@ -10,6 +10,7 @@ CREATE TYPE api.retskreds AS (
     retkredsnavn text,
     visningstekst text,
     myndighedskode text,
+    kommunekode text,
     geometri geometry,
     bbox geometry
 );
@@ -24,6 +25,8 @@ COMMENT ON COLUMN api.retskreds.visningstekst IS 'Præsentationsform for en rets
 
 COMMENT ON COLUMN api.retskreds.myndighedskode IS 'Retskredsens myndighedskode. Er unik for hver retskreds. 4 cifre.';
 
+COMMENT ON COLUMN api.retskreds.kommunekode IS 'Kommunekode(r) for retskredsen';
+
 COMMENT ON COLUMN api.retskreds.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.retskreds.bbox IS 'Geometriens boundingbox i EPSG:25832';
@@ -35,15 +38,23 @@ WITH retskredse AS (
         r.retskredsnummer,
         r.navn,
         r.myndighedskode,
+        string_agg(k.kommunekode, ',') AS kommunekode,
         st_force2d (r.geometri) AS geometri
     FROM
         dagi_500.retskreds r
-)
+        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, r.geometri))
+    GROUP BY
+        r.retskredsnummer,
+        r.navn,
+        r.myndighedskode,
+        r.geometri
+    )
 SELECT
     r.navn AS visningstekst,
     r.retskredsnummer,
     coalesce(r.navn, '') AS retkredsnavn,
     r.myndighedskode,
+    r.kommunekode,
     st_multi (st_union (r.geometri)) AS geometri,
     st_extent (r.geometri) AS bbox INTO basic.retskreds
 FROM
@@ -51,7 +62,8 @@ FROM
 GROUP BY
     r.retskredsnummer,
     r.navn,
-    r.myndighedskode;
+    r.myndighedskode,
+    r.kommunekode;
 
 ALTER TABLE basic.retskreds
     DROP COLUMN IF EXISTS textsearchable_plain_col;
@@ -146,6 +158,7 @@ BEGIN
                 retkredsnavn::text,
                 visningstekst::text,
                 myndighedskode::text,
+                kommunekode::text,
                 geometri,
                 bbox::geometry
             FROM
