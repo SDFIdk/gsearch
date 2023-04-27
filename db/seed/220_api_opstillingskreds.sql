@@ -12,6 +12,7 @@ CREATE TYPE api.opstillingskreds AS (
     valgkredsnummer text,
     storkredsnummer text,
     storkredsnavn text,
+    kommunekode text,
     geometri geometry,
     bbox geometry
 );
@@ -30,6 +31,8 @@ COMMENT ON COLUMN api.opstillingskreds.storkredsnummer IS 'Unik nummer for stork
 
 COMMENT ON COLUMN api.opstillingskreds.storkredsnavn IS 'Storkredsens unikke navn';
 
+COMMENT ON COLUMN api.opstillingskreds.kommunekode IS 'Kommunekode(r) for opstillingskredsen';
+
 COMMENT ON COLUMN api.opstillingskreds.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.opstillingskreds.bbox IS 'Geometriens boundingbox i EPSG:25832';
@@ -43,10 +46,19 @@ WITH opstillingskredse AS (
         o.valgkredsnummer,
         s.storkredsnummer,
         s.navn AS storkredsnavn,
+        string_agg(k.kommunekode, ',') AS kommunekode,
         st_force2d (o.geometri) AS geometri
     FROM
         dagi_500.opstillingskreds o
-        LEFT JOIN dagi_500.storkreds s ON o.storkredslokalid = s.id_lokalid
+        JOIN dagi_500.storkreds s ON o.storkredslokalid = s.id_lokalid
+        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, o.geometri))
+    GROUP BY
+        o.opstillingskredsnummer,
+        o.navn,
+        o.valgkredsnummer,
+        storkredsnummer,
+        storkredsnavn,
+        o.geometri
 )
 SELECT
     o.navn || 'kredsen' AS visningstekst,
@@ -55,6 +67,7 @@ SELECT
     o.valgkredsnummer,
     o.storkredsnummer,
     o.storkredsnavn,
+    o.kommunekode,
     st_multi (st_union (o.geometri)) AS geometri,
     st_extent (o.geometri) AS bbox INTO basic.opstillingskreds
 FROM
@@ -64,7 +77,8 @@ GROUP BY
     o.navn,
     o.valgkredsnummer,
     storkredsnummer,
-    storkredsnavn;
+    storkredsnavn,
+    o.kommunekode;
 
 ALTER TABLE basic.opstillingskreds
     DROP COLUMN IF EXISTS textsearchable_plain_col;
@@ -162,6 +176,7 @@ BEGIN
                 valgkredsnummer::text,
                 storkredsnummer::text,
                 storkredsnavn::text,
+                kommunekode:text,
                 geometri,
                 bbox::geometry
             FROM
