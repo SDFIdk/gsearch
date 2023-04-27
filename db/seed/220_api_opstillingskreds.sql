@@ -156,8 +156,14 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-                opstillingskredsnummer::text, opstillingskredsnavn::text, visningstekst,
-                valgkredsnummer::text, storkredsnummer::text, storkredsnavn::text, geometri, bbox::geometry
+                opstillingskredsnummer::text,
+                opstillingskredsnavn::text,
+                visningstekst,
+                valgkredsnummer::text,
+                storkredsnummer::text,
+                storkredsnavn::text,
+                geometri,
+                bbox::geometry
             FROM
                 basic.opstillingskreds
             WHERE (
@@ -166,8 +172,16 @@ BEGIN
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
-                ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
+                basic.combine_rank(
+                    $2,
+                    $2,
+                    textsearchable_plain_col,
+                    textsearchable_unaccent_col,
+                    ''simple''::regconfig,
+                    ''basic.septima_fts_config''::regconfig) desc,
+                    ts_rank_cd(textsearchable_phonetic_col,
+                    to_tsquery(''simple'',$1)
+                )::double precision desc,
                 opstillingskredsnavn
             LIMIT $3;', filters);
     RETURN QUERY EXECUTE stmt
