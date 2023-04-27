@@ -136,7 +136,11 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-                sognekode::text, sognenavn::text, visningstekst, geometri, bbox::geometry
+                sognekode::text,
+                sognenavn::text,
+                visningstekst,
+                geometri,
+                bbox::geometry
             FROM
                 basic.sogn
             WHERE (
@@ -145,7 +149,14 @@ BEGIN
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
             AND %s
             ORDER BY
-                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
+                basic.combine_rank(
+                    $2,
+                    $2,
+                    textsearchable_plain_col,
+                    textsearchable_unaccent_col,
+                    ''simple''::regconfig,
+                    ''basic.septima_fts_config''::regconfig
+                ) desc,
                 ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
                 visningstekst
             LIMIT $3;', filters);
