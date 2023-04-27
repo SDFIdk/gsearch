@@ -1422,7 +1422,7 @@ FROM (
     SELECT
         s.objectid,
         s.navnefoelgenummer,
-        array_to_string(array_agg(k.kommunekode::text), ','::text) AS kommunekode
+        string_agg(k.kommunekode, ',') AS kommunekode
     FROM
         stednavne_udstilling.stednavne_udstilling s
         JOIN dagi_500.kommuneinddeling k ON (st_intersects (s.geometri, k.geometri))
