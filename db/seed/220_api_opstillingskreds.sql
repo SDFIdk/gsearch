@@ -51,7 +51,7 @@ WITH opstillingskredse AS (
     FROM
         dagi_500.opstillingskreds o
         JOIN dagi_500.storkreds s ON o.storkredslokalid = s.id_lokalid
-        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, o.geometri))
+        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, st_buffer(o.geometri, -50)))
     GROUP BY
         o.opstillingskredsnummer,
         o.navn,

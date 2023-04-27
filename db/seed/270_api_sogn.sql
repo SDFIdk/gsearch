@@ -38,7 +38,7 @@ WITH sogne AS (
         st_force2d (s.geometri) AS geometri
     FROM
         dagi_500.sogneinddeling s
-        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, s.geometri))
+        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, st_buffer(s.geometri, -50)))
     GROUP BY
         s.sognekode,
         s.navn,

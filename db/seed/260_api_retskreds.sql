@@ -42,7 +42,7 @@ WITH retskredse AS (
         st_force2d (r.geometri) AS geometri
     FROM
         dagi_500.retskreds r
-        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, r.geometri))
+        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, st_buffer(r.geometri, -50)))
     GROUP BY
         r.retskredsnummer,
         r.navn,
