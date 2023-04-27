@@ -9,6 +9,7 @@ CREATE TYPE api.sogn AS (
     sognekode text,
     sognenavn text,
     visningstekst text,
+    kommunekode text,
     geometri geometry,
     bbox geometry
 );
@@ -21,6 +22,8 @@ COMMENT ON COLUMN api.sogn.sognenavn IS 'Navn på sogn';
 
 COMMENT ON COLUMN api.sogn.visningstekst IS 'Præsentationsform for et sogn';
 
+COMMENT ON COLUMN api.sogn.kommunekode IS 'Kommunekode(r) for sogn';
+
 COMMENT ON COLUMN api.sogn.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.sogn.bbox IS 'Geometriens boundingbox i EPSG:25832';
@@ -31,21 +34,29 @@ WITH sogne AS (
     SELECT
         s.sognekode,
         s.navn,
+        string_agg(k.kommunekode, ',') AS kommunekode,
         st_force2d (s.geometri) AS geometri
     FROM
         dagi_500.sogneinddeling s
+        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, s.geometri))
+    GROUP BY
+        s.sognekode,
+        s.navn,
+        s.geometri
 )
 SELECT
     s.navn || ' sogn' AS visningstekst,
     s.sognekode,
     coalesce(s.navn, '') AS sognenavn,
+    s.kommunekode,
     st_multi (st_union (s.geometri)) AS geometri,
     st_extent (s.geometri) AS bbox INTO basic.sogn
 FROM
     sogne s
 GROUP BY
     s.sognekode,
-    s.navn;
+    s.navn,
+    s.kommunekode;
 
 ALTER TABLE basic.sogn
     DROP COLUMN IF EXISTS textsearchable_plain_col;
@@ -139,6 +150,7 @@ BEGIN
                 sognekode::text,
                 sognenavn::text,
                 visningstekst,
+                kommunekode::text,
                 geometri,
                 bbox::geometry
             FROM
