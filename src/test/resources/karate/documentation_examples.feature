@@ -22,11 +22,11 @@ Feature:
         And match response == '#[90]'
 
     Scenario: Example 3
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?q=lærke&filter=kommunekode='0461'
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?q=lærke&filter=kommunekode like '%250461%25'
         Given path 'husnummer'
         Then param q = 'Lærke'
 
-        And param filter = "kommunekode='0461'"
+        And param filter = "kommunekode like '%250461%25'"
         And retry until responseStatus == 200
         When method GET
         And match response == '#[10]'
@@ -52,11 +52,11 @@ Feature:
         And match response == '#[10]'
 
     Scenario: Example 6
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=30&q=fle&filter=kommunekode='0360'
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=30&q=fle&filter=kommunekode like '%250360%25'
         Given path 'adresse'
         Then param q = 'fle'
 
-        And param filter = "kommunekode='0360'"
+        And param filter = "kommunekode like '%250360%25'"
         When method GET
         Then status 200
         And match response == '#[10]'
@@ -82,12 +82,12 @@ Feature:
         And match response == '#[10]'
 
     Scenario: Example 9
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=30&q=fl&filter=kommunekode='0376'
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=30&q=fl&filter=kommunekode like '%250376%25'
         Given path 'husnummer'
         Then param q = 'fl'
 
         And param limit = '30'
-        And param filter = "kommunekode='0376'"
+        And param filter = "kommunekode like '%250376%25'"
         When method GET
         Then status 200
         And match response == '#[30]'
@@ -114,11 +114,11 @@ Feature:
         And match response == '#[7]'
 
     Scenario: Example 12
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a&filter=kommunekode='0851'
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a&filter=kommunekode like '%250851%25'
         Given path 'kommune'
         Then param q = 'a'
 
-        And param filter = "kommunekode='0851'"
+        And param filter = "kommunekode like '%250851%25'"
         When method GET
         Then status 200
         And match response == '#[1]'

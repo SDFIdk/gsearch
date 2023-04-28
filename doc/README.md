@@ -65,14 +65,14 @@ _Parametren_ `filter` angiver hvilken del af data-ressourcen, der søges i.
 
 Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx `bbox` og `geometri`.
 
-**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så `'` fx encodes til `%27` og at udtrykket er defineret som tekst.
+**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så f.eks `'` encodes til `%27`, `%` encodes til `%25` og at udtrykket er defineret som tekst.
 
 **NB** Attributter i retursvaret, der udgør et array, kan ikke benyttes som filter. Det gælder fx attributten `postnummer` i ressourcen `navngivenvej`.
 
-_Eksempel:_ Simpelt filter på husnummer: kommunekode '0461', dvs. Odense, bemærk brugen af `%27` som erstatning for `'`.
+_Eksempel:_ Simpelt filter på husnummer: kommunekode '0461', dvs. Odense, bemærk brugen af `%27` som erstatning for `'` og `%25` som erstatning for `%`.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?q=lærke&filter=kommunekode=%270461%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?q=lærke&filter=kommunekode%20like%20%27%250461%25%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -129,7 +129,7 @@ Syntaks eksempel som søger efter 'flens':
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=30&q=fle&filter=kommunekode=%270360%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=30&q=fle&filter=kommunekode%20like%20%27%250360%25%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -157,7 +157,7 @@ Syntaks eksempel som søger efter 'genvej':
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=30&q=fl&filter=kommunekode=%270376%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=30&q=fl&filter=kommunekode%20like%20%27%250376%25%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -185,7 +185,7 @@ Syntaks eksempel som søger efter 'a':
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a&filter=kommunekode=%270851%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a&filter=kommunekode%20like%20%27%250851%25%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
