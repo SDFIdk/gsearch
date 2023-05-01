@@ -39,19 +39,27 @@ COMMENT ON COLUMN api.opstillingskreds.bbox IS 'Geometriens boundingbox i EPSG:2
 
 DROP TABLE IF EXISTS basic.opstillingskreds;
 
-WITH opstillingskredse AS (
+WITH kommunenumre AS (
+    SELECT
+        o.opstillingskredsnummer,
+        string_agg(k.kommunekode, ',') AS kommunekode
+    FROM
+        dagi_10.opstillingskreds o
+        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, o.geometri)
+    GROUP BY
+        o.opstillingskredsnummer
+),
+    opstillingskredse AS (
     SELECT
         o.opstillingskredsnummer,
         o.navn,
         o.valgkredsnummer,
         s.storkredsnummer,
         s.navn AS storkredsnavn,
-        string_agg(k.kommunekode, ',') AS kommunekode,
         st_force2d (o.geometri) AS geometri
     FROM
         dagi_500.opstillingskreds o
         JOIN dagi_500.storkreds s ON o.storkredslokalid = s.id_lokalid
-        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, st_buffer(o.geometri, -50)))
     GROUP BY
         o.opstillingskredsnummer,
         o.navn,
@@ -67,18 +75,20 @@ SELECT
     o.valgkredsnummer,
     o.storkredsnummer,
     o.storkredsnavn,
-    o.kommunekode,
+    k.kommunekode,
     st_multi (st_union (o.geometri)) AS geometri,
-    st_extent (o.geometri) AS bbox INTO basic.opstillingskreds
+    st_extent (o.geometri) AS bbox
+INTO basic.opstillingskreds
 FROM
     opstillingskredse o
+LEFT JOIN kommunenumre k ON o.opstillingskredsnummer = k.opstillingskredsnummer
 GROUP BY
     o.opstillingskredsnummer,
     o.navn,
     o.valgkredsnummer,
     storkredsnummer,
     storkredsnavn,
-    o.kommunekode;
+    k.kommunekode;
 
 ALTER TABLE basic.opstillingskreds
     DROP COLUMN IF EXISTS textsearchable_plain_col;

@@ -33,16 +33,24 @@ COMMENT ON COLUMN api.politikreds.bbox IS 'Geometriens boundingbox i EPSG:25832'
 
 DROP TABLE IF EXISTS basic.politikreds;
 
-WITH politikredse AS (
+WITH kommunenumre AS (
+    SELECT
+        p.politikredsnummer,
+        string_agg(k.kommunekode, ',') AS kommunekode
+    FROM
+        dagi_10.politikreds p
+        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, p.geometri)
+    GROUP BY
+        p.politikredsnummer
+),
+    politikredse AS (
     SELECT
         p.politikredsnummer,
         p.navn,
         p.myndighedskode,
-        string_agg(k.kommunekode,',') AS kommunekode,
         st_force2d (p.geometri) AS geometri
     FROM
         dagi_500.politikreds p
-        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, p.geometri))
     GROUP BY
         p.politikredsnummer,
         p.navn,
@@ -54,16 +62,18 @@ SELECT
     p.politikredsnummer,
     coalesce(p.navn, '') AS navn,
     p.myndighedskode,
-    p.kommunekode,
+    k.kommunekode,
     st_multi (st_union (p.geometri)) AS geometri,
-    st_extent (p.geometri) AS bbox INTO basic.politikreds
+    st_extent (p.geometri) AS bbox
+INTO basic.politikreds
 FROM
     politikredse p
+    LEFT JOIN kommunenumre k ON p.politikredsnummer = k.politikredsnummer
 GROUP BY
     p.politikredsnummer,
     p.navn,
     p.myndighedskode,
-    p.kommunekode;
+    k.kommunekode;
 
 ALTER TABLE basic.politikreds
     DROP COLUMN IF EXISTS textsearchable_plain_col;

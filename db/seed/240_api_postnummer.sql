@@ -63,7 +63,7 @@ SELECT
 INTO basic.postnummer
 FROM
     postnumre p
-        LEFT JOIN kommunenumre k ON p.postnummer = k.postnummer
+    LEFT JOIN kommunenumre k ON p.postnummer = k.postnummer
 GROUP BY
     p.postnummer,
     p.postnummernavn,

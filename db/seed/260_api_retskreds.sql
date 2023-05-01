@@ -33,37 +33,47 @@ COMMENT ON COLUMN api.retskreds.bbox IS 'Geometriens boundingbox i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.retskreds;
 
-WITH retskredse AS (
+WITH kommunenumre AS (
+    SELECT
+        r.retskredsnummer,
+        string_agg(k.kommunekode, ',') AS kommunekode
+    FROM
+        dagi_10.retskreds r
+        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, r.geometri)
+    GROUP BY
+        r.retskredsnummer
+),
+retskredse AS (
     SELECT
         r.retskredsnummer,
         r.navn,
         r.myndighedskode,
-        string_agg(k.kommunekode, ',') AS kommunekode,
         st_force2d (r.geometri) AS geometri
     FROM
         dagi_500.retskreds r
-        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, st_buffer(r.geometri, -50)))
     GROUP BY
         r.retskredsnummer,
         r.navn,
         r.myndighedskode,
         r.geometri
-    )
+)
 SELECT
     r.navn AS visningstekst,
     r.retskredsnummer,
     coalesce(r.navn, '') AS retkredsnavn,
     r.myndighedskode,
-    r.kommunekode,
+    k.kommunekode,
     st_multi (st_union (r.geometri)) AS geometri,
-    st_extent (r.geometri) AS bbox INTO basic.retskreds
+    st_extent (r.geometri) AS bbox
+INTO basic.retskreds
 FROM
     retskredse r
+    LEFT JOIN kommunenumre k ON r.regionskode = k.regionskode
 GROUP BY
     r.retskredsnummer,
     r.navn,
     r.myndighedskode,
-    r.kommunekode;
+    k.kommunekode;
 
 ALTER TABLE basic.retskreds
     DROP COLUMN IF EXISTS textsearchable_plain_col;

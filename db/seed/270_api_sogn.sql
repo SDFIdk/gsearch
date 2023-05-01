@@ -30,15 +30,23 @@ COMMENT ON COLUMN api.sogn.bbox IS 'Geometriens boundingbox i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.sogn;
 
-WITH sogne AS (
+WITH kommunenumre AS (
+    SELECT
+        s.sognekode,
+        string_agg(k.kommunekode, ',') AS kommunekode
+    FROM
+        dagi_10.sogneinddeling s
+        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, s.geometri)
+    GROUP BY
+        s.sognekode
+),
+sogne AS (
     SELECT
         s.sognekode,
         s.navn,
-        string_agg(k.kommunekode, ',') AS kommunekode,
         st_force2d (s.geometri) AS geometri
     FROM
         dagi_500.sogneinddeling s
-        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, st_buffer(s.geometri, -50)))
     GROUP BY
         s.sognekode,
         s.navn,
@@ -48,15 +56,17 @@ SELECT
     s.navn || ' sogn' AS visningstekst,
     s.sognekode,
     coalesce(s.navn, '') AS sognenavn,
-    s.kommunekode,
+    k.kommunekode,
     st_multi (st_union (s.geometri)) AS geometri,
-    st_extent (s.geometri) AS bbox INTO basic.sogn
+    st_extent (s.geometri) AS bbox
+INTO basic.sogn
 FROM
     sogne s
+    LEFT JOIN kommunenumre k ON s.sognekode = k.sognekode
 GROUP BY
     s.sognekode,
     s.navn,
-    s.kommunekode;
+    k.kommunekode;
 
 ALTER TABLE basic.sogn
     DROP COLUMN IF EXISTS textsearchable_plain_col;
