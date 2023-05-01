@@ -9,6 +9,7 @@ CREATE TYPE api.region AS (
     regionskode text,
     regionsnavn text,
     visningstekst text,
+    kommunekode text,
     geometri geometry,
     bbox geometry
 );
@@ -21,6 +22,8 @@ COMMENT ON COLUMN api.region.regionsnavn IS 'Navn på region';
 
 COMMENT ON COLUMN api.region.visningstekst IS 'Præsentationsform for en region';
 
+COMMENT ON COLUMN api.region.kommunekode IS 'Kommunekoder inden og opad region';
+
 COMMENT ON COLUMN api.region.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.region.bbox IS 'Geometriens boundingbox i EPSG:25832';
@@ -31,21 +34,29 @@ WITH regioner AS (
     SELECT
         r.regionskode,
         r.navn,
+        string_agg(k.kommunekode,',') AS kommunekode,
         st_force2d (r.geometri) AS geometri
     FROM
         dagi_500.regionsinddeling r
+        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, r.geometri))
+    GROUP BY
+        r.regionskode,
+        r.navn,
+        r.geometri
 )
 SELECT
     r.navn AS visningstekst,
     r.regionskode,
     coalesce(r.navn, '') AS regionsnavn,
+    r.kommunekode,
     st_multi (st_union (r.geometri)) AS geometri,
     st_extent (r.geometri) AS bbox INTO basic.region
 FROM
     regioner r
 GROUP BY
     r.regionskode,
-    r.navn;
+    r.navn,
+    r.kommunekode;
 
 ALTER TABLE basic.region
     DROP COLUMN IF EXISTS textsearchable_plain_col;
@@ -139,6 +150,7 @@ BEGIN
             regionskode::text,
             regionsnavn::text,
             visningstekst::text,
+            kommunekode::text,
             geometri,
             bbox::geometry
         FROM
