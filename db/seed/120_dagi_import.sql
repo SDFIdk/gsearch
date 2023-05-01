@@ -23,6 +23,10 @@ LIMIT (
     FROM
         g_options);
 
+CREATE INDEX ON dagi_500.kommuneinddeling USING gist (geometri);
+VACUUM ANALYZE dagi_500.kommuneinddeling;
+
+
 DROP TABLE IF EXISTS dagi_500.opstillingskreds;
 
 CREATE TABLE dagi_500.opstillingskreds AS
@@ -35,6 +39,10 @@ LIMIT (
         maxrows
     FROM
         g_options);
+
+CREATE INDEX ON dagi_500.opstillingskreds USING gist (geometri);
+VACUUM ANALYZE dagi_500.opstillingskreds;
+
 
 DROP TABLE IF EXISTS dagi_500.storkreds;
 
@@ -49,6 +57,10 @@ LIMIT (
     FROM
         g_options);
 
+CREATE INDEX ON dagi_500.storkreds USING gist (geometri);
+VACUUM ANALYZE dagi_500.storkreds;
+
+
 DROP TABLE IF EXISTS dagi_500.politikreds;
 
 CREATE TABLE dagi_500.politikreds AS
@@ -61,6 +73,10 @@ LIMIT (
         maxrows
     FROM
         g_options);
+
+CREATE INDEX ON dagi_500.politikreds USING gist (geometri);
+VACUUM ANALYZE dagi_500.politikreds;
+
 
 DROP TABLE IF EXISTS dagi_500.postnummerinddeling;
 
@@ -75,6 +91,10 @@ LIMIT (
     FROM
         g_options);
 
+CREATE INDEX ON dagi_500.postnummerinddeling USING gist (geometri);
+VACUUM ANALYZE dagi_500.postnummerinddeling;
+
+
 DROP TABLE IF EXISTS dagi_500.regionsinddeling;
 
 CREATE TABLE dagi_500.regionsinddeling AS
@@ -87,6 +107,10 @@ LIMIT (
         maxrows
     FROM
         g_options);
+
+CREATE INDEX ON dagi_500.regionsinddeling USING gist (geometri);
+VACUUM ANALYZE dagi_500.regionsinddeling;
+
 
 DROP TABLE IF EXISTS dagi_500.retskreds;
 
@@ -101,6 +125,10 @@ LIMIT (
     FROM
         g_options);
 
+CREATE INDEX ON dagi_500.retskreds USING gist (geometri);
+VACUUM ANALYZE dagi_500.retskreds;
+
+
 DROP TABLE IF EXISTS dagi_500.sogneinddeling;
 
 CREATE TABLE dagi_500.sogneinddeling AS
@@ -113,6 +141,10 @@ LIMIT (
         maxrows
     FROM
         g_options);
+
+CREATE INDEX ON dagi_500.sogneinddeling USING gist (geometri);
+VACUUM ANALYZE dagi_500.sogneinddeling;
+
 
 DROP TABLE IF EXISTS dagi_10.kommuneinddeling;
 
@@ -127,6 +159,10 @@ FROM
     FROM
         g_options);
 
+CREATE INDEX ON dagi_10.kommuneinddeling USING gist (geometri);
+VACUUM ANALYZE dagi_10.kommuneinddeling;
+
+
 DROP TABLE IF EXISTS dagi_10.opstillingskreds;
 
 CREATE TABLE dagi_10.opstillingskreds AS
@@ -139,6 +175,10 @@ FROM
                    maxrows
     FROM
         g_options);
+
+CREATE INDEX ON dagi_10.opstillingskreds USING gist (geometri);
+VACUUM ANALYZE dagi_10.opstillingskreds;
+
 
 DROP TABLE IF EXISTS dagi_10.storkreds;
 
@@ -153,6 +193,10 @@ FROM
     FROM
         g_options);
 
+CREATE INDEX ON dagi_10.storkreds USING gist (geometri);
+VACUUM ANALYZE dagi_10.storkreds;
+
+
 DROP TABLE IF EXISTS dagi_10.politikreds;
 
 CREATE TABLE dagi_10.politikreds AS
@@ -165,6 +209,10 @@ FROM
                    maxrows
     FROM
         g_options);
+
+CREATE INDEX ON dagi_10.politikreds USING gist (geometri);
+VACUUM ANALYZE dagi_10.politikreds;
+
 
 DROP TABLE IF EXISTS dagi_10.postnummerinddeling;
 
@@ -179,6 +227,10 @@ FROM
     FROM
         g_options);
 
+CREATE INDEX ON dagi_10.postnummerinddeling USING gist (geometri);
+VACUUM ANALYZE dagi_10.postnummerinddeling;
+
+
 DROP TABLE IF EXISTS dagi_10.regionsinddeling;
 
 CREATE TABLE dagi_10.regionsinddeling AS
@@ -191,6 +243,10 @@ FROM
                    maxrows
     FROM
         g_options);
+
+CREATE INDEX ON dagi_10.regionsinddeling USING gist (geometri);
+VACUUM ANALYZE dagi_10.regionsinddeling;
+
 
 DROP TABLE IF EXISTS dagi_10.retskreds;
 
@@ -205,6 +261,10 @@ FROM
     FROM
         g_options);
 
+CREATE INDEX ON dagi_10.retskreds USING gist (geometri);
+VACUUM ANALYZE dagi_10.retskreds;
+
+
 DROP TABLE IF EXISTS dagi_10.sogneinddeling;
 
 CREATE TABLE dagi_10.sogneinddeling AS
@@ -217,3 +277,6 @@ FROM
                    maxrows
     FROM
         g_options);
+
+CREATE INDEX ON dagi_10.sogneinddeling USING gist (geometri);
+VACUUM ANALYZE dagi_10.sogneinddeling;
