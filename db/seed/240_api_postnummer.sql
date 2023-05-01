@@ -39,7 +39,7 @@ WITH kommunenumre AS (
         string_agg(k.kommunekode, ',') AS kommunekode
     FROM
         dagi_10.postnummerinddeling p
-            LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, p.geometri)
+        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, p.geometri)
     GROUP BY
         p.postnummer
 ),
