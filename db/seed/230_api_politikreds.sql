@@ -10,6 +10,7 @@ CREATE TYPE api.politikreds AS (
     navn text,
     visningstekst text,
     myndighedskode text,
+    kommunekode text,
     geometri geometry,
     bbox geometry
 );
@@ -24,6 +25,8 @@ COMMENT ON COLUMN api.politikreds.navn IS 'Navn på politikreds';
 
 COMMENT ON COLUMN api.politikreds.myndighedskode IS 'Politikredsens myndighedskode. Er unik for hver politikreds. 4 cifre.';
 
+COMMENT ON COLUMN api.politikreds.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil politikreds';
+
 COMMENT ON COLUMN api.politikreds.geometri IS 'Geometri i EPSG:25832';
 
 COMMENT ON COLUMN api.politikreds.bbox IS 'Geometriens boundingbox i EPSG:25832';
@@ -35,15 +38,23 @@ WITH politikredse AS (
         p.politikredsnummer,
         p.navn,
         p.myndighedskode,
+        string_agg(k.kommunekode,',') AS kommunekode,
         st_force2d (p.geometri) AS geometri
     FROM
         dagi_500.politikreds p
+        JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, p.geometri))
+    GROUP BY
+        p.politikredsnummer,
+        p.navn,
+        p.myndighedskode,
+        p.geometri
 )
 SELECT
     REPLACE(p.navn, 'Politi', 'Politikreds') AS visningstekst,
     p.politikredsnummer,
     coalesce(p.navn, '') AS navn,
     p.myndighedskode,
+    p.kommunekode,
     st_multi (st_union (p.geometri)) AS geometri,
     st_extent (p.geometri) AS bbox INTO basic.politikreds
 FROM
@@ -51,7 +62,8 @@ FROM
 GROUP BY
     p.politikredsnummer,
     p.navn,
-    p.myndighedskode;
+    p.myndighedskode,
+    p.kommunekode;
 
 ALTER TABLE basic.politikreds
     DROP COLUMN IF EXISTS textsearchable_plain_col;
@@ -146,6 +158,7 @@ BEGIN
             navn::text,
             visningstekst,
             myndighedskode::text,
+            kommunekode::text,
             geometri,
             bbox::geometry
         FROM
