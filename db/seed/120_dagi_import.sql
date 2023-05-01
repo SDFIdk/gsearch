@@ -114,6 +114,58 @@ LIMIT (
     FROM
         g_options);
 
+DROP TABLE IF EXISTS dagi_10.kommuneinddeling;
+
+CREATE TABLE dagi_10.kommuneinddeling AS
+SELECT
+    *
+FROM
+    dagi_10_fdw.kommuneinddeling
+        LIMIT (
+               SELECT
+                   maxrows
+    FROM
+        g_options);
+
+DROP TABLE IF EXISTS dagi_10.opstillingskreds;
+
+CREATE TABLE dagi_10.opstillingskreds AS
+SELECT
+    *
+FROM
+    dagi_10_fdw.opstillingskreds
+        LIMIT (
+               SELECT
+                   maxrows
+    FROM
+        g_options);
+
+DROP TABLE IF EXISTS dagi_10.storkreds;
+
+CREATE TABLE dagi_10.storkreds AS
+SELECT
+    *
+FROM
+    dagi_10_fdw.storkreds
+        LIMIT (
+               SELECT
+                   maxrows
+    FROM
+        g_options);
+
+DROP TABLE IF EXISTS dagi_10.politikreds;
+
+CREATE TABLE dagi_10.politikreds AS
+SELECT
+    *
+FROM
+    dagi_10_fdw.politikreds
+        LIMIT (
+               SELECT
+                   maxrows
+    FROM
+        g_options);
+
 DROP TABLE IF EXISTS dagi_10.postnummerinddeling;
 
 CREATE TABLE dagi_10.postnummerinddeling AS
@@ -121,9 +173,47 @@ SELECT
     *
 FROM
     dagi_10_fdw.postnummerinddeling
-LIMIT (
-    SELECT
-        maxrows
+        LIMIT (
+               SELECT
+                   maxrows
     FROM
         g_options);
 
+DROP TABLE IF EXISTS dagi_10.regionsinddeling;
+
+CREATE TABLE dagi_10.regionsinddeling AS
+SELECT
+    *
+FROM
+    dagi_10_fdw.regionsinddeling
+        LIMIT (
+               SELECT
+                   maxrows
+    FROM
+        g_options);
+
+DROP TABLE IF EXISTS dagi_10.retskreds;
+
+CREATE TABLE dagi_10.retskreds AS
+SELECT
+    *
+FROM
+    dagi_10_fdw.retskreds
+        LIMIT (
+               SELECT
+                   maxrows
+    FROM
+        g_options);
+
+DROP TABLE IF EXISTS dagi_10.sogneinddeling;
+
+CREATE TABLE dagi_10.sogneinddeling AS
+SELECT
+    *
+FROM
+    dagi_10_fdw.sogneinddeling
+        LIMIT (
+               SELECT
+                   maxrows
+    FROM
+        g_options);
