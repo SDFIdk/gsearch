@@ -33,7 +33,17 @@ COMMENT ON COLUMN api.postnummer.bbox IS 'Geometriens boundingbox i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.postnummer;
 
-WITH postnumre AS (
+WITH kommunenumre AS (
+    SELECT
+        p.postnummer,
+        string_agg(k.kommunekode, ',') AS kommunekode
+    FROM
+        dagi_10.postnummerinddeling p
+            LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, p.geometri)
+    GROUP BY
+        p.postnummer
+),
+postnumre AS (
     SELECT
         COALESCE(p2.postnummer, p1.postnummer) AS postnummer,
         COALESCE(p2.navn, p1.navn) AS postnummernavn,
@@ -47,16 +57,18 @@ SELECT
     coalesce(p.postnummer, '') AS postnummer,
     coalesce(p.postnummernavn, '') AS postnummernavn,
     (p.ergadepostnummer = 'true') AS ergadepostnummer,
+    k.kommunekode,
     st_multi (st_union (p.geometri)) AS geometri,
-    st_extent (p.geometri) AS bbox,
-    string_agg(k.kommunekode, ',') AS kommunekode INTO basic.postnummer
+    st_extent (p.geometri) AS bbox
 FROM
     postnumre p
-    LEFT JOIN dagi_500.kommuneinddeling k ON (st_intersects (k.geometri, p.geometri))
+        LEFT JOIN kommunenumre k ON p.postnummer = k.postnummer
 GROUP BY
     p.postnummer,
     p.postnummernavn,
-    p.ergadepostnummer;
+    p.ergadepostnummer,
+    k.kommunekode;
+
 
 ALTER TABLE basic.postnummer
     DROP COLUMN IF EXISTS textsearchable_plain_col;
