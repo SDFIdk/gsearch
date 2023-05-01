@@ -136,16 +136,27 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-            regionskode::text, regionsnavn::text, visningstekst::text, geometri, bbox::geometry
-            FROM
-                basic.region
-            WHERE (
-                textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
-                OR textsearchable_unaccent_col @@ to_tsquery(''simple'', $2)
-                OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
-            AND %s
-            ORDER BY
-                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
+            regionskode::text,
+            regionsnavn::text,
+            visningstekst::text,
+            geometri,
+            bbox::geometry
+        FROM
+            basic.region
+        WHERE (
+            textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
+            OR textsearchable_unaccent_col @@ to_tsquery(''simple'', $2)
+            OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
+        AND %s
+        ORDER BY
+            basic.combine_rank(
+                $2,
+                $2,
+                textsearchable_plain_col,
+                textsearchable_unaccent_col,
+                ''simple''::regconfig,
+                ''basic.septima_fts_config''::regconfig
+            ) desc,
                 ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
                 regionsnavn
             LIMIT $3;', filters);
