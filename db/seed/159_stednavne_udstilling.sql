@@ -1411,30 +1411,25 @@ WHERE
     AND btrim(subtype_presentation) <> '';
 
 -- Tilføj og populer kommunefilter på tabellen
--- ALTER TABLE stednavne_udstilling.stednavne_udstilling
---     ADD COLUMN kommunekode text;
---
--- -- Opdater kommunekode på stednavne. ca. 11 minutter
--- UPDATE
--- stednavne_udstilling.stednavne_udstilling
--- SET
---     kommunekode = t.kommunekode
--- FROM (
---     SELECT
---         s.objectid,
---         s.navnefoelgenummer,
---         string_agg(k.kommunekode, ',') AS kommunekode
---     FROM
---         stednavne_udstilling.stednavne_udstilling s
---         JOIN dagi_500.kommuneinddeling k ON (st_intersects (s.geometri, k.geometri))
---     WHERE
---         st_geometrytype (s.geometri) <> 'ST_GeometryCollection' -- undgå geometrycollections - det er en fejl de er i data
---     GROUP BY
---         s.objectid,
---         s.navnefoelgenummer) t
--- WHERE
---     stednavne_udstilling.stednavne_udstilling.objectid = t.objectid
---     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = t.navnefoelgenummer;
+UPDATE
+stednavne_udstilling.stednavne_udstilling
+SET
+    kommunekode = t.kommunekode
+FROM (
+    SELECT
+        s.objectid,
+        s.navnefoelgenummer,
+        string_agg(k.kommunekode, ',') AS kommunekode
+    FROM
+        stednavne_udstilling.stednavne_udstilling s
+        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, s.geometri)
+    GROUP BY
+        s.objectid,
+        s.navnefoelgenummer
+    ) t
+WHERE
+    stednavne_udstilling.stednavne_udstilling.objectid = t.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = t.navnefoelgenummer;
 
 -- General update der fjerner alle gentagelser af subtype
 -- Fx `Bispebjerg Kirkegård (kirkegård i København NV)` bliver lavet om til `Bispebjerg Kirkegård (København NV)`

@@ -40,17 +40,7 @@ COMMENT ON COLUMN api.stednavn.bbox IS 'Geometriens boundingbox i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.stednavn;
 
-WITH kommunenumre AS (
-    SELECT
-        st.objectid,
-        string_agg(k.kommunekode, ',') AS kommunekode
-    FROM
-        stednavne_udstilling.stednavne_udstilling st
-        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, st.geometri)
-    GROUP BY
-        st.objectid
-),
-stednavne AS (
+WITH stednavne AS (
     SELECT
         objectid,
         id_lokalid,
@@ -59,6 +49,7 @@ stednavne AS (
         skrivemaade,
         type,
         subtype,
+        kommunekode,
         st_force2d (geometri_udtyndet) AS geometri
     FROM
         stednavne_udstilling.stednavne_udstilling
@@ -92,6 +83,7 @@ agg_stednavne AS (
         u.skrivemaade AS uofficielle_skrivemaader,
         "type",
         subtype,
+        kommunekode,
         geometri_udtyndet as geometri
     FROM
         stednavne_udstilling.stednavne_udstilling su
@@ -108,6 +100,7 @@ agg_stednavne AS (
         u.skrivemaade,
         "type",
         subtype,
+        kommunekode,
         geometri_udtyndet
 )
 SELECT
@@ -129,12 +122,11 @@ SELECT
         END) AS skrivemaade_uofficiel_nohyphen,
     type AS stednavn_type,
     subtype AS stednavn_subtype,
-    k.kommunekode,
+    kommunekode,
     st_multi (st_union (geometri)) AS geometri,
     st_envelope (st_collect (geometri)) AS bbox INTO basic.stednavn
 FROM
     agg_stednavne
-LEFT JOIN kommunenumre k ON agg_stednavne.objectid = k.objectid
 GROUP BY
     id,
     visningstekst,
@@ -144,7 +136,7 @@ GROUP BY
     skrivemaade_uofficiel_nohyphen,
     type,
     subtype,
-    k.kommunekode;
+    kommunekode;
 
 
 -- Inserts into tekst_forekomst
