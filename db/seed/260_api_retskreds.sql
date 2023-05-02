@@ -68,7 +68,7 @@ SELECT
 INTO basic.retskreds
 FROM
     retskredse r
-    LEFT JOIN kommunenumre k ON r.regionskode = k.regionskode
+    LEFT JOIN kommunenumre k ON r.retskredsnummer = k.retskredsnummer
 GROUP BY
     r.retskredsnummer,
     r.navn,
