@@ -62,3 +62,11 @@ Feature: Gsearch region test
         When method GET
         Then status 200
         And match response == '#[0]'
+
+  Scenario: Filter kommunekode in like
+    Then param q = 's'
+
+    And param filter = "kommunekode like '%0169%'"
+    When method GET
+    Then status 200
+    And match response == '#[1]'

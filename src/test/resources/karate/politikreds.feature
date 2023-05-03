@@ -63,3 +63,11 @@ Feature: Gsearch politikreds test
         When method GET
         Then status 200
         And match response == '#[0]'
+
+    Scenario: Filter kommunekode in like
+        Then param q = 'k'
+
+        And param filter = "kommunekode like '%0185%'"
+        When method GET
+        Then status 200
+        And match response == '#[1]'
