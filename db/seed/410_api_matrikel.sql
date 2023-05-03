@@ -10,6 +10,7 @@ CREATE TYPE api.matrikel AS (
     kommunekode text,
     matrikelnummer text,
     visningstekst text,
+    bfenummer text,
     centroid_x text,
     centroid_y text,
     geometri geometry
@@ -28,6 +29,8 @@ COMMENT ON COLUMN api.matrikel.kommunekode IS 'Kommunekode(r) for kommune(r) der
 COMMENT ON COLUMN api.matrikel.matrikelnummer IS 'Matrikelnummer';
 
 COMMENT ON COLUMN api.matrikel.visningstekst IS 'Præsentationsform for et matrikelnummer';
+
+COMMENT ON COLUMN api.matrikel.visningstekst IS 'BFE-nummer for matriklen';
 
 COMMENT ON COLUMN api.matrikel.centroid_x IS 'Centroide X for matriklens geometri';
 
@@ -54,6 +57,7 @@ WITH matrikelnumre AS (
         JOIN matriklen.centroide c ON c.jordstykkelokalid = j.id_lokalid
         JOIN matriklen.matrikelkommune k ON k.id_lokalid = j.kommunelokalid
         JOIN matriklen.lodflade l ON l.jordstykkelokalid = j.id_lokalid
+        JOIN matriklen_fdw.samletfastejendom s on s.id_lokalid = j.samletfastejendomlokalid
 ),
 ejerlavsnavn_dups AS (
     SELECT
@@ -244,6 +248,7 @@ BEGIN
                 kommunekode::text,
                 matrikelnummer::text,
                 visningstekst::text,
+                bfenummer::text,
                 ST_X((ST_DUMP(centroide_geometri)).geom)::text,
                 ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
                 geometri
@@ -268,6 +273,7 @@ BEGIN
                 kommunekode::text,
                 matrikelnummer::text,
                 visningstekst::text,
+                bfenummer::text,
                 ST_X((ST_DUMP(centroide_geometri)).geom)::text,
                 ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
                 geometri
