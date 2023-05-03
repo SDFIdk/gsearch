@@ -85,11 +85,28 @@ LIMIT (
     FROM
         g_options);
 
+DROP TABLE IF EXISTS matriklen.samletfastejendom;
+
+CREATE TABLE matriklen.samletfastejendom AS
+SELECT
+    *
+FROM
+    matriklen_fdw.samletfastejendom
+WHERE
+        status = 'Gældende'
+    LIMIT (
+    SELECT
+        maxrows
+    FROM
+        g_options);
+
 CREATE INDEX ON matriklen.jordstykke (id_lokalid);
 CREATE INDEX ON matriklen.jordstykke (ejerlavlokalid);
 CREATE INDEX ON matriklen.jordstykke (kommunelokalid);
+CREATE INDEX ON matriklen.jordstykke (samletfastejendomlokalid);
 CREATE INDEX ON matriklen.ejerlav (id_lokalid);
 CREATE INDEX ON matriklen.ejerlav (ejerlavsnavn);
 CREATE INDEX ON matriklen.centroide (jordstykkelokalid);
 CREATE INDEX ON matriklen.matrikelkommune (id_lokalid);
 CREATE INDEX ON matriklen.lodflade (jordstykkelokalid);
+CREATE INDEX ON matriklen.samletfastejendom (id_lokalid);
