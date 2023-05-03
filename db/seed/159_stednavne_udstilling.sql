@@ -1440,3 +1440,5 @@ SET
 	visningstekst = replace(stednavne_udstilling.stednavne_udstilling.visningstekst, stednavne_udstilling.stednavne_udstilling.subtype_presentation || ' i ','')
 WHERE
 	stednavne_udstilling.stednavne_udstilling.skrivemaade ilike '% ' || stednavne_udstilling.stednavne_udstilling.subtype_presentation;
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
