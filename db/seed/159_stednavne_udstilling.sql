@@ -59,6 +59,7 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype_presentation)
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (objectid);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (navnefoelgenummer);
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
