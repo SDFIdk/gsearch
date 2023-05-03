@@ -57,7 +57,7 @@ WITH matrikelnumre AS (
         JOIN matriklen.centroide c ON c.jordstykkelokalid = j.id_lokalid
         JOIN matriklen.matrikelkommune k ON k.id_lokalid = j.kommunelokalid
         JOIN matriklen.lodflade l ON l.jordstykkelokalid = j.id_lokalid
-        JOIN matriklen_fdw.samletfastejendom s on s.id_lokalid = j.samletfastejendomlokalid
+        JOIN matriklen.samletfastejendom s on s.id_lokalid = j.samletfastejendomlokalid
 ),
 ejerlavsnavn_dups AS (
     SELECT
