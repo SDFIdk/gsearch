@@ -28,7 +28,7 @@ COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer(postnumre) for navn
 
 COMMENT ON COLUMN api.navngivenvej.postnummernavn IS 'Postnummernavn(e) for navngiven vej';
 
-COMMENT ON COLUMN api.navngivenvej.kommunekode IS 'Kommunekode(r) for navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.geometri IS 'Geometri for den navngivne vej i EPSG:25832, linje eller polygon';
 

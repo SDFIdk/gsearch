@@ -23,7 +23,7 @@ COMMENT ON COLUMN api.matrikel.ejerlavskode IS 'Ejerlavskode for matrikel';
 
 COMMENT ON COLUMN api.matrikel.kommunenavn IS 'Kommunenavn for matrikel';
 
-COMMENT ON COLUMN api.matrikel.kommunekode IS 'Kommunekode for matrikel';
+COMMENT ON COLUMN api.matrikel.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil matrikel';
 
 COMMENT ON COLUMN api.matrikel.matrikelnummer IS 'Matrikelnummer';
 

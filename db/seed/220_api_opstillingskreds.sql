@@ -31,7 +31,7 @@ COMMENT ON COLUMN api.opstillingskreds.storkredsnummer IS 'Unik nummer for stork
 
 COMMENT ON COLUMN api.opstillingskreds.storkredsnavn IS 'Storkredsens unikke navn';
 
-COMMENT ON COLUMN api.opstillingskreds.kommunekode IS 'Kommunekode(r) for opstillingskredsen';
+COMMENT ON COLUMN api.opstillingskreds.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil opstillingskredsen';
 
 COMMENT ON COLUMN api.opstillingskreds.geometri IS 'Geometri i EPSG:25832';
 

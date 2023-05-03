@@ -25,7 +25,7 @@ COMMENT ON COLUMN api.retskreds.visningstekst IS 'Præsentationsform for en rets
 
 COMMENT ON COLUMN api.retskreds.myndighedskode IS 'Retskredsens myndighedskode. Er unik for hver retskreds. 4 cifre.';
 
-COMMENT ON COLUMN api.retskreds.kommunekode IS 'Kommunekode(r) for retskredsen';
+COMMENT ON COLUMN api.retskreds.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil retskredsen';
 
 COMMENT ON COLUMN api.retskreds.geometri IS 'Geometri i EPSG:25832';
 

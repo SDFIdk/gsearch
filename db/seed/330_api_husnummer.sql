@@ -23,7 +23,7 @@ COMMENT ON TYPE api.husnummer IS 'Husnummer';
 
 COMMENT ON COLUMN api.husnummer.id IS 'ID på husnummer';
 
-COMMENT ON COLUMN api.husnummer.kommunekode IS 'Kommunekode for et husnummer';
+COMMENT ON COLUMN api.husnummer.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil et husnummer';
 
 COMMENT ON COLUMN api.husnummer.kommunenavn IS 'Kommunenavn for et husnummer';
 

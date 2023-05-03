@@ -32,7 +32,7 @@ COMMENT ON COLUMN api.stednavn.stednavn_type IS 'Featuretype på stednavn';
 
 COMMENT ON COLUMN api.stednavn.stednavn_subtype IS 'Topografitype på stednavn';
 
-COMMENT ON COLUMN api.stednavn.kommunekode IS 'Kommunekode(r) for stednavn';
+COMMENT ON COLUMN api.stednavn.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil stednavn';
 
 COMMENT ON COLUMN api.stednavn.geometri IS 'Geometri i EPSG:25832';
 

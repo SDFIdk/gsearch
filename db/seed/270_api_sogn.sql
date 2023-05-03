@@ -22,7 +22,7 @@ COMMENT ON COLUMN api.sogn.sognenavn IS 'Navn på sogn';
 
 COMMENT ON COLUMN api.sogn.visningstekst IS 'Præsentationsform for et sogn';
 
-COMMENT ON COLUMN api.sogn.kommunekode IS 'Kommunekode(r) for sogn';
+COMMENT ON COLUMN api.sogn.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil sogn';
 
 COMMENT ON COLUMN api.sogn.geometri IS 'Geometri i EPSG:25832';
 

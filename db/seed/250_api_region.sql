@@ -22,7 +22,7 @@ COMMENT ON COLUMN api.region.regionsnavn IS 'Navn på region';
 
 COMMENT ON COLUMN api.region.visningstekst IS 'Præsentationsform for en region';
 
-COMMENT ON COLUMN api.region.kommunekode IS 'Kommunekoder inden og opad region';
+COMMENT ON COLUMN api.region.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil region';
 
 COMMENT ON COLUMN api.region.geometri IS 'Geometri i EPSG:25832';
 
