@@ -151,58 +151,35 @@ BEGIN
         btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
     INTO input_postnummer;
 
+    SELECT
+        CASE
+            WHEN input_postnummer = ''
+                THEN NULL
+            ELSE input_postnummer
+            END
+    INTO postnummer_string;
+
     --RAISE NOTICE 'input_postnummernavn: %', input_postnummernavn;
     --RAISE NOTICE 'input_postnummer: %', input_postnummer;
-
-    WITH tokens AS (
-        SELECT
-            UNNEST(string_to_array(input_postnummernavn, ' ')) t
-            )
-    SELECT
-        string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
-    FROM
-        tokens INTO postnummernavn_string;
-
-    WITH tokens AS (
-        SELECT
-            UNNEST(string_to_array(input_postnummernavn, ' ')) t
-            )
-    SELECT
-        string_agg(t, ':BCD* <-> ') || ':BCD*'
-    FROM
-        tokens INTO postnummernavn_string_plain;
-
-    WITH tokens AS (
-        SELECT
-            UNNEST(string_to_array(input_postnummer, ' ')) t
-            )
-    SELECT
-        string_agg(t, ':A | ') || ':A'
-    FROM
-        tokens INTO postnummer_string;
-    --RAISE NOTICE 'postnummernavn_string: %', postnummernavn_string;
-    --RAISE NOTICE 'postnummernavn_string_plain: %', postnummernavn_string_plain;
     --RAISE NOTICE 'postnummer_string: %', postnummer_string;
-    CASE WHEN postnummernavn_string IS NULL THEN
+
+    WITH tokens AS (
         SELECT
-            postnummer_string INTO query_string;
-    WHEN postnummer_string IS NULL THEN
+            UNNEST(string_to_array(input_postnummernavn, ' ')) t
+    )
+    SELECT
+            string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
+    FROM
+        tokens INTO query_string;
+
+    WITH tokens AS (
         SELECT
-            postnummernavn_string INTO query_string;
-        ELSE
-            SELECT
-                postnummernavn_string || ' | ' || postnummer_string INTO query_string;
-    END CASE;
-    CASE WHEN postnummernavn_string_plain IS NULL THEN
-        SELECT
-            postnummer_string INTO plain_query_string;
-    WHEN postnummer_string IS NULL THEN
-        SELECT
-            postnummernavn_string_plain INTO plain_query_string;
-        ELSE
-            SELECT
-                postnummernavn_string_plain || ' | ' || postnummer_string INTO plain_query_string;
-    END CASE;
+            UNNEST(string_to_array(input_postnummernavn, ' ')) t
+    )
+    SELECT
+            string_agg(t, ':BCD* <-> ') || ':BCD*'
+    FROM
+        tokens INTO plain_query_string;
     --RAISE NOTICE 'query_string: %', query_string; RAISE NOTICE 'plain_query_string: %', plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
