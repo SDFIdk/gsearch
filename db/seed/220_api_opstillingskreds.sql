@@ -186,7 +186,7 @@ BEGIN
                 valgkredsnummer::text,
                 storkredsnummer::text,
                 storkredsnavn::text,
-                kommunekode:text,
+                kommunekode::text,
                 geometri,
                 bbox::geometry
             FROM
