@@ -19,6 +19,7 @@ Feature: Gsearch postnummer test
       "geometri": '#(geometriSchema)',
       "postnummer": '#string',
       "postnummernavn": '#string',
+      "kommunekode": '#string',
       "gadepostnummer": '#string'
     }
     """
@@ -97,10 +98,10 @@ Feature: Gsearch postnummer test
     Then status 200
     And match response == '#[100]'
 
-  Scenario: Filter postnummer in like
-    Then param q = '2500'
+  Scenario: Filter kommunekode in like
+    Then param q = '88'
 
-    And param filter = 'kommunekode like '%250101%25''
+    And param filter = "kommunekode like '%0791%'"
     When method GET
     Then status 200
-    And match response == '#[100]'
+    And match response == '#[7]'

@@ -23,6 +23,7 @@ Feature: Gsearch sogn test
         """
             {
                 "sognenavn": '#string',
+                "kommunekode": '#string',
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',
@@ -78,3 +79,11 @@ Feature: Gsearch sogn test
         When method GET
         Then status 200
         And match response == '#[100]'
+
+    Scenario: Filter kommunekode in like
+        Then param q = 'sel'
+
+        And param filter = "kommunekode like '%0779%'"
+        When method GET
+        Then status 200
+        And match response == '#[1]'

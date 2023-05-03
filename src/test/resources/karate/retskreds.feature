@@ -17,6 +17,7 @@ Feature: Gsearch retskreds test
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "retkredsnavn": '#string',
+                "kommunekode": '#string',
                 "geometri": '#(geometriSchema)',
                 "retskredsnummer": '#string',
                 "myndighedskode": '#string'
@@ -71,3 +72,11 @@ Feature: Gsearch retskreds test
         When method GET
         Then status 200
         And match response == '#[23]'
+
+    Scenario: Filter kommunekode in like
+        Then param q = 'retten i a'
+
+        And param filter = "kommunekode like '%0710%'"
+        When method GET
+        Then status 200
+        And match response == '#[1]'
