@@ -47,6 +47,7 @@ WITH matrikelnumre AS (
         k.kommunenavn,
         k.kommunekode,
         j.matrikelnummer,
+        s.bfenummer,
         c.geometri AS centroide_geometri,
         st_force2d (COALESCE(l.geometri)) AS geometri
     FROM
@@ -93,6 +94,7 @@ SELECT
     m.kommunenavn,
     m.kommunekode,
     m.matrikelnummer,
+    m.bfenummer,
     m.centroide_geometri,
     e.textsearchable_plain_col_ejerlavsnavn,
     e.textsearchable_unaccent_col_ejerlavsnavn,
