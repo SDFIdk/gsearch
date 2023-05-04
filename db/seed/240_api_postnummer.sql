@@ -151,6 +151,8 @@ BEGIN
         btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
     INTO input_postnummer;
 
+    -- If input_postnumer is an empty string it needs to be change to NULL so the where clause in the function
+    -- behaves as expected, and not make a search as postnummer like `%` that matches every postnummer.
     SELECT
         CASE
             WHEN input_postnummer = ''
