@@ -158,7 +158,7 @@ BEGIN
             WHEN input_postnummer = ''
                 THEN NULL
             ELSE input_postnummer
-            END
+        END
     INTO postnummer_string;
 
     --RAISE NOTICE 'input_postnummernavn: %', input_postnummernavn;
@@ -183,6 +183,7 @@ BEGIN
     FROM
         tokens INTO plain_query_string;
     --RAISE NOTICE 'query_string: %', query_string; RAISE NOTICE 'plain_query_string: %', plain_query_string;
+
     -- Execute and return the result
     stmt = format(E'SELECT
                 postnummer::text,
@@ -198,6 +199,7 @@ BEGIN
                 textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
                 OR textsearchable_unaccent_col @@ to_tsquery(''simple'', $2)
                 OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
+				OR (postnummer IS NULL OR postnummer LIKE $3 || ''%%'')
             AND %s
             ORDER BY
                 basic.combine_rank(
@@ -213,9 +215,9 @@ BEGIN
                     to_tsquery(''simple'',$1)
                 )::double precision desc,
                 postnummernavn
-            LIMIT $3 ;', filters);
+            LIMIT $4 ;', filters);
     RETURN QUERY EXECUTE stmt
-    USING query_string, plain_query_string, rowlimit;
+    USING query_string, plain_query_string, postnummer_string, rowlimit;
 END
 $function$;
 -- Test cases:
