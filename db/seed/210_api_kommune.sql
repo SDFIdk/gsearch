@@ -69,9 +69,9 @@ ALTER TABLE basic.kommune
 ALTER TABLE basic.kommune
     ADD COLUMN textsearchable_plain_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', kommunekode), 'A') ||
-                         setweight(to_tsvector('simple', split_part(visningstekst, ' ', 1)), 'B') ||
-                         setweight(to_tsvector('simple', split_part(visningstekst, ' ', 2)), 'C') ||
-                         setweight(to_tsvector('simple', basic.split_and_endsubstring (visningstekst, 3)), 'D'))
+                         setweight(to_tsvector('simple', split_part(kommunenavn, ' ', 1)), 'B') ||
+                         setweight(to_tsvector('simple', split_part(kommunenavn, ' ', 2)), 'C') ||
+                         setweight(to_tsvector('simple', basic.split_and_endsubstring (kommunenavn, 3)), 'D'))
     STORED;
 
 ALTER TABLE basic.kommune
@@ -80,9 +80,9 @@ ALTER TABLE basic.kommune
 ALTER TABLE basic.kommune
     ADD COLUMN textsearchable_unaccent_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('basic.septima_fts_config', kommunekode), 'A') ||
-                         setweight(to_tsvector('basic.septima_fts_config', split_part(visningstekst, ' ', 1)), 'B') ||
-                         setweight(to_tsvector('basic.septima_fts_config', split_part(visningstekst, ' ', 2)), 'C') ||
-                         setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (visningstekst, 3)), 'D'))
+                         setweight(to_tsvector('basic.septima_fts_config', split_part(kommunenavn, ' ', 1)), 'B') ||
+                         setweight(to_tsvector('basic.septima_fts_config', split_part(kommunenavn, ' ', 2)), 'C') ||
+                         setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (kommunenavn, 3)), 'D'))
     STORED;
 
 ALTER TABLE basic.kommune
@@ -91,9 +91,9 @@ ALTER TABLE basic.kommune
 ALTER TABLE basic.kommune
     ADD COLUMN textsearchable_phonetic_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', kommunekode), 'A') ||
-                         setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(visningstekst, ' ', 1), 2)), 'B') ||
-                         setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(visningstekst, ' ', 2), 2)), 'C') ||
-                         setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (visningstekst, 3)), 'D'))
+                         setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(kommunenavn, ' ', 1), 2)), 'B') ||
+                         setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(kommunenavn, ' ', 2), 2)), 'C') ||
+                         setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (kommunenavn, 3)), 'D'))
     STORED;
 
 CREATE INDEX ON basic.kommune USING GIN (textsearchable_plain_col);
