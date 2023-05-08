@@ -120,3 +120,5 @@ Feature: Gsearch kommune test
         When method GET
         Then status 200
         And match response == '#[1]'
+        And match response.[*].kommunenavn == ['Glostrup']
+        
