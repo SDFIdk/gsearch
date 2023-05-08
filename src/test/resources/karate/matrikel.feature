@@ -106,13 +106,13 @@ Feature: Gsearch matrikel test
 
         Then match thirdresponse == secondresponse
 
-    Scenario: Filter kommunekode in like
-        Then param q = '1 grib'
+    Scenario: Filter bfe-nummer in like
+        Then param q = '9284876'
 
-        And param filter = "kommunekode like '%0270%'"
+        And param filter = "bfenummer like '%9284876%'"
         When method GET
         Then status 200
-        And match response == '#[10]'
+        And match response == '#[4]'
         
         #  Scenario: Test maximum limit and one character search
         #    Then param q = 's'

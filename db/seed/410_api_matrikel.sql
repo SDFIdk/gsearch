@@ -47,7 +47,7 @@ WITH matrikelnumre AS (
         k.kommunenavn,
         k.kommunekode,
         j.matrikelnummer,
-        s.bfenummer,
+        s.bfenummer::text,
         c.geometri AS centroide_geometri,
         st_force2d (COALESCE(l.geometri)) AS geometri
     FROM
