@@ -257,8 +257,7 @@ BEGIN
             FROM
                 basic.matrikel
             WHERE
-                lower(ejerlavsnavn) >= ''%s''
-                AND lower(ejerlavsnavn) <= ''%s'' || ''å''
+                visningstekst ilike ''%%s%%''
             ORDER BY
                 matrikelnummer,
                 visningstekst
