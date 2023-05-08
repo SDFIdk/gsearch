@@ -73,6 +73,15 @@ Feature: Gsearch kommune test
         And match response.[*].kommunenavn contains deep ['København']
         And match response.[*].kommunekode contains deep ['0101']
 
+    Scenario: Search kommunekode without the prefix zero
+        Then param q = '259'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[*].kommunenavn contains deep ['Køge']
+        And match response.[*].kommunekode contains deep ['0259']
+
     Scenario: Combined search, Get København from using the kommunekode as search input and Herlev as tekst input
         Then param q = '0101 herlev'
 
@@ -111,3 +120,5 @@ Feature: Gsearch kommune test
         When method GET
         Then status 200
         And match response == '#[1]'
+        And match response.[*].kommunenavn == ['Glostrup']
+        

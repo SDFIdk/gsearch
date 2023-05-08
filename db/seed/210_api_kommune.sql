@@ -113,8 +113,6 @@ DECLARE
     max_rows integer;
     input_kommunenavn text;
     input_kommunekode text;
-    kommunenavn_string text;
-    kommunenavn_string_plain text;
     kommunekode_string text;
     query_string text;
     plain_query_string text;
@@ -138,10 +136,26 @@ BEGIN
         regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '[- \s]+', ' ', 'g')
     INTO input_kommunenavn;
 
+    --RAISE NOTICE 'input_kommunenavn: %', input_kommunenavn;
+
     SELECT
         -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
         regexp_replace(btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) , '\s+', ' ', 'g')
     INTO input_kommunekode;
+
+    --RAISE NOTICE 'input_kommunekode: %', input_kommunekode;
+
+    -- If input_kommunekode is an empty string it needs to be change to NULL so the where clause in the function
+    -- behaves as expected, and not make a search as kommunekode like `%` that matches every kommunekode.
+    SELECT
+        CASE
+            WHEN input_kommunekode = ''
+                THEN NULL
+            ELSE input_kommunekode
+        END
+    INTO kommunekode_string;
+
+    --RAISE NOTICE 'kommunekode_string: %', kommunekode_string;
 
     WITH tokens AS (
         SELECT
@@ -150,8 +164,7 @@ BEGIN
     SELECT
             string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
     FROM
-        tokens
-    INTO kommunenavn_string;
+        tokens INTO query_string;
 
     WITH tokens AS (
         SELECT
@@ -160,35 +173,8 @@ BEGIN
     SELECT
             string_agg(t, ':BCD* <-> ') || ':BCD*'
     FROM
-        tokens INTO kommunenavn_string_plain;
-    WITH tokens AS (
-        SELECT
-            UNNEST(string_to_array(input_kommunekode, ' ')) t
-    )
-    SELECT
-            string_agg(t, ':A | ') || ':A'
-    FROM
-        tokens INTO kommunekode_string;
-    CASE WHEN kommunenavn_string IS NULL THEN
-    SELECT
-        kommunekode_string INTO query_string;
-    WHEN kommunekode_string IS NULL THEN
-    SELECT
-        kommunenavn_string INTO query_string;
-    ELSE
-    SELECT
-            kommunenavn_string || ' | ' || kommunekode_string INTO query_string;
-    END CASE;
-    CASE WHEN kommunenavn_string_plain IS NULL THEN
-    SELECT
-        kommunekode_string INTO plain_query_string;
-    WHEN kommunekode_string IS NULL THEN
-    SELECT
-        kommunenavn_string_plain INTO plain_query_string;
-    ELSE
-    SELECT
-            kommunenavn_string_plain || ' | ' || kommunekode_string INTO plain_query_string;
-    END CASE;
+        tokens INTO plain_query_string;
+
     -- Execute and return the result
     stmt = format(E'SELECT
                 kommunekode::text,
@@ -201,14 +187,25 @@ BEGIN
             WHERE (
                 textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
                 OR textsearchable_unaccent_col @@ to_tsquery(''simple'', $2)
-                OR textsearchable_plain_col @@ to_tsquery(''simple'', $2) )
+                OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
+				OR (kommunekode IS NULL OR kommunekode LIKE ''%%'' || $3 || ''%%'')
             AND %s
             ORDER BY
-                basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
-                ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
+                basic.combine_rank(
+                    $2,
+                    $2,
+                    textsearchable_plain_col,
+                    textsearchable_unaccent_col,
+                    ''simple''::regconfig,
+                    ''basic.septima_fts_config''::regconfig
+                ) desc,
+                    ts_rank_cd(
+                    textsearchable_phonetic_col,
+                    to_tsquery(''simple'',$1)
+                )::double precision desc,
             	kommunenavn
-            LIMIT $3;', filters); RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+            LIMIT $4;', filters); RETURN QUERY EXECUTE stmt
+        USING query_string, plain_query_string, kommunekode_string, rowlimit;
 END
 $function$;
 
