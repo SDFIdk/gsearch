@@ -260,7 +260,7 @@ BEGIN
                 lower(ejerlavsnavn) >= ''%s''
                 AND lower(ejerlavsnavn) <= ''%s'' || ''å''
             ORDER BY
-                matrikel,
+                matrikelnummer,
                 visningstekst
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
