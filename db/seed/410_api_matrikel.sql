@@ -247,9 +247,6 @@ BEGIN
 -- - navngivenvej
 -- - stednavn
 
--- Et par linjer nede herfra, tilfoejes der et `|| ''å''`. Det er et hack,
--- for at representere den alfanumerisk sidste vej, der starter med `%s`
-
     IF (
         SELECT
             COALESCE(forekomster, 0)
@@ -274,7 +271,7 @@ BEGIN
             FROM
                 basic.matrikel
             WHERE
-                visningstekst ilike ''%%s%%''
+                ejerlavsnavn ilike ''%s%%'' or matrikelnummer ilike ''%s''
             ORDER BY
                 matrikelnummer,
                 visningstekst
