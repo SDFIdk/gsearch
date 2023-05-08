@@ -14,11 +14,15 @@ DROP SCHEMA IF EXISTS dar_fdw CASCADE;
 
 DROP SCHEMA IF EXISTS matriklen_fdw CASCADE;
 
+DROP SCHEMA IF EXISTS matriklen_udgaaet_fdw CASCADE;
+
 DROP SCHEMA IF EXISTS stednavne_fdw CASCADE;
 
 DROP SCHEMA IF EXISTS dar CASCADE;
 
 DROP SCHEMA IF EXISTS matriklen CASCADE;
+
+DROP SCHEMA IF EXISTS matriklen_udgaaet CASCADE;
 
 DROP SCHEMA IF EXISTS stednavne CASCADE;
 
@@ -42,6 +46,8 @@ CREATE SCHEMA dar_fdw;
 
 CREATE SCHEMA matriklen_fdw;
 
+CREATE SCHEMA matriklen_udgaaet_fdw;
+
 CREATE SCHEMA stednavne_fdw;
 
 CREATE SCHEMA dagi_10;
@@ -51,6 +57,8 @@ CREATE SCHEMA dagi_500;
 CREATE SCHEMA dar;
 
 CREATE SCHEMA matriklen;
+
+CREATE SCHEMA matriklen_udgaaet;
 
 CREATE SCHEMA stednavne;
 
@@ -70,11 +78,15 @@ COMMENT ON SCHEMA dar_fdw IS 'Foreign data wrappers to dar';
 
 COMMENT ON SCHEMA matriklen_fdw IS 'Foreign data wrappers to matriklen';
 
+COMMENT ON SCHEMA matriklen_udgaaet_fdw IS 'Foreign data wrappers to matriklen_udgaaet';
+
 COMMENT ON SCHEMA stednavne_fdw IS 'Foreign data wrappers to stednavne';
 
 COMMENT ON SCHEMA dar IS 'DAR base data';
 
 COMMENT ON SCHEMA matriklen IS 'MAT base data';
+
+COMMENT ON SCHEMA matriklen_udgaaet IS 'MAT base data';
 
 COMMENT ON SCHEMA stednavne IS 'Stednavne base data';
 

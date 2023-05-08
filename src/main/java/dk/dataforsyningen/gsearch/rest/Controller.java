@@ -5,6 +5,7 @@ import dk.dataforsyningen.gsearch.datamodel.adresse;
 import dk.dataforsyningen.gsearch.datamodel.husnummer;
 import dk.dataforsyningen.gsearch.datamodel.kommune;
 import dk.dataforsyningen.gsearch.datamodel.matrikel;
+import dk.dataforsyningen.gsearch.datamodel.matrikel_udgaaet;
 import dk.dataforsyningen.gsearch.datamodel.navngivenvej;
 import dk.dataforsyningen.gsearch.datamodel.opstillingskreds;
 import dk.dataforsyningen.gsearch.datamodel.politikreds;
@@ -215,6 +216,29 @@ public class Controller {
       throws FilterToSQLException, CQLException {
 
     List<matrikel> result = getResult(q, "matrikel", filter, limit);
+    return result;
+  }
+
+  /**
+   * @param q
+   * @param filter
+   * @param limit
+   * @return
+   * @throws CQLException
+   * @throws FilterToSQLException
+   */
+  @GetMapping(path = "/matrikel_udgaaet", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(operationId = "matrikel_udgaaet", tags = {"Gsearch"})
+  public List<matrikel_udgaaet> getMatrikelUdgaaet(
+      @Parameter(description = "Søgestreng")
+      @RequestParam(value = "q", required = true) @NotBlank String q,
+      @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+      @RequestParam(required = false) Optional<String> filter,
+      @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      throws FilterToSQLException, CQLException {
+
+    List<matrikel_udgaaet> result = getResult(q, "matrikel_udgaaet", filter, limit);
     return result;
   }
 

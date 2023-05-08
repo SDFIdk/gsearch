@@ -5,6 +5,7 @@ import dk.dataforsyningen.gsearch.datamodel.adresse;
 import dk.dataforsyningen.gsearch.datamodel.husnummer;
 import dk.dataforsyningen.gsearch.datamodel.kommune;
 import dk.dataforsyningen.gsearch.datamodel.matrikel;
+import dk.dataforsyningen.gsearch.datamodel.matrikel_udgaaet;
 import dk.dataforsyningen.gsearch.datamodel.navngivenvej;
 import dk.dataforsyningen.gsearch.datamodel.opstillingskreds;
 import dk.dataforsyningen.gsearch.datamodel.politikreds;
@@ -69,6 +70,9 @@ class DataMapper implements RowMapper<Object> {
         if (resource.equals(ResourceType.MATRIKEL.toString())) {
             return mapMatrikel(rs, ctx);
         }
+        if (resource.equals(ResourceType.MATRIKEL_UDGAAET.toString())) {
+            return mapMatrikelUdgaaet(rs, ctx);
+        }
         if (resource.equals(ResourceType.NAVNGIVENVEJ.toString())) {
             return mapNavngivenvej(rs, ctx);
         }
@@ -119,6 +123,13 @@ class DataMapper implements RowMapper<Object> {
 
     private matrikel mapMatrikel(ResultSet rs, StatementContext ctx) throws SQLException {
         matrikel data = new matrikel();
+        for (int i = 1; i <= meta.getColumnCount(); i++)
+            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        return data;
+    }
+
+    private matrikel_udgaaet mapMatrikelUdgaaet(ResultSet rs, StatementContext ctx) throws SQLException {
+        matrikel_udgaaet data = new matrikel_udgaaet();
         for (int i = 1; i <= meta.getColumnCount(); i++)
             data.add(meta.getColumnName(i), mapColumn(i, rs));
         return data;
