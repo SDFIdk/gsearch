@@ -106,20 +106,20 @@ FROM
 
 
 -- Inserts into tekst_forekomst
-    WITH a AS (SELECT generate_series(1,8) a)
+WITH a AS (SELECT generate_series(1,8) a)
 INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
-    SELECT
+SELECT
     'matrikel',
     substring(lower(ejerlavsnavn) FROM 1 FOR a),
     count(*)
-    FROM
+FROM
     basic.matrikel am
-    CROSS JOIN a
-    WHERE ejerlavsnavn IS NOT null
-    GROUP BY
+        CROSS JOIN a
+WHERE ejerlavsnavn IS NOT NULL
+GROUP BY
     substring(lower(ejerlavsnavn) FROM 1 FOR a)
-    HAVING
-    count(1) > 1000
+HAVING
+        count(1) > 1000
     ON CONFLICT DO NOTHING;
 
 
