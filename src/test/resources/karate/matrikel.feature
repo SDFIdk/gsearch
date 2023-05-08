@@ -107,7 +107,7 @@ Feature: Gsearch matrikel test
         Then match thirdresponse == secondresponse
 
     Scenario: Filter bfe-nummer in like
-        Then param q = '9284876'
+        Then param q = 'f'
 
         And param filter = "bfenummer like '%9284876%'"
         When method GET
