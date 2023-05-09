@@ -271,7 +271,8 @@ BEGIN
             FROM
                 basic.matrikel
             WHERE
-                ejerlavsnavn ilike ''%s%%'' or matrikelnummer ilike ''%s''
+                ejerlavsnavn ilike ''%s%%''
+                OR matrikelnummer ilike ''%s''
             ORDER BY
                 matrikelnummer
             LIMIT $3;', input_tekst, input_tekst);
