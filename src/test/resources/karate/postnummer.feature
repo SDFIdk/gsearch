@@ -105,3 +105,10 @@ Feature: Gsearch postnummer test
     When method GET
     Then status 200
     And match response == '#[7]'
+
+  Scenario: Search with exactly the input value (here no matches)
+    Then param q = '12a'
+
+    When method GET
+    Then status 200
+    And match response == '#[0]'

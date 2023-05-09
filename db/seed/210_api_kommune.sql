@@ -132,15 +132,15 @@ BEGIN
     END IF;
 
     SELECT
-        -- matches non-digits and removes repeated whitespace and '-'
-        regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '[- \s]+', ' ', 'g')
+        -- Removes repeated whitespace and '-'
+        regexp_replace(btrim(input_tekst), '[- \s]+', ' ', 'g')
     INTO input_kommunenavn;
 
     --RAISE NOTICE 'input_kommunenavn: %', input_kommunenavn;
 
     SELECT
         -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
-        regexp_replace(btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' ')) , '\s+', ' ', 'g')
+        btrim(regexp_replace(regexp_replace(btrim(input_tekst), '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
     INTO input_kommunekode;
 
     --RAISE NOTICE 'input_kommunekode: %', input_kommunekode;

@@ -121,4 +121,10 @@ Feature: Gsearch kommune test
         Then status 200
         And match response == '#[1]'
         And match response.[*].kommunenavn == ['Glostrup']
-        
+
+    Scenario: Search with exactly the input value (here no matches)
+        Then param q = '12a'
+
+        When method GET
+        Then status 200
+        And match response == '#[0]'

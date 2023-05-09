@@ -121,8 +121,6 @@ DECLARE
     max_rows integer;
     input_postnummernavn text;
     input_postnummer text;
-    postnummernavn_string text;
-    postnummernavn_string_plain text;
     postnummer_string text;
     query_string text;
     plain_query_string text;
@@ -142,14 +140,18 @@ BEGIN
     END IF;
 
     SELECT
-        -- matches non-digits and removes repeated whitespace and '-'
-        regexp_replace(btrim((REGEXP_MATCH(btrim(input_tekst), '([^\d]+)'))[1]), '[- \s]+', ' ', 'g')
+        -- Removes repeated whitespace and '-'
+        regexp_replace(btrim(input_tekst), '[- \s]+', ' ', 'g')
     INTO input_postnummernavn;
+
+    --RAISE NOTICE 'input_postnummernavn: %', input_postnummernavn;
 
     SELECT
         -- Removes everything that starts with a letter or symbol (not digits) and then removes repeated whitespace.
-        btrim(regexp_replace(regexp_replace(input_tekst, '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
+        btrim(regexp_replace(regexp_replace(btrim(input_tekst), '((?<!\S)\D\S*)', '', 'g'), '\s+', ' '))
     INTO input_postnummer;
+
+    --RAISE NOTICE 'input_postnummer: %', input_postnummer;
 
     -- If input_postnumer is an empty string it needs to be change to NULL so the where clause in the function
     -- behaves as expected, and not make a search as postnummer like `%` that matches every postnummer.
@@ -161,8 +163,6 @@ BEGIN
         END
     INTO postnummer_string;
 
-    --RAISE NOTICE 'input_postnummernavn: %', input_postnummernavn;
-    --RAISE NOTICE 'input_postnummer: %', input_postnummer;
     --RAISE NOTICE 'postnummer_string: %', postnummer_string;
 
     WITH tokens AS (
