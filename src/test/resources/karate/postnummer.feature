@@ -66,23 +66,6 @@ Feature: Gsearch postnummer test
     And match response.[*]postnummernavn contains deep ['København S', 'København SV']
     And match response.[*].visningstekst contains deep ['2300 København S', '2450 København SV']
 
-  Scenario: Get Birkerød and Hillerød from using the postnumber as search input
-    Then param q = '3460 3400'
-
-    When method GET
-    Then status 200
-    And match response == '#[2]'
-    And match response.[*]postnummernavn contains deep ['Birkerød', 'Hillerød']
-    And match response.[*].postnummer contains deep ['3460', '3400']
-
-  Scenario: Get København S from using the postnumber as search input and Søborg as tekst input
-    Then param q = '2300 søborg'
-
-    When method GET
-    Then status 200
-    And match response == '#[2]'
-    And match response.[*]postnummernavn contains deep ['Søborg', 'København S']
-
   Scenario: Do not have a match on '.'
     Then param q = '.'
 
@@ -105,3 +88,10 @@ Feature: Gsearch postnummer test
     When method GET
     Then status 200
     And match response == '#[7]'
+
+  Scenario: Search with exactly the input value (here no matches)
+    Then param q = '12a'
+
+    When method GET
+    Then status 200
+    And match response == '#[0]'
