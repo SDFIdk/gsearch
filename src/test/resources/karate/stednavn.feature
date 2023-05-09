@@ -158,4 +158,4 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[1].skrivemaade_officiel contains ['Lind']
+        And match response.[0].skrivemaade_officiel contains 'Lind'
