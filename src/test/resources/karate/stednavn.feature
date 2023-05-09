@@ -151,3 +151,11 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[2]'
+
+    Scenario: Levenshtein ordering test
+        Then param q = 'lind'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[1].skrivemaade_officiel contains ['Lind']
