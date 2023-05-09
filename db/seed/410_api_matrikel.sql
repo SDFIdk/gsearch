@@ -38,6 +38,8 @@ COMMENT ON COLUMN api.matrikel.centroid_y IS 'Centroide Y for matriklens geometr
 
 COMMENT ON COLUMN api.matrikel.geometri IS 'Geometri i EPSG:25832';
 
+CREATE COLLATION IF NOT EXISTS matrikelnummer_collation (provider = icu, locale = 'en@colNumeric=yes');
+
 DROP TABLE IF EXISTS basic.matrikel;
 
 WITH ejerlav_kommune_distinct as (
@@ -155,6 +157,10 @@ GROUP BY
 HAVING
         count(1) > 1000
     ON CONFLICT DO NOTHING;
+
+
+ALTER TABLE basic.matrikel
+    ALTER COLUMN matrikelnummer TYPE TEXT COLLATE matrikelnummer_collation;
 
 
 ALTER TABLE basic.matrikel

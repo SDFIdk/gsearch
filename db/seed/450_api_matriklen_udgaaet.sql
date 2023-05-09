@@ -38,8 +38,9 @@ COMMENT ON COLUMN api.matrikel_udgaaet.centroid_y IS 'Centroide Y for matriklens
 
 COMMENT ON COLUMN api.matrikel_udgaaet.geometri IS 'Geometri i EPSG:25832';
 
-DROP TABLE IF EXISTS basic.matrikel_udgaaet;
+CREATE COLLATION IF NOT EXISTS matrikelnummer_udgaaet_collation (provider = icu, locale = 'en@colNumeric=yes');
 
+DROP TABLE IF EXISTS basic.matrikel_udgaaet;
 
 WITH ejerlav_kommune_distinct as (
 	SELECT distinct
@@ -79,7 +80,7 @@ ejerlav_distinct as (
 ),
 samletfastejendom_distinct as (
 	SELECT distinct
-		bfenummer,
+		bfenummer::text,
 		id_lokalid
 	from matriklen_udgaaet.samletfastejendom
 ),
@@ -105,7 +106,7 @@ matrikelnumre AS (
         k.kommunenavn,
         k.kommunekode,
         j.matrikelnummer,
-        s.bfenummer,
+        s.bfenummer::text,
         c.geometri AS centroide_geometri,
         st_force2d (COALESCE(l.geometri)) AS geometri
     FROM
@@ -163,6 +164,23 @@ WITH a AS (SELECT generate_series(1,8) a)
 INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
 SELECT
     'matrikel_udgaaet',
+    substring(lower(matrikelnummer) FROM 1 FOR a),
+    count(*)
+FROM
+    basic.matrikel am
+        CROSS JOIN a
+WHERE ejerlavsnavn IS NOT NULL
+GROUP BY
+    substring(lower(matrikelnummer) FROM 1 FOR a)
+HAVING
+        count(1) > 1000
+    ON CONFLICT DO NOTHING;
+
+-- Inserts into tekst_forekomst
+WITH a AS (SELECT generate_series(1,8) a)
+INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
+SELECT
+    'matrikel_udgaaet',
     substring(lower(ejerlavsnavn) FROM 1 FOR a),
     count(*)
 FROM
@@ -174,6 +192,10 @@ GROUP BY
 HAVING
         count(1) > 1000
     ON CONFLICT DO NOTHING;
+
+
+ALTER TABLE basic.matrikel_udgaaet
+    ALTER COLUMN matrikelnummer TYPE TEXT COLLATE matrikelnummer_udgaaet_collation;
 
 
 ALTER TABLE basic.matrikel_udgaaet
