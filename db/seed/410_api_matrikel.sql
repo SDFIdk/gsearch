@@ -40,7 +40,28 @@ COMMENT ON COLUMN api.matrikel.geometri IS 'Geometri i EPSG:25832';
 
 DROP TABLE IF EXISTS basic.matrikel;
 
-WITH matrikelnumre AS (
+WITH ejerlav_kommune_distinct as (
+	select distinct
+		j.ejerlavlokalid,
+		k.kommunenavn,
+		k.kommunekode,
+		k.id_lokalid as kommuneidlokalid
+	from
+		matriklen.jordstykke j
+		join matriklen.matrikelkommune k on k.id_lokalid = j.kommunelokalid
+),
+ejerlavnavn_kommune_distinct as (
+	select 
+		e.ejerlavsnavn,
+		e.ejerlavskode::text,
+		ek.kommunenavn,
+		ek.kommunekode,
+		ek.kommuneidlokalid
+	from
+		ejerlav_kommune_distinct ek
+		join matriklen.ejerlav e on e.id_lokalid = ek.ejerlavlokalid
+),
+matrikelnumre AS (
     SELECT
         e.ejerlavsnavn,
         e.ejerlavskode::text,
@@ -73,12 +94,8 @@ ejerlavsnavn_dups AS (
         (setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(ejerlavsnavn, ' ', 1), 2)), 'B') ||
         setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(ejerlavsnavn, ' ', 2), 2)), 'C') ||
         setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (ejerlavsnavn, 3)), 'D')) AS textsearchable_phonetic_col_ejerlavsnavn
-    FROM ( SELECT DISTINCT
-            ejerlavsnavn,
-            ejerlavskode,
-            kommunenavn
-        FROM
-            matrikelnumre) x
+    FROM ( SELECT *
+        FROM ejerlavnavn_kommune_distinct) x
     GROUP BY
         ejerlavsnavn
 )
