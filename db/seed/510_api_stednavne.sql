@@ -323,9 +323,10 @@ BEGIN
                 basic.combine_rank($2, $2, textsearchable_plain_col, textsearchable_unaccent_col, ''simple''::regconfig, ''basic.septima_fts_config''::regconfig) desc,
                 ts_rank_cd(textsearchable_phonetic_col, to_tsquery(''simple'',$1))::double precision desc,
                 visningstekst
+                levenshtein(lower(skrivemaade)::text, lower($4)) asc,
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, input_tekst;
     END IF;
 END
 $function$;
