@@ -68,6 +68,27 @@ IMPORT FOREIGN SCHEMA matriklen_latest
 FROM
     SERVER :matriklen_server INTO matriklen_fdw;
 
+-- MATRIKLEN_UDGAAET
+DROP SERVER IF EXISTS :matriklen_udgaaet_server CASCADE;
+
+CREATE SERVER IF NOT EXISTS :matriklen_udgaaet_server FOREIGN DATA WRAPPER postgres_fdw OPTIONS (
+    host :matriklen_udgaaet_hostname,
+    port :matriklen_udgaaet_port,
+    dbname :matriklen_udgaaet_database,
+    fetch_size '1000'
+);
+
+DROP USER MAPPING IF EXISTS FOR CURRENT_USER SERVER :matriklen_udgaaet_server;
+
+CREATE USER MAPPING FOR CURRENT_USER SERVER :matriklen_udgaaet_server OPTIONS (
+    USER :matriklen_udgaaet_username,
+    PASSWORD :matriklen_udgaaet_password
+);
+
+IMPORT FOREIGN SCHEMA matriklen_udgaaet_latest
+FROM
+    SERVER :matriklen_udgaaet_server INTO matriklen_udgaaet_fdw;
+
 -- STEDNAVNE
 DROP SERVER IF EXISTS :stednavne_server CASCADE;
 
