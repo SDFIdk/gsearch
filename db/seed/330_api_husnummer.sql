@@ -315,7 +315,6 @@ BEGIN
             AND
                 %s
             ORDER BY
-                husnummertekst,
                 basic.combine_rank(
                     $2,
                     $2,
@@ -328,6 +327,7 @@ BEGIN
                     textsearchable_phonetic_col,
                     to_tsquery(''simple'',$1)
                 )::double precision desc,
+                husnummertekst,
                 visningstekst
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
