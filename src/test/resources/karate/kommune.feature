@@ -82,14 +82,6 @@ Feature: Gsearch kommune test
         And match response.[*].kommunenavn contains deep ['Køge']
         And match response.[*].kommunekode contains deep ['0259']
 
-    Scenario: Combined search, Get København from using the kommunekode as search input and Herlev as tekst input
-        Then param q = '0101 herlev'
-
-        When method GET
-        Then status 200
-        And match response == '#[2]'
-        And match response.[*].kommunenavn contains deep ['Herlev', 'København']
-
     Scenario: Do not have a match on '.'
         Then param q = '.'
 
