@@ -110,6 +110,23 @@ WITH a AS (SELECT generate_series(1,8) a)
 INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
 SELECT
     'matrikel',
+    substring(lower(matrikelnummer) FROM 1 FOR a),
+    count(*)
+FROM
+    basic.matrikel am
+        CROSS JOIN a
+WHERE ejerlavsnavn IS NOT NULL
+GROUP BY
+    substring(lower(matrikelnummer) FROM 1 FOR a)
+HAVING
+        count(1) > 1000
+    ON CONFLICT DO NOTHING;
+
+-- Inserts into tekst_forekomst
+WITH a AS (SELECT generate_series(1,8) a)
+INSERT INTO basic.tekst_forekomst (ressource, tekstelement, forekomster)
+SELECT
+    'matrikel',
     substring(lower(ejerlavsnavn) FROM 1 FOR a),
     count(*)
 FROM
@@ -230,9 +247,6 @@ BEGIN
 -- - navngivenvej
 -- - stednavn
 
--- Et par linjer nede herfra, tilfoejes der et `|| ''å''`. Det er et hack,
--- for at representere den alfanumerisk sidste vej, der starter med `%s`
-
     IF (
         SELECT
             COALESCE(forekomster, 0)
@@ -257,11 +271,10 @@ BEGIN
             FROM
                 basic.matrikel
             WHERE
-                lower(ejerlavsnavn) >= ''%s''
-                AND lower(ejerlavsnavn) <= ''%s'' || ''å''
+                ejerlavsnavn ilike ''%s%%''
+                OR matrikelnummer ilike ''%s''
             ORDER BY
-                matrikel,
-                visningstekst
+                matrikelnummer
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
