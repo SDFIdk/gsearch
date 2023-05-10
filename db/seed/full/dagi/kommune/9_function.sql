@@ -1,107 +1,3 @@
-SELECT '210_api_kommune.sql ' || now();
-
-CREATE SCHEMA IF NOT EXISTS api;
-
-DROP TYPE IF EXISTS api.kommune CASCADE;
-
-CREATE TYPE api.kommune AS (
-    kommunekode text,
-    kommunenavn text,
-    visningstekst text,
-    geometri geometry,
-    bbox geometry
-    );
-
-COMMENT ON TYPE api.kommune IS 'Kommune';
-
-COMMENT ON COLUMN api.kommune.kommunekode IS 'Kommunekode';
-
-COMMENT ON COLUMN api.kommune.kommunenavn IS 'Navn på kommune';
-
-COMMENT ON COLUMN api.kommune.visningstekst IS 'Præsentationsform for en kommune';
-
-COMMENT ON COLUMN api.kommune.geometri IS 'Geometri i EPSG:25832';
-
-COMMENT ON COLUMN api.kommune.bbox IS 'Geometriens boundingbox i EPSG:25832';
-
-DROP TABLE IF EXISTS basic.kommune;
-
-WITH kommuner AS (
-    SELECT
-        k.kommunekode,
-        k.navn,
-        r.regionskode,
-        st_force2d (k.geometri) AS geometri
-    FROM
-        dagi_500.kommuneinddeling k
-        LEFT JOIN dagi_500.regionsinddeling r ON k.regionlokalid = r.id_lokalid
-    )
-SELECT
-    (
-        CASE
-            WHEN
-                k.kommunekode = '0101'
-            THEN
-                k.navn || 's Kommune'
-            WHEN
-                k.kommunekode = '0411'
-            THEN
-                k.navn
-        ELSE
-            k.navn || ' Kommune'
-        END
-    ) AS visningstekst,
-    coalesce(k.kommunekode, '') AS kommunekode,
-    coalesce(k.navn, '') AS kommunenavn,
-    k.regionskode,
-    st_multi (st_union (k.geometri)) AS geometri,
-    st_extent (k.geometri) AS bbox INTO basic.kommune
-FROM
-    kommuner k
-GROUP BY
-    k.kommunekode,
-    k.navn,
-    k.regionskode;
-
-ALTER TABLE basic.kommune
-    DROP COLUMN IF EXISTS textsearchable_plain_col;
-
-ALTER TABLE basic.kommune
-    ADD COLUMN textsearchable_plain_col tsvector
-    GENERATED ALWAYS AS (setweight(to_tsvector('simple', kommunekode), 'A') ||
-                         setweight(to_tsvector('simple', split_part(kommunenavn, ' ', 1)), 'B') ||
-                         setweight(to_tsvector('simple', split_part(kommunenavn, ' ', 2)), 'C') ||
-                         setweight(to_tsvector('simple', basic.split_and_endsubstring (kommunenavn, 3)), 'D'))
-    STORED;
-
-ALTER TABLE basic.kommune
-    DROP COLUMN IF EXISTS textsearchable_unaccent_col;
-
-ALTER TABLE basic.kommune
-    ADD COLUMN textsearchable_unaccent_col tsvector
-    GENERATED ALWAYS AS (setweight(to_tsvector('basic.septima_fts_config', kommunekode), 'A') ||
-                         setweight(to_tsvector('basic.septima_fts_config', split_part(kommunenavn, ' ', 1)), 'B') ||
-                         setweight(to_tsvector('basic.septima_fts_config', split_part(kommunenavn, ' ', 2)), 'C') ||
-                         setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (kommunenavn, 3)), 'D'))
-    STORED;
-
-ALTER TABLE basic.kommune
-    DROP COLUMN IF EXISTS textsearchable_phonetic_col;
-
-ALTER TABLE basic.kommune
-    ADD COLUMN textsearchable_phonetic_col tsvector
-    GENERATED ALWAYS AS (setweight(to_tsvector('simple', kommunekode), 'A') ||
-                         setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(kommunenavn, ' ', 1), 2)), 'B') ||
-                         setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(kommunenavn, ' ', 2), 2)), 'C') ||
-                         setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (kommunenavn, 3)), 'D'))
-    STORED;
-
-CREATE INDEX ON basic.kommune USING GIN (textsearchable_plain_col);
-
-CREATE INDEX ON basic.kommune USING GIN (textsearchable_unaccent_col);
-
-CREATE INDEX ON basic.kommune USING GIN (textsearchable_phonetic_col);
-
 DROP FUNCTION IF EXISTS api.kommune (text, jsonb, int, int);
 
 CREATE OR REPLACE FUNCTION api.kommune(input_tekst text, filters text, sortoptions integer, rowlimit integer)
@@ -209,6 +105,7 @@ BEGIN
 END
 $function$;
 
+
 -- Test cases:
 /*
  SELECT (api.kommune('køb',NULL, 1, 100)).*;
@@ -220,3 +117,4 @@ $function$;
  SELECT(api.kommune('0851 Lyngby',NULL,1,100)).*;
  SELECT(api.kommune('0760 0730 0840 0329 0265 0230 0175',NULL,1,100)).*;
  */
+
