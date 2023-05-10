@@ -1,14 +1,3 @@
-SELECT '140_matriklen_import.sql ' || now();
-
-
--- DEBUG
-DROP TABLE IF EXISTS g_options;
-
-CREATE TEMPORARY TABLE g_options (
-    maxrows int
-);
-
---INSERT INTO g_options VALUES (1000);
 -- MATRIKLEN
 DROP TABLE IF EXISTS matriklen.jordstykke;
 
@@ -18,12 +7,7 @@ SELECT
 FROM
     matriklen_fdw.jordstykke
 WHERE
-    status = 'Gældende'
-LIMIT (
-    SELECT
-        maxrows
-    FROM
-        g_options);
+    status = 'Gældende';
 
 DROP TABLE IF EXISTS matriklen.lodflade;
 
@@ -33,12 +17,7 @@ SELECT
 FROM
     matriklen_fdw.lodflade
 WHERE
-    status = 'Gældende'
-LIMIT (
-    SELECT
-        maxrows
-    FROM
-        g_options);
+    status = 'Gældende';
 
 DROP TABLE IF EXISTS matriklen.ejerlav;
 
@@ -48,12 +27,7 @@ SELECT
 FROM
     matriklen_fdw.ejerlav
 WHERE
-    status = 'Gældende'
-LIMIT (
-    SELECT
-        maxrows
-    FROM
-        g_options);
+    status = 'Gældende';
 
 DROP TABLE IF EXISTS matriklen.centroide;
 
@@ -63,12 +37,7 @@ SELECT
 FROM
     matriklen_fdw.centroide
 WHERE
-    status = 'Gældende'
-LIMIT (
-    SELECT
-        maxrows
-    FROM
-        g_options);
+    status = 'Gældende';
 
 DROP TABLE IF EXISTS matriklen.matrikelkommune;
 
@@ -78,12 +47,7 @@ SELECT
 FROM
     matriklen_fdw.matrikelkommune
 WHERE
-    status = 'Gældende'
-LIMIT (
-    SELECT
-        maxrows
-    FROM
-        g_options);
+    status = 'Gældende';
 
 DROP TABLE IF EXISTS matriklen.samletfastejendom;
 
@@ -93,12 +57,7 @@ SELECT
 FROM
     matriklen_fdw.samletfastejendom
 WHERE
-        status = 'Gældende'
-    LIMIT (
-    SELECT
-        maxrows
-    FROM
-        g_options);
+    status = 'Gældende';
 
 CREATE INDEX ON matriklen.jordstykke (id_lokalid);
 CREATE INDEX ON matriklen.jordstykke (ejerlavlokalid);
