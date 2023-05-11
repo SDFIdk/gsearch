@@ -1,4 +1,3 @@
-
 ALTER TABLE basic.politikreds
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 

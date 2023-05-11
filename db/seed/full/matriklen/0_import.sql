@@ -1,4 +1,3 @@
--- MATRIKLEN
 DROP TABLE IF EXISTS matriklen.jordstykke;
 
 CREATE TABLE matriklen.jordstykke AS

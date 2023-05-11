@@ -13,5 +13,7 @@ INSERT INTO dar.adressepunkt SELECT DISTINCT
     id_lokalid::uuid,
     geometri
 FROM
-    dar_fdw.adressepunkt;
+    dar_fdw.adressepunkt
+ON CONFLICT
+    DO NOTHING;
 

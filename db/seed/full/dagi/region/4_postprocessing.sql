@@ -1,4 +1,3 @@
-
 ALTER TABLE basic.region
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 

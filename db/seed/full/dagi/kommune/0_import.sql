@@ -1,4 +1,3 @@
--- DAGI
 DROP TABLE IF EXISTS dagi_500.kommuneinddeling;
 
 CREATE TABLE dagi_500.kommuneinddeling AS

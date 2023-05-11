@@ -1,4 +1,3 @@
-
 ALTER TABLE basic.postnummer
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 

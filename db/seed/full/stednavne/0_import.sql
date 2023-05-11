@@ -1,4 +1,3 @@
--- STEDNAVNE
 DROP TABLE IF EXISTS stednavne.vej CASCADE;
 
 CREATE TABLE stednavne.vej AS

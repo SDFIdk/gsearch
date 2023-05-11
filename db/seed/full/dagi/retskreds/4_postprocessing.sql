@@ -1,4 +1,3 @@
-
 ALTER TABLE basic.retskreds
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 

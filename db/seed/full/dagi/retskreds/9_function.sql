@@ -1,4 +1,3 @@
-
 DROP FUNCTION IF EXISTS api.retskreds (text, jsonb, int, int);
 
 CREATE OR REPLACE FUNCTION api.retskreds (input_tekst text, filters text, sortoptions integer, rowlimit integer)

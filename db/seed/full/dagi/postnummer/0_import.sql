@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS dagi_500.postnummerinddeling;
 
 CREATE TABLE dagi_500.postnummerinddeling AS

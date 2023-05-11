@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS basic.opstillingskreds;
 
 WITH kommunenumre AS (
@@ -11,7 +10,7 @@ WITH kommunenumre AS (
     GROUP BY
         o.opstillingskredsnummer
 ),
-    opstillingskredse AS (
+opstillingskredse AS (
     SELECT
         o.opstillingskredsnummer,
         o.navn,

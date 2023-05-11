@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS basic.politikreds;
 
 WITH kommunenumre AS (

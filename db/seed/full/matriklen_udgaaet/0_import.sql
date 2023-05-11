@@ -1,4 +1,3 @@
--- MATRIKLEN_UDGAAET
 DROP TABLE IF EXISTS matriklen_udgaaet.jordstykke;
 
 CREATE TABLE matriklen_udgaaet.jordstykke AS

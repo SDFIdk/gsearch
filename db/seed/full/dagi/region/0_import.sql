@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS dagi_500.regionsinddeling;
 
 CREATE TABLE dagi_500.regionsinddeling AS

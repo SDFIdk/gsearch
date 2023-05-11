@@ -1,4 +1,3 @@
-
 DROP FUNCTION IF EXISTS api.region (text, jsonb, int, int);
 
 CREATE OR REPLACE FUNCTION api.region (input_tekst text, filters text, sortoptions integer, rowlimit integer)

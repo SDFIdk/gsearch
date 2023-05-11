@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS basic.retskreds;
 
 WITH kommunenumre AS (
