@@ -6,12 +6,7 @@ SELECT
     vejnavn,
     COALESCE(geometri, st_setsrid(st_geomfromtext(wkt_omr),25832)) AS geometri
 FROM
-    dar_fdw.navngivenvej
-LIMIT (
-    SELECT
-        maxrows
-    FROM
-        g_options);
+    dar_fdw.navngivenvej;
 
 CREATE INDEX ON dar.navngivenvej (id);
 

@@ -1,7 +1,8 @@
 -- Create table with text combinations and number of occurences
 -- Helper to create data.
 DROP TABLE IF EXISTS basic.navngivenvej_count;
-CREATE TABLE basic.matrikel_count (
+
+CREATE TABLE basic.navngivenvej_count (
     tekstelement text,
     forekomster int,
     PRIMARY KEY (tekstelement)
