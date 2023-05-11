@@ -20,11 +20,11 @@ Danmarks Adresseregister (DAR), Danmarks Administrative Geografiske Inddeling (D
 
 I hvert endpoint søges der efter bedst mulig match i et eller flere felter/attributter som følger:
 
-* Adresse: Der søges i DAR adresse, husnummer, navngivenvej, postnummer
+* Adresse: Der søges i DAR adresse
 * Husnummer: Der søges i DAR husnummer
 * Kommune: Der søges i DAGI kommuneinddeling
 * Matrikel: Der søges i MAT matrikelnummer
-* Navngiven vej: Der søges i DAR navngivenvej og postnummer
+* Navngiven vej: Der søges i DAR navngivenvej
 * Opstillingskreds: Der søges i DAGI opstillingskreds
 * Politikreds: Der søges i DAGI politikreds
 * Postnummer: Der søges i DAGI postnummerinddeling
