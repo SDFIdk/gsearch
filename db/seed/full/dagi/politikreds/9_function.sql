@@ -26,8 +26,8 @@ BEGIN
     -- Build the query_string
 
     SELECT
-        -- removes repeated whitespace and '-'
-        regexp_replace(input_tekst, '[- \s]+', ' ', 'g')
+        -- Removes repeated whitespace and following symbols -()!
+        regexp_replace(btrim(input_tekst), '[-()! \s]+', ' ', 'g')
     INTO input_tekst;
 
     WITH tokens AS (

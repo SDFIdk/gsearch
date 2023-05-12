@@ -28,8 +28,8 @@ BEGIN
     END IF;
 
     SELECT
-        -- Removes repeated whitespace and '-'
-        regexp_replace(btrim(input_tekst), '[- \s]+', ' ', 'g')
+        -- Removes repeated whitespace and following symbols -()!
+        regexp_replace(btrim(input_tekst), '[-()! \s]+', ' ', 'g')
     INTO input_postnummernavn;
 
     --RAISE NOTICE 'input_postnummernavn: %', input_postnummernavn;
