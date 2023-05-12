@@ -159,7 +159,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (by i ' || p.navn || ')'
+    visningstekst = s.skrivemaade || ' (By i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
@@ -330,6 +330,15 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'campingplads'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- Justeringer af visningstekst (når typen oplagt fremgår af skrivemaade)
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = replace(visningstekst, '(Campingplads i ', '(')
+WHERE
+    TYPE ILIKE 'campingplads'
+    AND visningstekst ILIKE '%camping%';
 
 -------------
 -- Farvand --
@@ -646,6 +655,23 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
+-- Justeringer af visningstekst (når subtypen oplagt fremgår af skrivemaade)
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = replace(visningstekst, '(Bakke i ', '(')
+WHERE
+    TYPE ILIKE 'landskabsform'
+    AND skrivemaade ILIKE '%Bakke%';
+
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = replace(visningstekst, '(Dal i ', '(')
+WHERE
+    TYPE ILIKE 'landskabsform'
+    AND skrivemaade ILIKE '%Dal%';
+
 ---------------
 -- Lufthavne --
 ---------------
@@ -917,7 +943,7 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Vandloeb,  > 50 % i postnummerinddeling
+-- Vandloeb, > 50 % i postnummerinddeling
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
@@ -1006,6 +1032,24 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
+-- Juster broer
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = replace(visningstekst, '(Bro i ', '(')
+WHERE
+    TYPE ILIKE 'andentopografipunkt'
+    AND skrivemaade ILIKE '% bro%';
+
+-- Juster kilder
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = replace(visningstekst, '(Kilde i ', '(')
+WHERE
+    TYPE ILIKE 'andentopografipunkt'
+    AND (skrivemaade ILIKE '%kilde %'
+        OR skrivemaade ILIKE '%kilder %');
 
 ---------------------
 -- faergerutelinje --
@@ -1065,6 +1109,15 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'idraetsanlaeg'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- Juster cykelbaner
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = replace(visningstekst, '(Cykelbane i ', '(')
+WHERE
+    TYPE ILIKE 'idraetsanlaeg'
+    AND skrivemaade ILIKE '%cykelbane%';
 
 -- Juster golfklubber
 UPDATE
@@ -1176,6 +1229,15 @@ SET
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'soe';
+
+-- Juster Sø
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = replace(visningstekst, '(Sø i ', '(')
+WHERE
+    TYPE ILIKE 'soe'
+    AND (skrivemaade ILIKE '%sø');
 
 ---------------------
 -- standsningssted --
@@ -1433,14 +1495,5 @@ FROM (
 WHERE
     stednavne_udstilling.stednavne_udstilling.objectid = t.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = t.navnefoelgenummer;
-
--- General update der fjerner alle gentagelser af subtype
--- Fx `Bispebjerg Kirkegård (kirkegård i København NV)` bliver lavet om til `Bispebjerg Kirkegård (København NV)`
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = replace(stednavne_udstilling.stednavne_udstilling.visningstekst, stednavne_udstilling.stednavne_udstilling.subtype_presentation || ' i ','')
-WHERE
-	stednavne_udstilling.stednavne_udstilling.skrivemaade ilike '% ' || stednavne_udstilling.stednavne_udstilling.subtype_presentation;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
