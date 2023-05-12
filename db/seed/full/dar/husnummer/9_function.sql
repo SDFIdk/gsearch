@@ -46,7 +46,7 @@ BEGIN
     WITH tokens AS (
         SELECT
             -- Splitter op i temp-tabel hver hvert vejnavn-ord i hver sin raekke.
-            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
+            UNNEST(string_to_array(regexp_replace(btrim(input_tekst),'[ ][&][ ]|[&][ ]|[ ][&]','','g'), ' ')) t
     )
     SELECT
         string_agg(t, ':* & ') || ':*'

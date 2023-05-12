@@ -64,7 +64,7 @@ BEGIN
 
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(input_kommunenavn, ' ')) t
+            UNNEST(string_to_array(regexp_replace(btrim(input_kommunenavn),'[ ][&][ ]|[&][ ]|[ ][&]','','g'), ' ')) t
     )
     SELECT
             string_agg(t, ':BCD* <-> ') || ':BCD*'

@@ -41,7 +41,7 @@ BEGIN
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(btrim(input_tekst), ' ')) t
+            UNNEST(string_to_array(regexp_replace(btrim(input_tekst),'[ ][&][ ]|[&][ ]|[ ][&]','','g'), ' ')) t
 )
     SELECT
         string_agg(t, ':* <-> ') || ':*'
