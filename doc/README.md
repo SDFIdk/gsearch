@@ -67,8 +67,6 @@ Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, 
 
 **NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så f.eks `'` encodes til `%27`, `%` encodes til `%25` og at udtrykket er defineret som tekst.
 
-**NB** Attributter i retursvaret, der udgør et array, kan ikke benyttes som filter. Det gælder fx attributten `postnummer` i ressourcen `navngivenvej`.
-
 _Eksempel:_ Simpelt filter på husnummer: kommunekode '0461', dvs. Odense, bemærk brugen af `%27` som erstatning for `'` og `%25` som erstatning for `%`.
 
 ```http
