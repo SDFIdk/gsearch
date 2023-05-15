@@ -28,8 +28,8 @@ BEGIN
     END IF;
 
     SELECT
-        -- Removes repeated whitespace and '-'
-        regexp_replace(btrim(input_tekst), '[- \s]+', ' ', 'g')
+        -- Removes repeated whitespace and following symbols -()!
+        regexp_replace(btrim(input_tekst), '[-()! \s]+', ' ', 'g')
     INTO input_kommunenavn;
 
     --RAISE NOTICE 'input_kommunenavn: %', input_kommunenavn;
@@ -64,7 +64,7 @@ BEGIN
 
     WITH tokens AS (
         SELECT
-            UNNEST(string_to_array(input_kommunenavn, ' ')) t
+            UNNEST(string_to_array(regexp_replace(btrim(input_kommunenavn),'[ ][&][ ]|[&][ ]|[ ][&]','','g'), ' ')) t
     )
     SELECT
             string_agg(t, ':BCD* <-> ') || ':BCD*'
