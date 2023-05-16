@@ -83,8 +83,8 @@ BEGIN
             WHERE (
                 textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
                 OR textsearchable_unaccent_col @@ to_tsquery(''simple'', $2)
-                OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
-				OR (kommunekode IS NULL OR kommunekode LIKE ''%%'' || $3 || ''%%'')
+                OR textsearchable_plain_col @@ to_tsquery(''simple'', $2)
+				OR (kommunekode IS NULL OR kommunekode LIKE ''%%'' || $3 || ''%%''))
             AND %s
             ORDER BY
                 basic.combine_rank(
