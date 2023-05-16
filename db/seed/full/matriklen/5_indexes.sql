@@ -9,3 +9,5 @@ CREATE INDEX ON basic.matrikel (matrikelnummer, visningstekst);
 CREATE INDEX ON basic.matrikel (bfenummer);
 
 CREATE INDEX ON basic.matrikel (lower(ejerlavsnavn));
+
+CREATE INDEX ON basic.matrikel USING gist (geometri);
