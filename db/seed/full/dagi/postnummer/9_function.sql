@@ -86,8 +86,8 @@ BEGIN
             WHERE (
                 textsearchable_phonetic_col @@ to_tsquery(''simple'', $1)
                 OR textsearchable_unaccent_col @@ to_tsquery(''simple'', $2)
-                OR textsearchable_plain_col @@ to_tsquery(''simple'', $2))
-				OR (postnummer IS NULL OR postnummer LIKE $3 || ''%%'')
+                OR textsearchable_plain_col @@ to_tsquery(''simple'', $2)
+				OR (postnummer IS NULL OR postnummer LIKE $3 || ''%%''))
             AND %s
             ORDER BY
                 basic.combine_rank(
