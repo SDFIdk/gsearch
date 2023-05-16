@@ -221,6 +221,15 @@ Syntaks eksempel som søger efter '123ab' med `filter` på `ejerlavskode` '13065
 <br/><br/>
 
 ```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0//matrikel?q=a&filter=bfenummer=%27100032397%27 HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter 'a' med `filter` på `bfenummer` '100032397':
+
+<br/><br/>
+
+```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=22&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json

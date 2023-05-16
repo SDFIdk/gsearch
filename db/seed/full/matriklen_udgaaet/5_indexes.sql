@@ -6,4 +6,6 @@ CREATE INDEX ON basic.matrikel_udgaaet USING GIN (textsearchable_phonetic_col);
 
 CREATE INDEX ON basic.matrikel_udgaaet (matrikelnummer, visningstekst);
 
+CREATE INDEX ON basic.matrikel_udgaaet (bfenummer);
+
 CREATE INDEX ON basic.matrikel_udgaaet (lower(ejerlavsnavn));

@@ -109,7 +109,7 @@ Feature: Gsearch matrikel test
     Scenario: Filter bfe-nummer in like
         Then param q = 'f'
 
-        And param filter = "bfenummer like '%9284876%'"
+        And param filter = "bfenummer = '9284876'"
         When method GET
         Then status 200
         And match response == '#[4]'
