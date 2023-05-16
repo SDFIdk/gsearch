@@ -26,7 +26,7 @@ Feature:
         Given path 'husnummer'
         Then param q = 'Lærke'
 
-        And param filter = "kommunekode like '%250461%25'"
+        And param filter = "kommunekode like '%0461%'"
         And retry until responseStatus == 200
         When method GET
         And match response == '#[10]'
@@ -56,7 +56,7 @@ Feature:
         Given path 'adresse'
         Then param q = 'fle'
 
-        And param filter = "kommunekode like '%250360%25'"
+        And param filter = "kommunekode like '%0360%'"
         When method GET
         Then status 200
         And match response == '#[10]'
@@ -87,7 +87,7 @@ Feature:
         Then param q = 'fl'
 
         And param limit = '30'
-        And param filter = "kommunekode like '%250376%25'"
+        And param filter = "kommunekode like '%0376%'"
         When method GET
         Then status 200
         And match response == '#[30]'
@@ -118,7 +118,7 @@ Feature:
         Given path 'kommune'
         Then param q = 'a'
 
-        And param filter = "kommunekode like '%250851%25'"
+        And param filter = "kommunekode like '%0851%'"
         When method GET
         Then status 200
         And match response == '#[1]'
