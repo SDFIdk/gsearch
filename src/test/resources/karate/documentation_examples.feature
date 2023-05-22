@@ -213,7 +213,7 @@ Feature:
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
         And retry until responseStatus == 200
         When method GET
-        And match response == '#[1]'
+        And match response == '#[2]'
 
 
     Scenario: Example 22
