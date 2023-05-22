@@ -25,7 +25,7 @@ HAVING
 ON CONFLICT DO NOTHING;
 
 
--- Inserts into tekst_forekomst
+-- Inserts into matrikel_udgaaet_count
 WITH a AS (SELECT generate_series(1,8) a)
 INSERT INTO basic.matrikel_udgaaet_count (tekstelement, forekomster)
 SELECT

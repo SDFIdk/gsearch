@@ -57,13 +57,7 @@ BEGIN
 -- eller adresse = 'od').
 -- Saa for at goere api'et hurtigere ved disse soegninger, er der to forskellige queries
 -- i denne funktion. Den ene bliver brugt, hvis der er over 1000 forekomster.
--- Vi har hardcoded antal forekomster i tabellen: `tekst_forekomst`.
--- Dette gaelder for:
--- - husnummer
--- - adresse
--- - matrikel
--- - navngivenvej
--- - stednavn
+-- Vi har hardcoded antal forekomster i tabellen: `stednavn_count`.
 
 -- Et par linjer nede herfra, tilfoejes der et `|| ''å''`. Det er et hack,
 -- for at representere den alfanumerisk sidste vej, der starter med `%s`
@@ -72,7 +66,7 @@ BEGIN
         SELECT
             COALESCE(forekomster, 0)
         FROM
-            basic.tekst_forekomst
+            basic.stednavn_count
         WHERE
             ressource = 'stednavn'
         AND lower(input_tekst) = tekstelement) > 1000
