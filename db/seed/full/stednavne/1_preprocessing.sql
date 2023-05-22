@@ -1250,7 +1250,6 @@ CREATE TABLE stednavne_udstilling.stednavne_udstilling (
     subtype_presentation varchar,
     kommunekode varchar,
     geometri geometry(Geometry, 25832),
-    geometri_udtyndet geometry(Geometry, 25832),
     visningstekst varchar,
     area float,
     CONSTRAINT stednavne_udstilling_pkey PRIMARY KEY (objectid, navnefoelgenummer)
@@ -1329,16 +1328,6 @@ WHERE navnestatus = 'uofficielt'
 DELETE FROM stednavne_udstilling.stednavne_udstilling s
 WHERE st_geometrytype (s.geometri) = 'ST_GeometryCollection';
 
--- Opdater udyndet geometri 0:55
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    geometri_udtyndet = CASE WHEN length(ST_Astext (geometri)) < 5000 THEN
-        geometri
-    ELSE
-        ST_SimplifyPreserveTopology (geometri, GREATEST (ST_Xmax (ST_Envelope (geometri)) - ST_Xmin (ST_Envelope (geometri)), ST_Ymax (ST_Envelope (geometri)) - ST_Ymin (ST_Envelope (geometri))) / 300)
-    END;
-
 -- Prioritetsmæssig opdatering af visningstekst
 UPDATE
     stednavne_udstilling.stednavne_udstilling
@@ -1378,8 +1367,8 @@ FROM
             s2.type ILIKE 'bebyggelse'
             AND s2.subtype ILIKE 'By'
             AND s2.area > 10000000
-            AND s1.geometri_udtyndet && s2.geometri_udtyndet
-            AND ST_contains (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND s1.geometri && s2.geometri
+            AND ST_contains (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'bebyggelse'
@@ -1394,7 +1383,7 @@ SET
     visningstekst = s.skrivemaade || ' (By i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND s.type ILIKE 'bebyggelse'
@@ -1409,7 +1398,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND s.type ILIKE 'bebyggelse'
@@ -1433,7 +1422,7 @@ SET
     visningstekst = s.skrivemaade || ' (Begravelsesplads i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'begravelsesplads'
@@ -1447,8 +1436,8 @@ SET
     visningstekst = s.skrivemaade || ' (Begravelsesplads i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'begravelsesplads'
@@ -1483,7 +1472,7 @@ SET
         FROM 2 FOR length(s.subtype_presentation)) || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'bygning'
@@ -1499,8 +1488,8 @@ SET
         FROM 2 FOR length(s.subtype_presentation)) || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'bygning'
@@ -1541,7 +1530,7 @@ SET
     visningstekst = s.skrivemaade || ' (Campingplads i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'campingplads'
@@ -1555,8 +1544,8 @@ SET
     visningstekst = s.skrivemaade || ' (Campingplads i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'campingplads'
@@ -1599,7 +1588,7 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.visningstekst IS NOT NULL
             AND s2.type ILIKE 'farvand'
-            AND ST_contains (s2.geometri_udtyndet, s.geometri_udtyndet))
+            AND ST_contains (s2.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'farvand'
@@ -1615,8 +1604,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.visningstekst IS NOT NULL
             AND s2.type ILIKE 'farvand'
-            AND s2.geometri_udtyndet && s.geometri_udtyndet
-            AND st_area (st_intersection (s2.geometri_udtyndet, s.geometri_udtyndet)) > 0.5 * s.area)
+            AND s2.geometri && s.geometri
+            AND st_area (st_intersection (s2.geometri, s.geometri)) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'farvand'
@@ -1640,7 +1629,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'fortidsminde'
@@ -1654,10 +1643,10 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
 WHERE
-    st_geometrytype (stednavne_udstilling.stednavne_udstilling.geometri_udtyndet) = 'ST_MultiPoint'
+    st_geometrytype (stednavne_udstilling.stednavne_udstilling.geometri) = 'ST_MultiPoint'
     AND stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'fortidsminde'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
@@ -1680,7 +1669,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || 'Friluftsbad' || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'friluftsbad'
@@ -1737,7 +1726,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'havnebassin'
@@ -1751,8 +1740,8 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'havnebassin'
@@ -1776,7 +1765,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'jernbane'
@@ -1790,8 +1779,8 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'jernbane'
@@ -1816,7 +1805,7 @@ SET
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND TYPE ILIKE 'landskabsform'
-    AND ST_Area (geometri_udtyndet) > 50000000;
+    AND ST_Area (geometri) > 50000000;
 
 -- Ø'er i store farvande
 UPDATE
@@ -1827,8 +1816,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s1
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
             AND s2.area > 400000000
-            AND s1.geometri_udtyndet && s2.geometri_udtyndet
-            AND ST_contains (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND s1.geometri && s2.geometri
+            AND ST_contains (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'landskabsform'
@@ -1845,8 +1834,8 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s1
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type ILIKE 'farvand'
-            AND s1.geometri_udtyndet && s2.geometri_udtyndet
-            AND ST_contains (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND s1.geometri && s2.geometri
+            AND ST_contains (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'landskabsform'
@@ -1863,8 +1852,8 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s1
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type ILIKE 'farvand'
-            AND s1.geometri_udtyndet && s2.geometri_udtyndet
-            AND ST_Intersects (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND s1.geometri && s2.geometri
+            AND ST_Intersects (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'landskabsform'
@@ -1880,7 +1869,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'landskabsform'
@@ -1939,7 +1928,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'naturareal'
@@ -1963,7 +1952,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'navigationsanlaeg'
@@ -1987,7 +1976,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'restriktionsareal'
@@ -2031,7 +2020,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'sevaerdighed'
@@ -2045,8 +2034,8 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'sevaerdighed'
@@ -2070,7 +2059,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'terraenkontur'
@@ -2084,8 +2073,8 @@ SET
     visningstekst = s.skrivemaade || ' (' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'terraenkontur'
@@ -2111,8 +2100,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s1
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type ILIKE 'farvand'
             AND s2.area > 400000000
-            AND s1.geometri_udtyndet && s2.geometri_udtyndet
-            AND ST_contains (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND s1.geometri && s2.geometri
+            AND ST_contains (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'urentfarvand'
@@ -2127,8 +2116,8 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s1
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type ILIKE 'farvand'
-            AND s1.geometri_udtyndet && s2.geometri_udtyndet
-            AND ST_contains (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND s1.geometri && s2.geometri
+            AND ST_contains (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'urentfarvand'
@@ -2143,8 +2132,8 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s1
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type ILIKE 'farvand'
-            AND s1.geometri_udtyndet && s2.geometri_udtyndet
-            AND ST_Intersects (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND s1.geometri && s2.geometri
+            AND ST_Intersects (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'urentfarvand'
@@ -2168,7 +2157,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'vandloeb'
@@ -2182,8 +2171,8 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'vandloeb'
@@ -2208,7 +2197,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'andentopografiflade'
@@ -2222,8 +2211,8 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'andentopografiflade'
@@ -2257,7 +2246,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'andentopografipunkt'
@@ -2320,7 +2309,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'idraetsanlaeg'
@@ -2334,8 +2323,8 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'idraetsanlaeg'
@@ -2416,7 +2405,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'soe'
@@ -2430,8 +2419,8 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'soe'
@@ -2445,8 +2434,8 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.4 * s.area)
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+            AND st_area (st_intersection (p.geometri, s.geometri)) > 0.4 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'soe'
@@ -2489,7 +2478,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || INITCAP(s.type) || ', ' || s.subtype || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'standsningssted'
@@ -2523,7 +2512,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'ubearbejdetnavnflade'
@@ -2557,7 +2546,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'ubearbejdetnavnlinje'
@@ -2591,7 +2580,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'ubearbejdetnavnpunkt'
@@ -2625,7 +2614,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'ubearbejdetnavnpunkt'
@@ -2653,7 +2642,7 @@ FROM
     stednavne_udstilling.stednavne_udstilling s1
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype ILIKE 'Halvø'
             AND s2.skrivemaade = 'Jylland'
-            AND ST_contains (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND ST_contains (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
@@ -2668,7 +2657,7 @@ FROM
     stednavne_udstilling.stednavne_udstilling s1
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'Ø'
             AND s2.area > 50000000
-            AND ST_contains (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND ST_contains (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
@@ -2682,7 +2671,7 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s1
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'Ø'
-            AND ST_contains (s2.geometri_udtyndet, s1.geometri_udtyndet))
+            AND ST_contains (s2.geometri, s1.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
