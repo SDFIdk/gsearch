@@ -29,7 +29,7 @@ BEGIN
 
     SELECT
         -- Removes repeated whitespace and following symbols -()!
-        regexp_replace(btrim(input_tekst), '[-()! \s]+', ' ', 'g')
+        btrim(regexp_replace(btrim(input_tekst), '[-()! \s]+', ' ', 'g'))
     INTO input_kommunenavn;
 
     --RAISE NOTICE 'input_kommunenavn: %', input_kommunenavn;
