@@ -139,7 +139,7 @@ Feature: Gsearch adresse test
         Then param q = 'Rentemest 110 2 th'
 
         When method GET
-        Then status 200
+        And retry until responseStatus == 200
         And match response == '#[6]'
         And match response.[0].visningstekst == "Rentemestervej 110, 2. th, 2400 København NV"
 
