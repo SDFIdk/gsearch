@@ -68,8 +68,7 @@ BEGIN
         FROM
             basic.stednavn_count
         WHERE
-            ressource = 'stednavn'
-        AND lower(input_tekst) = tekstelement) > 1000
+            lower(input_tekst) = tekstelement) > 1000
         AND filters = '1=1'
     THEN
         stmt = format(E'SELECT

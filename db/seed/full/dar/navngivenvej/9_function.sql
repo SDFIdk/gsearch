@@ -62,7 +62,8 @@ BEGIN
         FROM
             basic.navngivenvej_count
         WHERE
-            ressource = 'adresse' AND lower(input_tekst) = tekstelement) > 1000 AND filters = '1=1' THEN
+            lower(input_tekst) = tekstelement) > 1000
+            AND filters = '1=1' THEN
         stmt = format(E'SELECT
                 id::text,
                 vejnavn::text,

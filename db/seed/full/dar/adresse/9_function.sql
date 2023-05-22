@@ -67,8 +67,7 @@ BEGIN
         FROM
             basic.adresse_count
         WHERE
-            ressource = 'adresse'
-        AND lower(input_tekst) = tekstelement ) > 1000
+            lower(input_tekst) = tekstelement ) > 1000
         AND filters = '1=1'
     THEN
         stmt = format(E'SELECT
