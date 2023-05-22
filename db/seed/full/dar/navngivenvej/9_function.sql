@@ -63,7 +63,7 @@ BEGIN
             basic.navngivenvej_count
         WHERE
             lower(input_tekst) = tekstelement) > 1000
-            AND filters = '1=1' THEN
+        AND filters = '1=1' THEN
         stmt = format(E'SELECT
                 id::text,
                 vejnavn::text,
