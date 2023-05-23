@@ -16,6 +16,7 @@ Installation af ny database:
    - dagi_500
    - dar
    - matriklen
+   - matriklen_udgaaet
    - stednavne_udstil
  - Kør SQL-filer i rækkefølge - dog undtaget: `010_init_fdw.sql` og `025_basic_data.sql`
  

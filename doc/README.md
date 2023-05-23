@@ -20,11 +20,12 @@ Danmarks Adresseregister (DAR), Danmarks Administrative Geografiske Inddeling (D
 
 I hvert endpoint søges der efter bedst mulig match i et eller flere felter/attributter som følger:
 
-* Adresse: Der søges i DAR adresse, husnummer, navngivenvej, postnummer
+* Adresse: Der søges i DAR adresse
 * Husnummer: Der søges i DAR husnummer
 * Kommune: Der søges i DAGI kommuneinddeling
 * Matrikel: Der søges i MAT matrikelnummer
-* Navngiven vej: Der søges i DAR navngivenvej og postnummer
+* Matrikel udgået: Der søges i MAT udgaaet matrikelnummer
+* Navngiven vej: Der søges i DAR navngivenvej
 * Opstillingskreds: Der søges i DAGI opstillingskreds
 * Politikreds: Der søges i DAGI politikreds
 * Postnummer: Der søges i DAGI postnummerinddeling
@@ -65,14 +66,12 @@ _Parametren_ `filter` angiver hvilken del af data-ressourcen, der søges i.
 
 Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende data-ressources retursvar, herunder geometrien i attributterne fx `bbox` og `geometri`.
 
-**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så `'` fx encodes til `%27` og at udtrykket er defineret som tekst.
+**NB** Det er vigtigt at ECQL-udtrykket anvender fuld URL-encoding så f.eks `'` encodes til `%27`, `%` encodes til `%25` og at udtrykket er defineret som tekst.
 
-**NB** Attributter i retursvaret, der udgør et array, kan ikke benyttes som filter. Det gælder fx attributten `postnummer` i ressourcen `navngivenvej`.
-
-_Eksempel:_ Simpelt filter på husnummer: kommunekode '0461', dvs. Odense, bemærk brugen af `%27` som erstatning for `'`.
+_Eksempel:_ Simpelt filter på husnummer: kommunekode '0461', dvs. Odense, bemærk brugen af `%27` som erstatning for `'` og `%25` som erstatning for `%`.
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?q=lærke&filter=kommunekode=%270461%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?q=lærke&filter=kommunekode%20like%20%27%250461%25%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -82,7 +81,7 @@ Brug af geometri som filter vil være relevant, når man ønsker at begrænse s�
 Det spatiale referencesystem i et geometrifilter skal angives i EPSG:25832 (ETRS89 UTM Zone 32).
 
 Adresser og husnumre har ikke geometri i `bbox`, de har dog en ekstra `vejpunkt_geometri` udover `geometri` (indeholder geometrien fra adgangspunkt_geometri), som begge kan anvendes i et geografisk filter.
-Matrikel har hellere ikke geometri i `bbox`, men de har to ekstra `centroid_x` og `centroid_y` udover `geometri`, som alle tre kan anvendes i et geografisk filter.
+Matrikel og matrikel udgået har hellere ikke geometri i `bbox`, men de har to ekstra `centroid_x` og `centroid_y` udover `geometri`, som alle tre kan anvendes i et geografisk filter.
 
 _Eksempel:_ Filter med geometri (POLYGON) for stednavne inden for et område i Sønderjylland.
 
@@ -108,7 +107,7 @@ Resultatet af en forespørgsel indeholder de forekomster, som matcher forespørg
 **Objektgeometri:** Objektgeometri er inkluderet i response som GeoJSON i referencesystemet EPSG:25832 (ETRS89 UTM Zone 32).
 
 For adresse- og husnummer ressourcerne indeholder response geometrier i attributterne `geometri` (indeholder geometrien fra adgangspunkt_geometri) og `vejpunkt_geometri`.
-For matrikel indeholder response geomtrier i attributterne `centroid_x`, `centroid_y` og `geometri`.
+For matrikel og matrikel udgået indeholder response geomtrier i attributterne `centroid_x`, `centroid_y` og `geometri`.
 Øvrige data-ressourcer har to sæt geometrier: `bbox`, der er en beregnet bounding box, og `geometri` der er basisregisterets objektgeometri.
 
 For DAGI-objekterne; Postnummer bliver returneret i skala 1:10.000 (referenceskala). Kommune, opstillingskreds, politikreds, region, retskreds, sogn returneres i skala 1:500.000 (generaliseret version).
@@ -129,7 +128,7 @@ Syntaks eksempel som søger efter 'flens':
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=30&q=fle&filter=kommunekode=%270360%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/adresse?limit=30&q=fle&filter=kommunekode%20like%20%27%250360%25%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -157,7 +156,7 @@ Syntaks eksempel som søger efter 'genvej':
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=30&q=fl&filter=kommunekode=%270376%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/husnummer?limit=30&q=fl&filter=kommunekode%20like%20%27%250376%25%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -185,7 +184,7 @@ Syntaks eksempel som søger efter 'a':
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a&filter=kommunekode=%270851%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/kommune?q=a&filter=kommunekode%20like%20%27%250851%25%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -201,7 +200,6 @@ Accept: application/json
 Syntaks eksempel som søger efter 'l' med `filter` på `geometri` - Lolland-Falster:
 
 <br/><br/>
-
 
 <h3 id="dok_matrikel">matrikel</h3>
 ```http
@@ -223,11 +221,57 @@ Syntaks eksempel som søger efter '123ab' med `filter` på `ejerlavskode` '13065
 <br/><br/>
 
 ```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=a&filter=bfenummer=%27100032397%27 HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter 'a' med `filter` på `bfenummer` '100032397':
+
+<br/><br/>
+
+```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=22&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter '22' med `filter` på `geometri` - Lolland-Falster:
+Syntaks eksempel som søger efter '22' med `filter` på `geometri` - Sønderjylland:
+
+<br/><br/>
+
+<h3 id="dok_matrikel_udgaaet">matrikel udgået</h3>
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=11a HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter '11a':
+
+<br/><br/>
+
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=11a&filter=ejerlavskode=%2760453%27 HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter '11a' med `filter` på `ejerlavskode` '60453':
+
+<br/><br/>
+
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=ø&filter=bfenummer=%2710104516%27 HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter 'ø' med `filter` på `bfenummer` '10104516':
+
+<br/><br/>
+
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=10&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2))) HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+Syntaks eksempel som søger efter '10' med `filter` på `geometri` - Sønderjylland:
 
 <br/><br/>
 

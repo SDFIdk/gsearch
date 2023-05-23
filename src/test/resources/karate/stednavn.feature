@@ -21,6 +21,7 @@ Feature: Gsearch stednavn test
                 "skrivemaade": '#string',
                 "stednavn_subtype": '#string',
                 "stednavn_type": '#string',
+                "kommunekode": '#string',
                 "geometri": '#(geometriSchema)',
                 "id": '#string'
             }
@@ -142,3 +143,19 @@ Feature: Gsearch stednavn test
         And match thirdresponse == '#[1]'
 
         Then match thirdresponse == secondresponse
+
+    Scenario: Filter sogn in like
+        Then param q = 'kokholm'
+
+        And param filter = "kommunekode like '%0787%'"
+        When method GET
+        Then status 200
+        And match response == '#[2]'
+
+    Scenario: Levenshtein ordering test
+        Then param q = 'lind'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[0].skrivemaade_officiel contains 'Lind'
