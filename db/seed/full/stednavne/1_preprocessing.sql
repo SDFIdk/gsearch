@@ -1250,6 +1250,7 @@ CREATE TABLE stednavne_udstilling.stednavne_udstilling (
     subtype_presentation varchar,
     kommunekode varchar,
     geometri geometry(Geometry, 25832),
+    geometri_udtyndet geometry(Geometry, 25832),
     visningstekst varchar,
     area float,
     CONSTRAINT stednavne_udstilling_pkey PRIMARY KEY (objectid, navnefoelgenummer)
@@ -1327,6 +1328,16 @@ WHERE navnestatus = 'uofficielt'
 -- 2015-09-22/Christian: Slet stednavne med geometrier, der er GeometryCollection
 DELETE FROM stednavne_udstilling.stednavne_udstilling s
 WHERE st_geometrytype (s.geometri) = 'ST_GeometryCollection';
+
+-- Opdater udyndet geometri 0:55
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    geometri_udtyndet = CASE WHEN length(ST_Astext (geometri)) < 5000 THEN
+        geometri
+    ELSE
+        ST_SimplifyPreserveTopology (geometri, GREATEST (ST_Xmax (ST_Envelope (geometri)) - ST_Xmin (ST_Envelope (geometri)), ST_Ymax (ST_Envelope (geometri)) - ST_Ymin (ST_Envelope (geometri))) / 300)
+    END;
 
 -- Prioritetsmæssig opdatering af visningstekst
 UPDATE
