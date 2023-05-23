@@ -1391,6 +1391,22 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
+-- By, > 50 % i postnummerinddeling
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (By i ' || p.navn || ')'
+FROM
+    stednavne_udstilling.stednavne_udstilling s
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND s.type ILIKE 'bebyggelse'
+    AND s.subtype ILIKE 'By'
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
 -- Bebyggelser som ligger helt inde i et postnummerinddeling
 UPDATE
     stednavne_udstilling.stednavne_udstilling
@@ -1404,6 +1420,21 @@ WHERE
     AND s.type ILIKE 'bebyggelse'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- Bebyggelser, > 50 % i postnummerinddeling
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
+FROM
+    stednavne_udstilling.stednavne_udstilling s
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND s.type ILIKE 'bebyggelse'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 ------------------------
 -- Begravelsespladser --
@@ -1443,15 +1474,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'begravelsesplads'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
--- Justeringer af visningstekst (når typen oplagt fremgår af skrivemaade)
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Begravelsesplads i ', '(')
-WHERE
-    TYPE ILIKE 'begravelsesplads'
-    AND visningstekst ILIKE '%kirkegård%';
 
 ---------------
 -- Bygninger --
@@ -1551,15 +1573,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'campingplads'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
--- Justeringer af visningstekst (når typen oplagt fremgår af skrivemaade)
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Campingplads i ', '(')
-WHERE
-    TYPE ILIKE 'campingplads'
-    AND visningstekst ILIKE '%camping%';
 
 -------------
 -- Farvand --
@@ -1662,7 +1675,7 @@ SET
 WHERE
     TYPE ILIKE 'friluftsbad';
 
--- Fortidsminder i postnummerinddeling
+-- Friluftsbad i postnummerinddeling
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
@@ -1675,39 +1688,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'friluftsbad'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
--- Justeringer af visningstekst (når subtypen oplagt fremgår af skrivemaade)
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Friluftsbad i ', '(')
-WHERE
-    TYPE ILIKE 'friluftsbad'
-    AND skrivemaade ILIKE '%friluftbad%';
-
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Friluftsbad i ', '(')
-WHERE
-    TYPE ILIKE 'friluftsbad'
-    AND skrivemaade ILIKE '%søbad%';
-
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Friluftsbad i ', '(')
-WHERE
-    TYPE ILIKE 'friluftsbad'
-    AND skrivemaade ILIKE '%svømmebad%';
-
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Friluftsbad i ', '(')
-WHERE
-    TYPE ILIKE 'friluftsbad'
-    AND skrivemaade ILIKE '%fribad%';
 
 -----------------
 -- Havnebassin --
@@ -1876,22 +1856,20 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Justeringer af visningstekst (når subtypen oplagt fremgår af skrivemaade)
+-- Landskabsformer, > 50 % i postnummerinddeling
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = replace(visningstekst, '(Bakke i ', '(')
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
+    FROM
+    stednavne_udstilling.stednavne_udstilling s
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
 WHERE
-    TYPE ILIKE 'landskabsform'
-    AND skrivemaade ILIKE '%Bakke%';
-
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Dal i ', '(')
-WHERE
-    TYPE ILIKE 'landskabsform'
-    AND skrivemaade ILIKE '%Dal%';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'landskabsform'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 ---------------
 -- Lufthavne --
@@ -1929,6 +1907,21 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'naturareal'
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- Naturareal, > 50 % i postnummerinddeling
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
+FROM
+    stednavne_udstilling.stednavne_udstilling s
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'naturareal'
@@ -1982,6 +1975,21 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'restriktionsareal'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- Restriktionsanlaeg, > 50 % i postnummerinddeling
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
+    FROM
+    stednavne_udstilling.stednavne_udstilling s
+    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri
+    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area)
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'restriktionsareal'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 ----------
 -- Rute --
@@ -2253,25 +2261,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Juster broer
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Bro i ', '(')
-WHERE
-    TYPE ILIKE 'andentopografipunkt'
-    AND skrivemaade ILIKE '% bro%';
-
--- Juster kilder
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Kilde i ', '(')
-WHERE
-    TYPE ILIKE 'andentopografipunkt'
-    AND (skrivemaade ILIKE '%kilde %'
-        OR skrivemaade ILIKE '%kilder %');
-
 ---------------------
 -- faergerutelinje --
 ---------------------
@@ -2330,62 +2319,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'idraetsanlaeg'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
--- Juster cykelbaner
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Cykelbane i ', '(')
-WHERE
-    TYPE ILIKE 'idraetsanlaeg'
-    AND skrivemaade ILIKE '%cykelbane%';
-
--- Juster golfklubber
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Golfbane i ', '(')
-WHERE
-    TYPE ILIKE 'idraetsanlaeg'
-    AND skrivemaade ILIKE '% golf%';
-
--- Juster travbaner og galopbaner
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Hestevæddeløbsbane i ', '(')
-WHERE
-    TYPE ILIKE 'idraetsanlaeg'
-    AND (skrivemaade ILIKE '%galopbane%'
-        OR skrivemaade ILIKE '%travbane%');
-
--- Juster motocross baner
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Motocrossbane i ', '(')
-WHERE
-    TYPE ILIKE 'idraetsanlaeg'
-    AND (skrivemaade ILIKE '%motocross%');
-
--- Juster skydebane
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Skydebane i ', '(')
-WHERE
-    TYPE ILIKE 'idraetsanlaeg'
-    AND (skrivemaade ILIKE '%skyde%'
-        OR skrivemaade ILIKE '%skytteforening%');
-
--- Juster stadion
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Stadion i ', '(')
-WHERE
-    TYPE ILIKE 'idraetsanlaeg'
-    AND skrivemaade ILIKE '%idræts%';
 
 ---------
 -- soe --
@@ -2450,15 +2383,6 @@ SET
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'soe';
-
--- Juster Sø
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, '(Sø i ', '(')
-WHERE
-    TYPE ILIKE 'soe'
-    AND (skrivemaade ILIKE '%sø');
 
 ---------------------
 -- standsningssted --
@@ -2605,7 +2529,7 @@ UPDATE
 SET
     visningstekst = NULL
 WHERE
-    TYPE ILIKE 'ubearbejdetnavnpunkt';
+    TYPE ILIKE 'vej';
 
 -- Helt indenfor et postnummerinddeling
 UPDATE
@@ -2617,7 +2541,7 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri))
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'ubearbejdetnavnpunkt'
+    AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'vej'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
@@ -2628,7 +2552,7 @@ SET
     visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'ubearbejdetnavnpunkt';
+    AND stednavne_udstilling.stednavne_udstilling.type ILIKE 'vej';
 
 --------------------------
 -- Resterende stednavne --
