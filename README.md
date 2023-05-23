@@ -50,7 +50,7 @@ NOTE: dev.env specifies environment variables to local database and --add-hosts 
 | kommuner | kommune |
 | matrikelnumre | matrikel |
 | matrikelnumre_incl_udgaaet | - |
-| matrikelnumre_udgaaet | - |
+| matrikelnumre_udgaaet | matrikel_udgaaet |
 | opstillingskredse | opstillingskreds |
 | politikredse | politikreds |
 | postdistriker | postnummer |
