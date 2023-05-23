@@ -10,7 +10,7 @@ WITH ejerlav_kommune_distinct as (
 		k.id_lokalid as kommuneidlokalid
 	from
 		matriklen_udgaaet.jordstykke j
-		join matriklen_udgaaet.matrikelkommune k on k.id_lokalid = j.kommunelokalid
+		join matriklen.matrikelkommune k on k.id_lokalid = j.kommunelokalid
 ),
 ejerlavnavn_kommune_distinct as (
 	SELECT 
@@ -21,7 +21,7 @@ ejerlavnavn_kommune_distinct as (
 		ek.kommuneidlokalid
 	from
 		ejerlav_kommune_distinct ek
-		join matriklen_udgaaet.ejerlav e on e.id_lokalid = ek.ejerlavlokalid
+		join matriklen.ejerlav e on e.id_lokalid = ek.ejerlavlokalid
 ),
 kommune_distinct as (
 	SELECT distinct
@@ -29,14 +29,14 @@ kommune_distinct as (
 		k.kommunekode,
 		k.id_lokalid
 	from 
-		matriklen_udgaaet.matrikelkommune k
+		matriklen.matrikelkommune k
 ),
 ejerlav_distinct as (
 	SELECT distinct
 		ejerlavsnavn,
 		ejerlavskode::text,
 		id_lokalid
-	from matriklen_udgaaet.ejerlav 
+	from matriklen.ejerlav 
 ),
 samletfastejendom_distinct as (
 	SELECT distinct
