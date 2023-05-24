@@ -86,8 +86,6 @@ BEGIN
             WHERE
                 ejerlavsnavn ilike ''%s%%''
                 OR matrikelnummer ilike ''%s''
-            ORDER BY
-                matrikelnummer
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
