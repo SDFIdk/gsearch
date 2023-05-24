@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS dar.adressepunkt;
+DROP TABLE IF EXISTS dar.adressepunkt CASCADE;
 
 CREATE TABLE dar.adressepunkt (
     id uuid PRIMARY KEY,
