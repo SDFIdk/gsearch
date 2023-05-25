@@ -249,29 +249,29 @@ Syntaks eksempel som søger efter '11a':
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=11a&filter=ejerlavskode=%2760453%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=11a&filter=ejerlavskode=%2770854%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter '11a' med `filter` på `ejerlavskode` '60453':
+Syntaks eksempel som søger efter '11a' med `filter` på `ejerlavskode` '70854':
 
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=ø&filter=bfenummer=%2710104516%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=e&filter=bfenummer=%275290287%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter 'ø' med `filter` på `bfenummer` '10104516':
+Syntaks eksempel som søger efter 'e' med `filter` på `bfenummer` '5290287':
 
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=10&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2))) HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=1&filter=INTERSECTS(geometri,SRID=25832%3BPOLYGON((530000.1%206085450.2,%20530000.3%206092950.4,%20540000.5%206092950.6,%20540000.7%206085450.8,%20530000.1%206085450.2))) HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
-Syntaks eksempel som søger efter '10' med `filter` på `geometri` - Sønderjylland:
+Syntaks eksempel som søger efter '1' med `filter` på `geometri` - Sønderjylland:
 
 <br/><br/>
 

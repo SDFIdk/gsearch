@@ -4,7 +4,7 @@ Feature: Gsearch matrikel test
         * url url + '/matrikel_udgaaet'
 
     Scenario: Response matches columns database
-        Then param q = '1431051'
+        Then param q = '1450152'
 
         When method GET
         Then status 200
@@ -36,14 +36,14 @@ Feature: Gsearch matrikel test
         When method GET
         Then status 200
         And def firstresponse = response
-        And match firstresponse == '#[10]'
+        And match firstresponse == '#[8]'
 
         Then param q = 'løgstør markjorder'
 
         When method GET
         Then status 200
         And def secondresponse = response
-        And match secondresponse == '#[10]'
+        And match secondresponse == '#[8]'
 
         Then match firstresponse == secondresponse
 
@@ -52,18 +52,18 @@ Feature: Gsearch matrikel test
         When method GET
         Then status 200
         And def thirdresponse = response
-        And match thirdresponse == '#[10]'
+        And match thirdresponse == '#[8]'
 
         Then match thirdresponse == secondresponse
 
     Scenario: Combine search using ejerlavsnavn og matrikelnummer
-        Then param q = '2006451 1023a'
+        Then param q = '1430851 1000g'
 
         When method GET
         Then status 200
-        And match response == '#[9]'
-        And match response.[*].matrikelnummer contains deep ['1023a']
-        And match response.[*].ejerlavsnavn contains deep ['Horsens Bygrunde']
+        And match response == '#[1]'
+        And match response.[*].matrikelnummer contains deep ['1000g']
+        And match response.[*].ejerlavsnavn contains deep ['Skrydstrup Ejerlav, Skrydstrup']
 
     Scenario: Combine search using ejerlavskode and ejerlavsnavn
         Then param q = 'utterslev'
@@ -81,35 +81,35 @@ Feature: Gsearch matrikel test
         And match response == '#[0]'
 
     Scenario: Search is interchangeable order of ejerlavsnavn and matrikelnummer
-        Then param q = 'staurby 4a 401954'
+        Then param q = '104, Ellum, Løgumkloster 1470453'
 
         When method GET
         Then status 200
         And def firstresponse = response
-        And match firstresponse == '#[10]'
+        And match firstresponse == '#[1]'
 
-        Then param q = '4a 401954 staurby'
+        Then param q = 'Ellum, Løgumkloster 1470453 104'
 
         When method GET
         Then status 200
         And def secondresponse = response
-        And match secondresponse == '#[10]'
+        And match secondresponse == '#[1]'
 
         Then match firstresponse == secondresponse
 
-        Then param q = '401954 4a staurby'
+        Then param q = '1470453 104 Ellum, Løgumkloster'
 
         When method GET
         Then status 200
         And def thirdresponse = response
-        And match thirdresponse == '#[10]'
+        And match thirdresponse == '#[1]'
 
         Then match thirdresponse == secondresponse
 
     Scenario: Filter bfe-nummer in like
-        Then param q = 'a'
+        Then param q = 'v'
 
-        And param filter = "bfenummer = '8837737'"
+        And param filter = "bfenummer = '5753971'"
         When method GET
         Then status 200
         And match response == '#[1]'

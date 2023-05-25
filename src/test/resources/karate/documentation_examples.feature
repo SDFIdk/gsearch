@@ -183,24 +183,24 @@ Feature:
 
         When method GET
         Then status 200
-        And match response == '#[10]'
+        And match response == '#[8]'
 
     Scenario: Example 19
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=11a&filter=ejerlavskode='60453'
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=11a&filter=ejerlavskode='70854'
         Given path 'matrikel_udgaaet'
         Then param q = '11a'
 
-        And param filter = "ejerlavskode='60453'"
+        And param filter = "ejerlavskode='70854'"
         When method GET
         Then status 200
-        And match response == '#[7]'
+        And match response == '#[3]'
 
     Scenario: Example 20
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=ø&filter=bfenummer='10104516'
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=e&filter=bfenummer='5290287'
         Given path 'matrikel_udgaaet'
-        Then param q = 'ø'
+        Then param q = 'e'
 
-        And param filter = "bfenummer='10104516'"
+        And param filter = "bfenummer='5290287'"
         When method GET
         Then status 200
         And match response == '#[1]'
@@ -208,12 +208,12 @@ Feature:
     Scenario: Example 21
         # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=10&filter=INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))
         Given path 'matrikel_udgaaet'
-        Then param q = '10'
+        Then param q = '1'
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
         And retry until responseStatus == 200
         When method GET
-        And match response == '#[2]'
+        And match response == '#[6]'
 
 
     Scenario: Example 22
