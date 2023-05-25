@@ -62,7 +62,7 @@ Feature: Gsearch stednavn test
         Then match thirdresponse == secondresponse
 
     Scenario: Combined search
-        Then param q = 'valby naturareal'
+        Then param q = 'valby park'
 
         When method GET
         Then status 200
