@@ -116,13 +116,8 @@ public class Controller {
     // NOTE: Hack correct SRID
     String finalWhere = where == null ? null : where.replaceAll("', null", "', 25832");
     logger.debug("finalWhere: " + finalWhere);
-
-    // Map requested types into results via query in parallel
-    // Concatenate into single list of results
-    List<T> result = (List<T>) Stream.of(resource)
-        .map(resourceType -> getData(q, resourceType, finalWhere, limit))
-        .flatMap(List::stream)
-        .collect(Collectors.toList());
+    
+    List<T> result = getData(q, resource, finalWhere, limit);
 
     return result;
   }
