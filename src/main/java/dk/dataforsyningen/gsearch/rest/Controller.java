@@ -109,6 +109,7 @@ public class Controller {
       logger.debug("ogcFilter: " + ogcFilter);
       // TODO: visit filter to apply restrictions
       // TODO: visit filter to remove non applicable (field name not in type fx.)
+      // Fixes shared memory issue with out
       synchronized (this) {
         where = filterToSQL.encodeToString(ogcFilter);
       }
