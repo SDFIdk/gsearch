@@ -22,10 +22,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
@@ -107,16 +106,20 @@ public class Controller {
     if (filter.isPresent()) {
       // To transform cql filter to sql where clause
       Filter ogcFilter = ECQL.toFilter(filter.get());
+      logger.debug("ogcFilter: " + ogcFilter);
       // TODO: visit filter to apply restrictions
       // TODO: visit filter to remove non applicable (field name not in type fx.)
-      where = filterToSQL.encodeToString(ogcFilter);
+      synchronized (this) {
+        where = filterToSQL.encodeToString(ogcFilter);
+      }
+
       logger.debug("where: " + where);
     }
 
     // NOTE: Hack correct SRID
     String finalWhere = where == null ? null : where.replaceAll("', null", "', 25832");
     logger.debug("finalWhere: " + finalWhere);
-    
+
     List<T> result = getData(q, resource, finalWhere, limit);
 
     return result;
