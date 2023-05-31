@@ -17,3 +17,4 @@ FROM
 ON CONFLICT
     DO NOTHING;
 
+VACUUM ANALYZE dar.adressepunkt;

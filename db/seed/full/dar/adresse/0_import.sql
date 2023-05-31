@@ -24,3 +24,5 @@ INSERT INTO dar.adresse SELECT DISTINCT
     husnummerlokalid::uuid AS husnummer_id
 FROM
     dar_fdw.adresse;
+
+VACUUM ANALYZE dar.adresse;

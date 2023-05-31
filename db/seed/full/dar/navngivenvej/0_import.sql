@@ -11,3 +11,5 @@ FROM
 CREATE INDEX ON dar.navngivenvej (id);
 
 CREATE INDEX ON dar.navngivenvej USING gist (geometri);
+
+VACUUM ANALYZE dar.navngivenvej;

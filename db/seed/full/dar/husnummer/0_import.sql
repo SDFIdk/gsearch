@@ -26,3 +26,5 @@ CREATE INDEX ON dar.husnummer (id);
 CREATE INDEX ON dar.husnummer (navngivenvej_id);
 
 CREATE INDEX ON dar.husnummer (vejpunkt_id);
+
+VACUUM ANALYZE dar.husnummer;

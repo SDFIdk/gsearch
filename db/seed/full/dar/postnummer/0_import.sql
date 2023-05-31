@@ -9,3 +9,5 @@ FROM
     dar_fdw.postnummer;
 
 CREATE INDEX ON dar.postnummer (id);
+
+VACUUM ANALYZE dar.postnummer;
