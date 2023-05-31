@@ -37,3 +37,8 @@ CREATE INDEX ON matriklen_udgaaet.jordstykke (samletfastejendomlokalid);
 CREATE INDEX ON matriklen_udgaaet.centroide (jordstykkelokalid);
 CREATE INDEX ON matriklen_udgaaet.lodflade (jordstykkelokalid);
 CREATE INDEX ON matriklen_udgaaet.samletfastejendom (id_lokalid);
+
+VACUUM ANALYZE matriklen_udgaaet.jordstykke;
+VACUUM ANALYZE matriklen_udgaaet.centroide;
+VACUUM ANALYZE matriklen_udgaaet.lodflade;
+VACUUM ANALYZE matriklen_udgaaet.samletfastejendom;
