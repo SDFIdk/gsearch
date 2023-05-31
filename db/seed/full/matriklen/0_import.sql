@@ -68,3 +68,10 @@ CREATE INDEX ON matriklen.centroide (jordstykkelokalid);
 CREATE INDEX ON matriklen.matrikelkommune (id_lokalid);
 CREATE INDEX ON matriklen.lodflade (jordstykkelokalid);
 CREATE INDEX ON matriklen.samletfastejendom (id_lokalid);
+
+VACUUM ANALYZE matriklen.jordstykke;
+VACUUM ANALYZE matriklen.ejerlav;
+VACUUM ANALYZE matriklen.centroide;
+VACUUM ANALYZE matriklen.matrikelkommune;
+VACUUM ANALYZE matriklen.lodflade;
+VACUUM ANALYZE matriklen.samletfastejendom;
