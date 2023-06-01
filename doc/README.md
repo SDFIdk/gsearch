@@ -34,6 +34,8 @@ I hvert endpoint søges der efter bedst mulig match i et eller flere felter/attr
 * Sogn: Der søges i DAGI sogneinddeling
 * Stednavn: Der søges i danske stednavne
 
+Følgende tegn i `q` parameteren bliver anset som mellemrum; `-`,`(`,`)`,`!`
+
 ## Request syntax
 **URL** til GSearch er `https://api.dataforsyningen.dk/rest/gsearch/v1.0/{resource}`
 
