@@ -94,10 +94,6 @@ BEGIN
                 AND lower(vejnavn) <= lower(''%s'') || ''å'')
                 OR
                 lower(husnummertekst) = lower(''%s'')
-            ORDER BY
-                lower(vejnavn),
-                navngivenvej_id,
-                sortering
             LIMIT $3;', input_tekst, input_tekst, input_tekst);
 
         --RAISE NOTICE 'stmt=%', stmt;
