@@ -23,3 +23,21 @@ GROUP BY
 HAVING
     count(1) > 1000
 ON CONFLICT DO NOTHING;
+
+
+-- inserts into husnummer_count
+WITH number_of_chars AS (
+    SELECT generate_series(1,8) i
+)
+INSERT INTO basic.husnummer_count (tekstelement, forekomster)
+SELECT
+    substring(lower(husnummertekst) FROM 1 FOR i),
+    count(*)
+FROM
+    basic.husnummer, number_of_chars
+WHERE vejnavn IS NOT null
+GROUP BY
+    substring(lower(husnummertekst) FROM 1 FOR i)
+HAVING
+    count(1) > 1000
+ON CONFLICT DO NOTHING;

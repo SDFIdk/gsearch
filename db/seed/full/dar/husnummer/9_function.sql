@@ -90,14 +90,15 @@ BEGIN
             FROM
                 basic.husnummer
             WHERE
-                lower(vejnavn) >= lower(''%s'')
-            AND
-                lower(vejnavn) <= lower(''%s'') || ''å''
+                (lower(vejnavn) >= lower(''%s'')
+                AND lower(vejnavn) <= lower(''%s'') || ''å'')
+                OR
+                lower(husnummertekst) = lower(''%s'')
             ORDER BY
                 lower(vejnavn),
                 navngivenvej_id,
                 sortering
-            LIMIT $3;', input_tekst, input_tekst);
+            LIMIT $3;', input_tekst, input_tekst, input_tekst);
 
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
