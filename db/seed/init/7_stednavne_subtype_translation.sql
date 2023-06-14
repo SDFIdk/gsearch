@@ -281,3 +281,5 @@ INSERT INTO stednavne_udstilling.subtype_translation (subtype, subtype_presentat
     ('mindelund', 'Mindelund'),
     ('muslimsk', 'Muslimsk');
 
+
+VACUUM ANALYZE stednavne_udstilling.subtype_translation;
