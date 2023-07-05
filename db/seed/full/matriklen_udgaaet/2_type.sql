@@ -30,6 +30,7 @@ COMMENT ON COLUMN api.matrikel_udgaaet.matrikelnummer IS 'Matrikelnummer';
 COMMENT ON COLUMN api.matrikel_udgaaet.visningstekst IS 'Præsentationsform for et matrikelnummer';
 
 COMMENT ON COLUMN api.matrikel_udgaaet.visningstekst IS 'BFE-nummer for matriklen';
+COMMENT ON COLUMN api.matrikel_udgaaet.bfenummer IS 'BFE-nummer for matriklen';
 
 COMMENT ON COLUMN api.matrikel_udgaaet.centroid_x IS 'Centroide X for matriklens geometri';
 
