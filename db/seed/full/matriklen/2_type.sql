@@ -9,6 +9,7 @@ CREATE TYPE api.matrikel AS (
     kommunekode text,
     matrikelnummer text,
     visningstekst text,
+    jordstykke_id text,
     bfenummer text,
     centroid_x text,
     centroid_y text,
@@ -29,7 +30,8 @@ COMMENT ON COLUMN api.matrikel.matrikelnummer IS 'Matrikelnummer';
 
 COMMENT ON COLUMN api.matrikel.visningstekst IS 'Præsentationsform for et matrikelnummer';
 
-COMMENT ON COLUMN api.matrikel.visningstekst IS 'BFE-nummer for matriklen';
+COMMENT ON COLUMN api.matrikel.jordstykke_id IS 'Jordstykke lokalid';
+
 COMMENT ON COLUMN api.matrikel.bfenummer IS 'BFE-nummer for matriklen';
 
 COMMENT ON COLUMN api.matrikel.centroid_x IS 'Centroide X for matriklens geometri';

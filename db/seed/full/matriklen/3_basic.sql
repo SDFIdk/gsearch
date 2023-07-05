@@ -13,7 +13,7 @@ WITH ejerlav_kommune_distinct as (
 		join matriklen.matrikelkommune k on k.id_lokalid = j.kommunelokalid
 ),
 ejerlavnavn_kommune_distinct as (
-	select 
+	select
 		e.ejerlavsnavn,
 		e.ejerlavskode::text,
 		ek.kommunenavn,
@@ -30,6 +30,7 @@ matrikelnumre AS (
         k.kommunenavn,
         k.kommunekode,
         j.matrikelnummer,
+        j.id_lokalid::text,
         s.bfenummer::text,
         c.geometri AS centroide_geometri,
         st_force2d (COALESCE(l.geometri)) AS geometri
@@ -73,6 +74,7 @@ SELECT
     m.kommunenavn,
     m.kommunekode,
     m.matrikelnummer,
+    m.id_lokalid AS jordstykke_id,
     m.bfenummer,
     m.centroide_geometri,
     e.textsearchable_plain_col_ejerlavsnavn,
@@ -82,4 +84,3 @@ SELECT
 FROM
     matrikelnumre m
     JOIN ejerlavsnavn_dups e ON e.ejerlavsnavn = m.ejerlavsnavn;
-    
