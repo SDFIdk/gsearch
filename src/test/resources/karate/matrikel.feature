@@ -113,6 +113,14 @@ Feature: Gsearch matrikel test
         When method GET
         Then status 200
         And match response == '#[4]'
+
+    Scenario: Filter jordstykke_id in like
+        Then param q = 'f'
+
+        And param filter = "jordstykke_id = '100000197'"
+        When method GET
+        Then status 200
+        And match response == '#[1]'
         
     Scenario: Test maximum limit and one character search
         Then param q = 's'
