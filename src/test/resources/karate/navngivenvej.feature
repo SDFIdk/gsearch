@@ -5,13 +5,14 @@ Feature: Gsearch navngivenvej test
 
     Scenario: Response matches columns database
         Then param q = 'Kocksvej'
+        Then param limit = '1'
 
         When method GET
         Then status 200
-        And match response == '#[9]'
+        And match response == '#[1]'
         And def bboxSchema = {type: 'Polygon', coordinates: '#array'}
         And def geometriSchema = {type: 'MultiLineString', coordinates: '#array'}
-        And match response contains deep
+        And match response contains only
         """
         {
             "postnummer": '#string',
@@ -20,7 +21,8 @@ Feature: Gsearch navngivenvej test
             "postnummernavn": '#string',
             "bbox": '#(bboxSchema)',
             "geometri": '#(geometriSchema)',
-            "id": '#string'
+            "id": '#string',
+            "kommunekode": "#string",
         }
         """
 

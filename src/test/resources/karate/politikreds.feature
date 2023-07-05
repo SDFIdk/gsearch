@@ -11,15 +11,16 @@ Feature: Gsearch politikreds test
         And match response == '#[1]'
         And def bboxSchema = {type: 'Polygon', coordinates: '#array'}
         And def geometriSchema = {type: 'MultiPolygon', coordinates: '#array'}
-        And match response contains deep
+        And match response contains only
         """
         {
-        "visningstekst": '#string',
-        "bbox": '#(bboxSchema)',
-        "politikredsnummer": '#string',
-        "geometri": '#(geometriSchema)',
-        "politikredsnummer": '#string',
-        "myndighedskode": '#string'
+            "visningstekst": '#string',
+            "bbox": '#(bboxSchema)',
+            "politikredsnummer": '#string',
+            "geometri": '#(geometriSchema)',
+            "myndighedskode": '#string',
+            "navn": "#string",
+            "kommunekode": "#string"
         }
         """
 

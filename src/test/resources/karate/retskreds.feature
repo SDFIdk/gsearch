@@ -11,7 +11,7 @@ Feature: Gsearch retskreds test
         And match response == '#[1]'
         And def bboxSchema = {type: 'Polygon', coordinates: '#array'}
         And def geometriSchema = {type: 'MultiPolygon', coordinates: '#array'}
-        And match response contains deep
+        And match response contains only
         """
             {
                 "visningstekst": '#string',
