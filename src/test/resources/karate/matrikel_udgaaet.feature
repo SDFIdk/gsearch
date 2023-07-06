@@ -5,12 +5,13 @@ Feature: Gsearch matrikel test
 
     Scenario: Response matches columns database
         Then param q = '1450152'
+        Then param limit = '1'
 
         When method GET
         Then status 200
-        And match response == '#[3]'
+        And match response == '#[1]'
         And def geometriSchema = {type: 'MultiPolygon', coordinates: '#array'}
-        And match response contains deep
+        And match response contains only
         """
         {
             "ejerlavskode": '#string',
@@ -19,7 +20,11 @@ Feature: Gsearch matrikel test
             "geometri": '#(geometriSchema)',
             "centroid_x": '#string',
             "centroid_y": '#string',
-            "matrikelnummer": '#string'
+            "matrikelnummer": '#string',
+            "kommunenavn": "#string",
+            "kommunekode": "#string",
+            "bfenummer": "#string",
+            "jordstykke_id": "#string"
         }
         """
 
@@ -113,7 +118,15 @@ Feature: Gsearch matrikel test
         When method GET
         Then status 200
         And match response == '#[1]'
-        
+
+    Scenario: Filter jordstykke_id in like
+        Then param q = 'f'
+
+        And param filter = "jordstykke_id = '1697026'"
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+
     Scenario: Test maximum limit and one character search
         Then param q = 's'
 

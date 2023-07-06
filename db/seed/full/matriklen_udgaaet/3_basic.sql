@@ -66,6 +66,7 @@ matrikelnumre AS (
         k.kommunenavn,
         k.kommunekode,
         j.matrikelnummer,
+        j.id_lokalid::text,
         s.bfenummer::text,
         c.geometri AS centroide_geometri,
         st_force2d (COALESCE(l.geometri)) AS geometri
@@ -108,6 +109,7 @@ SELECT DISTINCT
     m.kommunenavn,
     m.kommunekode,
     m.matrikelnummer,
+    m.id_lokalid AS jordstykke_id,
     m.bfenummer,
     m.centroide_geometri,
     e.textsearchable_plain_col_ejerlavsnavn,

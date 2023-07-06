@@ -5,12 +5,13 @@ Feature: Gsearch adresse test
 
     Scenario: Response matches columns database
         Then param q = 'kocksvej'
+        Then param limit = '1'
 
         When method GET
         Then status 200
-        And match response == '#[10]'
+        And match response == '#[1]'
         And def geometriSchema = {type: 'MultiPoint', coordinates: '#array'}
-        And match response contains deep
+        And match response contains only
         """
         {
             "vejkode": '#string',
