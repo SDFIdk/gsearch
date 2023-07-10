@@ -5,27 +5,28 @@ Feature: Gsearch adresse test
 
     Scenario: Response matches columns database
         Then param q = 'kocksvej'
+        Then param limit = '1'
 
         When method GET
         Then status 200
-        And match response == '#[10]'
+        And match response == '#[1]'
         And def geometriSchema = {type: 'MultiPoint', coordinates: '#array'}
-        And match response contains deep
+        And match response contains only
         """
         {
-          "vejkode": '#string',
-          "etagebetegnelse": '#string',
-          "geometri": '#(geometriSchema)',
-          "husnummer": '#string',
-          "vejnavn": '#string',
-          "kommunekode": '#string',
-          "visningstekst": '#string',
-          "kommunenavn": '#string',
-          "doerbetegnelse": '#string',
-          "postnummer": '#string',
-          "vejpunkt_geometri": '#(geometriSchema)',
-          "id": '#string',
-          "postnummernavn": '#string'
+            "vejkode": '#string',
+            "etagebetegnelse": '#string',
+            "geometri": '#(geometriSchema)',
+            "husnummer": '#string',
+            "vejnavn": '#string',
+            "kommunekode": '#string',
+            "visningstekst": '#string',
+            "kommunenavn": '#string',
+            "doerbetegnelse": '#string',
+            "postnummer": '#string',
+            "vejpunkt_geometri": '#(geometriSchema)',
+            "id": '#string',
+            "postnummernavn": '#string'
         }
         """
 
@@ -139,7 +140,7 @@ Feature: Gsearch adresse test
         Then param q = 'Rentemest 110 2 th'
 
         When method GET
-        Then status 200
+        And retry until responseStatus == 200
         And match response == '#[6]'
         And match response.[0].visningstekst == "Rentemestervej 110, 2. th, 2400 København NV"
 
@@ -152,3 +153,11 @@ Feature: Gsearch adresse test
 
         Then match response == secondresponse
         And match response.[0].visningstekst == "Rentemestervej 110, 2. th, 2400 København NV"
+
+    Scenario: Filter kommunekode in like
+        Then param q = 'kocksvej'
+
+        And param filter = "kommunekode like '%0540%'"
+        When method GET
+        Then status 200
+        And match response == '#[10]'

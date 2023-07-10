@@ -5,6 +5,7 @@ import dk.dataforsyningen.gsearch.datamodel.adresse;
 import dk.dataforsyningen.gsearch.datamodel.husnummer;
 import dk.dataforsyningen.gsearch.datamodel.kommune;
 import dk.dataforsyningen.gsearch.datamodel.matrikel;
+import dk.dataforsyningen.gsearch.datamodel.matrikel_udgaaet;
 import dk.dataforsyningen.gsearch.datamodel.navngivenvej;
 import dk.dataforsyningen.gsearch.datamodel.opstillingskreds;
 import dk.dataforsyningen.gsearch.datamodel.politikreds;
@@ -21,10 +22,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
@@ -106,9 +106,14 @@ public class Controller {
     if (filter.isPresent()) {
       // To transform cql filter to sql where clause
       Filter ogcFilter = ECQL.toFilter(filter.get());
+      logger.debug("ogcFilter: " + ogcFilter);
       // TODO: visit filter to apply restrictions
       // TODO: visit filter to remove non applicable (field name not in type fx.)
-      where = filterToSQL.encodeToString(ogcFilter);
+      // Fixes shared memory issue with out
+      synchronized (this) {
+        where = filterToSQL.encodeToString(ogcFilter);
+      }
+
       logger.debug("where: " + where);
     }
 
@@ -116,12 +121,7 @@ public class Controller {
     String finalWhere = where == null ? null : where.replaceAll("', null", "', 25832");
     logger.debug("finalWhere: " + finalWhere);
 
-    // Map requested types into results via query in parallel
-    // Concatenate into single list of results
-    List<T> result = (List<T>) Stream.of(resource)
-        .map(resourceType -> getData(q, resourceType, finalWhere, limit))
-        .flatMap(List::stream)
-        .collect(Collectors.toList());
+    List<T> result = getData(q, resource, finalWhere, limit);
 
     return result;
   }
@@ -215,6 +215,29 @@ public class Controller {
       throws FilterToSQLException, CQLException {
 
     List<matrikel> result = getResult(q, "matrikel", filter, limit);
+    return result;
+  }
+
+  /**
+   * @param q
+   * @param filter
+   * @param limit
+   * @return
+   * @throws CQLException
+   * @throws FilterToSQLException
+   */
+  @GetMapping(path = "/matrikel_udgaaet", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(operationId = "matrikel_udgaaet", tags = {"Gsearch"})
+  public List<matrikel_udgaaet> getMatrikelUdgaaet(
+      @Parameter(description = "Søgestreng")
+      @RequestParam(value = "q", required = true) @NotBlank String q,
+      @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
+      @RequestParam(required = false) Optional<String> filter,
+      @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      throws FilterToSQLException, CQLException {
+
+    List<matrikel_udgaaet> result = getResult(q, "matrikel_udgaaet", filter, limit);
     return result;
   }
 

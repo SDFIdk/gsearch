@@ -11,14 +11,15 @@ Feature: Gsearch region test
         And match response == '#[1]'
         And def bboxSchema = {type: 'Polygon', coordinates: '#array'}
         And def geometriSchema = {type: 'MultiPolygon', coordinates: '#array'}
-        And match response contains deep
+        And match response contains only
         """
             {
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
                 "geometri": '#(geometriSchema)',
                 "regionskode": '#string',
-                "regionsnavn": '#string'
+                "regionsnavn": '#string',
+                "kommunekode": '#string'
             }
         """
 
@@ -62,3 +63,11 @@ Feature: Gsearch region test
         When method GET
         Then status 200
         And match response == '#[0]'
+
+  Scenario: Filter kommunekode in like
+    Then param q = 's'
+
+    And param filter = "kommunekode like '%0169%'"
+    When method GET
+    Then status 200
+    And match response == '#[1]'

@@ -1,7 +1,5 @@
 # gsearch
-Version 2 af GeoSearch.
-
-Gsearch bygger på følgende hovedprincipper:
+  Gsearch bygger på følgende hovedprincipper:
  - Udvikles i dette repo.
  - Brugere inddrages i så bredt omfang som muligt. Der bliver løbende etableret test / udviklings services til "tidlig" kommentering fra brugere
  - Tilbyder restservices, som givet en søgetekst og eventuelle filtre, returnerer en række objekter underlagt de givne filtre, der "ligner" søgetekst.
@@ -52,7 +50,7 @@ NOTE: dev.env specifies environment variables to local database and --add-hosts 
 | kommuner | kommune |
 | matrikelnumre | matrikel |
 | matrikelnumre_incl_udgaaet | - |
-| matrikelnumre_udgaaet | - |
+| matrikelnumre_udgaaet | matrikel_udgaaet |
 | opstillingskredse | opstillingskreds |
 | politikredse | politikreds |
 | postdistriker | postnummer |

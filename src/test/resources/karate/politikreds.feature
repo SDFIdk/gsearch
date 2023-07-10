@@ -11,15 +11,16 @@ Feature: Gsearch politikreds test
         And match response == '#[1]'
         And def bboxSchema = {type: 'Polygon', coordinates: '#array'}
         And def geometriSchema = {type: 'MultiPolygon', coordinates: '#array'}
-        And match response contains deep
+        And match response contains only
         """
         {
-        "visningstekst": '#string',
-        "bbox": '#(bboxSchema)',
-        "politikredsnummer": '#string',
-        "geometri": '#(geometriSchema)',
-        "politikredsnummer": '#string',
-        "myndighedskode": '#string'
+            "visningstekst": '#string',
+            "bbox": '#(bboxSchema)',
+            "politikredsnummer": '#string',
+            "geometri": '#(geometriSchema)',
+            "myndighedskode": '#string',
+            "navn": "#string",
+            "kommunekode": "#string"
         }
         """
 
@@ -63,3 +64,11 @@ Feature: Gsearch politikreds test
         When method GET
         Then status 200
         And match response == '#[0]'
+
+    Scenario: Filter kommunekode in like
+        Then param q = 'k'
+
+        And param filter = "kommunekode like '%0185%'"
+        When method GET
+        Then status 200
+        And match response == '#[1]'
