@@ -23,6 +23,8 @@ INSERT INTO dar.adresse SELECT DISTINCT
     bygninglokalid::uuid,
     husnummerlokalid::uuid AS husnummer_id
 FROM
-    dar_fdw.adresse;
+    dar_fdw.adresse
+ON CONFLICT
+    DO NOTHING;
 
 VACUUM ANALYZE dar.adresse;
