@@ -48,7 +48,7 @@ Feature: Gsearch matrikel test
         When method GET
         Then status 200
         And def secondresponse = response
-        And match secondresponse == '#[8]'
+        And match secondresponse == '#[9]'
 
         Then match firstresponse == secondresponse
 
