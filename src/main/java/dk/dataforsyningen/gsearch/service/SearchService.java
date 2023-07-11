@@ -2,7 +2,6 @@ package dk.dataforsyningen.gsearch.service;
 
 import dk.dataforsyningen.gsearch.dao.ISearchDao;
 import dk.dataforsyningen.gsearch.rest.Controller;
-import dk.dataforsyningen.gsearch.rest.CustomPostgisFilterToSQL;
 import java.util.List;
 import java.util.Optional;
 import org.geotools.data.jdbc.FilterToSQL;

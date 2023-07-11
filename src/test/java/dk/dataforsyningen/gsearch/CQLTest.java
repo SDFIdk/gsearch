@@ -10,7 +10,7 @@ import org.geotools.filter.text.ecql.ECQL;
 import org.junit.jupiter.api.Test;
 import org.opengis.filter.Filter;
 
-import dk.dataforsyningen.gsearch.rest.CustomPostgisFilterToSQL;
+import dk.dataforsyningen.gsearch.service.CustomPostgisFilterToSQL;
 
 public class CQLTest {
     static FilterToSQL filterToSQL;
