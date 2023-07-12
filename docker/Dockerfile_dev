@@ -1,10 +1,10 @@
-FROM maven:3.8.6-eclipse-temurin-17-alpine as builder
+FROM maven:3.9.3-eclipse-temurin-17-alpine as builder
 WORKDIR /gsearch
 COPY pom.xml .
 RUN mvn -e -B dependency:resolve
 COPY src ./src
 RUN mvn -e -B package -DskipTests
 
-FROM eclipse-temurin:17.0.4.1_1-jdk-jammy
+FROM eclipse-temurin:17.0.7_7-jdk-jammy
 COPY --from=builder /gsearch/target/gsearch.jar ./gsearch.jar
 ENTRYPOINT java -jar gsearch.jar
