@@ -1,11 +1,19 @@
 FROM maven:3.9.5-eclipse-temurin-17-alpine as builder
+
 WORKDIR /gsearch
+
 COPY pom.xml .
+
 RUN mvn -e -B dependency:resolve
+
 COPY src ./src
+
 RUN mvn -e -B package -DskipTests
 
 FROM eclipse-temurin:17.0.8.1_1-jdk-alpine
+
 RUN apk upgrade --available --no-cache
+
 COPY --from=builder /gsearch/target/gsearch.jar ./gsearch.jar
+
 ENTRYPOINT java -jar gsearch.jar

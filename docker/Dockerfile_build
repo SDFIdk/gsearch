@@ -1,8 +1,11 @@
 FROM maven:3.9.5-eclipse-temurin-17-alpine
+
 WORKDIR /gsearch
-COPY pom.xml .
+
 COPY public/pom.xml .
+
 RUN mvn -e -B dependency:resolve
-COPY src ./src
+
 COPY public/src ./src
+
 RUN mvn -e -B package -DskipTests
