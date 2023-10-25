@@ -12,6 +12,8 @@ CREATE INDEX ON basic.matrikel (bfenummer);
 
 CREATE INDEX ON basic.matrikel (lower(ejerlavsnavn));
 
+CREATE INDEX ON basic.matrikel (kommunekode);
+
 CREATE INDEX ON basic.matrikel USING gist (geometri);
 
 VACUUM ANALYZE basic.matrikel;

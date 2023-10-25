@@ -5,6 +5,6 @@ RUN mvn -e -B dependency:resolve
 COPY src ./src
 RUN mvn -e -B package -DskipTests
 
-FROM eclipse-temurin:17.0.4.1_1-jdk-jammy
+FROM eclipse-temurin:17.0.8_7-jdk-jammy
 COPY --from=builder /gsearch/target/gsearch.jar ./gsearch.jar
 ENTRYPOINT java -jar gsearch.jar
