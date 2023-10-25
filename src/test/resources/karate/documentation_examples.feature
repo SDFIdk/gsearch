@@ -166,9 +166,9 @@ Feature:
         And match response == '#[10]'
 
     Scenario: Example 17
-        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=22&filter=INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))
+        # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel?q=2&filter=INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))
         Given path 'matrikel'
-        Then param q = '22'
+        Then param q = '2'
 
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
         And retry until responseStatus == 200
