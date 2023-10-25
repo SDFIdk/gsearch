@@ -1,6 +1,5 @@
 package dk.dataforsyningen.gsearch.rest;
 
-import dk.dataforsyningen.gsearch.ResourceTypes;
 import dk.dataforsyningen.gsearch.datamodel.adresse;
 import dk.dataforsyningen.gsearch.datamodel.husnummer;
 import dk.dataforsyningen.gsearch.datamodel.kommune;
@@ -14,6 +13,7 @@ import dk.dataforsyningen.gsearch.datamodel.region;
 import dk.dataforsyningen.gsearch.datamodel.retskreds;
 import dk.dataforsyningen.gsearch.datamodel.sogn;
 import dk.dataforsyningen.gsearch.datamodel.stednavn;
+import dk.dataforsyningen.gsearch.service.ISearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,19 +22,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
-
 import java.util.List;
 import java.util.Optional;
-import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
-import org.geotools.data.postgis.PostGISDialect;
 import org.geotools.filter.text.cql2.CQLException;
-import org.geotools.filter.text.ecql.ECQL;
-import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.mapper.reflect.FieldMapper;
-import org.opengis.filter.Filter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -46,84 +37,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
-  static Logger logger = LoggerFactory.getLogger(Controller.class);
-
-  static PostGISDialect dialect = new PostGISDialect(null);
-  static FilterToSQL filterToSQL = new CustomPostgisFilterToSQL(dialect);
-
-  static {
-    dialect.setFunctionEncodingEnabled(true);
-    filterToSQL.setInline(true);
-  }
+  private final ISearchService iSearchService;
 
   @Autowired
-  private Jdbi jdbi;
-
-  @Autowired
-  private ResourceTypes resourceTypes;
-
-  /**
-   * It assembles full sql query from the parameters and maps the result to list of data entities
-   *
-   * @param q
-   * @param resource
-   * @param where
-   * @param limit
-   * @return
-   */
-  private <T> List<T> getData(String q, String resource, String where, Integer limit) {
-    return (List<T>) jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit)).*";
-      // TODO: This gets register every time this method gets called
-      handle.registerRowMapper(FieldMapper.factory(Object.class));
-      List<Object> data = handle
-          .createQuery(sql)
-          .bind("q", q)
-          .bind("where", where)
-          .bind("limit", limit)
-          .map(new DataMapper(resource))
-          .list();
-      return data;
-    });
-  }
-
-  /**
-   * Transform request to database query, execute query and return the result
-   *
-   * @param q
-   * @param resource
-   * @param filter
-   * @param limit
-   * @return
-   * @throws FilterToSQLException
-   * @throws CQLException
-   */
-  private <T> List<T> getResult(String q, String resource, Optional<String> filter, Integer limit)
-      throws FilterToSQLException, CQLException {
-
-    String where = null;
-    // If filter is present we need to change the CQl to SQL
-    if (filter.isPresent()) {
-      // To transform cql filter to sql where clause
-      Filter ogcFilter = ECQL.toFilter(filter.get());
-      logger.debug("ogcFilter: " + ogcFilter);
-      // TODO: visit filter to apply restrictions
-      // TODO: visit filter to remove non applicable (field name not in type fx.)
-      // Fixes shared memory issue with out
-      synchronized (this) {
-        where = filterToSQL.encodeToString(ogcFilter);
-      }
-
-      logger.debug("where: " + where);
-    }
-
-    // NOTE: Hack correct SRID
-    String finalWhere = where == null ? null : where.replaceAll("', null", "', 25832");
-    logger.debug("finalWhere: " + finalWhere);
-
-    List<T> result = getData(q, resource, finalWhere, limit);
-
-    return result;
+  public Controller(ISearchService iSearchService) {
+    this.iSearchService = iSearchService;
   }
 
   /**
@@ -145,7 +63,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<adresse> result = getResult(q, "adresse", filter, limit);
+    List<adresse> result = iSearchService.getResult(q, "adresse", filter, limit);
     return result;
   }
 
@@ -168,7 +86,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<husnummer> result = getResult(q, "husnummer", filter, limit);
+    List<husnummer> result = iSearchService.getResult(q, "husnummer", filter, limit);
     return result;
   }
 
@@ -191,7 +109,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<kommune> result = getResult(q, "kommune", filter, limit);
+    List<kommune> result = iSearchService.getResult(q, "kommune", filter, limit);
     return result;
   }
 
@@ -214,7 +132,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<matrikel> result = getResult(q, "matrikel", filter, limit);
+    List<matrikel> result = iSearchService.getResult(q, "matrikel", filter, limit);
     return result;
   }
 
@@ -237,7 +155,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<matrikel_udgaaet> result = getResult(q, "matrikel_udgaaet", filter, limit);
+    List<matrikel_udgaaet> result = iSearchService.getResult(q, "matrikel_udgaaet", filter, limit);
     return result;
   }
 
@@ -260,7 +178,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<navngivenvej> result = getResult(q, "navngivenvej", filter, limit);
+    List<navngivenvej> result = iSearchService.getResult(q, "navngivenvej", filter, limit);
     return result;
   }
 
@@ -283,7 +201,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<opstillingskreds> result = getResult(q, "opstillingskreds", filter, limit);
+    List<opstillingskreds> result = iSearchService.getResult(q, "opstillingskreds", filter, limit);
     return result;
   }
 
@@ -306,7 +224,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<politikreds> result = getResult(q, "politikreds", filter, limit);
+    List<politikreds> result = iSearchService.getResult(q, "politikreds", filter, limit);
     return result;
   }
 
@@ -329,7 +247,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<postnummer> result = getResult(q, "postnummer", filter, limit);
+    List<postnummer> result = iSearchService.getResult(q, "postnummer", filter, limit);
     return result;
   }
 
@@ -352,7 +270,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<region> result = getResult(q, "region", filter, limit);
+    List<region> result = iSearchService.getResult(q, "region", filter, limit);
     return result;
   }
 
@@ -375,7 +293,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<retskreds> result = getResult(q, "retskreds", filter, limit);
+    List<retskreds> result = iSearchService.getResult(q, "retskreds", filter, limit);
     return result;
   }
 
@@ -401,7 +319,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<sogn> result = getResult(q, "sogn", filter, limit);
+    List<sogn> result = iSearchService.getResult(q, "sogn", filter, limit);
     return result;
   }
 
@@ -427,7 +345,7 @@ public class Controller {
       @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
       throws FilterToSQLException, CQLException {
 
-    List<stednavn> result = getResult(q, "stednavn", filter, limit);
+    List<stednavn> result = iSearchService.getResult(q, "stednavn", filter, limit);
     return result;
   }
 }

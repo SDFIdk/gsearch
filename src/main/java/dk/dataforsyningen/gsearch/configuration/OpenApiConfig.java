@@ -6,7 +6,6 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.ComposedSchema;
-import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -25,11 +24,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
+  static Logger logger = LoggerFactory.getLogger(Application.class);
   final String securitySchemeNameQuery = "QueryToken";
   final String securitySchemeNameHeader = "HeaderToken";
-
-  static Logger logger = LoggerFactory.getLogger(Application.class);
-
   @Autowired
   private Jdbi jdbi;
 
