@@ -12,6 +12,8 @@ CREATE INDEX ON basic.matrikel_udgaaet (bfenummer);
 
 CREATE INDEX ON basic.matrikel_udgaaet (lower(ejerlavsnavn));
 
+CREATE INDEX ON basic.matrikel_udgaaet (kommunekode);
+
 CREATE INDEX ON basic.matrikel_udgaaet USING gist (geometri);
 
 VACUUM ANALYZE basic.matrikel_udgaaet;

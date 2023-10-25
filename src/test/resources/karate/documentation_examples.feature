@@ -70,7 +70,7 @@ Feature:
         And param filter = 'INTERSECTS(vejpunkt_geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))'
         And retry until responseStatus == 200
         When method GET
-        And match response == '#[38]'
+        And match response == '#[24]'
 
 
     Scenario: Example 8
@@ -183,7 +183,7 @@ Feature:
 
         When method GET
         Then status 200
-        And match response == '#[8]'
+        And match response == '#[10]'
 
     Scenario: Example 19
         # https://api.dataforsyningen.dk/rest/gsearch/v1.0/matrikel_udgaaet?q=11a&filter=ejerlavskode='70854'
@@ -213,7 +213,7 @@ Feature:
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))'
         And retry until responseStatus == 200
         When method GET
-        And match response == '#[6]'
+        And match response == '#[10]'
 
 
     Scenario: Example 22

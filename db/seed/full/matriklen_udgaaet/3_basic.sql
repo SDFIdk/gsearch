@@ -2,62 +2,62 @@ CREATE COLLATION IF NOT EXISTS matrikelnummer_udgaaet_collation (provider = icu,
 
 DROP TABLE IF EXISTS basic.matrikel_udgaaet;
 
-WITH ejerlav_kommune_distinct as (
+WITH ejerlav_kommune_distinct AS (
 	SELECT distinct
 		j.ejerlavlokalid,
 		k.kommunenavn,
 		k.kommunekode,
-		k.id_lokalid as kommuneidlokalid
-	from
+		k.id_lokalid AS kommuneidlokalid
+	FROM
 		matriklen_udgaaet.jordstykke j
-		join matriklen.matrikelkommune k on k.id_lokalid = j.kommunelokalid
+		JOIN matriklen.matrikelkommune k ON k.id_lokalid = j.kommunelokalid
 ),
-ejerlavnavn_kommune_distinct as (
+ejerlavnavn_kommune_distinct AS (
 	SELECT 
 		e.ejerlavsnavn,
 		e.ejerlavskode::text,
 		ek.kommunenavn,
 		ek.kommunekode,
 		ek.kommuneidlokalid
-	from
+	FROM
 		ejerlav_kommune_distinct ek
-		join matriklen.ejerlav e on e.id_lokalid = ek.ejerlavlokalid
+		JOIN matriklen.ejerlav e ON e.id_lokalid = ek.ejerlavlokalid
 ),
-kommune_distinct as (
+kommune_distinct AS (
 	SELECT distinct
 		k.kommunenavn,
 		k.kommunekode,
 		k.id_lokalid
-	from 
+	FROM 
 		matriklen.matrikelkommune k
 ),
-ejerlav_distinct as (
+ejerlav_distinct AS (
 	SELECT distinct
 		ejerlavsnavn,
 		ejerlavskode::text,
 		id_lokalid
-	from matriklen.ejerlav 
+	FROM matriklen.ejerlav 
 ),
-samletfastejendom_distinct as (
+samletfastejendom_distinct AS (
 	SELECT distinct
 		bfenummer::text,
 		id_lokalid
-	from matriklen_udgaaet.samletfastejendom
+	FROM matriklen_udgaaet.samletfastejendom
 ),
-lodflade_distinct as (
+lodflade_distinct AS (
 	SELECT distinct
 		jordstykkelokalid,
 		geometri
-	from matriklen_udgaaet.lodflade
+	FROM matriklen_udgaaet.lodflade
 ),
-jordstykke_distinct as (
+jordstykke_distinct AS (
 	SELECT distinct
 		id_lokalid,
 		matrikelnummer,
 		ejerlavlokalid,
 		kommunelokalid,
 		samletfastejendomlokalid
-	from matriklen_udgaaet.jordstykke
+	FROM matriklen_udgaaet.jordstykke
 ),
 matrikelnumre AS (
     SELECT
@@ -74,9 +74,9 @@ matrikelnumre AS (
         matriklen_udgaaet.jordstykke j
         JOIN ejerlav_distinct e ON e.id_lokalid = j.ejerlavlokalid
         JOIN matriklen_udgaaet.centroide c ON c.jordstykkelokalid = j.id_lokalid
-        join kommune_distinct k ON k.id_lokalid = j.kommunelokalid
+        JOIN kommune_distinct k ON k.id_lokalid = j.kommunelokalid
         JOIN lodflade_distinct l ON l.jordstykkelokalid = j.id_lokalid
-        JOIN samletfastejendom_distinct s on s.id_lokalid = j.samletfastejendomlokalid
+        LEFT JOIN samletfastejendom_distinct s ON s.id_lokalid = j.samletfastejendomlokalid
 ),
 ejerlavsnavn_dups AS (
     SELECT
