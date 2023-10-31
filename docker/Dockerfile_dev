@@ -1,4 +1,4 @@
-FROM maven:3.9.5-eclipse-temurin-17-alpine as builder
+FROM maven:3.9.5-eclipse-temurin-21-alpine as builder
 
 WORKDIR /gsearch
 
@@ -10,7 +10,7 @@ COPY src ./src
 
 RUN mvn -e -B package -DskipTests
 
-FROM eclipse-temurin:17.0.8.1_1-jdk-alpine
+FROM eclipse-temurin:21.0.1_12-jdk-alpine
 
 RUN apk upgrade --available --no-cache
 
