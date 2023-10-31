@@ -1,4 +1,4 @@
-package dk.dataforsyningen.gsearch.rest;
+package dk.dataforsyningen.gsearch.service;
 
 import org.geotools.data.postgis.PostGISDialect;
 import org.geotools.data.postgis.PostgisFilterToSQL;

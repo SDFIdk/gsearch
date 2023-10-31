@@ -1,8 +1,8 @@
 FROM gsearch_temp AS builder
 
-FROM eclipse-temurin:17.0.8_7-jdk-jammy
+FROM eclipse-temurin:21.0.1_12-jdk-alpine
 
-RUN apt update -y && apt upgrade -y
+RUN apk upgrade --available --no-cache
 
 COPY --from=builder /gsearch/target/gsearch.jar ./gsearch.jar
 

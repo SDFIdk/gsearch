@@ -1,4 +1,4 @@
-package dk.dataforsyningen.gsearch.rest;
+package dk.dataforsyningen.gsearch.mapper;
 
 import dk.dataforsyningen.gsearch.datamodel.ResourceType;
 import dk.dataforsyningen.gsearch.datamodel.adresse;
@@ -26,7 +26,7 @@ import java.sql.SQLException;
 /**
  * Maps dynamic row data into the generic Data entity
  */
-class DataMapper implements RowMapper<Object> {
+public class DataMapper implements RowMapper<Object> {
     JtsBinaryParser binaryParser = new JtsBinaryParser();
     ResultSetMetaData meta;
     String resource;
