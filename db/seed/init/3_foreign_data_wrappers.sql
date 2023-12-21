@@ -64,7 +64,7 @@ CREATE USER MAPPING FOR CURRENT_USER SERVER :matriklen_server OPTIONS (
     PASSWORD :matriklen_password
 );
 
-IMPORT FOREIGN SCHEMA matriklen_latest
+IMPORT FOREIGN SCHEMA matriklen2_latest
 FROM
     SERVER :matriklen_server INTO matriklen_fdw;
 
@@ -85,7 +85,7 @@ CREATE USER MAPPING FOR CURRENT_USER SERVER :matriklen_udgaaet_server OPTIONS (
     PASSWORD :matriklen_udgaaet_password
 );
 
-IMPORT FOREIGN SCHEMA matriklen_udgaaet_latest
+IMPORT FOREIGN SCHEMA matriklen2_udgaaet_latest
 FROM
     SERVER :matriklen_udgaaet_server INTO matriklen_udgaaet_fdw;
 
