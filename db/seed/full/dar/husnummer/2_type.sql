@@ -22,19 +22,20 @@ COMMENT ON COLUMN api.husnummer.id IS 'ID på husnummer';
 
 COMMENT ON COLUMN api.husnummer.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil et husnummer';
 
-COMMENT ON COLUMN api.husnummer.kommunenavn IS 'Kommunenavn for et husnummer';
+COMMENT ON COLUMN api.husnummer.kommunenavn IS 'Kommunenavn for husnummer';
 
-COMMENT ON COLUMN api.husnummer.vejkode IS 'Vejkode for et husnummer';
+COMMENT ON COLUMN api.husnummer.vejkode IS 'Vejkode for husnummer';
 
-COMMENT ON COLUMN api.husnummer.vejnavn IS 'Vejnavn for et husnummer';
+COMMENT ON COLUMN api.husnummer.vejnavn IS 'Vejnavn for husnummer';
 
 COMMENT ON COLUMN api.husnummer.husnummertekst IS 'Husnummertekst evt. med bogstavsbetegnelse';
 
 COMMENT ON COLUMN api.husnummer.postnummer IS 'Postnummer for et husnummer';
+COMMENT ON COLUMN api.husnummer.postnummer IS 'Postnummer for husnummer';
 
-COMMENT ON COLUMN api.husnummer.postnummernavn IS 'Postnummernavn for et husnummer';
+COMMENT ON COLUMN api.husnummer.postnummernavn IS 'Postnummernavn for husnummer';
 
-COMMENT ON COLUMN api.husnummer.visningstekst IS 'Adgangsadresse for et husnummer';
+COMMENT ON COLUMN api.husnummer.visningstekst IS 'Adgangsadresse for husnummer';
 
 COMMENT ON COLUMN api.husnummer.vejpunkt_geometri IS 'Geometri for vejpunkt i EPSG:25832';
 

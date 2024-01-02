@@ -24,11 +24,11 @@ COMMENT ON COLUMN api.adresse.id IS 'ID på adresse';
 
 COMMENT ON COLUMN api.adresse.kommunekode IS 'Kommunekode(r) for kommune(r) der ligger i eller optil en adresse';
 
-COMMENT ON COLUMN api.adresse.kommunenavn IS 'Kommunenavn for en adresse';
+COMMENT ON COLUMN api.adresse.kommunenavn IS 'Kommunenavn for adresse';
 
-COMMENT ON COLUMN api.adresse.vejkode IS 'Vejkode for en adresse';
+COMMENT ON COLUMN api.adresse.vejkode IS 'Vejkode for adresse';
 
-COMMENT ON COLUMN api.adresse.vejnavn IS 'Vejnavn for en adresse';
+COMMENT ON COLUMN api.adresse.vejnavn IS 'Vejnavn for adresse';
 
 COMMENT ON COLUMN api.adresse.husnummer IS 'Husnummer på adresse';
 

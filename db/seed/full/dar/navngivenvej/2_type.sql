@@ -21,6 +21,8 @@ COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
 
 COMMENT ON COLUMN api.navngivenvej.visningstekst IS 'Præsentationsform for et navngiven vej';
 
+COMMENT ON COLUMN api.navngivenvej.visningstekst IS 'Præsentationsform for navngiven vej';
+
 COMMENT ON COLUMN api.navngivenvej.postnummer IS 'Postnummer(postnumre) for navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.postnummernavn IS 'Postnummernavn(e) for navngiven vej';
