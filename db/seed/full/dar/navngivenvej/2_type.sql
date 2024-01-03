@@ -5,6 +5,7 @@ DROP TYPE IF EXISTS api.navngivenvej CASCADE;
 CREATE TYPE api.navngivenvej AS (
     id text,
     vejnavn text,
+    supplerendebynavn text,
     visningstekst text,
     postnummer text,
     postnummernavn text,
@@ -19,7 +20,7 @@ COMMENT ON COLUMN api.navngivenvej.id IS 'ID på navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.vejnavn IS 'Navn på vej';
 
-COMMENT ON COLUMN api.navngivenvej.visningstekst IS 'Præsentationsform for et navngiven vej';
+COMMENT ON COLUMN api.navngivenvej.supplerendebynavn IS 'Supplerende bynavn(e) for navngiven vej';
 
 COMMENT ON COLUMN api.navngivenvej.visningstekst IS 'Præsentationsform for navngiven vej';
 
