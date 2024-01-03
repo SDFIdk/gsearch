@@ -8,6 +8,10 @@ SELECT
 FROM
     dar_fdw.navngivenvejsupplerendebynavn;
 
+CREATE INDEX ON dar.navngivenvejsupplerendebynavn (navngivenvej_id);
+
+CREATE INDEX ON dar.navngivenvejsupplerendebynavn (supplerendebynavn_id);
+
 CREATE INDEX ON dar.navngivenvejsupplerendebynavn (navngivenvej_id, supplerendebynavn_id);
 
 VACUUM ANALYZE dar.navngivenvejsupplerendebynavn;

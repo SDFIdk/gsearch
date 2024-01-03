@@ -7,6 +7,8 @@ SELECT
 FROM
     dar_fdw.supplerendebynavn;
 
+CREATE INDEX ON dar.supplerendebynavn (id);
+
 CREATE INDEX ON dar.supplerendebynavn (id, navn);
 
 VACUUM ANALYZE dar.supplerendebynavn;
