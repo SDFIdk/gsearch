@@ -31,11 +31,11 @@ WITH adresser AS (
                 FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering
             FROM
                 dar.husnummer) h ON a.husnummer_id = h.id::uuid
-            JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
-            JOIN dar.postnummer p ON p.id = h.postnummer_id::uuid
-            JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt_id
-            JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt_id
-            JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
+        JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
+        JOIN dar.postnummer p ON p.id = h.postnummer_id::uuid
+        JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt_id
+        JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt_id
+        JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
 )
 SELECT
     a.id,
