@@ -28,14 +28,14 @@ COMMENT ON COLUMN api.matrikel.kommunekode IS 'Kommunekode(r) for kommune(r) der
 
 COMMENT ON COLUMN api.matrikel.matrikelnummer IS 'Matrikelnummer';
 
-COMMENT ON COLUMN api.matrikel.visningstekst IS 'Præsentationsform for et matrikelnummer';
+COMMENT ON COLUMN api.matrikel.visningstekst IS 'Præsentationsform for et matrikel';
 
 COMMENT ON COLUMN api.matrikel.jordstykke_id IS 'Jordstykke lokalid';
 
-COMMENT ON COLUMN api.matrikel.bfenummer IS 'BFE-nummer for matriklen';
+COMMENT ON COLUMN api.matrikel.bfenummer IS 'BFE-nummer for matrikel';
 
 COMMENT ON COLUMN api.matrikel.centroid_x IS 'Centroide X for matriklens geometri';
 
 COMMENT ON COLUMN api.matrikel.centroid_y IS 'Centroide Y for matriklens geometri';
 
-COMMENT ON COLUMN api.matrikel.geometri IS 'Geometri i EPSG:25832';
+COMMENT ON COLUMN api.matrikel.geometri IS 'Geometri i EPSG:25832 for matrikel';
