@@ -18,6 +18,7 @@ Feature: Gsearch navngivenvej test
             "postnummer": '#string',
             "visningstekst": '#string',
             "vejnavn": '#string',
+            "supplerendebynavn": '#string',
             "postnummernavn": '#string',
             "bbox": '#(bboxSchema)',
             "geometri": '#(geometriSchema)',

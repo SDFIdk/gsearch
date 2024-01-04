@@ -19,6 +19,7 @@ Feature: Gsearch adresse test
             "geometri": '#(geometriSchema)',
             "husnummer": '#string',
             "vejnavn": '#string',
+            "supplerendebynavn": '#string',
             "kommunekode": '#string',
             "visningstekst": '#string',
             "kommunenavn": '#string',
