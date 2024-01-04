@@ -188,20 +188,31 @@ public class DataMapper implements RowMapper<Object> {
         intColumns.add("opstillingskredsnummer");
         intColumns.add("valgkredsnummer");
         intColumns.add("storkredsnummer");
-        for (int i = 1; i <= meta.getColumnCount(); i++)
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
             if (intColumns.contains(meta.getColumnName(i))) {
                 data.add(meta.getColumnName(i), rs.getInt(i));
             }
             else {
                 data.add(meta.getColumnName(i), mapColumn(i, rs));
             }
+        }
         return data;
     }
 
     private politikreds mapPolitikreds(ResultSet rs, StatementContext ctx) throws SQLException {
         politikreds data = new politikreds();
-        for (int i = 1; i <= meta.getColumnCount(); i++)
-            data.add(meta.getColumnName(i), mapColumn(i, rs));
+
+        List<String> intColumns  = new ArrayList<String>(1);
+        intColumns.add("politikredsnummer");
+
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
+            if (intColumns.contains(meta.getColumnName(i))) {
+                data.add(meta.getColumnName(i), rs.getInt(i));
+            }
+            else {
+                data.add(meta.getColumnName(i), mapColumn(i, rs));
+            }
+        }
         return data;
     }
 
