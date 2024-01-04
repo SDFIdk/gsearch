@@ -26,8 +26,8 @@ ALTER TABLE basic_initialloading.kommune
 ALTER TABLE basic_initialloading.kommune
     ADD COLUMN textsearchable_phonetic_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', kommunekode), 'A') ||
-                         setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(kommunenavn, ' ', 1), 2)), 'B') ||
-                         setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(kommunenavn, ' ', 2), 2)), 'C') ||
+                         setweight(to_tsvector('simple', functions.fnfonetik (split_part(kommunenavn, ' ', 1), 2)), 'B') ||
+                         setweight(to_tsvector('simple', functions.fnfonetik (split_part(kommunenavn, ' ', 2), 2)), 'C') ||
                          setweight(to_tsvector('simple', functions.split_and_endsubstring_fonetik (kommunenavn, 3)), 'D'))
     STORED;
 

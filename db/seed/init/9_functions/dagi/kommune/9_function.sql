@@ -58,7 +58,7 @@ BEGIN
             UNNEST(string_to_array(input_kommunenavn, ' ')) t
     )
     SELECT
-            string_agg(fonetik.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
+            string_agg(functions.fnfonetik (t, 2), ':BCD* <-> ') || ':BCD*'
     FROM
         tokens INTO query_string;
 
@@ -87,13 +87,13 @@ BEGIN
 				OR (kommunekode IS NULL OR kommunekode LIKE ''%%'' || $3 || ''%%''))
             AND %s
             ORDER BY
-                basic.combine_rank(
+                functions.combine_rank(
                     $2,
                     $2,
                     textsearchable_plain_col,
                     textsearchable_unaccent_col,
                     ''simple''::regconfig,
-                    ''basic.septima_fts_config''::regconfig
+                    ''functions.gsearch_fts_config''::regconfig
                 ) desc,
                     ts_rank_cd(
                     textsearchable_phonetic_col,

@@ -84,13 +84,13 @@ ejerlavsnavn_dups AS (
         ejerlavsnavn,
         (setweight(to_tsvector('simple', split_part(ejerlavsnavn, ' ', 1)), 'B') ||
         setweight(to_tsvector('simple', split_part(ejerlavsnavn, ' ', 2)), 'C') ||
-        setweight(to_tsvector('simple', basic.split_and_endsubstring (ejerlavsnavn, 3)), 'D')) AS textsearchable_plain_col_ejerlavsnavn,
-        (setweight(to_tsvector('basic.septima_fts_config', split_part(ejerlavsnavn, ' ', 1)), 'B') ||
-        setweight(to_tsvector('basic.septima_fts_config', split_part(ejerlavsnavn, ' ', 2)), 'C') ||
-        setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (ejerlavsnavn, 3)), 'D')) AS textsearchable_unaccent_col_ejerlavsnavn,
-        (setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(ejerlavsnavn, ' ', 1), 2)), 'B') ||
-        setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(ejerlavsnavn, ' ', 2), 2)), 'C') ||
-        setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (ejerlavsnavn, 3)), 'D')) AS textsearchable_phonetic_col_ejerlavsnavn
+        setweight(to_tsvector('simple', functions.split_and_endsubstring (ejerlavsnavn, 3)), 'D')) AS textsearchable_plain_col_ejerlavsnavn,
+        (setweight(to_tsvector('functions.gsearch_fts_config', split_part(ejerlavsnavn, ' ', 1)), 'B') ||
+        setweight(to_tsvector('functions.gsearch_fts_config', split_part(ejerlavsnavn, ' ', 2)), 'C') ||
+        setweight(to_tsvector('functions.gsearch_fts_config', functions.split_and_endsubstring (ejerlavsnavn, 3)), 'D')) AS textsearchable_unaccent_col_ejerlavsnavn,
+        (setweight(to_tsvector('simple', functions.fnfonetik (split_part(ejerlavsnavn, ' ', 1), 2)), 'B') ||
+        setweight(to_tsvector('simple', functions.fnfonetik (split_part(ejerlavsnavn, ' ', 2), 2)), 'C') ||
+        setweight(to_tsvector('simple', functions.split_and_endsubstring_fonetik (ejerlavsnavn, 3)), 'D')) AS textsearchable_phonetic_col_ejerlavsnavn
     FROM ( SELECT *
         FROM
             ejerlavnavn_kommune_distinct) x
