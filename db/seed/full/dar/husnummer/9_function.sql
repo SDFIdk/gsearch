@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS api.husnummer (text, text, int, int);
+DROP FUNCTION IF EXISTS api.husnummer (text, text, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.husnummer (input_tekst text, filters text, sortoptions int, rowlimit int)
+CREATE OR REPLACE FUNCTION api.husnummer (input_tekst text, filters text, sortoptions integer, rowlimit integer, crs integer)
     RETURNS SETOF api.husnummer
     LANGUAGE plpgsql
     STABLE
@@ -85,8 +85,8 @@ BEGIN
                 postnummer::text,
                 postnummernavn::text,
                 visningstekst::text,
-                geometri,
-                vejpunkt_geometri
+                ST_TRANSFORM(geometri, $4),
+                ST_TRANSFORM(vejpunkt_geometri, $4)
             FROM
                 basic.husnummer
             WHERE
@@ -101,7 +101,7 @@ BEGIN
 
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, crs;
 
     ELSE
         stmt = format(E'SELECT
@@ -114,8 +114,8 @@ BEGIN
                 postnummer::text,
                 postnummernavn::text,
                 visningstekst::text,
-                geometri,
-                vejpunkt_geometri
+                ST_TRANSFORM(geometri, $4),
+                ST_TRANSFORM(vejpunkt_geometri, $4)
             FROM
                 basic.husnummer
             WHERE
@@ -141,7 +141,7 @@ BEGIN
                 visningstekst
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, crs;
     END IF;
 END
 $function$;

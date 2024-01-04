@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS api.stednavn (text, text, int, int);
+DROP FUNCTION IF EXISTS api.stednavn (text, text, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.stednavn (input_tekst text, filters text, sortoptions int, rowlimit int)
+CREATE OR REPLACE FUNCTION api.stednavn (input_tekst text, filters text, sortoptions integer, rowlimit integer, crs integer)
     RETURNS SETOF api.stednavn
     LANGUAGE plpgsql
     STABLE
@@ -80,7 +80,7 @@ BEGIN
                 stednavn_type::text,
                 stednavn_subtype::text,
                 kommunekode::text,
-                geometri,
+                ST_TRANSFORM(geometri, $4),
                 bbox
             FROM
                 basic.stednavn
@@ -92,7 +92,7 @@ BEGIN
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE '%', stmt;
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, crs;
     ELSE
 -- Execute and return the result
         stmt = format(E'SELECT
@@ -104,7 +104,7 @@ BEGIN
                 stednavn_type::text,
                 stednavn_subtype::text,
                 kommunekode::text,
-                geometri,
+                ST_TRANSFORM(geometri, $4),
                 bbox
             FROM
                 basic.stednavn
@@ -132,7 +132,7 @@ BEGIN
                 )::double precision desc
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit, input_tekst;
+        USING query_string, plain_query_string, rowlimit, input_tekst, crs;
     END IF;
 END
 $function$;

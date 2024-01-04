@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS api.region (text, jsonb, int, int);
+DROP FUNCTION IF EXISTS api.region (text, jsonb, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.region (input_tekst text, filters text, sortoptions integer, rowlimit integer)
+CREATE OR REPLACE FUNCTION api.region (input_tekst text, filters text, sortoptions integer, rowlimit integer, crs integer)
     RETURNS SETOF api.region
     LANGUAGE plpgsql
     STABLE
@@ -52,7 +52,7 @@ BEGIN
             regionsnavn::text,
             visningstekst::text,
             kommunekode::text,
-            geometri,
+            ST_TRANSFORM(geometri, $4),
             bbox::geometry
         FROM
             basic.region
@@ -74,6 +74,6 @@ BEGIN
                 regionsnavn
             LIMIT $3;', filters);
     RETURN QUERY EXECUTE stmt
-    USING query_string, plain_query_string, rowlimit;
+    USING query_string, plain_query_string, rowlimit, crs;
 END
 $function$;

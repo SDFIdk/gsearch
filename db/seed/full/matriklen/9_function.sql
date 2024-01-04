@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS api.matrikel(text, text, int, int);
+DROP FUNCTION IF EXISTS api.matrikel(text, text, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.matrikel(input_tekst text, filters text, sortoptions int, rowlimit int)
+CREATE OR REPLACE FUNCTION api.matrikel(input_tekst text, filters text, sortoptions integer, rowlimit integer, crs integer)
     RETURNS SETOF api.matrikel
     LANGUAGE plpgsql
     STABLE
@@ -78,7 +78,7 @@ BEGIN
                 bfenummer::text,
                 ST_X((ST_DUMP(centroide_geometri)).geom)::text,
                 ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
-                geometri
+                ST_TRANSFORM(geometri, $4),
             FROM
                 basic.matrikel
             WHERE
@@ -87,7 +87,7 @@ BEGIN
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, crs;
     ELSE
         -- Execute and return the result
         stmt = format(E'SELECT
@@ -101,7 +101,7 @@ BEGIN
                 bfenummer::text,
                 ST_X((ST_DUMP(centroide_geometri)).geom)::text,
                 ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
-                geometri
+                ST_TRANSFORM(geometri, $4),
             FROM
                 basic.matrikel
             WHERE (
@@ -127,7 +127,7 @@ BEGIN
                 visningstekst
             LIMIT $3  ;', filters);
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, crs;
     END IF;
 END
 $function$;

@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS api.adresse (text, text, int, int);
+DROP FUNCTION IF EXISTS api.adresse (text, text, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.adresse (input_tekst text, filters text, sortoptions int, rowlimit int)
+CREATE OR REPLACE FUNCTION api.adresse (input_tekst text, filters text, sortoptions integer, rowlimit integer, crs integer)
     RETURNS SETOF api.adresse
     LANGUAGE plpgsql
     STABLE
@@ -82,8 +82,8 @@ BEGIN
                 postnummer::text,
                 postnummernavn::text,
                 visningstekst::text,
-                geometri,
-                vejpunkt_geometri
+                ST_TRANSFORM(geometri, $4),
+                ST_TRANSFORM(vejpunkt_geometri, $4)
             FROM
                 basic.adresse
             WHERE
@@ -97,7 +97,7 @@ BEGIN
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, crs;
     ELSE
         -- Execute and return the result
         stmt = format(E'SELECT
@@ -112,8 +112,8 @@ BEGIN
                 postnummer::text,
                 postnummernavn::text,
                 visningstekst::text,
-                geometri,
-                vejpunkt_geometri
+                ST_TRANSFORM(geometri, $4),
+                ST_TRANSFORM(vejpunkt_geometri, $4)
             FROM
                 basic.adresse
             WHERE (
@@ -142,7 +142,7 @@ BEGIN
             LIMIT $3;', filters);
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, crs;
     END IF;
 END
 $function$;
