@@ -6,6 +6,8 @@ CREATE INDEX ON basic.adresse USING GIN (textsearchable_phonetic_col);
 
 CREATE INDEX ON basic.adresse (lower(vejnavn), navngivenvej_id, husnummer_sortering, sortering);
 
+CREATE INDEX ON basic.adresse (supplerendebynavn);
+
 CREATE INDEX ON basic.adresse (kommunekode);
 
 CREATE INDEX ON basic.adresse USING gist (geometri);
