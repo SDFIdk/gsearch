@@ -22,6 +22,7 @@ import org.locationtech.jts.geom.Geometry;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Maps dynamic row data into the generic Data entity
@@ -124,7 +125,7 @@ public class DataMapper implements RowMapper<Object> {
     private matrikel mapMatrikel(ResultSet rs, StatementContext ctx) throws SQLException {
         matrikel data = new matrikel();
         // Return strings as numbers
-        List<String> intColumns  = new ArrayList<String>(4);
+        List<String> intColumns  = new ArrayList<String>(3);
         intColumns.add("ejerlavskode");
         intColumns.add("jordstykke_id");
         intColumns.add("bfenummer");
@@ -133,7 +134,7 @@ public class DataMapper implements RowMapper<Object> {
             if (intColumns.contains(meta.getColumnName(i))) {
                 data.add(meta.getColumnName(i), rs.getInt(i));
             }
-            else if (columnName.equals("centroid_x") || columnName.equals("centroid_y")) {
+            else if (meta.getColumnName(i).equals("centroid_x") || meta.getColumnName(i).equals("centroid_y")) {
                 data.add(meta.getColumnName(i), rs.getFloat(i));
             }
             else {
