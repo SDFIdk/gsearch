@@ -202,7 +202,6 @@ public class DataMapper implements RowMapper<Object> {
 
     private politikreds mapPolitikreds(ResultSet rs, StatementContext ctx) throws SQLException {
         politikreds data = new politikreds();
-
         // Return strings as integers
         List<String> intColumns  = new ArrayList<String>(1);
         intColumns.add("politikredsnummer");
@@ -234,8 +233,18 @@ public class DataMapper implements RowMapper<Object> {
 
     private retskreds mapRetskreds(ResultSet rs, StatementContext ctx) throws SQLException {
         retskreds data = new retskreds();
-        for (int i = 1; i <= meta.getColumnCount(); i++)
-            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        // Return strings as integers
+        List<String> intColumns  = new ArrayList<String>(1);
+        intColumns.add("retskredsnummer");
+        
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
+            if (intColumns.contains(meta.getColumnName(i))) {
+                data.add(meta.getColumnName(i), rs.getInt(i));
+            }
+            else {
+                data.add(meta.getColumnName(i), mapColumn(i, rs));
+            }
+        }
         return data;
     }
 
