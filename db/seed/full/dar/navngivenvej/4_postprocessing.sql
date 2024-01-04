@@ -38,6 +38,8 @@ ALTER TABLE basic.navngivenvej
 ALTER TABLE basic.navngivenvej
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
+-- supplerende bynavn kan være null så derfor bruges der coalesce som anbefalet fra postgres dokumentation
+-- https://www.postgresql.org/docs/current/textsearch-controls.html#TEXTSEARCH-PARSING-DOCUMENTS
 ALTER TABLE basic.navngivenvej
     ADD COLUMN textsearchable_plain_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', split_part(vejnavn, ' ', 1)), 'A') ||
