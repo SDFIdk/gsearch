@@ -135,7 +135,7 @@ public class DataMapper implements RowMapper<Object> {
                 data.add(meta.getColumnName(i), rs.getInt(i));
             }
             else if (meta.getColumnName(i).equals("centroid_x") || meta.getColumnName(i).equals("centroid_y")) {
-                data.add(meta.getColumnName(i), rs.getFloat(i));
+                data.add(meta.getColumnName(i), rs.getDouble(i));
             }
             else {
                 data.add(meta.getColumnName(i), mapColumn(i, rs));
