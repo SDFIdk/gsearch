@@ -123,8 +123,23 @@ public class DataMapper implements RowMapper<Object> {
 
     private matrikel mapMatrikel(ResultSet rs, StatementContext ctx) throws SQLException {
         matrikel data = new matrikel();
+        // Return strings as numbers
+        List<String> intColumns  = new ArrayList<String>(4);
+        intColumns.add("ejerlavskode");
+        intColumns.add("jordstykke_id");
+        intColumns.add("bfenummer");
+
         for (int i = 1; i <= meta.getColumnCount(); i++)
-            data.add(meta.getColumnName(i), mapColumn(i, rs));
+            if (intColumns.contains(meta.getColumnName(i))) {
+                data.add(meta.getColumnName(i), rs.getInt(i));
+            }
+            else if (columnName.equals("centroid_x") || columnName.equals("centroid_y")) {
+                data.add(meta.getColumnName(i), rs.getFloat(i));
+            }
+            else {
+                data.add(meta.getColumnName(i), mapColumn(i, rs));
+            }
+
         return data;
     }
 
