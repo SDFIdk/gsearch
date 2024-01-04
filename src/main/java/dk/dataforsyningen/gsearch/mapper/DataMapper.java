@@ -22,7 +22,8 @@ import org.locationtech.jts.geom.Geometry;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Maps dynamic row data into the generic Data entity
