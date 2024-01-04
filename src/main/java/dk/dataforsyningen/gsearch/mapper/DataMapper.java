@@ -124,30 +124,54 @@ public class DataMapper implements RowMapper<Object> {
 
     private matrikel mapMatrikel(ResultSet rs, StatementContext ctx) throws SQLException {
         matrikel data = new matrikel();
-        // Return strings as numbers
+        // Return strings as integers
         List<String> intColumns  = new ArrayList<String>(3);
         intColumns.add("ejerlavskode");
         intColumns.add("jordstykke_id");
         intColumns.add("bfenummer");
+        // Return strings as doubles
+        List<String> doubleColumns  = new ArrayList<String>(2);
+        doubleColumns.add("centroid_x");
+        doubleColumns.add("centroid_y");
 
-        for (int i = 1; i <= meta.getColumnCount(); i++)
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
             if (intColumns.contains(meta.getColumnName(i))) {
                 data.add(meta.getColumnName(i), rs.getInt(i));
             }
-            else if (meta.getColumnName(i).equals("centroid_x") || meta.getColumnName(i).equals("centroid_y")) {
+            else if (doubleColumns.contains(meta.getColumnName(i))) {
                 data.add(meta.getColumnName(i), rs.getDouble(i));
             }
             else {
                 data.add(meta.getColumnName(i), mapColumn(i, rs));
             }
-
+        }
         return data;
     }
 
     private matrikel_udgaaet mapMatrikelUdgaaet(ResultSet rs, StatementContext ctx) throws SQLException {
         matrikel_udgaaet data = new matrikel_udgaaet();
-        for (int i = 1; i <= meta.getColumnCount(); i++)
-            data.add(meta.getColumnName(i), mapColumn(i, rs));
+        // Return strings as integers
+        List<String> intColumns  = new ArrayList<String>(3);
+        intColumns.add("ejerlavskode");
+        intColumns.add("jordstykke_id");
+        intColumns.add("bfenummer");
+        // Return strings as doubles
+        List<String> doubleColumns  = new ArrayList<String>(2);
+        doubleColumns.add("centroid_x");
+        doubleColumns.add("centroid_y");
+
+
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
+            if (intColumns.contains(meta.getColumnName(i))) {
+                data.add(meta.getColumnName(i), rs.getInt(i));
+            }
+            else if (doubleColumns.contains(meta.getColumnName(i))) {
+                data.add(meta.getColumnName(i), rs.getDouble(i));
+            }
+            else {
+                data.add(meta.getColumnName(i), mapColumn(i, rs));
+            }
+        }
         return data;
     }
 
@@ -160,8 +184,17 @@ public class DataMapper implements RowMapper<Object> {
 
     private opstillingskreds mapOpstillingskreds(ResultSet rs, StatementContext ctx) throws SQLException {
         opstillingskreds data = new opstillingskreds();
+        List<String> intColumns  = new ArrayList<String>(3);
+        intColumns.add("opstillingskredsnummer");
+        intColumns.add("valgkredsnummer");
+        intColumns.add("storkredsnummer");
         for (int i = 1; i <= meta.getColumnCount(); i++)
-            data.add(meta.getColumnName(i), mapColumn(i, rs));
+            if (intColumns.contains(meta.getColumnName(i))) {
+                data.add(meta.getColumnName(i), rs.getInt(i));
+            }
+            else {
+                data.add(meta.getColumnName(i), mapColumn(i, rs));
+            }
         return data;
     }
 
