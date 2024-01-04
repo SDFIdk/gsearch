@@ -14,10 +14,10 @@ ALTER TABLE basic_initialloading.kommune
 
 ALTER TABLE basic_initialloading.kommune
     ADD COLUMN textsearchable_unaccent_col tsvector
-    GENERATED ALWAYS AS (setweight(to_tsvector('functions.septima_fts_config', kommunekode), 'A') ||
-                         setweight(to_tsvector('functions.septima_fts_config', split_part(kommunenavn, ' ', 1)), 'B') ||
-                         setweight(to_tsvector('functions.septima_fts_config', split_part(kommunenavn, ' ', 2)), 'C') ||
-                         setweight(to_tsvector('functions.septima_fts_config', functions.split_and_endsubstring (kommunenavn, 3)), 'D'))
+    GENERATED ALWAYS AS (setweight(to_tsvector('functions.gsearch_fts_config', kommunekode), 'A') ||
+                         setweight(to_tsvector('functions.gsearch_fts_config', split_part(kommunenavn, ' ', 1)), 'B') ||
+                         setweight(to_tsvector('functions.gsearch_fts_config', split_part(kommunenavn, ' ', 2)), 'C') ||
+                         setweight(to_tsvector('functions.gsearch_fts_config', functions.split_and_endsubstring (kommunenavn, 3)), 'D'))
     STORED;
 
 ALTER TABLE basic_initialloading.kommune
