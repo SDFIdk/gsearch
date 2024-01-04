@@ -10,4 +10,8 @@ FROM
 
 CREATE INDEX ON dar.postnummer (id);
 
+CREATE INDEX ON dar.postnummer (navn);
+
+CREATE INDEX ON dar.postnummer (postnr);
+
 VACUUM ANALYZE dar.postnummer;
