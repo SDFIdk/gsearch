@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.region;
+DROP TABLE IF EXISTS basic_initialloading.region;
 
 WITH kommunenumre AS (
     SELECT
@@ -29,7 +29,7 @@ SELECT
     k.kommunekode,
     st_multi (st_union (r.geometri)) AS geometri,
     st_extent (r.geometri) AS bbox
-INTO basic.region
+INTO basic_initialloading.region
 FROM
     regioner r
     LEFT JOIN kommunenumre k ON r.regionskode = k.regionskode

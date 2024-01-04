@@ -1,6 +1,6 @@
 CREATE COLLATION IF NOT EXISTS matrikelnummer_udgaaet_collation (provider = icu, locale = 'en@colNumeric=yes');
 
-DROP TABLE IF EXISTS basic.matrikel_udgaaet;
+DROP TABLE IF EXISTS basic_initialloading.matrikel_udgaaet;
 
 WITH ejerlav_kommune_distinct AS (
 	SELECT distinct
@@ -115,7 +115,7 @@ SELECT DISTINCT
     e.textsearchable_plain_col_ejerlavsnavn,
     e.textsearchable_unaccent_col_ejerlavsnavn,
     e.textsearchable_phonetic_col_ejerlavsnavn,
-    st_multi (m.geometri) AS geometri INTO basic.matrikel_udgaaet
+    st_multi (m.geometri) AS geometri INTO basic_initialloading.matrikel_udgaaet
 FROM
     matrikelnumre m
     JOIN ejerlavsnavn_dups e ON e.ejerlavsnavn = m.ejerlavsnavn;

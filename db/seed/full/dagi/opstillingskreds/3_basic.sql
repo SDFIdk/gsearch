@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.opstillingskreds;
+DROP TABLE IF EXISTS basic_initialloading.opstillingskreds;
 
 WITH kommunenumre AS (
     SELECT
@@ -39,7 +39,7 @@ SELECT
     k.kommunekode,
     st_multi (st_union (o.geometri)) AS geometri,
     st_extent (o.geometri) AS bbox
-INTO basic.opstillingskreds
+INTO basic_initialloading.opstillingskreds
 FROM
     opstillingskredse o
 LEFT JOIN kommunenumre k ON o.opstillingskredsnummer = k.opstillingskredsnummer

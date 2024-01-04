@@ -1,8 +1,8 @@
 -- Create table with text combinations and number of occurences
 -- Helper to create data.
-DROP TABLE IF EXISTS basic.navngivenvej_count;
+DROP TABLE IF EXISTS basic_initialloading.navngivenvej_count;
 
-CREATE TABLE basic.navngivenvej_count (
+CREATE TABLE basic_initialloading.navngivenvej_count (
     tekstelement text,
     forekomster int,
     PRIMARY KEY (tekstelement)
@@ -12,12 +12,12 @@ CREATE TABLE basic.navngivenvej_count (
 WITH number_of_chars AS (
     SELECT generate_series(1,8) i
 )
-INSERT INTO basic.navngivenvej_count (tekstelement, forekomster)
+INSERT INTO basic_initialloading.navngivenvej_count (tekstelement, forekomster)
 SELECT
     substring(lower(vejnavn) FROM 1 FOR i),
     count(*)
 FROM
-    basic.navngivenvej, number_of_chars
+    basic_initialloading.navngivenvej, number_of_chars
 WHERE vejnavn IS NOT null
 GROUP BY
     substring(lower(vejnavn) FROM 1 FOR i)

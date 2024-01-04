@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.stednavn;
+DROP TABLE IF EXISTS basic_initialloading.stednavn;
 
 WITH stednavne AS (
     SELECT
@@ -84,7 +84,7 @@ SELECT
     subtype AS stednavn_subtype,
     kommunekode,
     st_multi (st_union (geometri)) AS geometri,
-    st_envelope (st_collect (geometri)) AS bbox INTO basic.stednavn
+    st_envelope (st_collect (geometri)) AS bbox INTO basic_initialloading.stednavn
 FROM
     agg_stednavne
 GROUP BY

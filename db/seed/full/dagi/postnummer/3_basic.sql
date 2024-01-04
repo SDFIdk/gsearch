@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.postnummer;
+DROP TABLE IF EXISTS basic_initialloading.postnummer;
 
 WITH kommunenumre AS (
     SELECT
@@ -27,7 +27,7 @@ SELECT
     k.kommunekode,
     st_multi (st_union (p.geometri)) AS geometri,
     st_extent (p.geometri) AS bbox
-INTO basic.postnummer
+INTO basic_initialloading.postnummer
 FROM
     postnumre p
     LEFT JOIN kommunenumre k ON p.postnummer = k.postnummer

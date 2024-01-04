@@ -1,7 +1,7 @@
-ALTER TABLE basic.stednavn
+ALTER TABLE basic_initialloading.stednavn
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
-ALTER TABLE basic.stednavn
+ALTER TABLE basic_initialloading.stednavn
     ADD COLUMN textsearchable_plain_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', split_part(visningstekst, ' ', 1)), 'A') ||
                          setweight(to_tsvector('simple', split_part(visningstekst, ' ', 2)), 'B') ||
@@ -9,10 +9,10 @@ ALTER TABLE basic.stednavn
                          functions.stednavne_uofficielle_tsvector (skrivemaade_uofficiel))
     STORED;
 
-ALTER TABLE basic.stednavn
+ALTER TABLE basic_initialloading.stednavn
     DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 
-ALTER TABLE basic.stednavn
+ALTER TABLE basic_initialloading.stednavn
     ADD COLUMN textsearchable_unaccent_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('functions.gsearch_fts_config', split_part(visningstekst, ' ', 1)), 'A') ||
                          setweight(to_tsvector('functions.gsearch_fts_config', split_part(visningstekst, ' ', 2)), 'B') ||
@@ -20,10 +20,10 @@ ALTER TABLE basic.stednavn
                          functions.stednavne_uofficielle_tsvector (skrivemaade_uofficiel))
     STORED;
 
-ALTER TABLE basic.stednavn
+ALTER TABLE basic_initialloading.stednavn
     DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 
-ALTER TABLE basic.stednavn
+ALTER TABLE basic_initialloading.stednavn
     ADD COLUMN textsearchable_phonetic_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', functions.fnfonetik (split_part(visningstekst_nohyphen, ' ', 1), 2)), 'A') ||
                          setweight(to_tsvector('simple', functions.fnfonetik (split_part(visningstekst_nohyphen, ' ', 2), 2)), 'B') ||

@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS basic.adresse;
+DROP TABLE IF EXISTS basic_initialloading.adresse;
 
 -- Gets the list of problem roadnames
--- SELECT DISTINCT a.vejnavn FROM basic.adresse a WHERE vejnavn ~ '\d';
+-- SELECT DISTINCT a.vejnavn FROM basic_initialloading.adresse a WHERE vejnavn ~ '\d';
 
 WITH adresser AS (
     SELECT
@@ -79,7 +79,7 @@ SELECT
             NULLIF ((substring(a.doerbetegnelse FROM '^[^0-9]*([0-9]+)')), '')::int
         END) AS sortering,
         st_multi (a.geometri) AS geometri,
-    st_multi (a.vejpunkt_geometri) AS vejpunkt_geometri INTO basic.adresse
+    st_multi (a.vejpunkt_geometri) AS vejpunkt_geometri INTO basic_initialloading.adresse
 FROM
     adresser a
-    JOIN basic.navngivenvej nv ON a.navngivenvej_id = nv.id;
+    JOIN basic_initialloading.navngivenvej nv ON a.navngivenvej_id = nv.id;

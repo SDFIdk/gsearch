@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.husnummer;
+DROP TABLE IF EXISTS basic_initialloading.husnummer;
 
 WITH husnumre AS (
     SELECT
@@ -40,7 +40,7 @@ SELECT
         substring(h.husnummertekst::text FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering,
         st_multi (h.geometri) AS geometri,
     st_multi (h.vejpunkt_geometri) AS vejpunkt_geometri
-INTO basic.husnummer
+INTO basic_initialloading.husnummer
 FROM
     husnumre h
-    JOIN basic.navngivenvej nv ON h.navngivenvej_id = nv.id;
+    JOIN basic_initialloading.navngivenvej nv ON h.navngivenvej_id = nv.id;

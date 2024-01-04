@@ -1,7 +1,7 @@
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     DROP COLUMN IF EXISTS textsearchable_plain_col_vej;
 
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     ADD COLUMN textsearchable_plain_col_vej tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', split_part(vejnavn, ' ', 1)), 'A') ||
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 2)), 'B') ||
@@ -10,10 +10,10 @@ ALTER TABLE basic.navngivenvej
     STORED;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     DROP COLUMN IF EXISTS textsearchable_unaccent_col_vej;
 
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     ADD COLUMN textsearchable_unaccent_col_vej tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('functions.gsearch_fts_config', split_part(vejnavn, ' ', 1)), 'A') ||
                          setweight(to_tsvector('functions.gsearch_fts_config', split_part(vejnavn, ' ', 2)), 'B') ||
@@ -23,10 +23,10 @@ ALTER TABLE basic.navngivenvej
     STORED;
 
 -- phonetic textsearchable column: christian -> kristian, k
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     DROP COLUMN IF EXISTS textsearchable_phonetic_col_vej;
 
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     ADD COLUMN textsearchable_phonetic_col_vej tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', functions.fnfonetik (split_part(vejnavn, ' ', 1), 2)), 'A') ||
                          setweight(to_tsvector('simple', functions.fnfonetik (split_part(vejnavn, ' ', 2), 2)), 'B') ||
@@ -35,10 +35,10 @@ ALTER TABLE basic.navngivenvej
 
     STORED;
 
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     ADD COLUMN textsearchable_plain_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', split_part(vejnavn, ' ', 1)), 'A') ||
                          setweight(to_tsvector('simple', split_part(vejnavn, ' ', 2)), 'B') ||
@@ -49,10 +49,10 @@ ALTER TABLE basic.navngivenvej
     STORED;
 
 -- unaccented textsearchable column: å -> aa, é -> e, ect.
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     ADD COLUMN textsearchable_unaccent_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('functions.gsearch_fts_config', split_part(vejnavn, ' ', 1)), 'A') ||
                          setweight(to_tsvector('functions.gsearch_fts_config', split_part(vejnavn, ' ', 2)), 'B') ||
@@ -64,10 +64,10 @@ ALTER TABLE basic.navngivenvej
     STORED;
 
 -- phonetic textsearchable column: christian -> kristian, k
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 
-ALTER TABLE basic.navngivenvej
+ALTER TABLE basic_initialloading.navngivenvej
     ADD COLUMN textsearchable_phonetic_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', functions.fnfonetik (split_part(vejnavn, ' ', 1), 2)), 'A') ||
                          setweight(to_tsvector('simple', functions.fnfonetik (split_part(vejnavn, ' ', 2), 2)), 'B') ||

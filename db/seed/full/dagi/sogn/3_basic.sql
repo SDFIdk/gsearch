@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.sogn;
+DROP TABLE IF EXISTS basic_initialloading.sogn;
 
 WITH kommunenumre AS (
     SELECT
@@ -29,7 +29,7 @@ SELECT
     k.kommunekode,
     st_multi (st_union (s.geometri)) AS geometri,
     st_extent (s.geometri) AS bbox
-INTO basic.sogn
+INTO basic_initialloading.sogn
 FROM
     sogne s
     LEFT JOIN kommunenumre k ON s.sognekode = k.sognekode

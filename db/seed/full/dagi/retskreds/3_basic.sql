@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.retskreds;
+DROP TABLE IF EXISTS basic_initialloading.retskreds;
 
 WITH kommunenumre AS (
     SELECT
@@ -32,7 +32,7 @@ SELECT
     k.kommunekode,
     st_multi (st_union (r.geometri)) AS geometri,
     st_extent (r.geometri) AS bbox
-INTO basic.retskreds
+INTO basic_initialloading.retskreds
 FROM
     retskredse r
     LEFT JOIN kommunenumre k ON r.retskredsnummer = k.retskredsnummer

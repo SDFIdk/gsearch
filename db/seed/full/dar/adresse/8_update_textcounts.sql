@@ -1,7 +1,7 @@
 -- Create table with text combinations and number of occurences
 -- Helper to create data.
-DROP TABLE IF EXISTS basic.adresse_count;
-CREATE TABLE basic.adresse_count (
+DROP TABLE IF EXISTS basic_initialloading.adresse_count;
+CREATE TABLE basic_initialloading.adresse_count (
     tekstelement text,
     forekomster int,
     PRIMARY KEY (tekstelement)
@@ -11,12 +11,12 @@ CREATE TABLE basic.adresse_count (
 WITH number_of_chars AS (
     SELECT generate_series(1,8) i
 )
-INSERT INTO basic.adresse_count (tekstelement, forekomster)
+INSERT INTO basic_initialloading.adresse_count (tekstelement, forekomster)
 SELECT
     substring(lower(vejnavn) FROM 1 FOR i),
     count(*)
 FROM
-    basic.adresse, number_of_chars
+    basic_initialloading.adresse, number_of_chars
 WHERE vejnavn IS NOT null
 GROUP BY
     substring(lower(vejnavn) FROM 1 FOR i)

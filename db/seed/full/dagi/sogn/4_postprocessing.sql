@@ -1,7 +1,7 @@
-ALTER TABLE basic.sogn
+ALTER TABLE basic_initialloading.sogn
     DROP COLUMN IF EXISTS textsearchable_plain_col;
 
-ALTER TABLE basic.sogn
+ALTER TABLE basic_initialloading.sogn
     ADD COLUMN textsearchable_plain_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', split_part(sognenavn, ' ', 1)), 'A') ||
                          setweight(to_tsvector('simple', split_part(sognenavn, ' ', 2)), 'B') ||
@@ -9,10 +9,10 @@ ALTER TABLE basic.sogn
                          setweight(to_tsvector('simple', functions.split_and_endsubstring (sognenavn, 4)), 'D'))
     STORED;
 
-ALTER TABLE basic.sogn
+ALTER TABLE basic_initialloading.sogn
     DROP COLUMN IF EXISTS textsearchable_unaccent_col;
 
-ALTER TABLE basic.sogn
+ALTER TABLE basic_initialloading.sogn
     ADD COLUMN textsearchable_unaccent_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('functions.gsearch_fts_config', split_part(sognenavn, ' ', 1)), 'A') ||
                          setweight(to_tsvector('functions.gsearch_fts_config', split_part(sognenavn, ' ', 2)), 'B') ||
@@ -20,10 +20,10 @@ ALTER TABLE basic.sogn
                          setweight(to_tsvector('functions.gsearch_fts_config', functions.split_and_endsubstring (sognenavn, 4)), 'D'))
     STORED;
 
-ALTER TABLE basic.sogn
+ALTER TABLE basic_initialloading.sogn
     DROP COLUMN IF EXISTS textsearchable_phonetic_col;
 
-ALTER TABLE basic.sogn
+ALTER TABLE basic_initialloading.sogn
     ADD COLUMN textsearchable_phonetic_col tsvector
     GENERATED ALWAYS AS (setweight(to_tsvector('simple', functions.fnfonetik (split_part(sognenavn, ' ', 1), 2)), 'A') ||
                          setweight(to_tsvector('simple', functions.fnfonetik (split_part(sognenavn, ' ', 2), 2)), 'B') ||
