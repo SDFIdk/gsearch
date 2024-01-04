@@ -5,10 +5,6 @@ CREATE TABLE dar.adressepunkt (
     geometri geometry
 );
 
-CREATE INDEX ON dar.adressepunkt (id);
-
-CREATE INDEX ON dar.adressepunkt USING gist (geometri);
-
 INSERT INTO dar.adressepunkt SELECT DISTINCT
     id_lokalid::uuid,
     geometri
@@ -16,5 +12,9 @@ FROM
     dar_fdw.adressepunkt
 ON CONFLICT
     DO NOTHING;
+
+CREATE INDEX ON dar.adressepunkt (id);
+
+CREATE INDEX ON dar.adressepunkt USING gist (geometri);
 
 VACUUM ANALYZE dar.adressepunkt;
