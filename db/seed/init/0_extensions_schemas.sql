@@ -36,6 +36,8 @@ DROP SCHEMA IF EXISTS dagi_500 CASCADE;
 
 DROP SCHEMA IF EXISTS basic CASCADE;
 
+DROP SCHEMA IF EXISTS basic_initialloading CASCADE;
+
 DROP SCHEMA IF EXISTS functions CASCADE;
 
 DROP SCHEMA IF EXISTS api CASCADE;
@@ -72,6 +74,8 @@ CREATE SCHEMA api;
 
 CREATE SCHEMA basic;
 
+CREATE SCHEMA basic_initialloading;
+
 CREATE SCHEMA functions;
 
 CREATE SCHEMA scratch;
@@ -101,6 +105,8 @@ COMMENT ON SCHEMA scratch IS 'Tables describing duplicate pk, orphan FK etc.';
 COMMENT ON SCHEMA api IS 'Public Schema for Gsearch';
 
 COMMENT ON SCHEMA basic IS 'Searchable tables';
+
+COMMENT ON SCHEMA basic_initialloading IS 'Schema for preprocessing data-tables before going to basic';
 
 COMMENT ON SCHEMA functions IS 'Various functions';
 
