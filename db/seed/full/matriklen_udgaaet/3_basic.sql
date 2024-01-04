@@ -115,7 +115,8 @@ SELECT DISTINCT
     e.textsearchable_plain_col_ejerlavsnavn,
     e.textsearchable_unaccent_col_ejerlavsnavn,
     e.textsearchable_phonetic_col_ejerlavsnavn,
-    st_multi (m.geometri) AS geometri INTO basic_initialloading.matrikel_udgaaet
+    st_multi (m.geometri) AS geometri 
+INTO basic_initialloading.matrikel_udgaaet
 FROM
     matrikelnumre m
     JOIN ejerlavsnavn_dups e ON e.ejerlavsnavn = m.ejerlavsnavn;

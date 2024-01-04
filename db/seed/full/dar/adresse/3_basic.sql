@@ -82,4 +82,4 @@ SELECT
     st_multi (a.vejpunkt_geometri) AS vejpunkt_geometri INTO basic_initialloading.adresse
 FROM
     adresser a
-    JOIN basic_initialloading.navngivenvej nv ON a.navngivenvej_id = nv.id;
+    JOIN basic.navngivenvej nv ON a.navngivenvej_id = nv.id;

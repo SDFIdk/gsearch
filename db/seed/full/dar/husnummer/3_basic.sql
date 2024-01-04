@@ -43,4 +43,4 @@ SELECT
 INTO basic_initialloading.husnummer
 FROM
     husnumre h
-    JOIN basic_initialloading.navngivenvej nv ON h.navngivenvej_id = nv.id;
+    JOIN basic.navngivenvej nv ON h.navngivenvej_id = nv.id;
