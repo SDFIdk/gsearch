@@ -67,7 +67,7 @@ BEGIN
         stmt = format(E'SELECT
                 id::text,
                 vejnavn::text,
-                supplerendebynavn::text
+                supplerendebynavn::text,
                 visningstekst::text,
                 postnummer,
                 postnummernavn,
