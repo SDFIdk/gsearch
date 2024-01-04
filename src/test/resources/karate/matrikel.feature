@@ -14,17 +14,17 @@ Feature: Gsearch matrikel test
         And match response contains only
         """
         {
-            "ejerlavskode": '#string',
+            "ejerlavskode": '#number',
             "ejerlavsnavn": '#string',
             "visningstekst": '#string',
             "geometri": '#(geometriSchema)',
-            "centroid_x": '#string',
-            "centroid_y": '#string',
+            "centroid_x": '#number',
+            "centroid_y": '#number',
             "matrikelnummer": '#string',
             "kommunenavn": "#string",
             "kommunekode": "#string",
-            "bfenummer": "#string",
-            "jordstykke_id": "#string"
+            "bfenummer": "#number",
+            "jordstykke_id": "#number"
         }
         """
 
@@ -134,3 +134,12 @@ Feature: Gsearch matrikel test
         When method GET
         Then status 200
         And match response == '#[100]'
+        
+    Scenario: Test string to double typecast of centroids
+        Then param q = '5787'
+
+        And param limit = '1'
+        When method GET
+        Then status 200
+        And match response.[*].centroid_x contains deep [723841.455]
+        And match response.[*].centroid_y contains deep [6179661.553]

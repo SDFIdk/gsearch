@@ -17,11 +17,11 @@ Feature: Gsearch opstillingskreds test
       "opstillingskredsnavn": '#string',
       "visningstekst": '#string',
       "bbox": '#(bboxSchema)',
-      "valgkredsnummer": '#string',
+      "valgkredsnummer": '#number',
       "kommunekode": '#string',
       "geometri": '#(geometriSchema)',
-      "opstillingskredsnummer": '#string',
-      "storkredsnummer": '#string',
+      "opstillingskredsnummer": '#number',
+      "storkredsnummer": '#number',
       "storkredsnavn": '#string'
     }
     """
