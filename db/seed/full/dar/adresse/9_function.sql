@@ -1,6 +1,6 @@
 DROP FUNCTION IF EXISTS api.adresse (text, text, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.adresse (input_tekst text, filters text, sortoptions integer, rowlimit integer, crs integer)
+CREATE OR REPLACE FUNCTION api.adresse (input_tekst text, filters text, sortoptions integer, rowlimit integer, srid integer)
     RETURNS SETOF api.adresse
     LANGUAGE plpgsql
     STABLE
@@ -97,7 +97,7 @@ BEGIN
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit, crs;
+        USING query_string, plain_query_string, rowlimit, srid;
     ELSE
         -- Execute and return the result
         stmt = format(E'SELECT
@@ -142,7 +142,7 @@ BEGIN
             LIMIT $3;', filters);
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit, crs;
+        USING query_string, plain_query_string, rowlimit, srid;
     END IF;
 END
 $function$;

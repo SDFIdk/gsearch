@@ -1,6 +1,6 @@
 DROP FUNCTION IF EXISTS api.kommune (text, jsonb, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.kommune(input_tekst text, filters text, sortoptions integer, rowlimit integer, crs int)
+CREATE OR REPLACE FUNCTION api.kommune(input_tekst text, filters text, sortoptions integer, rowlimit integer, srid int)
     RETURNS SETOF api.kommune
     LANGUAGE plpgsql
     STABLE
@@ -101,7 +101,7 @@ BEGIN
                 )::double precision desc,
             	kommunenavn
             LIMIT $4;', filters); RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, kommunekode_string, rowlimit, crs;
+        USING query_string, plain_query_string, kommunekode_string, rowlimit, srid;
 END
 $function$;
 

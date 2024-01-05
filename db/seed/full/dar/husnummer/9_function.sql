@@ -1,6 +1,6 @@
 DROP FUNCTION IF EXISTS api.husnummer (text, text, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.husnummer (input_tekst text, filters text, sortoptions integer, rowlimit integer, crs integer)
+CREATE OR REPLACE FUNCTION api.husnummer (input_tekst text, filters text, sortoptions integer, rowlimit integer, srid integer)
     RETURNS SETOF api.husnummer
     LANGUAGE plpgsql
     STABLE
@@ -101,7 +101,7 @@ BEGIN
 
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit, crs;
+        USING query_string, plain_query_string, rowlimit, srid;
 
     ELSE
         stmt = format(E'SELECT
@@ -141,7 +141,7 @@ BEGIN
                 visningstekst
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit, crs;
+        USING query_string, plain_query_string, rowlimit, srid;
     END IF;
 END
 $function$;
