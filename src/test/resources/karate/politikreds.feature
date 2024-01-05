@@ -16,7 +16,7 @@ Feature: Gsearch politikreds test
         {
             "visningstekst": '#string',
             "bbox": '#(bboxSchema)',
-            "politikredsnummer": '#string',
+            "politikredsnummer": '#number',
             "geometri": '#(geometriSchema)',
             "myndighedskode": '#string',
             "navn": "#string",

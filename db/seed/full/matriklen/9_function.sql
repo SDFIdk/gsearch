@@ -69,15 +69,15 @@ BEGIN
     THEN
         stmt = format(E'SELECT
                 ejerlavsnavn::text,
-                ejerlavskode::text,
+                ejerlavskode::int,
                 kommunenavn::text,
                 kommunekode::text,
                 matrikelnummer::text,
                 visningstekst::text,
-                jordstykke_id::text,
-                bfenummer::text,
-                ST_X((ST_DUMP(centroide_geometri)).geom)::text,
-                ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
+                jordstykke_id::int,
+                bfenummer::int,
+                ST_X((ST_DUMP(centroide_geometri)).geom)::numeric,
+                ST_Y((ST_DUMP(centroide_geometri)).geom)::numeric,
                 geometri
             FROM
                 basic.matrikel
@@ -92,15 +92,15 @@ BEGIN
         -- Execute and return the result
         stmt = format(E'SELECT
                 ejerlavsnavn::text,
-                ejerlavskode::text,
+                ejerlavskode::int,
                 kommunenavn::text,
                 kommunekode::text,
                 matrikelnummer::text,
                 visningstekst::text,
-                jordstykke_id::text,
-                bfenummer::text,
-                ST_X((ST_DUMP(centroide_geometri)).geom)::text,
-                ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
+                jordstykke_id::int,
+                bfenummer::int,
+                ST_X((ST_DUMP(centroide_geometri)).geom)::numeric,
+                ST_Y((ST_DUMP(centroide_geometri)).geom)::numeric,
                 geometri
             FROM
                 basic.matrikel

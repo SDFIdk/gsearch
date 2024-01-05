@@ -3,11 +3,11 @@ CREATE SCHEMA IF NOT EXISTS api;
 DROP TYPE IF EXISTS api.opstillingskreds CASCADE;
 
 CREATE TYPE api.opstillingskreds AS (
-    opstillingskredsnummer text,
+    opstillingskredsnummer int,
     opstillingskredsnavn text,
     visningstekst text,
-    valgkredsnummer text,
-    storkredsnummer text,
+    valgkredsnummer int,
+    storkredsnummer int,
     storkredsnavn text,
     kommunekode text,
     geometri geometry,

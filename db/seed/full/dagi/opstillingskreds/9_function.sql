@@ -49,11 +49,11 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-                opstillingskredsnummer::text,
+                opstillingskredsnummer::int,
                 opstillingskredsnavn::text,
                 visningstekst,
-                valgkredsnummer::text,
-                storkredsnummer::text,
+                valgkredsnummer::int,
+                storkredsnummer::int,
                 storkredsnavn::text,
                 kommunekode::text,
                 geometri,
