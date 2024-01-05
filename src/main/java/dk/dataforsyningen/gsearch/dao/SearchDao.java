@@ -22,7 +22,7 @@ public class SearchDao implements ISearchDao {
    * @param limit
    * @return
    */
-  public <T> List<T> getData(String q, String resource, String where, Integer limit) {
+  public <T> List<T> getData(String q, String resource, String where, Integer limit, Integer srid) {
     return (List<T>) jdbi.withHandle(handle -> {
       String sql = "select (api." + resource + "(:q, :where, 1, :limit)).*";
       // TODO: This gets register every time this method gets called
@@ -32,6 +32,7 @@ public class SearchDao implements ISearchDao {
           .bind("q", q)
           .bind("where", where)
           .bind("limit", limit)
+          .bind("srid", srid)
           .map(new DataMapper(resource))
           .list();
       return data;

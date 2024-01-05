@@ -42,11 +42,12 @@ public class SearchService implements ISearchService {
    * @param resource
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public <T> List<T> getResult(String q, String resource, Optional<String> filter, Integer limit)
+  public <T> List<T> getResult(String q, String resource, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException {
 
     String where = null;
@@ -65,10 +66,10 @@ public class SearchService implements ISearchService {
     }
 
     // NOTE: Hack correct SRID
-    String finalWhere = where == null ? null : where.replaceAll("', null", "', 25832");
+    String finalWhere = where == null ? null : where.replaceAll("', null", "', " + srid);
     logger.debug("finalWhere: " + finalWhere);
 
-    List<T> result = iSearchDao.getData(q, resource, finalWhere, limit);
+    List<T> result = iSearchDao.getData(q, resource, finalWhere, limit, srid);
 
     return result;
   }

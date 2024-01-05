@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
+  private List<Integer> allowedEPSGs = Arrays.asList(2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833);
+  private static final illigalEPSGMessage = "SRID is not allowed. Allowlist: 2197, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833"
   private final ISearchService iSearchService;
 
   @Autowired
@@ -48,6 +50,7 @@ public class Controller {
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -60,17 +63,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<adresse> result = iSearchService.getResult(q, "adresse", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<adresse> result = iSearchService.getResult(q, "adresse", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -83,17 +93,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<husnummer> result = iSearchService.getResult(q, "husnummer", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<husnummer> result = iSearchService.getResult(q, "husnummer", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -106,17 +123,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<kommune> result = iSearchService.getResult(q, "kommune", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<kommune> result = iSearchService.getResult(q, "kommune", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -129,17 +153,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<matrikel> result = iSearchService.getResult(q, "matrikel", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<matrikel> result = iSearchService.getResult(q, "matrikel", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -152,17 +183,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<matrikel_udgaaet> result = iSearchService.getResult(q, "matrikel_udgaaet", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<matrikel_udgaaet> result = iSearchService.getResult(q, "matrikel_udgaaet", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -175,17 +213,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<navngivenvej> result = iSearchService.getResult(q, "navngivenvej", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<navngivenvej> result = iSearchService.getResult(q, "navngivenvej", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -198,17 +243,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<opstillingskreds> result = iSearchService.getResult(q, "opstillingskreds", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<opstillingskreds> result = iSearchService.getResult(q, "opstillingskreds", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -221,17 +273,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<politikreds> result = iSearchService.getResult(q, "politikreds", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<politikreds> result = iSearchService.getResult(q, "politikreds", filter, limit,  srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -244,17 +303,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<postnummer> result = iSearchService.getResult(q, "postnummer", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<postnummer> result = iSearchService.getResult(q, "postnummer", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -267,17 +333,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<region> result = iSearchService.getResult(q, "region", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<region> result = iSearchService.getResult(q, "region", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -290,17 +363,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<retskreds> result = iSearchService.getResult(q, "retskreds", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<retskreds> result = iSearchService.getResult(q, "retskreds", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -316,17 +396,24 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<sogn> result = iSearchService.getResult(q, "sogn", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<sogn> result = iSearchService.getResult(q, "sogn", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 
   /**
    * @param q
    * @param filter
    * @param limit
+   * @param srid
    * @return
    * @throws CQLException
    * @throws FilterToSQLException
@@ -342,10 +429,16 @@ public class Controller {
       @Parameter(description = "Angives med ECQL-text. Er kun kompatibelt med én resource angivet i requesten. Mulige atribut filtreringer er forskellige fra resource til resource. Se de mulige atribut filteringer i 'Schemas'. ECQL Dokumentation: https://docs.geoserver.org/stable/en/user/filter/ecql_reference.html#ecql-expr. Vejledning ECQL: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html")
       @RequestParam(required = false) Optional<String> filter,
       @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
-      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit)
+      @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
+      @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+      @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid)
       throws FilterToSQLException, CQLException {
 
-    List<stednavn> result = iSearchService.getResult(q, "stednavn", filter, limit);
-    return result;
+    if (allowedEPSGs.contains(srid)) {
+        List<stednavn> result = iSearchService.getResult(q, "stednavn", filter, limit, srid);
+
+        return result;
+    }
+    throw new IllegalArgumentException(illigalEPSGMessage);
   }
 }
