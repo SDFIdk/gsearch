@@ -11,6 +11,7 @@ CREATE TYPE api.adresse AS (
     husnummer text,
     etagebetegnelse text,
     doerbetegnelse text,
+    supplerendebynavn text,
     postnummer text,
     postnummernavn text,
     visningstekst text,
@@ -35,6 +36,8 @@ COMMENT ON COLUMN api.adresse.husnummer IS 'Husnummer på adresse';
 COMMENT ON COLUMN api.adresse.etagebetegnelse IS 'Etagebetegnelse for adresse';
 
 COMMENT ON COLUMN api.adresse.doerbetegnelse IS 'Dørbetegnelse for adresse';
+
+COMMENT ON COLUMN api.navngivenvej.supplerendebynavn IS 'Supplerende bynavn(e) for adresse';
 
 COMMENT ON COLUMN api.adresse.postnummer IS 'Postnummer på adresse';
 

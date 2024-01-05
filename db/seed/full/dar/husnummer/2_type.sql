@@ -9,6 +9,7 @@ CREATE TYPE api.husnummer AS (
     vejkode text,
     vejnavn text,
     husnummertekst text,
+    supplerendebynavn text,
     postnummer text,
     postnummernavn text,
     visningstekst text,
@@ -30,7 +31,8 @@ COMMENT ON COLUMN api.husnummer.vejnavn IS 'Vejnavn for husnummer';
 
 COMMENT ON COLUMN api.husnummer.husnummertekst IS 'Husnummertekst evt. med bogstavsbetegnelse';
 
-COMMENT ON COLUMN api.husnummer.postnummer IS 'Postnummer for et husnummer';
+COMMENT ON COLUMN api.husnummer.supplerendebynavn IS 'Supplerende bynavn(e) for husnummer';
+
 COMMENT ON COLUMN api.husnummer.postnummer IS 'Postnummer for husnummer';
 
 COMMENT ON COLUMN api.husnummer.postnummernavn IS 'Postnummernavn for husnummer';

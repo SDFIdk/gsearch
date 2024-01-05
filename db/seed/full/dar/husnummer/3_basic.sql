@@ -7,6 +7,7 @@ WITH husnumre AS (
         h.husnummertekst,
         h.navngivenvej_id,
         n.vejnavn,
+        sb.navn AS supplerendebynavn,
         h.vejkode,
         h.kommunekode,
         k.navn AS kommunenavn,
@@ -16,6 +17,7 @@ WITH husnumre AS (
         st_force2d (COALESCE(ap2.geometri)) AS vejpunkt_geometri
     FROM
         dar.husnummer h
+        LEFT JOIN dar.supplerendebynavn sb ON sb.id = h.supplerendebynavn_id::uuid
         JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
         JOIN dar.postnummer p ON p.id = h.postnummer_id::uuid
         JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt_id
@@ -27,6 +29,7 @@ SELECT
     h.visningstekst,
     h.husnummertekst,
     h.vejnavn,
+    h.supplerendebynavn,
     h.vejkode,
     h.kommunekode,
     h.kommunenavn,

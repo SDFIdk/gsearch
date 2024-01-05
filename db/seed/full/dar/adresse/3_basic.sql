@@ -13,6 +13,7 @@ WITH adresser AS (
         h.navngivenvej_id,
         h.sortering AS husnummer_sortering,
         n.vejnavn,
+        sb.navn AS supplerendebynavn,
         h.vejkode,
         h.kommunekode,
         k.navn AS kommunenavn,
@@ -31,11 +32,12 @@ WITH adresser AS (
                 FROM '[0-9]*([A-Z])') NULLS FIRST) AS sortering
             FROM
                 dar.husnummer) h ON a.husnummer_id = h.id::uuid
-            JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
-            JOIN dar.postnummer p ON p.id = h.postnummer_id::uuid
-            JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt_id
-            JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt_id
-            JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
+        JOIN dar.navngivenvej n ON n.id = h.navngivenvej_id::uuid
+        LEFT JOIN dar.supplerendebynavn sb ON sb.id = h.supplerendebynavn_id::uuid
+        JOIN dar.postnummer p ON p.id = h.postnummer_id::uuid
+        JOIN dar.adressepunkt ap ON ap.id = h.adgangspunkt_id
+        JOIN dar.adressepunkt ap2 ON ap2.id = h.vejpunkt_id
+        JOIN dagi_500.kommuneinddeling k ON k.kommunekode = h.kommunekode
 )
 SELECT
     a.id,
@@ -45,6 +47,7 @@ SELECT
     coalesce(a.husnummer::text, ''::text) AS husnummer,
     coalesce(a.etagebetegnelse, ''::text) AS etagebetegnelse,
     coalesce(a.doerbetegnelse, ''::text) AS doerbetegnelse,
+    a.supplerendebynavn,
     a.postnummer,
     a.postnummernavn,
     a.kommunekode,
@@ -54,6 +57,7 @@ SELECT
     nv.textsearchable_phonetic_col_vej,
     a.navngivenvej_id,
     a.husnummer_sortering,
+    -- Er 1 for alle rækker, men bruges i functionen, men det virker ikke relevant når alle har 1.
     ROW_NUMBER() OVER (PARTITION BY a.id ORDER BY CASE lower(a.etagebetegnelse)
         WHEN '' THEN
             -10
@@ -79,7 +83,8 @@ SELECT
             NULLIF ((substring(a.doerbetegnelse FROM '^[^0-9]*([0-9]+)')), '')::int
         END) AS sortering,
         st_multi (a.geometri) AS geometri,
-    st_multi (a.vejpunkt_geometri) AS vejpunkt_geometri INTO basic.adresse
+    st_multi (a.vejpunkt_geometri) AS vejpunkt_geometri
+INTO basic.adresse
 FROM
     adresser a
     JOIN basic.navngivenvej nv ON a.navngivenvej_id = nv.id;
