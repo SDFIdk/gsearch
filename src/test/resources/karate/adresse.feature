@@ -162,3 +162,23 @@ Feature: Gsearch adresse test
         When method GET
         Then status 200
         And match response == '#[10]'
+
+    Scenario: Search with supplerende bynavn returns the same as without supplerende bynavn
+        Then param q = 'Småkærvej 36, st., Hejsager, 6100 Haderslev'
+
+        When method GET
+        And retry until responseStatus == 200
+        And match response == '#[1]'
+        And match response.[0].visningstekst == "Småkærvej 36, st., Hejsager, 6100 Haderslev"
+
+        Then param q = 'Småkærvej 36, st., Hejsager, 6100 Haderslev'
+
+        When method GET
+        Then status 200
+        And def secondresponse = response
+        And match secondresponse == '#[1]'
+
+        Then match response == secondresponse
+        And match response.[0].visningstekst == "Småkærvej 36, st., Hejsager, 6100 Haderslev"
+
+

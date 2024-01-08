@@ -122,3 +122,11 @@ Feature: Gsearch navngivenvej test
         When method GET
         Then status 200
         And match response == '#[2]'
+
+    Scenario: Search with supplerende bynavn returns the same as without supplerende bynavn
+        Then param q = 'Haderslevvej 6100'
+
+        When method GET
+        And retry until responseStatus == 200
+        And match response == '#[13]'
+        And match response.[0].visningstekst == "Haderslevvej (6100 Haderslev, 6500 Vojens)"
