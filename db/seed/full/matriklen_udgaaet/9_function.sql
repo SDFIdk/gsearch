@@ -79,9 +79,12 @@ BEGIN
                 visningstekst::text,
                 jordstykke_id::text,
                 bfenummer::text,
-                ST_X((ST_DUMP(centroide_geometri)).geom)::text,
-                ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
-                ST_TRANSFORM(geometri, $4),
+                CASE WHEN $4 = 25832 THEN centroid_x
+                ELSE ST_TRANSFORM(centroid_x, $4) END,
+                CASE WHEN $4 = 25832 THEN centroid_y
+                ELSE ST_TRANSFORM(centroid_y, $4) END,
+                CASE WHEN $4 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $4) END
             FROM
                 basic.matrikel_udgaaet
             WHERE
@@ -102,9 +105,12 @@ BEGIN
                 visningstekst::text,
                 jordstykke_id::text,
                 bfenummer::text,
-                ST_X((ST_DUMP(centroide_geometri)).geom)::text,
-                ST_Y((ST_DUMP(centroide_geometri)).geom)::text,
-                ST_TRANSFORM(geometri, $4),
+                CASE WHEN $4 = 25832 THEN centroid_x
+                ELSE ST_TRANSFORM(centroid_x, $4) END,
+                CASE WHEN $4 = 25832 THEN centroid_y
+                ELSE ST_TRANSFORM(centroid_y, $4) END,
+                CASE WHEN $4 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $4) END
             FROM
                 basic.matrikel_udgaaet
             WHERE (

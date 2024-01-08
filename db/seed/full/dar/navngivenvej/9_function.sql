@@ -71,8 +71,8 @@ BEGIN
                 postnummer,
                 postnummernavn,
                 kommunekode,
-                ST_TRANSFORM(geometri, $4),
-                bbox
+                CASE WHEN $4 = 25832 THEN geometri ELSE ST_TRANSFORM(geometri, $4) END,
+                bbox::geometry
             FROM
                 basic.navngivenvej
             WHERE
@@ -92,7 +92,7 @@ BEGIN
                 postnummernavn,
                 kommunekode,
                 ST_TRANSFORM(geometri, $4),
-                bbox
+                bbox::geometry
             FROM
                 basic.navngivenvej
             WHERE (

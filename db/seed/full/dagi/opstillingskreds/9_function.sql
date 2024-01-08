@@ -56,7 +56,7 @@ BEGIN
                 storkredsnummer::text,
                 storkredsnavn::text,
                 kommunekode::text,
-                ST_TRANSFORM(geometri, $4),
+                CASE WHEN $4 = 25832 THEN geometri ELSE ST_TRANSFORM(geometri, $4) END,
                 bbox::geometry
             FROM
                 basic.opstillingskreds
