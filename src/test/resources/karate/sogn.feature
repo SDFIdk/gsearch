@@ -95,7 +95,7 @@ Feature: Gsearch sogn test
   
         When method GET
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/2196'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/2196>'
         And match response == '#[1]'
   
     Scenario: Test 2197 crs response
@@ -104,7 +104,7 @@ Feature: Gsearch sogn test
         And param srid = 2197
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/2197'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/2197>'
         And match response == '#[1]'
   
     Scenario: Test 2198 crs response
@@ -114,7 +114,7 @@ Feature: Gsearch sogn test
   
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/2198'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/2198>'
         And match response == '#[1]'
   
     Scenario: Test 3857 crs response
@@ -124,7 +124,7 @@ Feature: Gsearch sogn test
   
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/3857'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/3857>'
         And match response == '#[1]'
   
     Scenario: Test 4093 crs response
@@ -134,7 +134,7 @@ Feature: Gsearch sogn test
   
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/4093'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/4093>'
         And match response == '#[1]'
   
     Scenario: Test 4094 crs response
@@ -144,7 +144,7 @@ Feature: Gsearch sogn test
   
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/4094'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/4094>'
         And match response == '#[1]'
   
     Scenario: Test 4095 crs response
@@ -154,7 +154,7 @@ Feature: Gsearch sogn test
         
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/4095'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/4095>'
         And match response == '#[1]'
   
     Scenario: Test 4096 crs response
@@ -164,7 +164,7 @@ Feature: Gsearch sogn test
   
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/4096'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/4096>'
         And match response == '#[1]'
   
     Scenario: Test 4326 crs response
@@ -174,7 +174,7 @@ Feature: Gsearch sogn test
   
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/4396'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/4396>'
         And match response == '#[100]'
   
     Scenario: Test 25832 crs response
@@ -184,7 +184,7 @@ Feature: Gsearch sogn test
   
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/25832 '
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/25832>'
         And match response == '#[1]'
   
     Scenario: Test 25833 crs response
@@ -194,5 +194,5 @@ Feature: Gsearch sogn test
   
         When method get
         Then status 200
-        And match header Content-Crs == 'https://www.opengis.net/def/crs/EPSG/0/25833 '
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/25833>'
         And match response == '#[1]'
