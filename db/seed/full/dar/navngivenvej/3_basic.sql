@@ -14,7 +14,14 @@ postnumre AS (
     SELECT
         n.id,
         string_agg(DISTINCT p.postnr, ',') AS postnummer,
-        string_agg(DISTINCT p.navn, ',') AS postnummernavn
+        string_agg(DISTINCT p.navn, ',') AS postnummernavn,
+        string_agg (
+                p.postnr || ' ' || p.navn,
+                ', '
+                ORDER BY
+                    p.postnr,
+                    p.navn
+        ) supplementtext
     FROM
         dar.navngivenvej n
         JOIN dar.navngivenvejpostnummer nvp ON (nvp.navngivenvej_id = n.id)
@@ -48,7 +55,7 @@ vejnavne AS (
 )
     --SELECT v.vejnavn || '(' || v.postnummer[1] || ' - ' || v.postnummer[-1] || ')' AS visningstekst,
 SELECT
-    v.vejnavn AS visningstekst,
+    v.vejnavn || ' (' || p.supplementtext || ')' AS visningstekst,
     v.id,
     coalesce(v.vejnavn, '') AS vejnavn,
     sbn.supplerendebynavn,
@@ -69,4 +76,5 @@ GROUP BY
     sbn.supplerendebynavn,
     p.postnummer,
     p.postnummernavn,
+    p.supplementtext,
     k.kommunekode;
