@@ -207,7 +207,7 @@ Feature: Gsearch kommune test
   
         When method get
         Then status 200
-        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/4396>'
+        And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/4326>'
         And match response == '#[100]'
   
     Scenario: Test 25832 crs response
