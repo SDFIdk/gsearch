@@ -30,7 +30,7 @@ COMMENT ON COLUMN api.matrikel_udgaaet.matrikelnummer IS 'Matrikelnummer udgået
 
 COMMENT ON COLUMN api.matrikel_udgaaet.visningstekst IS 'Præsentationsform for et udgået matrikel';
 
-COMMENT ON COLUMN api.matrikel.jordstykke_id IS 'Jordstykke lokalid for udgået matrikel';
+COMMENT ON COLUMN api.matrikel_udgaaet.jordstykke_id IS 'Jordstykke lokalid for udgået matrikel';
 
 COMMENT ON COLUMN api.matrikel_udgaaet.bfenummer IS 'BFE-nummer for udgået matrikl';
 
