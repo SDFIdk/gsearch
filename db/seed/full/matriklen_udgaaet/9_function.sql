@@ -79,10 +79,10 @@ BEGIN
                 visningstekst::text,
                 jordstykke_id::text,
                 bfenummer::text,
-                CASE WHEN $4 = 25832 THEN centroid_x
-                ELSE ST_TRANSFORM(centroid_x, $4) END,
-                CASE WHEN $4 = 25832 THEN centroid_y
-                ELSE ST_TRANSFORM(centroid_y, $4) END,
+                CASE WHEN $4 = 25832 THEN ST_X((ST_DUMP(centroide_geometri)).geom)::text
+                ELSE ST_X((ST_DUMP(ST_TRANSFORM(centroide_geometri, $4))).geom)::text END,
+                CASE WHEN $4 = 25832 THEN ST_Y((ST_DUMP(centroide_geometri)).geom)::text
+                ELSE ST_Y((ST_DUMP(ST_TRANSFORM(centroide_geometri, $4))).geom)::text END,
                 CASE WHEN $4 = 25832 THEN geometri
                 ELSE ST_TRANSFORM(geometri, $4) END
             FROM
@@ -105,10 +105,10 @@ BEGIN
                 visningstekst::text,
                 jordstykke_id::text,
                 bfenummer::text,
-                CASE WHEN $4 = 25832 THEN centroid_x
-                ELSE ST_TRANSFORM(centroid_x, $4) END,
-                CASE WHEN $4 = 25832 THEN centroid_y
-                ELSE ST_TRANSFORM(centroid_y, $4) END,
+                CASE WHEN $4 = 25832 THEN ST_X((ST_DUMP(centroide_geometri)).geom)::text
+                ELSE ST_X((ST_DUMP(ST_TRANSFORM(centroide_geometri, $4))).geom)::text END,
+                CASE WHEN $4 = 25832 THEN ST_Y((ST_DUMP(centroide_geometri)).geom)::text
+                ELSE ST_Y((ST_DUMP(ST_TRANSFORM(centroide_geometri, $4))).geom)::text END,
                 CASE WHEN $4 = 25832 THEN geometri
                 ELSE ST_TRANSFORM(geometri, $4) END
             FROM
