@@ -79,10 +79,10 @@ BEGIN
                 visningstekst,
                 ergadepostnummer,
                 kommunekode::text,
-                CASE WHEN $4 = 25832 THEN geometri
-                ELSE ST_TRANSFORM(geometri, $4) END,
-                CASE WHEN $4 = 25832 THEN bbox::geometry
-                ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $4))::geometry END
+                CASE WHEN $5 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $5) END,
+                CASE WHEN $5 = 25832 THEN bbox::geometry
+                ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $5))::geometry END
             FROM
                 basic.postnummer
             WHERE (

@@ -1,6 +1,6 @@
 DROP FUNCTION IF EXISTS api.kommune (text, jsonb, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.kommune(input_tekst text, filters text, sortoptions integer, rowlimit integer, srid int)
+CREATE OR REPLACE FUNCTION api.kommune(input_tekst text, filters text, sortoptions integer, rowlimit integer, srid integer)
     RETURNS SETOF api.kommune
     LANGUAGE plpgsql
     STABLE
@@ -76,10 +76,10 @@ BEGIN
                 kommunekode::text,
 				kommunenavn::text,
 				visningstekst,
-                CASE WHEN $4 = 25832 THEN geometri
-                ELSE ST_TRANSFORM(geometri, $4) END,
-                CASE WHEN $4 = 25832 THEN bbox::geometry
-                ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $4))::geometry END
+                CASE WHEN $5 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $5) END,
+                CASE WHEN $5 = 25832 THEN bbox::geometry
+                ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $5))::geometry END
             FROM
                 basic.kommune
             WHERE (
