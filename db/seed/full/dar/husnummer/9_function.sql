@@ -85,8 +85,10 @@ BEGIN
                 postnummer::text,
                 postnummernavn::text,
                 visningstekst::text,
-                CASE WHEN $4 = 25832 THEN geometri ELSE ST_TRANSFORM(geometri, $4) END,
-                CASE WHEN $4 = 25832 THEN vejpunkt_geometri ELSE ST_TRANSFORM(vejpunkt_geometri, $4) END
+                CASE WHEN $4 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $4) END,
+                CASE WHEN $4 = 25832 THEN vejpunkt_geometri
+                ELSE ST_TRANSFORM(vejpunkt_geometri, $4) END
             FROM
                 basic.husnummer
             WHERE

@@ -52,8 +52,10 @@ BEGIN
                 sognenavn::text,
                 visningstekst,
                 kommunekode::text,
-                CASE WHEN $4 = 25832 THEN geometri ELSE ST_TRANSFORM(geometri, $4) END,
-                bbox::geometry
+                CASE WHEN $4 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $4) END,
+                CASE WHEN $4 = 25832 THEN bbox::geometry
+                ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $4))::geometry END
             FROM
                 basic.sogn
             WHERE (
