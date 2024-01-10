@@ -39,10 +39,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
-    private final List<Integer> allowedEPSGs = Arrays.asList(2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833);
     private static final String illegalMessage = "SRID is not allowed. Allow list: 2197, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833";
 
-    Map<Integer, String> crsLinks = Map.ofEntries(
+    private static final Map<Integer, String> epsgMap = Map.ofEntries(
         new AbstractMap.SimpleEntry<Integer, String>(2196, "https://www.opengis.net/def/crs/EPSG/0/2196"),
         new AbstractMap.SimpleEntry<Integer, String>(2197, "https://www.opengis.net/def/crs/EPSG/0/2197"),
         new AbstractMap.SimpleEntry<Integer, String>(2198, "https://www.opengis.net/def/crs/EPSG/0/2198"),
@@ -86,10 +85,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<adresse> result = iSearchService.getResult(q, "adresse", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -120,10 +119,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<husnummer> result = iSearchService.getResult(q, "husnummer", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -154,10 +153,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<kommune> result = iSearchService.getResult(q, "kommune", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -188,10 +187,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<matrikel> result = iSearchService.getResult(q, "matrikel", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -222,10 +221,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<matrikel_udgaaet> result = iSearchService.getResult(q, "matrikel_udgaaet", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -256,10 +255,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<navngivenvej> result = iSearchService.getResult(q, "navngivenvej", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -290,10 +289,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<opstillingskreds> result = iSearchService.getResult(q, "opstillingskreds", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -324,10 +323,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<politikreds> result = iSearchService.getResult(q, "politikreds", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -358,10 +357,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<postnummer> result = iSearchService.getResult(q, "postnummer", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -392,10 +391,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<region> result = iSearchService.getResult(q, "region", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -426,10 +425,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<retskreds> result = iSearchService.getResult(q, "retskreds", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -463,10 +462,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<sogn> result = iSearchService.getResult(q, "sogn", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
@@ -500,10 +499,10 @@ public class Controller {
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
-        if (allowedEPSGs.contains(srid)) {
+        if (epsgMap.containsKey(srid)) {
             List<stednavn> result = iSearchService.getResult(q, "stednavn", filter, limit, srid);
 
-            response.addHeader("Content-Crs", "<" + crsLinks.get(srid) + ">");
+            response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
             return result;
         }
