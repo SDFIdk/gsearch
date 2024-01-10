@@ -19,6 +19,7 @@ Feature: Gsearch husnummer test
             "geometri": '#(geometriSchema)',
             "husnummertekst": '#string',
             "vejnavn": '#string',
+            "supplerendebynavn": '#string',
             "kommunekode": '#string',
             "kommunenavn": '#string',
             "postnummer": '#string',

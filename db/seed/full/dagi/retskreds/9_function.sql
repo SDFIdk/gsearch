@@ -48,7 +48,7 @@ BEGIN
         tokens INTO plain_query_string;
     -- Execute and return the result
     stmt = format(E'SELECT
-                retskredsnummer::text,
+                retskredsnummer::int,
                 retkredsnavn::text,
                 visningstekst::text,
                 myndighedskode::text,

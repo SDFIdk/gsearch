@@ -8,6 +8,10 @@ SELECT
 FROM
     dar_fdw.navngivenvejpostnummer;
 
+CREATE INDEX ON dar.navngivenvejpostnummer (navngivenvej_id);
+
+CREATE INDEX ON dar.navngivenvejpostnummer (postnummer_id);
+
 CREATE INDEX ON dar.navngivenvejpostnummer (navngivenvej_id, postnummer_id);
 
 VACUUM ANALYZE dar.navngivenvejpostnummer;
