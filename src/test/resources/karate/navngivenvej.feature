@@ -231,3 +231,11 @@ Feature: Gsearch navngivenvej test
         Then status 200
         And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/25833>'
         And match response == '#[1]'
+
+    Scenario: Search with supplerende bynavn returns the same as without supplerende bynavn
+        Then param q = 'Haderslevvej 6100'
+
+        When method GET
+        And retry until responseStatus == 200
+        And match response == '#[13]'
+        And match response.[0].visningstekst == "Haderslevvej (6100 Haderslev, 6500 Vojens)"
