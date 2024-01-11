@@ -41,7 +41,7 @@ public class OpenApiConfig {
     return new OpenAPI()
         .info(new Info()
             .title("Gsearch")
-            .version("1.0.0"))
+            .version("2.0.0"))
         // AddSecurityItem section applies created scheme/paths globally
         .addSecurityItem(new SecurityRequirement().addList(securitySchemeNameHeader))
         .addSecurityItem(new SecurityRequirement().addList(securitySchemeNameQuery))
