@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS api.kommune (text, jsonb, int, int);
+DROP FUNCTION IF EXISTS api.kommune (text, jsonb, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.kommune(input_tekst text, filters text, sortoptions integer, rowlimit integer)
+CREATE OR REPLACE FUNCTION api.kommune(input_tekst text, filters text, sortoptions integer, rowlimit integer, srid integer)
     RETURNS SETOF api.kommune
     LANGUAGE plpgsql
     STABLE
@@ -76,8 +76,10 @@ BEGIN
                 kommunekode::text,
 				kommunenavn::text,
 				visningstekst,
-				geometri,
-				bbox::geometry
+                CASE WHEN $5 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $5) END,
+                CASE WHEN $5 = 25832 THEN bbox::geometry
+                ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $5))::geometry END
             FROM
                 basic.kommune
             WHERE (
@@ -101,20 +103,6 @@ BEGIN
                 )::double precision desc,
             	kommunenavn
             LIMIT $4;', filters); RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, kommunekode_string, rowlimit;
+        USING query_string, plain_query_string, kommunekode_string, rowlimit, srid;
 END
 $function$;
-
-
--- Test cases:
-/*
- SELECT (api.kommune('køb',NULL, 1, 100)).*;
- SELECT (api.kommune('ålborg',NULL, 1, 100)).*;
- SELECT (api.kommune('nord',NULL, 1, 100)).*;
- SELECT (api.kommune('0101 fred',NULL, 1, 100)).*;
- SELECT(api.kommune('a 1 a',NULL,1,100)).*;
- SELECT(api.kommune('Lyngby-Tårbæk 0851',NULL,1,100)).*;
- SELECT(api.kommune('0851 Lyngby',NULL,1,100)).*;
- SELECT(api.kommune('0760 0730 0840 0329 0265 0230 0175',NULL,1,100)).*;
- */
-

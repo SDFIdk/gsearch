@@ -6,6 +6,6 @@ import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.filter.text.cql2.CQLException;
 
 public interface ISearchService {
-  <T> List<T> getResult(String q, String resource, Optional<String> filter, Integer limit)
+  <T> List<T> getResult(String q, String resource, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException;
 }

@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS api.postnummer (text, jsonb, int, int);
+DROP FUNCTION IF EXISTS api.postnummer (text, jsonb, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.postnummer (input_tekst text, filters text, sortoptions integer, rowlimit integer)
+CREATE OR REPLACE FUNCTION api.postnummer (input_tekst text, filters text, sortoptions integer, rowlimit integer, srid integer)
     RETURNS SETOF api.postnummer
     LANGUAGE plpgsql
     STABLE
@@ -79,8 +79,10 @@ BEGIN
                 visningstekst,
                 ergadepostnummer,
                 kommunekode::text,
-                geometri,
-                bbox::geometry
+                CASE WHEN $5 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $5) END,
+                CASE WHEN $5 = 25832 THEN bbox::geometry
+                ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $5))::geometry END
             FROM
                 basic.postnummer
             WHERE (
@@ -105,6 +107,6 @@ BEGIN
                 postnummernavn
             LIMIT $4 ;', filters);
     RETURN QUERY EXECUTE stmt
-    USING query_string, plain_query_string, postnummer_string, rowlimit;
+    USING query_string, plain_query_string, postnummer_string, rowlimit, srid;
 END
 $function$;

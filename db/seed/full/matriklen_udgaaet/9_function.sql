@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS api.matrikel_udgaaet(text, text, int, int);
+DROP FUNCTION IF EXISTS api.matrikel_udgaaet(text, text, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.matrikel_udgaaet(input_tekst text, filters text, sortoptions int, rowlimit int)
+CREATE OR REPLACE FUNCTION api.matrikel_udgaaet(input_tekst text, filters text, sortoptions integer, rowlimit integer, srid integer)
     RETURNS SETOF api.matrikel_udgaaet
     LANGUAGE plpgsql
     STABLE
@@ -79,9 +79,12 @@ BEGIN
                 visningstekst::text,
                 jordstykke_id::int,
                 bfenummer::int,
-                ST_X((ST_DUMP(centroide_geometri)).geom)::numeric,
-                ST_Y((ST_DUMP(centroide_geometri)).geom)::numeric,
-                geometri
+                CASE WHEN $4 = 25832 THEN ST_X(ST_GEOMETRYN(centroide_geometri,1))::numeric 
+                ELSE ST_X(ST_transform(ST_GEOMETRYN(centroide_geometri,1), $4))::numeric END,
+                CASE WHEN $4 = 25832 then ST_Y(ST_GEOMETRYN(centroide_geometri,1))::numeric 
+                ELSE ST_Y(ST_transform(ST_GeometryN(centroide_geometri,1),$4))::numeric END,
+                CASE WHEN $4 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $4) END
             FROM
                 basic.matrikel_udgaaet
             WHERE
@@ -90,7 +93,7 @@ BEGIN
             LIMIT $3;', input_tekst, input_tekst);
         --RAISE NOTICE 'stmt=%', stmt;
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, srid;
     ELSE
         -- Execute and return the result
         stmt = format(E'SELECT
@@ -102,9 +105,12 @@ BEGIN
                 visningstekst::text,
                 jordstykke_id::int,
                 bfenummer::int,
-                ST_X((ST_DUMP(centroide_geometri)).geom)::numeric,
-                ST_Y((ST_DUMP(centroide_geometri)).geom)::numeric,
-                geometri
+                CASE WHEN $4 = 25832 THEN ST_X(ST_GEOMETRYN(centroide_geometri,1))::numeric 
+                ELSE ST_X(ST_transform(ST_GEOMETRYN(centroide_geometri,1), $4))::numeric END,
+                CASE WHEN $4 = 25832 then ST_Y(ST_GEOMETRYN(centroide_geometri,1))::numeric 
+                ELSE ST_Y(ST_transform(ST_GeometryN(centroide_geometri,1),$4))::numeric END,
+                CASE WHEN $4 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $4) END
             FROM
                 basic.matrikel_udgaaet
             WHERE (
@@ -130,7 +136,7 @@ BEGIN
                 visningstekst
             LIMIT $3  ;', filters);
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit;
+        USING query_string, plain_query_string, rowlimit, srid;
     END IF;
 END
 $function$;

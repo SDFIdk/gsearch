@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS api.politikreds (text, jsonb, int, int);
+DROP FUNCTION IF EXISTS api.politikreds (text, jsonb, int, int, int);
 
-CREATE OR REPLACE FUNCTION api.politikreds (input_tekst text, filters text, sortoptions integer, rowlimit integer)
+CREATE OR REPLACE FUNCTION api.politikreds (input_tekst text, filters text, sortoptions integer, rowlimit integer, srid integer)
     RETURNS SETOF api.politikreds
     LANGUAGE plpgsql
     STABLE
@@ -53,8 +53,10 @@ BEGIN
             visningstekst,
             myndighedskode::text,
             kommunekode::text,
-            geometri,
-            bbox::geometry
+            CASE WHEN $4 = 25832 THEN geometri
+            ELSE ST_TRANSFORM(geometri, $4) END,
+            CASE WHEN $4 = 25832 THEN bbox::geometry
+            ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $4))::geometry END
         FROM
             basic.politikreds
         WHERE (
@@ -75,6 +77,6 @@ BEGIN
                 navn
             LIMIT $3;', filters);
     RETURN QUERY EXECUTE stmt
-    USING query_string, plain_query_string, rowlimit;
+    USING query_string, plain_query_string, rowlimit, srid;
 END
 $function$;
