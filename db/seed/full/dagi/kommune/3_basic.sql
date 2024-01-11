@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.kommune;
+DROP TABLE IF EXISTS basic_initialloading.kommune;
 
 WITH kommuner AS (
     SELECT
@@ -29,7 +29,8 @@ SELECT
     coalesce(k.navn, '') AS kommunenavn,
     k.regionskode,
     st_multi (st_union (k.geometri)) AS geometri,
-    st_extent (k.geometri) AS bbox INTO basic.kommune
+    st_extent (k.geometri) AS bbox 
+INTO basic_initialloading.kommune
 FROM
     kommuner k
 GROUP BY

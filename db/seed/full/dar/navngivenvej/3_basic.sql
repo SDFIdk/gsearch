@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.navngivenvej;
+DROP TABLE IF EXISTS basic_initialloading.navngivenvej;
 
 WITH kommunenumre AS (
     SELECT
@@ -64,7 +64,7 @@ SELECT
     k.kommunekode,
     st_multi (st_union (geometri)) AS geometri,
     st_envelope (st_collect (v.geometri)) AS bbox
-INTO basic.navngivenvej
+INTO basic_initialloading.navngivenvej
 FROM
     vejnavne v
     LEFT JOIN kommunenumre k ON v.id = k.id

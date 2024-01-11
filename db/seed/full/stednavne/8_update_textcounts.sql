@@ -1,7 +1,7 @@
 -- Create table with text combinations and number of accourences
 -- Helper to create data:
-DROP TABLE IF EXISTS basic.stednavn_count;
-CREATE TABLE basic.stednavn_count (
+DROP TABLE IF EXISTS basic_initialloading.stednavn_count;
+CREATE TABLE basic_initialloading.stednavn_count (
     tekstelement text,
     forekomster int,
     PRIMARY KEY (tekstelement)
@@ -10,12 +10,12 @@ CREATE TABLE basic.stednavn_count (
 
 -- Inserts into stednavn_count
 WITH a AS (SELECT generate_series(1,8) a)
-INSERT INTO basic.stednavn_count (tekstelement, forekomster)
+INSERT INTO basic_initialloading.stednavn_count (tekstelement, forekomster)
 SELECT
     substring(lower(skrivemaade) FROM 1 FOR a),
     count(*)
 FROM
-    basic.stednavn am
+    basic_initialloading.stednavn am
         CROSS JOIN a
 WHERE skrivemaade IS NOT null
 GROUP BY

@@ -1,6 +1,6 @@
 CREATE COLLATION IF NOT EXISTS matrikelnummer_udgaaet_collation (provider = icu, locale = 'en@colNumeric=yes');
 
-DROP TABLE IF EXISTS basic.matrikel_udgaaet;
+DROP TABLE IF EXISTS basic_initialloading.matrikel_udgaaet;
 
 WITH ejerlav_kommune_distinct AS (
 	SELECT distinct
@@ -84,13 +84,13 @@ ejerlavsnavn_dups AS (
         ejerlavsnavn,
         (setweight(to_tsvector('simple', split_part(ejerlavsnavn, ' ', 1)), 'B') ||
         setweight(to_tsvector('simple', split_part(ejerlavsnavn, ' ', 2)), 'C') ||
-        setweight(to_tsvector('simple', basic.split_and_endsubstring (ejerlavsnavn, 3)), 'D')) AS textsearchable_plain_col_ejerlavsnavn,
-        (setweight(to_tsvector('basic.septima_fts_config', split_part(ejerlavsnavn, ' ', 1)), 'B') ||
-        setweight(to_tsvector('basic.septima_fts_config', split_part(ejerlavsnavn, ' ', 2)), 'C') ||
-        setweight(to_tsvector('basic.septima_fts_config', basic.split_and_endsubstring (ejerlavsnavn, 3)), 'D')) AS textsearchable_unaccent_col_ejerlavsnavn,
-        (setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(ejerlavsnavn, ' ', 1), 2)), 'B') ||
-        setweight(to_tsvector('simple', fonetik.fnfonetik (split_part(ejerlavsnavn, ' ', 2), 2)), 'C') ||
-        setweight(to_tsvector('simple', basic.split_and_endsubstring_fonetik (ejerlavsnavn, 3)), 'D')) AS textsearchable_phonetic_col_ejerlavsnavn
+        setweight(to_tsvector('simple', functions.split_and_endsubstring (ejerlavsnavn, 3)), 'D')) AS textsearchable_plain_col_ejerlavsnavn,
+        (setweight(to_tsvector('functions.gsearch_fts_config', split_part(ejerlavsnavn, ' ', 1)), 'B') ||
+        setweight(to_tsvector('functions.gsearch_fts_config', split_part(ejerlavsnavn, ' ', 2)), 'C') ||
+        setweight(to_tsvector('functions.gsearch_fts_config', functions.split_and_endsubstring (ejerlavsnavn, 3)), 'D')) AS textsearchable_unaccent_col_ejerlavsnavn,
+        (setweight(to_tsvector('simple', functions.fnfonetik (split_part(ejerlavsnavn, ' ', 1), 2)), 'B') ||
+        setweight(to_tsvector('simple', functions.fnfonetik (split_part(ejerlavsnavn, ' ', 2), 2)), 'C') ||
+        setweight(to_tsvector('simple', functions.split_and_endsubstring_fonetik (ejerlavsnavn, 3)), 'D')) AS textsearchable_phonetic_col_ejerlavsnavn
     FROM ( SELECT *
         FROM
             ejerlavnavn_kommune_distinct) x
@@ -115,7 +115,8 @@ SELECT DISTINCT
     e.textsearchable_plain_col_ejerlavsnavn,
     e.textsearchable_unaccent_col_ejerlavsnavn,
     e.textsearchable_phonetic_col_ejerlavsnavn,
-    st_multi (m.geometri) AS geometri INTO basic.matrikel_udgaaet
+    st_multi (m.geometri) AS geometri 
+INTO basic_initialloading.matrikel_udgaaet
 FROM
     matrikelnumre m
     JOIN ejerlavsnavn_dups e ON e.ejerlavsnavn = m.ejerlavsnavn;

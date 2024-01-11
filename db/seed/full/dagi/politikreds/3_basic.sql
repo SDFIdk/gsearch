@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS basic.politikreds;
+DROP TABLE IF EXISTS basic_initialloading.politikreds;
 
 WITH kommunenumre AS (
     SELECT
@@ -32,7 +32,7 @@ SELECT
     k.kommunekode,
     st_multi (st_union (p.geometri)) AS geometri,
     st_extent (p.geometri) AS bbox
-INTO basic.politikreds
+INTO basic_initialloading.politikreds
 FROM
     politikredse p
     LEFT JOIN kommunenumre k ON p.politikredsnummer = k.politikredsnummer
