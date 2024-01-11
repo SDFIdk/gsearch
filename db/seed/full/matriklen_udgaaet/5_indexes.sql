@@ -6,7 +6,7 @@ CREATE INDEX ON basic_initialloading.matrikel_udgaaet USING GIN (textsearchable_
 
 CREATE INDEX ON basic_initialloading.matrikel_udgaaet (matrikelnummer, visningstekst);
 
-CREATE INDEX ON basic_initialloading.matrikel (jordstykke_id);
+CREATE INDEX ON basic_initialloading.matrikel_udgaaet (jordstykke_id);
 
 CREATE INDEX ON basic_initialloading.matrikel_udgaaet (bfenummer);
 

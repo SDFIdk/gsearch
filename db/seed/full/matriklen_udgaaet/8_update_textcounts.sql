@@ -15,7 +15,7 @@ SELECT
     substring(lower(matrikelnummer) FROM 1 FOR a),
     count(*)
 FROM
-    basic_initialloading.matrikel am
+    basic_initialloading.matrikel_udgaaet am
     CROSS JOIN a
 WHERE ejerlavsnavn IS NOT NULL
 GROUP BY
