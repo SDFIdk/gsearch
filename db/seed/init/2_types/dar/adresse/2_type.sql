@@ -37,7 +37,7 @@ COMMENT ON COLUMN api.adresse.etagebetegnelse IS 'Etagebetegnelse for adresse';
 
 COMMENT ON COLUMN api.adresse.doerbetegnelse IS 'Dørbetegnelse for adresse';
 
-COMMENT ON COLUMN api.navngivenvej.supplerendebynavn IS 'Supplerende bynavn(e) for adresse';
+COMMENT ON COLUMN api.adresse.supplerendebynavn IS 'Supplerende bynavn(e) for adresse';
 
 COMMENT ON COLUMN api.adresse.postnummer IS 'Postnummer på adresse';
 
