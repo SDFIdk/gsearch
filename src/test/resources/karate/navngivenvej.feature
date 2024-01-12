@@ -237,5 +237,5 @@ Feature: Gsearch navngivenvej test
 
         When method GET
         And retry until responseStatus == 200
-        And match response == '#[13]'
+        And match response == '#[1]'
         And match response.[0].visningstekst == "Haderslevvej (6100 Haderslev, 6500 Vojens)"
