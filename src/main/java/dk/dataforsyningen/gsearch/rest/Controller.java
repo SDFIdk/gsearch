@@ -81,7 +81,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -115,7 +115,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -149,7 +149,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -183,7 +183,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -217,7 +217,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -251,7 +251,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -285,7 +285,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -319,7 +319,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -353,7 +353,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -387,7 +387,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -421,7 +421,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -458,7 +458,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 
@@ -495,7 +495,7 @@ public class Controller {
         @RequestParam(required = false) Optional<String> filter,
         @Parameter(description = "Maksantallet af returneret data elementer. Maks = 100")
         @RequestParam(defaultValue = "10") @Max(100) @Positive Integer limit,
-        @Parameter(description = "Koordinatsystem for output og filter som EPSG kode. Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
+        @Parameter(description = "Koordinatsystem for returnerede geometrier som ESPG kode Default: 25832. Tilladte koder: 2196, 2197, 2198, 3857, 4093, 4094, 4095, 4096, 4326, 25832, 25833")
         @RequestParam(value = "srid", defaultValue = "25832") @Positive Integer srid, HttpServletResponse response)
         throws FilterToSQLException, CQLException {
 

@@ -106,9 +106,19 @@ public class OpenApiConfig {
    * @param description
    * @return
    */
-  private StringSchema createSchema(String description) {
+  private StringSchema createSchema(String description, String datatype) {
     StringSchema schema = new StringSchema();
     schema.description(description);
+
+    // text and geometry gets map to string as default. Springdoc does not support geometry
+    // Map postgresql data type integer and numeric to openapi data types
+    if (datatype.equals("int4")) {
+        schema.type("integer").format("int32");
+    }
+    else if (datatype.equals("numeric")) {
+        schema.type("number").format("double");
+    }
+
     return schema;
   }
 
@@ -120,12 +130,13 @@ public class OpenApiConfig {
    */
   public Map<String, Schema> getProperties(String typname) {
     return jdbi.withHandle(handle -> {
-      String sql = "select attname, pgd.description\n" +
+      String sql = "select attname, pgd.description, pt.typname\n" +
           "from pg_catalog.pg_type t\n" +
           "join pg_catalog.pg_namespace pn on (pn.oid = t.typnamespace)\n" +
           "join pg_catalog.pg_class pc on (pc.reltype = t.oid)\n" +
           "join pg_catalog.pg_attribute pa on (t.typrelid = pa.attrelid)\n" +
           "join pg_catalog.pg_description pgd on (pgd.objoid = pc.oid and pgd.objsubid = pa.attnum)\n" +
+          "join pg_catalog.pg_type pt on (pa.atttypid = pt.oid)\n" +
           "where pn.nspname = 'api' and pc.relkind = 'c' and t.typname = :typname;";
       return handle
           .createQuery(sql)
@@ -133,7 +144,7 @@ public class OpenApiConfig {
           .map((rs, ctx) ->
               new AbstractMap.SimpleEntry<String, StringSchema>(
                   rs.getString("attname"),
-                  createSchema(rs.getString("description"))))
+                  createSchema(rs.getString("description"), rs.getString("typname"))))
           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     });
   }
