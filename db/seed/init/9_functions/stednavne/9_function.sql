@@ -80,10 +80,10 @@ BEGIN
                 stednavn_type::text,
                 stednavn_subtype::text,
                 kommunekode::text,
-                CASE WHEN $5 = 25832 THEN geometri
-                ELSE ST_TRANSFORM(geometri, $5) END,
-                CASE WHEN $5 = 25832 THEN bbox::geometry
-                ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $5))::geometry END
+                CASE WHEN $4 = 25832 THEN geometri
+                ELSE ST_TRANSFORM(geometri, $4) END,
+                CASE WHEN $4 = 25832 THEN bbox::geometry
+                ELSE BOX2D(ST_TRANSFORM(bbox, ''EPSG:25832'', $4))::geometry END
             FROM
                 basic.stednavn
             WHERE
@@ -120,7 +120,7 @@ BEGIN
             ORDER BY
                 levenshtein(
                     lower(skrivemaade)::text,
-                    lower($4)
+                    lower($5)
                 ) asc,
                 functions.combine_rank(
                     $2,
@@ -136,7 +136,7 @@ BEGIN
                 )::double precision desc
             LIMIT $3;', filters);
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit, input_tekst, srid;
+        USING query_string, plain_query_string, rowlimit, srid, input_tekst;
     END IF;
 END
 $function$;
