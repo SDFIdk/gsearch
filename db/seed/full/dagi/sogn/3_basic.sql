@@ -25,7 +25,7 @@ sogne AS (
 SELECT
     s.navn || ' sogn' AS visningstekst,
     s.sognekode,
-    coalesce(s.navn, '') AS sognenavn,
+    s.navn AS sognenavn,
     k.kommunekode,
     st_multi (st_union (s.geometri)) AS geometri,
     st_extent (s.geometri) AS bbox

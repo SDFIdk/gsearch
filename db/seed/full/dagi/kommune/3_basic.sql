@@ -25,8 +25,8 @@ SELECT
             k.navn || ' Kommune'
         END
     ) AS visningstekst,
-    coalesce(k.kommunekode, '') AS kommunekode,
-    coalesce(k.navn, '') AS kommunenavn,
+    k.kommunekode,
+    k.navn AS kommunenavn,
     k.regionskode,
     st_multi (st_union (k.geometri)) AS geometri,
     st_extent (k.geometri) AS bbox 

@@ -27,7 +27,7 @@ retskredse AS (
 SELECT
     r.navn AS visningstekst,
     r.retskredsnummer,
-    coalesce(r.navn, '') AS retkredsnavn,
+    r.navn AS retkredsnavn,
     r.myndighedskode,
     k.kommunekode,
     st_multi (st_union (r.geometri)) AS geometri,

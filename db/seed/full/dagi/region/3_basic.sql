@@ -25,7 +25,7 @@ regioner AS (
 SELECT
     r.navn AS visningstekst,
     r.regionskode,
-    coalesce(r.navn, '') AS regionsnavn,
+    r.navn AS regionsnavn,
     k.kommunekode,
     st_multi (st_union (r.geometri)) AS geometri,
     st_extent (r.geometri) AS bbox

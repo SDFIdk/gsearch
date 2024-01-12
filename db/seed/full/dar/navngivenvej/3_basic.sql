@@ -57,7 +57,7 @@ vejnavne AS (
 SELECT
     v.vejnavn || ' (' || p.supplementtext || ')' AS visningstekst,
     v.id,
-    coalesce(v.vejnavn, '') AS vejnavn,
+    v.vejnavn,
     sbn.supplerendebynavn,
     p.postnummer,
     p.postnummernavn,

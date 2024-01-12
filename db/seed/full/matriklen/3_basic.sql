@@ -33,7 +33,7 @@ matrikelnumre AS (
         j.id_lokalid::text,
         s.bfenummer::text,
         c.geometri AS centroide_geometri,
-        st_force2d (COALESCE(l.geometri)) AS geometri
+        st_force2d (l.geometri) AS geometri
     FROM
         -- mat.jordstykke j
         --JOIN mat.ejerlav e ON j.ejerlavlokalid = e.id_lokalid

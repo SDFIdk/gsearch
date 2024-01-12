@@ -19,8 +19,8 @@ WITH adresser AS (
         k.navn AS kommunenavn,
         p.postnr AS postnummer,
         p.navn AS postnummernavn,
-        st_force2d (COALESCE(ap.geometri)) AS geometri,
-        st_force2d (COALESCE(ap2.geometri)) AS vejpunkt_geometri
+        st_force2d (ap.geometri) AS geometri,
+        st_force2d (ap2.geometri) AS vejpunkt_geometri
     FROM
         dar.adresse a
         JOIN (

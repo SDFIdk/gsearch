@@ -12,17 +12,17 @@ WITH kommunenumre AS (
 ),
 postnumre AS (
     SELECT
-        COALESCE(p2.postnummer, p1.postnummer) AS postnummer,
-        COALESCE(p2.navn, p1.navn) AS postnummernavn,
-        COALESCE(p2.ergadepostnummer, p1.ergadepostnummer) AS ergadepostnummer,
+        p1.postnummer,
+        p1.navn AS postnummernavn,
+        p1.ergadepostnummer,
         st_force2d (COALESCE(p2.geometri, p1.geometri)) AS geometri
     FROM
         dagi_10.postnummerinddeling p1
         LEFT JOIN dagi_500.postnummerinddeling p2 USING (postnummer))
 SELECT
     p.postnummer || ' ' || p.postnummernavn AS visningstekst,
-    coalesce(p.postnummer, '') AS postnummer,
-    coalesce(p.postnummernavn, '') AS postnummernavn,
+    p.postnummer,
+    p.postnummernavn,
     (p.ergadepostnummer = 'true') AS ergadepostnummer,
     k.kommunekode,
     st_multi (st_union (p.geometri)) AS geometri,

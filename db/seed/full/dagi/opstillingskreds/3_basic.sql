@@ -32,7 +32,7 @@ opstillingskredse AS (
 SELECT
     o.navn || 'kredsen' AS visningstekst,
     o.opstillingskredsnummer,
-    coalesce(o.navn, '') AS opstillingskredsnavn,
+    o.navn AS opstillingskredsnavn,
     o.valgkredsnummer,
     o.storkredsnummer,
     o.storkredsnavn,

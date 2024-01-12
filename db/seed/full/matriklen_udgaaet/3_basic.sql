@@ -69,7 +69,7 @@ matrikelnumre AS (
         j.id_lokalid::text,
         s.bfenummer::text,
         c.geometri AS centroide_geometri,
-        st_force2d (COALESCE(l.geometri)) AS geometri
+        st_force2d (l.geometri) AS geometri
     FROM
         matriklen_udgaaet.jordstykke j
         JOIN ejerlav_distinct e ON e.id_lokalid = j.ejerlavlokalid

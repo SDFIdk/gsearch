@@ -27,7 +27,7 @@ WITH kommunenumre AS (
 SELECT
     REPLACE(p.navn, 'Politi', 'Politikreds') AS visningstekst,
     p.politikredsnummer,
-    coalesce(p.navn, '') AS navn,
+    p.navn,
     p.myndighedskode,
     k.kommunekode,
     st_multi (st_union (p.geometri)) AS geometri,

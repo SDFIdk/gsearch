@@ -4,7 +4,7 @@ WITH stednavne AS (
     SELECT
         objectid,
         id_lokalid,
-        coalesce(visningstekst, '') AS visningstekst,
+        visningstekst,
         navnestatus,
         skrivemaade,
         type,
