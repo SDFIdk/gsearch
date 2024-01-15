@@ -1266,7 +1266,6 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (type);
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
-
 -- Opdater subtype_presentation
 UPDATE
     stednavne_udstilling.stednavne_udstilling
@@ -1276,6 +1275,8 @@ FROM
     stednavne_udstilling.subtype_translation st
 WHERE
     stednavne_udstilling.stednavne_udstilling.subtype = st.subtype;
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -- Slet dublerede forekomster (Samme objekt og en uofficiel stavemaade der er magen til)
 DELETE FROM stednavne_udstilling.stednavne_udstilling
@@ -1313,6 +1314,8 @@ SET
     ELSE
         ST_SimplifyPreserveTopology (geometri, GREATEST (ST_Xmax (ST_Envelope (geometri)) - ST_Xmin (ST_Envelope (geometri)), ST_Ymax (ST_Envelope (geometri)) - ST_Ymin (ST_Envelope (geometri))) / 300)
     END;
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -- Prioritetsmæssig opdatering af visningstekst
 UPDATE
@@ -1372,6 +1375,8 @@ WHERE
     AND s.subtype = 'by'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -- By, > 50 % i postnummerinddeling
 UPDATE
@@ -1474,6 +1479,8 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type = 'bygning'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -- Bygninger, som ligger > 50 % indenfor et postnummerinddeling
 UPDATE
@@ -1647,8 +1654,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
-
 -----------------
 -- Havnebassin --
 -----------------
@@ -1682,8 +1687,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
-
 --------------
 -- Jernbane --
 --------------
@@ -1716,8 +1719,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type = 'jernbane'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -------------------
 -- Landskabsform --
@@ -1802,6 +1803,8 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -- Landskabsformer, > 50 % i postnummerinddeling
 UPDATE
     stednavne_udstilling.stednavne_udstilling
@@ -1816,8 +1819,6 @@ WHERE
   AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
   AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
   AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 ---------------
 -- Lufthavne --
@@ -1848,6 +1849,8 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type = 'naturareal'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -- Naturareal, > 50 % i postnummerinddeling
 UPDATE
@@ -1917,8 +1920,6 @@ WHERE
   AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
   AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
-
 ----------
 -- Rute --
 ----------
@@ -1932,8 +1933,6 @@ SET
 WHERE
     visningstekst IS NULL
     AND TYPE = 'rute';
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 ------------------
 -- Sevaerdighed --
@@ -2002,8 +2001,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type = 'terraenkontur'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 ------------------
 -- Urentfarvand --
@@ -2137,8 +2134,6 @@ SET
 WHERE
     visningstekst IS NULL
     AND type = 'andentopografiflade';
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -------------------------
 -- andentopografipunkt --
@@ -2322,8 +2317,6 @@ WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnflade';
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
-
 --------------------------
 -- ubearbejdetnavnlinje --
 --------------------------
@@ -2350,8 +2343,6 @@ SET
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnlinje';
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 --------------------------
 -- ubearbejdetnavnpunkt --
@@ -2380,8 +2371,6 @@ WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnpunkt';
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
-
 --------------------------
 -- vej --
 --------------------------
@@ -2408,8 +2397,6 @@ SET
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'vej';
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 --------------------------
 -- Resterende stednavne --
@@ -2457,8 +2444,6 @@ WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -- Alle andre får blot type/subtype
 UPDATE
