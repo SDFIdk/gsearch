@@ -1516,8 +1516,6 @@ WHERE
     type = 'bygning'
     AND subtype = 'akvarium';
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
-
 --------------------
 -- Campingpladser --
 --------------------
@@ -1550,8 +1548,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type = 'campingplads'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -------------
 -- Farvand --
@@ -1597,8 +1593,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.type = 'farvand'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 ------------------
 -- Fortidsminde --
@@ -1967,8 +1961,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
-
 -------------------
 -- Terraenkontur --
 -------------------
@@ -2259,8 +2251,6 @@ WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'soe';
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
-
 ---------------------
 -- standsningssted --
 ---------------------
@@ -2287,8 +2277,6 @@ SET
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'standsningssted';
-
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 --------------------------
 -- ubearbejdetnavnflade --
@@ -2461,6 +2449,8 @@ SET
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND btrim(subtype_presentation) <> '';
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -- Tilføj og populer kommunefilter på tabellen
 -- Kommunekode needs to be done here and not in 510_api_stednavne as it else results in duplicated kommunekoder in
