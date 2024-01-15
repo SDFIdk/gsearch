@@ -8,8 +8,7 @@ CREATE VIEW stednavne_udstilling.andentopografiflade AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.andentopografiflade x JOIN (
                 SELECT 
@@ -42,8 +41,7 @@ CREATE VIEW stednavne_udstilling.andentopografipunkt AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.andentopografipunkt x JOIN (
                 SELECT 
@@ -76,8 +74,7 @@ CREATE VIEW stednavne_udstilling.bebyggelse AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.bebyggelse x JOIN (
                 SELECT 
@@ -110,8 +107,7 @@ CREATE VIEW stednavne_udstilling.begravelsesplads AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.begravelsesplads x JOIN (
                 SELECT 
@@ -144,8 +140,7 @@ CREATE VIEW stednavne_udstilling.bygning AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.bygning x JOIN (
                 SELECT 
@@ -178,8 +173,7 @@ CREATE VIEW stednavne_udstilling.campingplads AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.campingplads x JOIN (
                 SELECT 
@@ -212,8 +206,7 @@ CREATE VIEW stednavne_udstilling.farvand AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.farvand x JOIN (
                 SELECT 
@@ -246,8 +239,7 @@ CREATE VIEW stednavne_udstilling.fortidsminde AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.fortidsminde x JOIN (
                 SELECT 
@@ -280,8 +272,7 @@ CREATE VIEW stednavne_udstilling.friluftsbad AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.friluftsbad x JOIN (
                 SELECT 
@@ -314,8 +305,7 @@ CREATE VIEW stednavne_udstilling.havnebassin AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.havnebassin x JOIN (
                 SELECT 
@@ -348,8 +338,7 @@ CREATE VIEW stednavne_udstilling.idraetsanlaeg AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.idraetsanlaeg x JOIN (
                 SELECT 
@@ -382,8 +371,7 @@ CREATE VIEW stednavne_udstilling.jernbane AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.jernbane x JOIN (
                 SELECT 
@@ -416,8 +404,7 @@ CREATE VIEW stednavne_udstilling.landskabsform AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.landskabsform x JOIN (
                 SELECT 
@@ -450,8 +437,7 @@ CREATE VIEW stednavne_udstilling.lufthavn AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.lufthavn x JOIN (
                 SELECT 
@@ -484,8 +470,7 @@ CREATE VIEW stednavne_udstilling.naturareal AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.naturareal x JOIN (
                 SELECT 
@@ -518,8 +503,7 @@ CREATE VIEW stednavne_udstilling.navigationsanlaeg AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.navigationsanlaeg x JOIN (
                 SELECT 
@@ -552,8 +536,7 @@ CREATE VIEW stednavne_udstilling.restriktionsareal AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.restriktionsareal x JOIN (
                 SELECT 
@@ -586,8 +569,7 @@ CREATE VIEW stednavne_udstilling.sevaerdighed AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.sevaerdighed x JOIN (
                 SELECT 
@@ -620,8 +602,7 @@ CREATE VIEW stednavne_udstilling.soe AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.soe x JOIN (
                 SELECT 
@@ -654,8 +635,7 @@ CREATE VIEW stednavne_udstilling.standsningssted AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.standsningssted x JOIN (
                 SELECT 
@@ -688,8 +668,7 @@ CREATE VIEW stednavne_udstilling.terraenkontur AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.terraenkontur x JOIN (
                 SELECT 
@@ -722,8 +701,7 @@ CREATE VIEW stednavne_udstilling.ubearbejdetnavnflade AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.ubearbejdetnavnflade x JOIN (
                 SELECT 
@@ -756,8 +734,7 @@ CREATE VIEW stednavne_udstilling.ubearbejdetnavnlinje AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.ubearbejdetnavnlinje x JOIN (
                 SELECT 
@@ -790,8 +767,7 @@ CREATE VIEW stednavne_udstilling.ubearbejdetnavnpunkt AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.ubearbejdetnavnpunkt x JOIN (
                 SELECT 
@@ -824,8 +800,7 @@ CREATE VIEW stednavne_udstilling.urentfarvand AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.urentfarvand x JOIN (
                 SELECT 
@@ -858,8 +833,7 @@ CREATE VIEW stednavne_udstilling.vandloeb AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.vandloeb x JOIN (
                 SELECT 
@@ -892,8 +866,7 @@ CREATE VIEW stednavne_udstilling.vej AS
             s.brugsprioritet,
             s.navnefoelgenummer,
             s.navnestatus,
-            s.sprog,
-            round(st_area(x.geometri)) as udregnet_areal
+            s.sprog
         FROM 
             stednavne.vej x JOIN (
                 SELECT 
