@@ -10,7 +10,13 @@ Hvordan GSearch-UI kan installeres som en NPM pakke, kan læses mere om på dets
 
 ## Generelt
 
-**GSearch** opdateres på ugentligt basis. Der er planlagt at opdatere data på daglig basis se [issue 92](https://github.com/SDFIdk/gsearch/issues/92) for opdatering.
+**Data** opdateres på ugentligt (hver weekenden) eller daglig basis (hver nat).
+
+Der er daglige opdateringer paa `adresse`, `husnummer`, `matrikel_udgaaet`, `matrikel` og `navngivenvej`,
+Der er ugentlige opdateringer paa `kommune`, `opstillingskreds`, `politikreds`, `postnummer`, `region`, `retskreds`, `sogn` og `stednavn`.
+
+(Se også [issue 92](https://github.com/SDFIdk/gsearch/issues/92) )
+
 Bemærk særligt at data fra DAR ikke har samme høje opdateringsfrekvens som i andre sammenhænge.
 
 **GSearch** kan søge i de ressourcer listet nedenfor.
