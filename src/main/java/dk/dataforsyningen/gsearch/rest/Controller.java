@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
+@Deprecated
 public class Controller {
 
   static Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -134,8 +135,12 @@ public class Controller {
    * @throws CQLException
    * @throws FilterToSQLException
    */
+  @Deprecated
   @GetMapping(path = "/adresse", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "adresse", tags = {"Gsearch"})
+  @Operation(operationId = "adresse", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = adresse.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<adresse> getAdresse(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -158,7 +163,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/husnummer", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "husnummer", tags = {"Gsearch"})
+  @Operation(operationId = "husnummer", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = husnummer.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<husnummer> getHusnummer(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -181,7 +189,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/kommune", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "kommune", tags = {"Gsearch"})
+  @Operation(operationId = "kommune", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = kommune.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<kommune> getKommune(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -204,7 +215,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/matrikel", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "matrikel", tags = {"Gsearch"})
+  @Operation(operationId = "matrikel", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = matrikel.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<matrikel> getMatrikel(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -227,7 +241,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/matrikel_udgaaet", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "matrikel_udgaaet", tags = {"Gsearch"})
+  @Operation(operationId = "matrikel_udgaaet", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = matrikel_udgaaet.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<matrikel_udgaaet> getMatrikelUdgaaet(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -250,7 +267,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/navngivenvej", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "navngivenvej", tags = {"Gsearch"})
+  @Operation(operationId = "navngivenvej", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = navngivenvej.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<navngivenvej> getNavngivenvej(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -273,7 +293,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/opstillingskreds", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "opstillingskreds", tags = {"Gsearch"})
+  @Operation(operationId = "opstillingskreds", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = opstillingskreds.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<opstillingskreds> getOpstillingskreds(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -296,7 +319,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/politikreds", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "politikreds", tags = {"Gsearch"})
+  @Operation(operationId = "politikreds", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = politikreds.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<politikreds> getPolitikreds(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -319,7 +345,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/postnummer", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "postnummer", tags = {"Gsearch"})
+  @Operation(operationId = "postnummer", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = postnummer.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<postnummer> getPostnummer(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -342,7 +371,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/region", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "region", tags = {"Gsearch"})
+  @Operation(operationId = "region", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = region.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<region> getRegion(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
@@ -365,7 +397,10 @@ public class Controller {
    * @throws FilterToSQLException
    */
   @GetMapping(path = "/retskreds", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(operationId = "retskreds", tags = {"Gsearch"})
+  @Operation(operationId = "retskreds", tags = {"Gsearch"}, responses = {
+      @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = retskreds.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+      @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true)))})
   public List<retskreds> getRetskreds(
       @Parameter(description = "Søgestreng")
       @RequestParam(value = "q", required = true) @NotBlank String q,
