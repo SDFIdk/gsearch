@@ -41,14 +41,14 @@ Feature: Gsearch matrikel test
         When method GET
         Then status 200
         And def firstresponse = response
-        And match firstresponse == '#[8]'
+        And match firstresponse == '#[9]'
 
         Then param q = 'løgstør markjorder'
 
         When method GET
         Then status 200
         And def secondresponse = response
-        And match secondresponse == '#[8]'
+        And match secondresponse == '#[9]'
 
         Then match firstresponse == secondresponse
 
@@ -57,7 +57,7 @@ Feature: Gsearch matrikel test
         When method GET
         Then status 200
         And def thirdresponse = response
-        And match thirdresponse == '#[8]'
+        And match thirdresponse == '#[9]'
 
         Then match thirdresponse == secondresponse
 
