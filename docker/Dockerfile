@@ -1,6 +1,6 @@
 FROM gsearch_temp AS builder
 
-FROM eclipse-temurin:17.0.5_8-jdk-jammy
+FROM eclipse-temurin:21.0.1_12-jdk-jammy
 
 RUN apt update -y && apt upgrade -y
 
