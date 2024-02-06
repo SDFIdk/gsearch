@@ -46,7 +46,7 @@ Feature: Gsearch errorhandling test
         "title":"Not Found",
         "status":404,
         "detail":"No static resource postnummer1.",
-        "instance":"/postnummer1",
+        "instance":"/rest/gsearch_test/v2.0/postnummer1",
         "properties":null
     }
     """
