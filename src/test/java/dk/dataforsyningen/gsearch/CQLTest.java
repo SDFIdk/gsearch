@@ -8,7 +8,7 @@ import org.geotools.data.postgis.PostGISDialect;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
 import org.junit.jupiter.api.Test;
-import org.opengis.filter.Filter;
+import org.geotools.api.filter.Filter;
 
 import dk.dataforsyningen.gsearch.service.CustomPostgisFilterToSQL;
 

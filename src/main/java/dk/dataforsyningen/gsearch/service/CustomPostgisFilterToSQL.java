@@ -1,8 +1,8 @@
 package dk.dataforsyningen.gsearch.service;
 
+import org.geotools.api.filter.expression.Literal;
 import org.geotools.data.postgis.PostGISDialect;
 import org.geotools.data.postgis.PostgisFilterToSQL;
-import org.opengis.filter.expression.Literal;
 
 /**
  * Custom GeoTools PostgisFilterToSQL to avoid coercing string literals to numbers
