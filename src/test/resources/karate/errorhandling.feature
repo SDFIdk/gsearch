@@ -42,10 +42,12 @@ Feature: Gsearch errorhandling test
     And match response ==
     """
     {
-        "timestamp":#number,
+        "type":"about:blank",
+        "title":"Not Found",
         "status":404,
-        "error":"Not Found",
-        "path":"/postnummer1"
+        "detail":"No static resource postnummer1.",
+        "instance":"/postnummer1",
+        "properties":null
     }
     """
 
