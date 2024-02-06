@@ -1,6 +1,6 @@
 FROM gsearch_temp AS builder
 
-FROM eclipse-temurin:21.0.1_12-jdk-alpine
+FROM eclipse-temurin:21.0.2_13-jdk-alpine
 
 RUN apk upgrade --available --no-cache
 
