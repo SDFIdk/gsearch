@@ -53,7 +53,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ConnectionException.class)
-    ResponseEntity<ErrorResponse> handleConnectionException(
+    public ResponseEntity<ErrorResponse> handleConnectionException(
         ConnectionException exception) {
         String exceptionCause = getRootCause(exception).toString();
 
@@ -64,7 +64,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    ResponseEntity<ErrorResponse> handleConstraintViolationException(Exception exception) {
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(Exception exception) {
         String exceptionCause = getRootCause(exception).toString();
 
         ErrorResponse errorResponse =
@@ -75,7 +75,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CQLException.class)
-    ResponseEntity<ErrorResponse> handleCQLException(
+    public ResponseEntity<ErrorResponse> handleCQLException(
         CQLException exception) {
         String exceptionCause = getRootCause(exception).toString();
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
@@ -85,7 +85,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    ResponseEntity<ErrorResponse> handleEmptyResultDataAccessException(
+    public ResponseEntity<ErrorResponse> handleEmptyResultDataAccessException(
         EmptyResultDataAccessException exception) {
         String exceptionCause = getRootCause(exception).toString();
 
@@ -96,7 +96,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception exception) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception exception) {
         String exceptionCause = getRootCause(exception).toString();
 
         ErrorResponse errorResponse =
@@ -107,7 +107,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UnableToExecuteStatementException.class)
-    ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
+    public ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
         UnableToExecuteStatementException exception) {
         String exceptionCause = getRootCause(exception).toString();
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
@@ -117,7 +117,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PSQLException.class)
-    ResponseEntity<ErrorResponse> handlePSQLException(
+    public ResponseEntity<ErrorResponse> handlePSQLException(
         PSQLException exception) {
         String exceptionCause = getRootCause(exception).toString();
         ErrorResponse errorResponse =
