@@ -1,12 +1,15 @@
 package dk.dataforsyningen.gsearch.errorhandling;
 
 import jakarta.validation.ConstraintViolationException;
+
+import java.sql.SQLNonTransientConnectionException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.apache.catalina.connector.ClientAbortException;
 import org.geotools.filter.text.cql2.CQLException;
 import org.jdbi.v3.core.ConnectionException;
+import org.jdbi.v3.core.result.ResultSetException;
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
 import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
@@ -39,6 +42,26 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(ApiServiceAdvice.class);
     private static final String ERROR_STRING = "FEJL!";
+
+    /**
+     * Uses NestedExceptionUtils to get too the Root Causes of a thrown Exception
+     * https://stackoverflow.com/questions/1791610/java-find-the-first-cause-of-an-exception/65442410#65442410
+     * https://stackoverflow.com/questions/17747175/how-can-i-loop-through-exception-getcause-to-find-root-cause-with-detail-messa
+     * https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/NestedExceptionUtils.html
+     *
+     * @param t Throwable
+     * @return Throwable
+     */
+    @NonNull
+    public static Throwable getRootCause(@NonNull Throwable t) {
+        Throwable rootCause = NestedExceptionUtils.getRootCause(t);
+        // Old way: return rootCause != null ? rootCause : t
+
+        if (rootCause == null) {
+            return t;
+        }
+        return rootCause;
+    }
 
     /**
      * Indicates that the client closed the connection, so it does not make sense to return af response
@@ -95,6 +118,28 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * A default exception handler that deals with all others exceptions that don't have specific
+     * handlers
+     *
+     * <p>HttpStatus.INTERNAL_SERVER_ERROR = 500
+     *
+     * <p>Very IMPORTANT that the exception declared with @ExceptionHandler matches the exceptions
+     * uses as a argument of the method
+     *
+     * @param exception Exception
+     * @return String
+     */
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<ErrorResponse> handleAll(Exception exception) {
+        ErrorResponse errorResponse =
+            new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage(), "error occurred");
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exception.getLocalizedMessage());
+        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception exception) {
         String exceptionCause = getRootCause(exception).toString();
@@ -106,25 +151,18 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
 
-    @ExceptionHandler(UnableToExecuteStatementException.class)
-    public ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
-        UnableToExecuteStatementException exception) {
-        String exceptionCause = getRootCause(exception).toString();
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
-        logger.info(ERROR_STRING, exception);
-        logger.info(ERROR_STRING + exceptionCause);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PSQLException.class)
-    public ResponseEntity<ErrorResponse> handlePSQLException(
-        PSQLException exception) {
-        String exceptionCause = getRootCause(exception).toString();
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
+        MethodArgumentTypeMismatchException exception, WebRequest request) {
+        String error =
+            exception.getName()
+                + " should be of type "
+                + Objects.requireNonNull(exception.getRequiredType()).getName();
         ErrorResponse errorResponse =
-            new ErrorResponse(HttpStatus.BAD_REQUEST, exceptionCause);
-        logger.info(ERROR_STRING, exception);
-        logger.info(ERROR_STRING, exceptionCause);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getLocalizedMessage(), error);
+        logger.debug(ERROR_STRING, exception);
+        logger.debug(ERROR_STRING + errorResponse.getErrors());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), errorResponse.getStatus());
     }
 
     /**
@@ -144,6 +182,63 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         logger.debug(ERROR_STRING, exception);
         logger.debug(ERROR_STRING + errorResponse.getErrors());
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
+    }
+
+    @ExceptionHandler(PSQLException.class)
+    public ResponseEntity<ErrorResponse> handlePSQLException(
+        PSQLException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse =
+            new ErrorResponse(HttpStatus.BAD_REQUEST, exceptionCause);
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING, exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnableToExecuteStatementException.class)
+    public ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
+        UnableToExecuteStatementException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResultSetException.class)
+    public ResponseEntity<ErrorResponse> handleResultSetException(
+        ResultSetException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, exceptionCause);
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * HttpStatus.CONFLICT = 409
+     * <p>
+     * Very IMPORTANT that the exception declared with @ExceptionHandler matches the
+     * exceptions uses as a argument of the method
+     *
+     * @param exception SQLNonTransientConnectionException
+     * @param request
+     * @return ResponseEntity<Object>
+     */
+    @ExceptionHandler({SQLNonTransientConnectionException.class})
+    public ResponseEntity<Object> handleSQLNonTransientConnectionException(SQLNonTransientConnectionException exception,
+                                                                           WebRequest request) {
+        String exceptionCause = "Cause is null";
+
+        if (exception.getCause() != null) {
+            exceptionCause = exception.getCause().toString();
+        }
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT, exception.getLocalizedMessage(),
+            exceptionCause);
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exceptionCause);
+        return new ResponseEntity<Object>(errorResponse, new HttpHeaders(), errorResponse.getStatus());
     }
 
     @Override
@@ -301,61 +396,5 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         logger.debug(ERROR_STRING + errorResponse.getErrors());
         return handleExceptionInternal(
             exception, errorResponse, headers, errorResponse.getStatus(), request);
-    }
-
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
-        MethodArgumentTypeMismatchException exception, WebRequest request) {
-        String error =
-            exception.getName()
-                + " should be of type "
-                + Objects.requireNonNull(exception.getRequiredType()).getName();
-        ErrorResponse errorResponse =
-            new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getLocalizedMessage(), error);
-        logger.debug(ERROR_STRING, exception);
-        logger.debug(ERROR_STRING + errorResponse.getErrors());
-        return new ResponseEntity<>(errorResponse, new HttpHeaders(), errorResponse.getStatus());
-    }
-
-    /**
-     * A default exception handler that deals with all others exceptions that don't have specific
-     * handlers
-     *
-     * <p>HttpStatus.INTERNAL_SERVER_ERROR = 500
-     *
-     * <p>Very IMPORTANT that the exception declared with @ExceptionHandler matches the exceptions
-     * uses as a argument of the method
-     *
-     * @param exception Exception
-     * @return String
-     */
-    @ExceptionHandler({Exception.class})
-    public ResponseEntity<ErrorResponse> handleAll(Exception exception) {
-        ErrorResponse errorResponse =
-            new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage(), "error occurred");
-        logger.info(ERROR_STRING, exception);
-        logger.info(ERROR_STRING + exception.getLocalizedMessage());
-        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
-    }
-
-    /**
-     * Uses NestedExceptionUtils to get too the Root Causes of a thrown Exception
-     * https://stackoverflow.com/questions/1791610/java-find-the-first-cause-of-an-exception/65442410#65442410
-     * https://stackoverflow.com/questions/17747175/how-can-i-loop-through-exception-getcause-to-find-root-cause-with-detail-messa
-     * https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/NestedExceptionUtils.html
-     *
-     * @param t Throwable
-     * @return Throwable
-     */
-    @NonNull
-    public static Throwable getRootCause(@NonNull Throwable t) {
-        Throwable rootCause = NestedExceptionUtils.getRootCause(t);
-        // Old way: return rootCause != null ? rootCause : t
-
-        if (rootCause == null) {
-            return t;
-        }
-        return rootCause;
     }
 }
