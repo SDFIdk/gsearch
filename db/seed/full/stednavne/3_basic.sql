@@ -98,7 +98,22 @@ DROP TABLE IF EXISTS basic_initialloading.stednavn;
 --     subtype,
 --     kommunekode;
 
-WITH agg_stednavne_officiel AS (
+WITH stednavne AS (
+    SELECT
+        objectid,
+        id_lokalid,
+        navnefoelgenummer,
+        visningstekst,
+        navnestatus,
+        skrivemaade,
+        type,
+        subtype,
+        kommunekode,
+        st_force2d (geometri_udtyndet) AS geometri
+    FROM
+        stednavne_udstilling.stednavne_udstilling
+),
+agg_stednavne_officiel AS (
     SELECT
         objectid,
         skrivemaade
@@ -120,7 +135,7 @@ agg_stednavne_uofficiel AS (
 ),
 agg_stednavne AS (
     SELECT
-        su.objectid,
+        s.objectid,
         id_lokalid,
         navnefoelgenummer,
         visningstekst as visningstekst,
@@ -130,24 +145,25 @@ agg_stednavne AS (
         "type",
         subtype,
         kommunekode,
-        st_force2d (geometri_udtyndet) AS geometri
+        geometri
     FROM
-        stednavne_udstilling.stednavne_udstilling su
+        stednavne s
     LEFT JOIN agg_stednavne_officiel o ON
-        o.objectid = su.objectid
+        o.objectid = s.objectid
     LEFT JOIN agg_stednavne_uofficiel u ON
-        u.objectid = su.objectid
+        u.objectid = s.objectid
     GROUP BY
-        su.objectid,
+        s.objectid,
         id_lokalid,
         navnefoelgenummer,
         visningstekst,
+        navnestatus,
         o.skrivemaade,
         u.skrivemaader,
         "type",
         subtype,
         kommunekode,
-        geometri_udtyndet
+        geometri
 )
 SELECT
     id_lokalid AS id,
