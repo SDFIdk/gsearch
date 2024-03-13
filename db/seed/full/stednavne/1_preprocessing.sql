@@ -2442,7 +2442,7 @@ WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND btrim(subtype_presentation) = '';
 
-    UPDATE
+UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ' / ' || subtype_presentation || ')'
