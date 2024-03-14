@@ -20,13 +20,29 @@ agg_stednavne_uofficiel AS (
     GROUP BY
     	objectid
 ),
+visningstekst_uofficel_merge AS (
+    SELECT
+        objectid,
+        REPLACE(agg_s.visningstekst, '(', '(' || skrivemaade || ', ') AS visningstekst
+    FROM
+        agg_stednavne agg_s
+    WHERE
+        navnestatus = 'uofficielt'
+        AND skrivemaade IS NOT NULL
+),
 agg_stednavne AS (
     SELECT
         su.objectid,
         id_lokalid,
         navnefoelgenummer,
-        visningstekst as visningstekst,
-        navnestatus,
+        (
+            CASE WHEN su.navnestatus = 'uofficielt'
+            THEN
+                vum.visningstekst
+            ELSE
+                su.visningstekst
+            END
+        ) AS visningstekst,
         o.skrivemaade AS skrivemaade,
         u.skrivemaader AS skrivemaade_uofficiel,
         "type",
@@ -39,6 +55,8 @@ agg_stednavne AS (
         o.objectid = su.objectid
     LEFT JOIN agg_stednavne_uofficiel u ON
         u.objectid = su.objectid
+    LEFT JOIN visningstekst_uofficel_merge vum ON
+        vum.objectid = su.objectid
     GROUP BY
         su.objectid,
         id_lokalid,
@@ -57,7 +75,6 @@ SELECT
     replace(replace(visningstekst, ' - ', ' '), '-', ' ') AS visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
-    navnestatus,
     type AS stednavn_type,
     subtype AS stednavn_subtype,
     kommunekode,
@@ -72,7 +89,6 @@ GROUP BY
     visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
-    navnestatus,
     type,
     subtype,
     kommunekode;
