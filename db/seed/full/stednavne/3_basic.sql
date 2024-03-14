@@ -61,17 +61,46 @@ visningstekst_uofficel_merge AS (
     WHERE
         navnestatus = 'uofficielt'
         AND skrivemaade IS NOT NULL
+),
+join_visningstekst AS (
+    SELECT
+        agg_s.objectid,
+        id_lokalid,
+        navnefoelgenummer,
+        (
+            CASE WHEN agg_s.navnestatus = 'uofficielt'
+                     THEN
+                     vum.visningstekst
+                 ELSE
+                     agg_s.visningstekst
+                END
+        ) AS visningstekst,
+        skrivemaade,
+        skrivemaade_uofficiel,
+        navnestatus,
+        "type",
+        subtype,
+        kommunekode,
+        geometri
+    FROM
+        agg_stednavne agg_s
+    LEFT JOIN visningstekst_uofficel_merge vum ON
+        vum.objectid = agg_s.objectid
+    GROUP BY
+        agg_s.objectid,
+        id_lokalid,
+        navnefoelgenummer,
+        skrivemaade,
+        skrivemaade_uofficiel,
+        navnestatus,
+        "type",
+        subtype,
+        kommunekode,
+        geometri
 )
 SELECT
     id_lokalid AS id,
-    (
-        CASE WHEN agg_s.navnestatus = 'uofficielt'
-                 THEN
-                 vum.visningstekst
-             ELSE
-                 agg_s.visningstekst
-            END
-        ) AS visningstekst,
+    visningstekst,
     replace(replace(visningstekst, ' - ', ' '), '-', ' ') AS visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
@@ -81,10 +110,7 @@ SELECT
     st_multi (st_union (geometri)) AS geometri,
     st_envelope (st_collect (geometri)) AS bbox
 INTO basic_initialloading.stednavn
-FROM
-    agg_stednavne agg_s
-    LEFT JOIN visningstekst_uofficel_merge vum ON
-        vum.objectid = agg_s.objectid
+FROM join_visningstekst
 GROUP BY
     id,
     visningstekst,
