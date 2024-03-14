@@ -18,7 +18,7 @@ agg_stednavne_uofficiel AS (
     WHERE
         navnestatus = 'uofficielt'
     GROUP BY
-    	objectid
+        objectid
 ),
 agg_stednavne AS (
     SELECT
@@ -60,48 +60,26 @@ visningstekst_uofficel_merge AS (
         agg_stednavne agg_s
     WHERE
         navnestatus = 'uofficielt'
-        AND skrivemaade IS NOT NULL
-),
-join_visningstekst AS (
-    SELECT
-        agg_s.objectid,
-        id_lokalid,
-        navnefoelgenummer,
-        (
-            CASE WHEN agg_s.navnestatus = 'uofficielt'
-                     THEN
-                     vum.visningstekst
-                 ELSE
-                     agg_s.visningstekst
-                END
-        ) AS visningstekst,
-        skrivemaade,
-        skrivemaade_uofficiel,
-        navnestatus,
-        "type",
-        subtype,
-        kommunekode,
-        geometri
-    FROM
-        agg_stednavne agg_s
-    LEFT JOIN visningstekst_uofficel_merge vum ON
-        vum.objectid = agg_s.objectid
-    GROUP BY
-        agg_s.objectid,
-        id_lokalid,
-        navnefoelgenummer,
-        skrivemaade,
-        skrivemaade_uofficiel,
-        navnestatus,
-        "type",
-        subtype,
-        kommunekode,
-        geometri
+      AND skrivemaade IS NOT NULL
 )
 SELECT
     id_lokalid AS id,
-    visningstekst,
-    replace(replace(visningstekst, ' - ', ' '), '-', ' ') AS visningstekst_nohyphen,
+    (
+        CASE WHEN agg_s.navnestatus = 'uofficielt'
+            THEN
+                 vum.visningstekst
+            ELSE
+                 agg_s.visningstekst
+            END
+        ) AS visningstekst,
+    (
+        CASE WHEN agg_s.navnestatus = 'uofficielt'
+            THEN
+                 replace(replace(vum.visningstekst, ' - ', ' '), '-', ' ')
+            ELSE
+                 replace(replace(agg_s.visningstekst, ' - ', ' '), '-', ' ')
+            END
+        ) AS visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
     type AS stednavn_type,
@@ -110,10 +88,14 @@ SELECT
     st_multi (st_union (geometri)) AS geometri,
     st_envelope (st_collect (geometri)) AS bbox
 INTO basic_initialloading.stednavn
-FROM join_visningstekst
+FROM
+    agg_stednavne agg_s
+    LEFT JOIN visningstekst_uofficel_merge vum ON
+        vum.objectid = agg_s.objectid
 GROUP BY
     id,
-    visningstekst,
+    vum.visningstekst,
+    agg_s.visningstekst,
     visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
