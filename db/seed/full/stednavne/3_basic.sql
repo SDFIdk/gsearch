@@ -57,6 +57,7 @@ SELECT
     replace(replace(visningstekst, ' - ', ' '), '-', ' ') AS visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
+    navnestatus,
     type AS stednavn_type,
     subtype AS stednavn_subtype,
     kommunekode,
@@ -71,6 +72,7 @@ GROUP BY
     visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
+    navnestatus,
     type,
     subtype,
     kommunekode;
