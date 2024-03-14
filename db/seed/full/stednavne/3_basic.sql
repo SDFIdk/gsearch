@@ -20,29 +20,12 @@ agg_stednavne_uofficiel AS (
     GROUP BY
     	objectid
 ),
-visningstekst_uofficel_merge AS (
-    SELECT
-        objectid,
-        REPLACE(agg_s.visningstekst, '(', '(' || skrivemaade || ', ') AS visningstekst
-    FROM
-        agg_stednavne agg_s
-    WHERE
-        navnestatus = 'uofficielt'
-        AND skrivemaade IS NOT NULL
-),
 agg_stednavne AS (
     SELECT
         su.objectid,
         id_lokalid,
         navnefoelgenummer,
-        (
-            CASE WHEN su.navnestatus = 'uofficielt'
-            THEN
-                vum.visningstekst
-            ELSE
-                su.visningstekst
-            END
-        ) AS visningstekst,
+        visningstekst,
         o.skrivemaade AS skrivemaade,
         u.skrivemaader AS skrivemaade_uofficiel,
         "type",
@@ -55,8 +38,6 @@ agg_stednavne AS (
         o.objectid = su.objectid
     LEFT JOIN agg_stednavne_uofficiel u ON
         u.objectid = su.objectid
-    LEFT JOIN visningstekst_uofficel_merge vum ON
-        vum.objectid = su.objectid
     GROUP BY
         su.objectid,
         id_lokalid,
@@ -68,10 +49,27 @@ agg_stednavne AS (
         subtype,
         kommunekode,
         geometri_udtyndet
+),
+visningstekst_uofficel_merge AS (
+    SELECT
+        objectid,
+        REPLACE(agg_s.visningstekst, '(', '(' || skrivemaade || ', ') AS visningstekst
+    FROM
+        agg_stednavne agg_s
+    WHERE
+        navnestatus = 'uofficielt'
+        AND skrivemaade IS NOT NULL
 )
 SELECT
     id_lokalid AS id,
-    visningstekst,
+    (
+        CASE WHEN agg_s.navnestatus = 'uofficielt'
+                 THEN
+                 vum.visningstekst
+             ELSE
+                 agg_s.visningstekst
+            END
+        ) AS visningstekst,
     replace(replace(visningstekst, ' - ', ' '), '-', ' ') AS visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
@@ -82,7 +80,9 @@ SELECT
     st_envelope (st_collect (geometri)) AS bbox
 INTO basic_initialloading.stednavn
 FROM
-    agg_stednavne
+    agg_stednavne agg_s
+    LEFT JOIN visningstekst_uofficel_merge vum ON
+        vum.objectid = agg_s.objectid
 GROUP BY
     id,
     visningstekst,
