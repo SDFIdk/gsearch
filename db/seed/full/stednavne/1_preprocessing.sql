@@ -1308,11 +1308,14 @@ WHERE st_geometrytype (s.geometri) = 'ST_GeometryCollection';
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    geometri_udtyndet = CASE WHEN length(ST_Astext (geometri)) < 5000 THEN
+    geometri_udtyndet = CASE WHEN length(ST_Astext (geometri)) < 5000
+    THEN
         geometri
     ELSE
         ST_SimplifyPreserveTopology (geometri, GREATEST (ST_Xmax (ST_Envelope (geometri)) - ST_Xmin (ST_Envelope (geometri)), ST_Ymax (ST_Envelope (geometri)) - ST_Ymin (ST_Envelope (geometri))) / 300)
     END;
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri_udtyndet);
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1323,6 +1326,7 @@ SET
     visningstekst = NULL;
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
+
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -----------------
