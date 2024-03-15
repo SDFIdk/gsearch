@@ -1336,18 +1336,18 @@ VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 -- SELECT skrivemaade, st_area(geometri)/1000/1000 FROM stednavne_udstilling.stednavne_udstilling WHERE type='bebyggelse' AND subtype='By' ORDER BY st_area(geometri) desc LIMIT 1000
 -- Store byer > 4 km**2 er kendte
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade
+    visningstekst = s.skrivemaade
 WHERE
-    st_area (geometri) > 4000000
-    AND type = 'bebyggelse'
-    AND subtype = 'by'
-    AND visningstekst IS NULL;
+    st_area (s.geometri) > 4000000
+    AND s.type = 'bebyggelse'
+    AND s.subtype = 'by'
+    AND s.visningstekst IS NULL;
 
 -- Bydele i store byer > 10 km**2
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (Bydel i ' || s2.skrivemaade || ')'
 FROM
@@ -1359,11 +1359,11 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.type = 'bebyggelse'
-    AND s1.subtype = 'bydel'
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'bebyggelse'
+    AND s.subtype = 'bydel'
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Byer som ligger helt inde i et postnummerinddeling
 UPDATE
@@ -1717,7 +1717,7 @@ WHERE
 
 -- Ø'er i store farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
@@ -1727,16 +1727,16 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.type = 'landskabsform'
-    AND (s1.subtype = 'ø'
-        OR s1.subtype = 'øgruppe')
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'landskabsform'
+    AND (s.subtype = 'ø'
+        OR s.subtype = 'øgruppe')
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Ø'er i alle farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
@@ -1745,16 +1745,16 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.type = 'landskabsform'
-    AND (s1.subtype = 'ø'
-        OR s1.subtype = 'øgruppe')
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'landskabsform'
+    AND (s.subtype = 'ø'
+        OR s.subtype = 'øgruppe')
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Ø'er intersects alle farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
@@ -1763,12 +1763,12 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_Intersects (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.type = 'landskabsform'
-    AND (s1.subtype = 'ø'
-        OR s1.subtype = 'øgruppe')
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'landskabsform'
+    AND (s.subtype = 'ø'
+        OR s.subtype = 'øgruppe')
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- landskabsformer i postnummer
 UPDATE
@@ -1987,7 +1987,7 @@ WHERE
 
 -- Urentfarvand i store farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
@@ -1997,14 +1997,14 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.type = 'urentfarvand'
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'urentfarvand'
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Urentfarvand i alle farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
@@ -2013,14 +2013,14 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.type = 'urentfarvand'
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'urentfarvand'
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Urentfarvand, intersects
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
@@ -2029,10 +2029,10 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_Intersects (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.type = 'urentfarvand'
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'urentfarvand'
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2378,7 +2378,7 @@ WHERE
 --------------------------
 -- I Jylland
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
@@ -2387,13 +2387,13 @@ FROM
             AND s2.skrivemaade = 'Jylland'
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- På store ø'er
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' på ' || s2.skrivemaade || ')'
 FROM
@@ -2402,13 +2402,13 @@ FROM
             AND s2.area > 50000000
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- På mindre ø'er
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' på ' || s2.skrivemaade || ')'
 FROM
@@ -2416,9 +2416,9 @@ FROM
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'Ø'
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s1.visningstekst IS NULL
-    AND s1.objectid = s1.objectid
-    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.objectid = s1.objectid
+    AND s.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Alle andre får blot type/subtype
 UPDATE
