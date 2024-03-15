@@ -1286,7 +1286,7 @@ AND objectid IN (
     SELECT
         objectid
     FROM
-        stednavne_udstilling.stednavne_udstilling
+        stednavne_udstilling.stednavne_udstilling s
     WHERE
         navnestatus = 'uofficielt'
     AND EXISTS (
@@ -1297,9 +1297,9 @@ AND objectid IN (
         WHERE 
             s2.navnestatus = 'officielt'
         AND 
-            s2.objectid = stednavne_udstilling.stednavne_udstilling.objectid
+            s2.objectid = s.objectid
         AND 
-            s2.skrivemaade = stednavne_udstilling.stednavne_udstilling.skrivemaade));
+            s2.skrivemaade = s.skrivemaade));
 
 -- 2015-09-22/Christian: Slet stednavne med geometrier, der er GeometryCollection
 DELETE FROM stednavne_udstilling.stednavne_udstilling s
@@ -1355,11 +1355,11 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'bebyggelse'
-    AND stednavne_udstilling.stednavne_udstilling.subtype = 'bydel'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.type = 'bebyggelse'
+    AND s1.subtype = 'bydel'
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Byer som ligger helt inde i et postnummerinddeling
 UPDATE
@@ -1370,11 +1370,11 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    s.visningstekst IS NULL
     AND s.type = 'bebyggelse'
     AND s.subtype = 'by'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1388,11 +1388,11 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
         AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    s.visningstekst IS NULL
     AND s.type = 'bebyggelse'
     AND s.subtype = 'by'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Bebyggelser som ligger helt inde i et postnummerinddeling
 UPDATE
@@ -1403,10 +1403,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    s.visningstekst IS NULL
     AND s.type = 'bebyggelse'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Bebyggelser, > 50 % i postnummerinddeling
 UPDATE
@@ -1418,10 +1418,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
         AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    s.visningstekst IS NULL
   AND s.type = 'bebyggelse'
-  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+  AND s.objectid = s.objectid
+  AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1438,10 +1438,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'begravelsesplads'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'begravelsesplads'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -1453,10 +1453,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'begravelsesplads'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'begravelsesplads'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1475,10 +1475,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'bygning'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'bygning'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1494,10 +1494,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'bygning'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'bygning'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 --------------------
 -- Campingpladser --
@@ -1512,10 +1512,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'campingplads'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'campingplads'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -1527,10 +1527,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'campingplads'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'campingplads'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -------------
 -- Farvand --
@@ -1555,10 +1555,10 @@ FROM
             AND s2.type = 'farvand'
             AND ST_contains (s2.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'farvand'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'farvand'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et farvand
 UPDATE
@@ -1572,10 +1572,10 @@ FROM
             AND s2.geometri_udtyndet && s.geometri_udtyndet
             AND st_area (st_intersection (s2.geometri_udtyndet, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'farvand'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'farvand'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 ------------------
 -- Fortidsminde --
@@ -1590,10 +1590,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'fortidsminde'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'fortidsminde'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Fortidsminder, som er multi punkter og ligger > 50 % i postnummerinddeling
 UPDATE
@@ -1605,11 +1605,11 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    st_geometrytype (stednavne_udstilling.stednavne_udstilling.geometri) = 'ST_MultiPoint'
-    AND stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'fortidsminde'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    st_geometrytype (s.geometri) = 'ST_MultiPoint'
+    AND s.visningstekst IS NULL
+    AND s.type = 'fortidsminde'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1626,10 +1626,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'friluftsbad'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'friluftsbad'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -----------------
 -- Havnebassin --
@@ -1644,10 +1644,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'havnebassin'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'havnebassin'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Havnebassin,  > 50 % i postnummerinddeling
 UPDATE
@@ -1659,10 +1659,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'havnebassin'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'havnebassin'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 --------------
 -- Jernbane --
@@ -1677,10 +1677,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'jernbane'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'jernbane'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Jernbane,  > 50 % i postnummerinddeling
 UPDATE
@@ -1692,10 +1692,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'jernbane'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'jernbane'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -------------------
 -- Landskabsform --
@@ -1703,13 +1703,13 @@ WHERE
 
 -- Landskabsformer > 50 km**2
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade
+    visningstekst = s.skrivemaade
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND TYPE = 'landskabsform'
-    AND ST_Area (geometri) > 50000000;
+    s.visningstekst IS NULL
+    AND s.type = 'landskabsform'
+    AND ST_Area (s.geometri) > 50000000;
 
 -- Ø'er i store farvande
 UPDATE
@@ -1723,12 +1723,12 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
-    AND (stednavne_udstilling.stednavne_udstilling.subtype = 'ø'
-        OR stednavne_udstilling.stednavne_udstilling.subtype = 'øgruppe')
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.type = 'landskabsform'
+    AND (s1.subtype = 'ø'
+        OR s1.subtype = 'øgruppe')
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Ø'er i alle farvande
 UPDATE
@@ -1741,12 +1741,12 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
-    AND (stednavne_udstilling.stednavne_udstilling.subtype = 'ø'
-        OR stednavne_udstilling.stednavne_udstilling.subtype = 'øgruppe')
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.type = 'landskabsform'
+    AND (s1.subtype = 'ø'
+        OR s1.subtype = 'øgruppe')
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Ø'er intersects alle farvande
 UPDATE
@@ -1759,12 +1759,12 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_Intersects (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
-    AND (stednavne_udstilling.stednavne_udstilling.subtype = 'ø'
-        OR stednavne_udstilling.stednavne_udstilling.subtype = 'øgruppe')
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.type = 'landskabsform'
+    AND (s1.subtype = 'ø'
+        OR s1.subtype = 'øgruppe')
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- landskabsformer i postnummer
 UPDATE
@@ -1775,10 +1775,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'landskabsform'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1792,22 +1792,22 @@ SET
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
     AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-  AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
-  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+  AND s.type = 'landskabsform'
+  AND s.objectid = s.objectid
+  AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 ---------------
 -- Lufthavne --
 ---------------
 
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'lufthavn';
+    s.visningstekst IS NULL
+    AND s.type = 'lufthavn';
 
 ----------------
 -- Naturareal --
@@ -1822,10 +1822,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'naturareal'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'naturareal'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1839,10 +1839,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
         AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'naturareal'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'naturareal'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1859,10 +1859,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'navigationsanlaeg'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'navigationsanlaeg'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 ------------------------
 -- Restriktionsanlaeg --
@@ -1877,10 +1877,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'restriktionsareal'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'restriktionsareal'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Restriktionsanlaeg, > 50 % i postnummerinddeling
 UPDATE
@@ -1892,10 +1892,10 @@ SET
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
     AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-  AND stednavne_udstilling.stednavne_udstilling.type = 'restriktionsareal'
-  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+  AND s.type = 'restriktionsareal'
+  AND s.objectid = s.objectid
+  AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 ----------
 -- Rute --
@@ -1924,10 +1924,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'sevaerdighed'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'sevaerdighed'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Sevaerdighed,  > 50 % i postnummerinddeling
 UPDATE
@@ -1939,10 +1939,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'sevaerdighed'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'sevaerdighed'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -------------------
 -- Terraenkontur --
@@ -1957,10 +1957,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'terraenkontur'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'terraenkontur'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Terraenkontur,  > 50 % i postnummerinddeling
 UPDATE
@@ -1972,10 +1972,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'terraenkontur'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'terraenkontur'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 ------------------
 -- Urentfarvand --
@@ -1993,10 +1993,10 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'urentfarvand'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.type = 'urentfarvand'
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Urentfarvand i alle farvande
 UPDATE
@@ -2009,10 +2009,10 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'urentfarvand'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.type = 'urentfarvand'
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Urentfarvand, intersects
 UPDATE
@@ -2025,10 +2025,10 @@ FROM
             AND s1.geometri && s2.geometri
             AND ST_Intersects (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'urentfarvand'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.type = 'urentfarvand'
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2045,10 +2045,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'vandloeb'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'vandloeb'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Vandloeb, > 50 % i postnummerinddeling
 UPDATE
@@ -2060,10 +2060,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'vandloeb'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'vandloeb'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2081,10 +2081,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'andentopografiflade'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'andentopografiflade'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -2096,10 +2096,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'andentopografiflade'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'andentopografiflade'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
@@ -2123,10 +2123,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'andentopografipunkt'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'andentopografipunkt'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2155,10 +2155,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'idraetsanlaeg'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'idraetsanlaeg'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -2170,10 +2170,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'idraetsanlaeg'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'idraetsanlaeg'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2190,10 +2190,10 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'soe'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'soe'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -2205,10 +2205,10 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'soe'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'soe'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 40 % i et postnummerinddeling
 UPDATE
@@ -2220,19 +2220,19 @@ FROM
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
             AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.4 * s.area)
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'soe'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'soe'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'soe';
+    s.visningstekst IS NULL
+    AND s.type = 'soe';
 
 ---------------------
 -- standsningssted --
@@ -2247,19 +2247,19 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'standsningssted'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'standsningssted'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ', ' || subtype || ')'
+    visningstekst = s.skrivemaade || ' (' || INITCAP(s.type) || ', ' || s.subtype || ')'
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'standsningssted';
+    s.visningstekst IS NULL
+    AND s.type = 'standsningssted';
 
 --------------------------
 -- ubearbejdetnavnflade --
@@ -2274,19 +2274,19 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnflade'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'ubearbejdetnavnflade'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnflade';
+    s.visningstekst IS NULL
+    AND s.type = 'ubearbejdetnavnflade';
 
 --------------------------
 -- ubearbejdetnavnlinje --
@@ -2301,19 +2301,19 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnlinje'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'ubearbejdetnavnlinje'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnlinje';
+    s.visningstekst IS NULL
+    AND s.type = 'ubearbejdetnavnlinje';
 
 --------------------------
 -- ubearbejdetnavnpunkt --
@@ -2328,19 +2328,19 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnpunkt'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'ubearbejdetnavnpunkt'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnpunkt';
+    s.visningstekst IS NULL
+    AND s.type = 'ubearbejdetnavnpunkt';
 
 --------------------------
 -- vej --
@@ -2355,19 +2355,19 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'vej'
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+    s.visningstekst IS NULL
+    AND s.type = 'vej'
+    AND s.objectid = s.objectid
+    AND s.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.type = 'vej';
+    s.visningstekst IS NULL
+    AND s.type = 'vej';
 
 --------------------------
 -- Resterende stednavne --
@@ -2383,9 +2383,9 @@ FROM
             AND s2.skrivemaade = 'Jylland'
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- På store ø'er
 UPDATE
@@ -2398,9 +2398,9 @@ FROM
             AND s2.area > 50000000
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- På mindre ø'er
 UPDATE
@@ -2412,26 +2412,26 @@ FROM
     JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'Ø'
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+    s1.visningstekst IS NULL
+    AND s1.objectid = s1.objectid
+    AND s1.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Alle andre får blot type/subtype
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ')'
+    visningstekst = s.skrivemaade || ' (' || INITCAP(s.type) || ')'
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND btrim(subtype_presentation) = '';
+    s.visningstekst IS NULL
+    AND btrim(s.subtype_presentation) = '';
 
 UPDATE
-    stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling s
 SET
-    visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ' / ' || subtype_presentation || ')'
+    visningstekst = s.skrivemaade || ' (' || INITCAP(s.type) || ' / ' || s.subtype_presentation || ')'
 WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND btrim(subtype_presentation) <> '';
+    s.visningstekst IS NULL
+    AND btrim(s.subtype_presentation) <> '';
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2439,23 +2439,23 @@ VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 -- Kommunekode needs to be done here and not in 510_api_stednavne as it else results in duplicated kommunekoder in
 -- stednavne that has more than one skrivemaade.
 UPDATE
-stednavne_udstilling.stednavne_udstilling
+stednavne_udstilling.stednavne_udstilling s
 SET
     kommunekode = t.kommunekode
 FROM (
     SELECT
-        s.objectid,
-        s.navnefoelgenummer,
+        s1.objectid,
+        s1.navnefoelgenummer,
         string_agg(k.kommunekode, ',') AS kommunekode
     FROM
-        stednavne_udstilling.stednavne_udstilling s
-        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, s.geometri)
+        stednavne_udstilling.stednavne_udstilling s1
+        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, s1.geometri)
     GROUP BY
-        s.objectid,
-        s.navnefoelgenummer
+        s1.objectid,
+        s1.navnefoelgenummer
     ) t
 WHERE
-    stednavne_udstilling.stednavne_udstilling.objectid = t.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = t.navnefoelgenummer;
+    s.objectid = t.objectid
+    AND s.navnefoelgenummer = t.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
