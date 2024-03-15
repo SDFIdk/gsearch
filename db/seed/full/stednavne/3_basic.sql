@@ -99,6 +99,7 @@ GROUP BY
     visningstekst_nohyphen,
     skrivemaade,
     skrivemaade_uofficiel,
+    agg_s.navnestatus,
     type,
     subtype,
     kommunekode;
