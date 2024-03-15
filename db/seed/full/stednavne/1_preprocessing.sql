@@ -1257,7 +1257,6 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype, type);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (type, visningstekst);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype_presentation);
-CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (objectid);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (navnefoelgenummer);
@@ -1323,6 +1322,7 @@ UPDATE
 SET
     visningstekst = NULL;
 
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -----------------
