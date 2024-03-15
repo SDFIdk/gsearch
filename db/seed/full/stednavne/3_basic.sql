@@ -65,7 +65,7 @@ visningstekst_uofficel_merge AS (
 SELECT
     id_lokalid AS id,
     (
-        CASE WHEN agg_s.navnestatus = 'uofficielt'
+        CASE WHEN agg_s.navnestatus = 'uofficielt' AND skrivemaade IS NOT NULL
             THEN
                  vum.visningstekst
             ELSE
@@ -73,7 +73,7 @@ SELECT
             END
         ) AS visningstekst,
     (
-        CASE WHEN agg_s.navnestatus = 'uofficielt'
+        CASE WHEN agg_s.navnestatus = 'uofficielt' AND skrivemaade IS NOT NULL
             THEN
                  replace(replace(vum.visningstekst, ' - ', ' '), '-', ' ')
             ELSE
