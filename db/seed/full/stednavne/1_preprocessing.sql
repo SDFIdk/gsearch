@@ -1365,7 +1365,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (By i ' || p.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
@@ -1382,7 +1382,7 @@ VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (By i ' || p.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
@@ -1952,7 +1952,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || p.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
@@ -1966,7 +1966,7 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || p.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
