@@ -1499,23 +1499,6 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Justeringer af visningstekst (når subtypen oplagt fremgår af skrivemaade)
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, 'Akvariet (Akvarium i ', 'Akvariet (')
-WHERE
-    type = 'bygning'
-    AND subtype = 'akvarium';
-
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = replace(visningstekst, 'Akvariet (Akvarium i ', 'Akvariet (')
-WHERE
-    type = 'bygning'
-    AND subtype = 'akvarium';
-
 --------------------
 -- Campingpladser --
 --------------------
