@@ -1,892 +1,892 @@
 DROP VIEW IF EXISTS stednavne_udstilling.andentopografiflade CASCADE;
 
 CREATE VIEW stednavne_udstilling.andentopografiflade AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.andentopografiflade x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.andentopografiflade x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.andentopografipunkt CASCADE;
 
 CREATE VIEW stednavne_udstilling.andentopografipunkt AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.andentopografipunkt x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.andentopografipunkt x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.bebyggelse CASCADE;
 
 CREATE VIEW stednavne_udstilling.bebyggelse AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.bebyggelse x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.bebyggelse x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.begravelsesplads CASCADE;
 
 CREATE VIEW stednavne_udstilling.begravelsesplads AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.begravelsesplads x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.begravelsesplads x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.bygning CASCADE;
 
 CREATE VIEW stednavne_udstilling.bygning AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.bygning x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.bygning x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.campingplads CASCADE;
 
 CREATE VIEW stednavne_udstilling.campingplads AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.campingplads x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.campingplads x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.farvand CASCADE;
 
 CREATE VIEW stednavne_udstilling.farvand AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.farvand x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.farvand x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.fortidsminde CASCADE;
 
 CREATE VIEW stednavne_udstilling.fortidsminde AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.fortidsminde x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.fortidsminde x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.friluftsbad CASCADE;
 
 CREATE VIEW stednavne_udstilling.friluftsbad AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.friluftsbad x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.friluftsbad x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.havnebassin CASCADE;
 
 CREATE VIEW stednavne_udstilling.havnebassin AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.havnebassin x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.havnebassin x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.idraetsanlaeg CASCADE;
 
 CREATE VIEW stednavne_udstilling.idraetsanlaeg AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.idraetsanlaeg x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.idraetsanlaeg x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.jernbane CASCADE;
 
 CREATE VIEW stednavne_udstilling.jernbane AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.jernbane x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.jernbane x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.landskabsform CASCADE;
 
 CREATE VIEW stednavne_udstilling.landskabsform AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.landskabsform x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.landskabsform x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.lufthavn CASCADE;
 
 CREATE VIEW stednavne_udstilling.lufthavn AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.lufthavn x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.lufthavn x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.naturareal CASCADE;
 
 CREATE VIEW stednavne_udstilling.naturareal AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.naturareal x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.naturareal x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.navigationsanlaeg CASCADE;
 
 CREATE VIEW stednavne_udstilling.navigationsanlaeg AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.navigationsanlaeg x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.navigationsanlaeg x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.restriktionsareal CASCADE;
 
 CREATE VIEW stednavne_udstilling.restriktionsareal AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.restriktionsareal x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.restriktionsareal x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.sevaerdighed CASCADE;
 
 CREATE VIEW stednavne_udstilling.sevaerdighed AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.sevaerdighed x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.sevaerdighed x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.soe CASCADE;
 
 CREATE VIEW stednavne_udstilling.soe AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.soe x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.soe x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.standsningssted CASCADE;
 
 CREATE VIEW stednavne_udstilling.standsningssted AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.standsningssted x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.standsningssted x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.terraenkontur CASCADE;
 
 CREATE VIEW stednavne_udstilling.terraenkontur AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.terraenkontur x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.terraenkontur x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.ubearbejdetnavnflade CASCADE;
 
 CREATE VIEW stednavne_udstilling.ubearbejdetnavnflade AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.ubearbejdetnavnflade x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.ubearbejdetnavnflade x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.ubearbejdetnavnlinje CASCADE;
 
 CREATE VIEW stednavne_udstilling.ubearbejdetnavnlinje AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.ubearbejdetnavnlinje x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.ubearbejdetnavnlinje x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.ubearbejdetnavnpunkt CASCADE;
 
 CREATE VIEW stednavne_udstilling.ubearbejdetnavnpunkt AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.ubearbejdetnavnpunkt x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.ubearbejdetnavnpunkt x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.urentfarvand CASCADE;
 
 CREATE VIEW stednavne_udstilling.urentfarvand AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.urentfarvand x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.urentfarvand x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.vandloeb CASCADE;
 
 CREATE VIEW stednavne_udstilling.vandloeb AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.vandloeb x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.vandloeb x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
-    
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
+
 
 DROP VIEW IF EXISTS stednavne_udstilling.vej CASCADE;
 
 CREATE VIEW stednavne_udstilling.vej AS
+SELECT
+    x.*,
+    s.skrivemaade,
+    s.aktualitet,
+    s.brugsprioritet,
+    s.navnefoelgenummer,
+    s.navnestatus,
+    s.sprog
+FROM
+    stednavne.vej x JOIN (
         SELECT
-            x.*,
-            s.skrivemaade,
-            s.aktualitet,
-            s.brugsprioritet,
-            s.navnefoelgenummer,
-            s.navnestatus,
-            s.sprog
-        FROM 
-            stednavne.vej x JOIN (
-                SELECT 
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    min(navnefoelgenummer) AS navnefoelgenummer,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-                FROM stednavne.stednavn
-                GROUP BY
-                    skrivemaade,
-                    aktualitet,
-                    brugsprioritet,
-                    navnestatus,
-                    sprog,
-                    navngivetsted_objectid
-            ) AS s
-            ON x.objectid = s.navngivetsted_objectid;
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            min(navnefoelgenummer) AS navnefoelgenummer,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+        FROM stednavne.stednavn
+        GROUP BY
+            skrivemaade,
+            aktualitet,
+            brugsprioritet,
+            navnestatus,
+            sprog,
+            navngivetsted_objectid
+    ) AS s
+    ON x.objectid = s.navngivetsted_objectid;
 
 
 
@@ -1279,26 +1279,26 @@ VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -- Slet dublerede forekomster (Samme objekt og en uofficiel stavemaade der er magen til)
 DELETE FROM stednavne_udstilling.stednavne_udstilling
-WHERE 
+WHERE
     navnestatus = 'uofficielt'
-AND objectid IN (
+  AND objectid IN (
     SELECT
         objectid
     FROM
-        stednavne_udstilling.stednavne_udstilling s
+        stednavne_udstilling.stednavne_udstilling
     WHERE
         navnestatus = 'uofficielt'
-    AND EXISTS (
+      AND EXISTS (
         SELECT
             '1'
         FROM
             stednavne_udstilling.stednavne_udstilling s2
-        WHERE 
+        WHERE
             s2.navnestatus = 'officielt'
-        AND 
-            s2.objectid = s.objectid
-        AND 
-            s2.skrivemaade = s.skrivemaade));
+          AND
+            s2.objectid = stednavne_udstilling.stednavne_udstilling.objectid
+          AND
+            s2.skrivemaade = stednavne_udstilling.stednavne_udstilling.skrivemaade));
 
 -- 2015-09-22/Christian: Slet stednavne med geometrier, der er GeometryCollection
 DELETE FROM stednavne_udstilling.stednavne_udstilling s
@@ -1336,34 +1336,34 @@ VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 -- SELECT skrivemaade, st_area(geometri)/1000/1000 FROM stednavne_udstilling.stednavne_udstilling WHERE type='bebyggelse' AND subtype='By' ORDER BY st_area(geometri) desc LIMIT 1000
 -- Store byer > 4 km**2 er kendte
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade
+    visningstekst = skrivemaade
 WHERE
-    st_area (s.geometri) > 4000000
-    AND s.type = 'bebyggelse'
-    AND s.subtype = 'by'
-    AND s.visningstekst IS NULL;
+    st_area (geometri) > 4000000
+  AND type = 'bebyggelse'
+  AND subtype = 'by'
+  AND visningstekst IS NULL;
 
 -- Bydele i store byer > 10 km**2
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (Bydel i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (
-            s2.type = 'bebyggelse'
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (
+        s2.type = 'bebyggelse'
             AND s2.subtype = 'by'
             AND s2.area > 10000000
             AND s1.geometri && s2.geometri
             AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'bebyggelse'
-    AND s.subtype = 'bydel'
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'bebyggelse'
+  AND stednavne_udstilling.stednavne_udstilling.subtype = 'bydel'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Byer som ligger helt inde i et postnummerinddeling
 UPDATE
@@ -1372,13 +1372,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'bebyggelse'
-    AND s.subtype = 'by'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND s.type = 'bebyggelse'
+  AND s.subtype = 'by'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1389,14 +1389,14 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
         AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'bebyggelse'
-    AND s.subtype = 'by'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND s.type = 'bebyggelse'
+  AND s.subtype = 'by'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Bebyggelser som ligger helt inde i et postnummerinddeling
 UPDATE
@@ -1405,12 +1405,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'bebyggelse'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND s.type = 'bebyggelse'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Bebyggelser, > 50 % i postnummerinddeling
 UPDATE
@@ -1419,13 +1419,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
         AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
   AND s.type = 'bebyggelse'
-  AND s.objectid = s.objectid
-  AND s.navnefoelgenummer = s.navnefoelgenummer;
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1440,12 +1440,12 @@ SET
     visningstekst = s.skrivemaade || ' (Begravelsesplads i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'begravelsesplads'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'begravelsesplads'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -1454,13 +1454,13 @@ SET
     visningstekst = s.skrivemaade || ' (Begravelsesplads i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'begravelsesplads'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'begravelsesplads'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1473,16 +1473,16 @@ UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s.skrivemaade || ' (' || upper(SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '')
-            FROM 1 FOR 1)) || SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '')
+        FROM 1 FOR 1)) || SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '')
         FROM 2 FOR length(s.subtype_presentation)) || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'bygning'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'bygning'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1491,17 +1491,17 @@ UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s.skrivemaade || ' (' || upper(SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '')
-            FROM 1 FOR 1)) || SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '')
+        FROM 1 FOR 1)) || SUBSTRING(REPLACE(s.subtype_presentation, 'Anden ', '')
         FROM 2 FOR length(s.subtype_presentation)) || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'bygning'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'bygning'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 --------------------
 -- Campingpladser --
@@ -1514,12 +1514,12 @@ SET
     visningstekst = s.skrivemaade || ' (Campingplads i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'campingplads'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'campingplads'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -1528,13 +1528,13 @@ SET
     visningstekst = s.skrivemaade || ' (Campingplads i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'campingplads'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'campingplads'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -------------
 -- Farvand --
@@ -1555,14 +1555,14 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.visningstekst IS NOT NULL
-            AND s2.type = 'farvand'
-            AND ST_contains (s2.geometri, s.geometri_udtyndet))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.visningstekst IS NOT NULL
+        AND s2.type = 'farvand'
+        AND ST_contains (s2.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'farvand'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'farvand'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et farvand
 UPDATE
@@ -1571,15 +1571,15 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.visningstekst IS NOT NULL
-            AND s2.type = 'farvand'
-            AND s2.geometri_udtyndet && s.geometri_udtyndet
-            AND st_area (st_intersection (s2.geometri_udtyndet, s.geometri_udtyndet)) > 0.5 * s.area)
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.visningstekst IS NOT NULL
+        AND s2.type = 'farvand'
+        AND s2.geometri_udtyndet && s.geometri_udtyndet
+        AND st_area (st_intersection (s2.geometri_udtyndet, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'farvand'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'farvand'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 ------------------
 -- Fortidsminde --
@@ -1592,12 +1592,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'fortidsminde'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'fortidsminde'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Fortidsminder, som er multi punkter og ligger > 50 % i postnummerinddeling
 UPDATE
@@ -1606,14 +1606,14 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    st_geometrytype (s.geometri) = 'ST_MultiPoint'
-    AND s.visningstekst IS NULL
-    AND s.type = 'fortidsminde'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    st_geometrytype (stednavne_udstilling.stednavne_udstilling.geometri) = 'ST_MultiPoint'
+  AND stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'fortidsminde'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1628,12 +1628,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || 'Friluftsbad' || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'friluftsbad'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'friluftsbad'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -----------------
 -- Havnebassin --
@@ -1646,12 +1646,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'havnebassin'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'havnebassin'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Havnebassin,  > 50 % i postnummerinddeling
 UPDATE
@@ -1660,13 +1660,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'havnebassin'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'havnebassin'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 --------------
 -- Jernbane --
@@ -1679,12 +1679,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'jernbane'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'jernbane'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Jernbane,  > 50 % i postnummerinddeling
 UPDATE
@@ -1693,13 +1693,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'jernbane'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'jernbane'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -------------------
 -- Landskabsform --
@@ -1707,68 +1707,68 @@ WHERE
 
 -- Landskabsformer > 50 km**2
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade
+    visningstekst = skrivemaade
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'landskabsform'
-    AND ST_Area (s.geometri) > 50000000;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND TYPE = 'landskabsform'
+  AND ST_Area (geometri) > 50000000;
 
 -- Ø'er i store farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
-            AND s2.area > 400000000
-            AND s1.geometri && s2.geometri
-            AND ST_contains (s2.geometri, s1.geometri))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
+        AND s2.area > 400000000
+        AND s1.geometri && s2.geometri
+        AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'landskabsform'
-    AND (s.subtype = 'ø'
-        OR s.subtype = 'øgruppe')
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
+  AND (stednavne_udstilling.stednavne_udstilling.subtype = 'ø'
+    OR stednavne_udstilling.stednavne_udstilling.subtype = 'øgruppe')
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Ø'er i alle farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
-            AND s1.geometri && s2.geometri
-            AND ST_contains (s2.geometri, s1.geometri))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
+        AND s1.geometri && s2.geometri
+        AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'landskabsform'
-    AND (s.subtype = 'ø'
-        OR s.subtype = 'øgruppe')
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
+  AND (stednavne_udstilling.stednavne_udstilling.subtype = 'ø'
+    OR stednavne_udstilling.stednavne_udstilling.subtype = 'øgruppe')
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Ø'er intersects alle farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
-            AND s1.geometri && s2.geometri
-            AND ST_Intersects (s2.geometri, s1.geometri))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
+        AND s1.geometri && s2.geometri
+        AND ST_Intersects (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'landskabsform'
-    AND (s.subtype = 'ø'
-        OR s.subtype = 'øgruppe')
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
+  AND (stednavne_udstilling.stednavne_udstilling.subtype = 'ø'
+    OR stednavne_udstilling.stednavne_udstilling.subtype = 'øgruppe')
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- landskabsformer i postnummer
 UPDATE
@@ -1777,12 +1777,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'landskabsform'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1791,27 +1791,27 @@ UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
-    FROM
+FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-  AND s.type = 'landskabsform'
-  AND s.objectid = s.objectid
-  AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'landskabsform'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 ---------------
 -- Lufthavne --
 ---------------
 
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
+    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'lufthavn';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.type = 'lufthavn';
 
 ----------------
 -- Naturareal --
@@ -1824,12 +1824,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'naturareal'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'naturareal'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1840,13 +1840,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
         AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'naturareal'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'naturareal'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -1861,12 +1861,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'navigationsanlaeg'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'navigationsanlaeg'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 ------------------------
 -- Restriktionsanlaeg --
@@ -1879,27 +1879,27 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'restriktionsareal'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'restriktionsareal'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Restriktionsanlaeg, > 50 % i postnummerinddeling
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
-    FROM
+FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-  AND s.type = 'restriktionsareal'
-  AND s.objectid = s.objectid
-  AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'restriktionsareal'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 ----------
 -- Rute --
@@ -1913,7 +1913,7 @@ SET
     visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
 WHERE
     visningstekst IS NULL
-    AND TYPE = 'rute';
+  AND TYPE = 'rute';
 
 ------------------
 -- Sevaerdighed --
@@ -1926,12 +1926,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'sevaerdighed'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'sevaerdighed'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Sevaerdighed,  > 50 % i postnummerinddeling
 UPDATE
@@ -1940,13 +1940,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'sevaerdighed'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'sevaerdighed'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -------------------
 -- Terraenkontur --
@@ -1959,12 +1959,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'terraenkontur'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'terraenkontur'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Terraenkontur,  > 50 % i postnummerinddeling
 UPDATE
@@ -1973,13 +1973,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'terraenkontur'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'terraenkontur'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 ------------------
 -- Urentfarvand --
@@ -1987,52 +1987,52 @@ WHERE
 
 -- Urentfarvand i store farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
-            AND s2.area > 400000000
-            AND s1.geometri && s2.geometri
-            AND ST_contains (s2.geometri, s1.geometri))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
+        AND s2.area > 400000000
+        AND s1.geometri && s2.geometri
+        AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'urentfarvand'
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'urentfarvand'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Urentfarvand i alle farvande
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
-            AND s1.geometri && s2.geometri
-            AND ST_contains (s2.geometri, s1.geometri))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
+        AND s1.geometri && s2.geometri
+        AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'urentfarvand'
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'urentfarvand'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Urentfarvand, intersects
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
-            AND s1.geometri && s2.geometri
-            AND ST_Intersects (s2.geometri, s1.geometri))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.type = 'farvand'
+        AND s1.geometri && s2.geometri
+        AND ST_Intersects (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'urentfarvand'
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'urentfarvand'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2047,12 +2047,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'vandloeb'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'vandloeb'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Vandloeb, > 50 % i postnummerinddeling
 UPDATE
@@ -2061,13 +2061,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, st_envelope (s.geometri_udtyndet))) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'vandloeb'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'vandloeb'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2083,12 +2083,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'andentopografiflade'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'andentopografiflade'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -2097,13 +2097,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'andentopografiflade'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'andentopografiflade'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
@@ -2112,7 +2112,7 @@ SET
     visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
 WHERE
     visningstekst IS NULL
-    AND type = 'andentopografiflade';
+  AND type = 'andentopografiflade';
 
 -------------------------
 -- andentopografipunkt --
@@ -2125,12 +2125,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'andentopografipunkt'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'andentopografipunkt'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2144,7 +2144,7 @@ SET
     visningstekst = skrivemaade || '(' || subtype_presentation || ')'
 WHERE
     type = 'faergerutelinje'
-    AND visningstekst IS NULL;
+  AND visningstekst IS NULL;
 
 -------------------
 -- idraetsanlaeg --
@@ -2157,12 +2157,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'idraetsanlaeg'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'idraetsanlaeg'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -2171,13 +2171,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'idraetsanlaeg'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'idraetsanlaeg'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2192,12 +2192,12 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'soe'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'soe'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 50 % i et postnummerinddeling
 UPDATE
@@ -2206,13 +2206,13 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'soe'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'soe'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- > 40 % i et postnummerinddeling
 UPDATE
@@ -2221,22 +2221,22 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
-            AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.4 * s.area)
+        JOIN dagi_10.postnummerinddeling p ON (p.geometri && s.geometri_udtyndet
+        AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.4 * s.area)
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'soe'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'soe'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
+    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'soe';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'soe';
 
 ---------------------
 -- standsningssted --
@@ -2249,21 +2249,21 @@ SET
     visningstekst = s.skrivemaade || ' (' || INITCAP(s.type) || ', ' || s.subtype || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'standsningssted'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'standsningssted'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || INITCAP(s.type) || ', ' || s.subtype || ')'
+    visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ', ' || subtype || ')'
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'standsningssted';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'standsningssted';
 
 --------------------------
 -- ubearbejdetnavnflade --
@@ -2276,21 +2276,21 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'ubearbejdetnavnflade'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnflade'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
+    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'ubearbejdetnavnflade';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnflade';
 
 --------------------------
 -- ubearbejdetnavnlinje --
@@ -2303,21 +2303,21 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'ubearbejdetnavnlinje'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnlinje'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
+    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'ubearbejdetnavnlinje';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnlinje';
 
 --------------------------
 -- ubearbejdetnavnpunkt --
@@ -2330,21 +2330,21 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'ubearbejdetnavnpunkt'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnpunkt'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
+    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'ubearbejdetnavnpunkt';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnpunkt';
 
 --------------------------
 -- vej --
@@ -2357,85 +2357,85 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
+        JOIN dagi_10.postnummerinddeling p ON (ST_contains (p.geometri, s.geometri_udtyndet))
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'vej'
-    AND s.objectid = s.objectid
-    AND s.navnefoelgenummer = s.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'vej'
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Øvrige
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ')'
+    visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
 WHERE
-    s.visningstekst IS NULL
-    AND s.type = 'vej';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.type = 'vej';
 
 --------------------------
 -- Resterende stednavne --
 --------------------------
 -- I Jylland
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'halvø'
-            AND s2.skrivemaade = 'Jylland'
-            AND ST_contains (s2.geometri, s1.geometri))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'halvø'
+        AND s2.skrivemaade = 'Jylland'
+        AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- På store ø'er
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' på ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'Ø'
-            AND s2.area > 50000000
-            AND ST_contains (s2.geometri, s1.geometri))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'Ø'
+        AND s2.area > 50000000
+        AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- På mindre ø'er
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' på ' || s2.skrivemaade || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s1
-    JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'Ø'
-            AND ST_contains (s2.geometri, s1.geometri))
+        JOIN stednavne_udstilling.stednavne_udstilling s2 ON (s2.subtype = 'Ø'
+        AND ST_contains (s2.geometri, s1.geometri))
 WHERE
-    s.visningstekst IS NULL
-    AND s.objectid = s1.objectid
-    AND s.navnefoelgenummer = s1.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
 -- Alle andre får blot type/subtype
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || INITCAP(s.type) || ')'
+    visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ')'
 WHERE
-    s.visningstekst IS NULL
-    AND btrim(s.subtype_presentation) = '';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND btrim(subtype_presentation) = '';
 
 UPDATE
-    stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || INITCAP(s.type) || ' / ' || s.subtype_presentation || ')'
+    visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ' / ' || subtype_presentation || ')'
 WHERE
-    s.visningstekst IS NULL
-    AND btrim(s.subtype_presentation) <> '';
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+  AND btrim(subtype_presentation) <> '';
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
@@ -2443,23 +2443,23 @@ VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 -- Kommunekode needs to be done here and not in 510_api_stednavne as it else results in duplicated kommunekoder in
 -- stednavne that has more than one skrivemaade.
 UPDATE
-stednavne_udstilling.stednavne_udstilling s
+    stednavne_udstilling.stednavne_udstilling
 SET
     kommunekode = t.kommunekode
 FROM (
-    SELECT
-        s1.objectid,
-        s1.navnefoelgenummer,
-        string_agg(k.kommunekode, ',') AS kommunekode
-    FROM
-        stednavne_udstilling.stednavne_udstilling s1
-        LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, s1.geometri)
-    GROUP BY
-        s1.objectid,
-        s1.navnefoelgenummer
-    ) t
+         SELECT
+             s.objectid,
+             s.navnefoelgenummer,
+             string_agg(k.kommunekode, ',') AS kommunekode
+         FROM
+             stednavne_udstilling.stednavne_udstilling s
+                 LEFT JOIN dagi_10.kommuneinddeling k ON st_intersects(k.geometri, s.geometri)
+         GROUP BY
+             s.objectid,
+             s.navnefoelgenummer
+     ) t
 WHERE
-    s.objectid = t.objectid
-    AND s.navnefoelgenummer = t.navnefoelgenummer;
+    stednavne_udstilling.stednavne_udstilling.objectid = t.objectid
+  AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = t.navnefoelgenummer;
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
