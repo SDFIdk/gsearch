@@ -1314,44 +1314,31 @@ FROM
 WHERE
 	st_isvalid (geometri);
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling (TYPE,
-subtype);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, subtype);
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling (subtype,
-TYPE);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype, TYPE);
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling (TYPE,
-visningstekst);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, visningstekst);
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling
-	USING gist (geometri);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri);
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling (subtype_presentation);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype_presentation);
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling (skrivemaade);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade);
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling (objectid);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (objectid);
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling (navnefoelgenummer);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (navnefoelgenummer);
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling (TYPE);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE);
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -- Opdater subtype_presentation
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
 SET
-	subtype_presentation = COALESCE(st.subtype_presentation,
-	st.subtype)
+	subtype_presentation = COALESCE(st.subtype_presentation, st.subtype)
 FROM
 	stednavne_udstilling.subtype_translation st
 WHERE
@@ -1392,11 +1379,10 @@ WHERE
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
 SET
-	geometri_udtyndet = CASE
-		WHEN length(ST_Astext (geometri)) < 5000
+	geometri_udtyndet = CASE WHEN length(ST_Astext (geometri)) < 5000
     THEN
         geometri
-		ELSE
+	ELSE
         ST_SimplifyPreserveTopology (geometri,
 		GREATEST (ST_Xmax (ST_Envelope (geometri)) - ST_Xmin (ST_Envelope (geometri)),
 		ST_Ymax (ST_Envelope (geometri)) - ST_Ymin (ST_Envelope (geometri))) / 300)
@@ -1413,8 +1399,7 @@ UPDATE
 SET
 	visningstekst = NULL;
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling (visningstekst);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 -----------------
