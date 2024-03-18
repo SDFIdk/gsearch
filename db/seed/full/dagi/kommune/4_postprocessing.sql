@@ -30,11 +30,3 @@ ALTER TABLE basic_initialloading.kommune
                          setweight(to_tsvector('simple', functions.fnfonetik (split_part(kommunenavn, ' ', 2), 2)), 'C') ||
                          setweight(to_tsvector('simple', functions.split_and_endsubstring_fonetik (kommunenavn, 3)), 'D'))
     STORED;
-
-CREATE INDEX ON basic_initialloading.kommune USING GIN (textsearchable_plain_col);
-
-CREATE INDEX ON basic_initialloading.kommune USING GIN (textsearchable_unaccent_col);
-
-CREATE INDEX ON basic_initialloading.kommune USING GIN (textsearchable_phonetic_col);
-
-VACUUM ANALYZE basic_initialloading.kommune;

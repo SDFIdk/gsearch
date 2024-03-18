@@ -27,11 +27,3 @@ ALTER TABLE basic_initialloading.stednavn
                          setweight(to_tsvector('simple', functions.fnfonetik (split_part(visningstekst_nohyphen, ' ', 2), 2)), 'B') ||
                          setweight(to_tsvector('simple', functions.split_and_endsubstring_fonetik (visningstekst_nohyphen, 3)), 'C'))
     STORED;
-
-CREATE INDEX ON basic_initialloading.stednavn USING GIN (textsearchable_plain_col);
-
-CREATE INDEX ON basic_initialloading.stednavn USING GIN (textsearchable_unaccent_col);
-
-CREATE INDEX ON basic_initialloading.stednavn USING GIN (textsearchable_phonetic_col);
-
-VACUUM ANALYZE basic_initialloading.stednavn;
