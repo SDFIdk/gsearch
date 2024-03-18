@@ -55,17 +55,17 @@ agg_stednavne AS (
 visningstekst_uofficel_merge AS (
     SELECT
         objectid,
-        REPLACE(agg_s.visningstekst, '(', '(' || skrivemaade || ', ') AS visningstekst
+        REPLACE(agg_s.visningstekst, '(', '(' || skrivemaade || ', ') AS visningstekst -- Uofficel skrivemaade shall always have the officel skrivemadde in visningstekst
     FROM
         agg_stednavne agg_s
     WHERE
         navnestatus = 'uofficielt'
-      AND skrivemaade IS NOT NULL
+      AND skrivemaade IS NOT NULL -- Nogle stednavne har ikke en officel skrivemaade, dem ønsker vi ikke at matche med
 )
 SELECT
     DISTINCT id_lokalid AS id, -- Need DISTINCT for not getting duplicates of the same row if there is two or more skrivemaade_uofficel
     (
-        CASE WHEN agg_s.navnestatus = 'uofficielt' AND skrivemaade IS NOT NULL
+        CASE WHEN agg_s.navnestatus = 'uofficielt' AND skrivemaade IS NOT NULL -- Nogle stednavne har ikke en officel skrivemaade, dem ønsker vi ikke at matche med
             THEN
                  vum.visningstekst
             ELSE
@@ -73,7 +73,7 @@ SELECT
             END
         ) AS visningstekst,
     (
-        CASE WHEN agg_s.navnestatus = 'uofficielt' AND skrivemaade IS NOT NULL
+        CASE WHEN agg_s.navnestatus = 'uofficielt' AND skrivemaade IS NOT NULL -- Nogle stednavne har ikke en officel skrivemaade, dem ønsker vi ikke at matche med
             THEN
                  replace(replace(vum.visningstekst, ' - ', ' '), '-', ' ')
             ELSE
