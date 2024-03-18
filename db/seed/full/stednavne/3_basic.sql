@@ -63,7 +63,7 @@ visningstekst_uofficel_merge AS (
       AND skrivemaade IS NOT NULL
 )
 SELECT
-    id_lokalid AS id,
+    DISTINCT id_lokalid AS id, -- Need DISTINCT for not getting duplicates of the same row if there is two or more skrivemaade_uofficel
     (
         CASE WHEN agg_s.navnestatus = 'uofficielt' AND skrivemaade IS NOT NULL
             THEN
