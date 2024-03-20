@@ -40,6 +40,8 @@ BEGIN
     -- build the plain version of the query string for ranking purposes
     WITH tokens AS (
         SELECT
+            -- Splitter op i temp-tabel hver hvert input ord i hver sin raekke.
+            -- removes all combination of spaces and ampersand and replaces it with a whitespace
             UNNEST(string_to_array(regexp_replace(btrim(input_tekst),'[ ][&][ ]|[&][ ]|[ ][&]','','g'), ' ')) t
 )
     SELECT
