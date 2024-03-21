@@ -62,7 +62,7 @@ Feature: Gsearch husnummer test
 
         Then match thirdresponse == secondresponse
 
-    Scenario: Search streetname with number
+    Scenario: Search street name with number
         Then param q = 'kocksvej 1'
 
         When method GET
@@ -70,7 +70,7 @@ Feature: Gsearch husnummer test
         And match response == '#[10]'
         And match response.[*].husnummertekst contains deep ['1']
 
-    Scenario: Search streetname with number and letter
+    Scenario: Search street name with number and letter
         Then param q = 'kocksvej 1C'
 
         When method GET
@@ -111,7 +111,7 @@ Feature: Gsearch husnummer test
 
         And match response == secondResponse
 
-    Scenario: Search steetname that has numbers in it
+    Scenario: Search street name that has numbers in it
         Then param q = 'Haveforeningen af 10. maj 1918'
 
         When method GET
@@ -119,7 +119,7 @@ Feature: Gsearch husnummer test
         And match response == '#[10]'
         And match response.[*].vejnavn contains deep ['Haveforeningen af 10. maj 1918']
 
-    Scenario: Search steetname that has numbers in it
+    Scenario: Search street name that has numbers in it
         Then param q = '2.Tværvej'
 
         When method GET
