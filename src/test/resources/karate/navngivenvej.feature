@@ -97,7 +97,7 @@ Feature: Gsearch navngivenvej test
 
         When method GET
         Then status 200
-        And match response == '#[8]'
+        And match response == '#[9]'
 
     Scenario: Search steetname that has numbers in it
         Then param q = 'Haveforeningen af 10. maj 1918'

@@ -14,7 +14,7 @@ Feature: Gsearch stednavn test
         And match response contains only
         """
             {
-                "skrivemaade_uofficiel": '#string',
+                "skrivemaade_uofficiel": '##string',
                 "skrivemaade_officiel": '#string',
                 "visningstekst": '#string',
                 "bbox": '#(bboxSchema)',
@@ -32,8 +32,8 @@ Feature: Gsearch stednavn test
 
         When method GET
         Then status 200
-        And match response == '#[6]'
-        And match response.[*].skrivemaade_officiel contains deep ['Gadekærvej Storbyhave', 'Valby Gl. Skole', 'Station Gearhallen', 'Store Valbygård']
+        And match response == '#[3]'
+        And match response.[*].skrivemaade_officiel contains deep ['Gadekærvej Storbyhave', 'Valby Gl. Skole', 'Store Valbygård']
 
     Scenario: Search is case insensitive
         Then param q = 'Valbyparken'
@@ -268,3 +268,29 @@ Feature: Gsearch stednavn test
         Then status 200
         And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/25833>'
         And match response == '#[1]'
+
+    Scenario: Search for B&W-hallerne
+        Then param q = 'B&W'
+
+        When method GET
+        Then status 200
+        And def firstresponse = response
+        And match firstresponse == '#[2]'
+        And match response.[*].skrivemaade_officiel contains ['B&W-hallerne']
+
+        Then param q = 'B&W - hall'
+
+        When method GET
+        Then status 200
+        And def secondresponse = response
+        And match secondresponse == '#[1]'
+        And match response.[*].skrivemaade_officiel contains ['B&W-hallerne']
+
+        Then param q = 'B&W-hallerne (Hal i København K)'
+
+        When method GET
+        Then status 200
+        And def thirdresponse = response
+        And match thirdresponse == '#[1]'
+        And match response.[*].skrivemaade_officiel contains ['B&W-hallerne']
+        Then match thirdresponse == secondresponse
