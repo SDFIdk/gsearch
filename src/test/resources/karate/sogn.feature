@@ -81,7 +81,7 @@ Feature: Gsearch sogn test
         And match response == '#[100]'
 
     Scenario: Filter kommunekode in like
-        Then param q = 'sel'
+        Then param q = 'døl'
 
         And param filter = "kommunekode like '%0779%'"
         When method GET
