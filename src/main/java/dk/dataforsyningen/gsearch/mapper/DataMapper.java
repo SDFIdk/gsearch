@@ -38,7 +38,7 @@ public class DataMapper implements RowMapper<Object> {
     }
 
     /**
-     * Maps column value to either geometry or String
+     * Maps column value to either geometry or String or null
      *
      * @param i
      * @param rs
@@ -53,6 +53,10 @@ public class DataMapper implements RowMapper<Object> {
             String hex = rs.getString(i);
             Geometry geometry = this.binaryParser.parse(hex);
             return geometry;
+        }
+        // If the return value is null, we return null instead of empty string
+        else if (rs.getString(i) == null) {
+            return null;
         } else {
             return rs.getString(i);
         }
