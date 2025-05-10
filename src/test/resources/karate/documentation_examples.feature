@@ -40,7 +40,17 @@ Feature:
         And param filter = 'INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))'
         And retry until responseStatus == 200
         When method GET
-        And match response == '#[2]'
+        And match response == '#[1]'
+
+        # https://api.dataforsyningen.dk/rest/gsearch/v2.0/stednavn?q=Benedikte&filter=BBOX(geometri,515000.1,6074200.2,555000.5,6104200.6,'epsg:25832')
+        Given path 'stednavn'
+        Then param q = 'Benedikte'
+
+        And param filter = "BBOX(geometri,515000.1,6074200.2,555000.5,6104200.6,'epsg:25832')"
+        And retry until responseStatus == 200
+        When method GET
+        And match response == '#[1]'
+
 
     Scenario: Example 5
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/adresse?q=flens
