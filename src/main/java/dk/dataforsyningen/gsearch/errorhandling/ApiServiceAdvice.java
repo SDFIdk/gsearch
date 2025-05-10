@@ -2,6 +2,7 @@ package dk.dataforsyningen.gsearch.errorhandling;
 
 import jakarta.validation.ConstraintViolationException;
 
+import java.net.UnknownHostException;
 import java.sql.SQLNonTransientConnectionException;
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +190,7 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
         PSQLException exception) {
         String exceptionCause = getRootCause(exception).toString();
         ErrorResponse errorResponse =
-            new ErrorResponse(HttpStatus.BAD_REQUEST, exceptionCause);
+            new ErrorResponse(HttpStatus.BAD_REQUEST, "PSQLException", "Database error");
         logger.info(ERROR_STRING, exception);
         logger.info(ERROR_STRING, exceptionCause);
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -199,10 +200,20 @@ public class ApiServiceAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUnableToExecuteStatementException(
         UnableToExecuteStatementException exception) {
         String exceptionCause = getRootCause(exception).toString();
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exceptionCause);
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "UnableToExecuteStatementException", "Invalid input");
         logger.info(ERROR_STRING, exception);
         logger.info(ERROR_STRING + exceptionCause);
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnknownHostException.class)
+    public ResponseEntity<ErrorResponse> handleUnknownHostException(
+            UnknownHostException exception) {
+        String exceptionCause = getRootCause(exception).toString();
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "UnknownHostException", "Host not found");
+        logger.info(ERROR_STRING, exception);
+        logger.info(ERROR_STRING + exceptionCause);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ResultSetException.class)
