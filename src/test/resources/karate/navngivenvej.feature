@@ -99,7 +99,7 @@ Feature: Gsearch navngivenvej test
         Then status 200
         And match response == '#[8]'
 
-    Scenario: Search steetname that has numbers in it
+    Scenario: Search street name that has numbers in it
         Then param q = 'Haveforeningen af 10. maj 1918'
 
         When method GET
@@ -107,7 +107,7 @@ Feature: Gsearch navngivenvej test
         And match response == '#[1]'
         And match response.[*].vejnavn contains deep ['Haveforeningen af 10. maj 1918']
 
-    Scenario: Search steetname that has numbers in it
+    Scenario: Search street name that has numbers in it
         Then param q = '2.Tværvej'
 
         When method GET

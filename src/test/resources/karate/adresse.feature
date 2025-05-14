@@ -72,7 +72,7 @@ Feature: Gsearch adresse test
         And match response.[*].vejnavn contains deep ['H.C. Andersen Haven', 'H.C. Andersens Boulevard']
         And match response.[*].postnummernavn contains deep ['Odense C', 'København V']
 
-    Scenario: Search steetname with number
+    Scenario: Search street name with number
         Then param q = 'kocksvej 1'
 
         When method GET
@@ -80,7 +80,7 @@ Feature: Gsearch adresse test
         And match response == '#[10]'
         And match response.[*].husnummer contains deep ['1']
 
-    Scenario: Search steetname with number and letter
+    Scenario: Search street name with number and letter
         Then param q = 'kocksvej 1C'
 
         When method GET
@@ -121,7 +121,7 @@ Feature: Gsearch adresse test
 
         And match response == secondResponse
 
-    Scenario: Search steetname that has numbers in it
+    Scenario: Search street name that has numbers in it
         Then param q = 'Haveforeningen af 10. maj 1918'
 
         When method GET
@@ -129,7 +129,7 @@ Feature: Gsearch adresse test
         And match response == '#[10]'
         And match response.[*].vejnavn contains deep ['Haveforeningen af 10. maj 1918']
 
-    Scenario: Search steetname that has numbers in it
+    Scenario: Search street name that has numbers in it
         Then param q = '2.Tværvej'
 
         When method GET

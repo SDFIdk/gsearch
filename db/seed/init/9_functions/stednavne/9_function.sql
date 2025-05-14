@@ -121,7 +121,7 @@ BEGIN
             AND %s
             ORDER BY
                 levenshtein(
-                    lower(skrivemaade)::text,
+                    lower(visningstekst)::text,
                     lower($5)
                 ) asc,
                 functions.combine_rank(

@@ -37,6 +37,7 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- Do not get used anymore (Signe 15-03-2024)
 DROP FUNCTION IF EXISTS functions.stednavne_uofficielle_tsvector (text);
 
 CREATE OR REPLACE FUNCTION functions.stednavne_uofficielle_tsvector (input text)

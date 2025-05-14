@@ -6,6 +6,8 @@ CREATE INDEX ON basic_initialloading.stednavn USING GIN (textsearchable_phonetic
 
 CREATE INDEX ON basic_initialloading.stednavn (lower(visningstekst));
 
+CREATE INDEX ON basic_initialloading.stednavn (visningstekst);
+
 CREATE INDEX ON basic_initialloading.stednavn (kommunekode);
 
 CREATE INDEX ON basic_initialloading.stednavn USING gist (geometri);

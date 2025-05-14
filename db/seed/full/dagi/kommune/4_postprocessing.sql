@@ -30,4 +30,3 @@ ALTER TABLE basic_initialloading.kommune
                          setweight(to_tsvector('simple', functions.fnfonetik (split_part(kommunenavn, ' ', 2), 2)), 'C') ||
                          setweight(to_tsvector('simple', functions.split_and_endsubstring_fonetik (kommunenavn, 3)), 'D'))
     STORED;
-
