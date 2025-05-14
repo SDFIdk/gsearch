@@ -292,6 +292,29 @@ Feature: Gsearch stednavn test
         And match response.[0].skrivemaade_officiel == '#null'
         And match response.[0].skrivemaade_uofficiel contains only deep 'BT-huset,Bien,Suppeterrinen'
 
+
+    Scenario: Search levenshtein ordering test rørvig
+
+        Then param q = 'rørvig'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[0].visningstekst == 'Rørvig (By i Rørvig)'
+        And match response.[1].visningstekst == 'Rørvig (Gård i Tønder)'
+        And match response.[2].visningstekst == 'Rørviggård (Gård i Otterup)'
+
+        Then param q = 'Fredericia Stadion'
+
+        When method GET
+        Then status 200
+        # There is a place "KFUM-Parken Fredericia (Stadion i Fredericia)" that also matches on the name BUT it is not the same place!
+        And match response == '#[2]'
+        And match response.[*].visningstekst contains deep 'Fredericia Stadion (Monjasa Park, Stadion i Fredericia)'
+        And match response.[*].skrivemaade_officiel contains deep 'Monjasa Park'
+        And match response.[*].skrivemaade_uofficiel contains deep 'Fredericia Stadion'
+
+
     Scenario: Test 2196 crs response
         Then param q = 's'
         And param limit = '1'
