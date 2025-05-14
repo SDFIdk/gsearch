@@ -118,6 +118,10 @@ BEGIN
             )
             AND %s
             ORDER BY
+                levenshtein(
+                    lower(visningstekst)::text,
+                    lower($5)
+                ) asc,
                 functions.combine_rank(
                     $2,
                     $2,
@@ -134,7 +138,7 @@ BEGIN
                 visningstekst
             LIMIT $3  ;', filters);
         RETURN QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit, srid;
+        USING query_string, plain_query_string, rowlimit, srid, input_tekst;
     END IF;
 END
 $function$;
