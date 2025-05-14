@@ -172,6 +172,126 @@ Feature: Gsearch stednavn test
         And match response == '#[10]'
         And match response.[0].skrivemaade_officiel contains 'Lind'
 
+    Scenario: Search for B&W-hallerne
+        Then param q = 'B&W'
+
+        When method GET
+        Then status 200
+        And def firstresponse = response
+        And match firstresponse == '#[2]'
+        And match response.[*].skrivemaade_officiel contains ['B&W-hallerne']
+
+        Then param q = 'B&W - hall'
+
+        When method GET
+        Then status 200
+        And def secondresponse = response
+        And match secondresponse == '#[1]'
+        And match response.[*].skrivemaade_officiel contains ['B&W-hallerne']
+
+        Then param q = 'B&W-hallerne (Hal i København K)'
+
+        When method GET
+        Then status 200
+        And def thirdresponse = response
+        And match thirdresponse == '#[1]'
+        And match response.[*].skrivemaade_officiel contains ['B&W-hallerne']
+        Then match thirdresponse == secondresponse
+
+    Scenario: Search for the same place with its officelle navn: Monjasa Park and its one uofficelle navn: Fredericia Stadion
+        # Relates to issue #133
+
+        Then param q = 'Monjasa Park'
+
+        When method GET
+        Then status 200
+        And match response == '#[2]'
+        And match response.[0].visningstekst == 'Monjasa Park (Stadion i Fredericia)'
+        And match response.[0].skrivemaade_officiel == 'Monjasa Park'
+        And match response.[0].skrivemaade_uofficiel == 'Fredericia Stadion'
+        And match response.[1].visningstekst == 'Fredericia Stadion (Monjasa Park, Stadion i Fredericia)'
+        And match response.[1].skrivemaade_officiel == 'Monjasa Park'
+        And match response.[1].skrivemaade_uofficiel == 'Fredericia Stadion'
+
+
+        Then param q = 'Fredericia Stadion'
+
+        When method GET
+        Then status 200
+        # There is a place "KFUM-Parken Fredericia (Stadion i Fredericia)" that also matches on the name BUT it is not the same place!
+        And match response == '#[2]'
+        And match response.[*].visningstekst contains deep 'Fredericia Stadion (Monjasa Park, Stadion i Fredericia)'
+        And match response.[*].skrivemaade_officiel contains deep 'Monjasa Park'
+        And match response.[*].skrivemaade_uofficiel contains deep 'Fredericia Stadion'
+
+
+    Scenario: Search for the same place with its officelle navn: Gørlevsborg and it two uofficelle navn: Gjørrildsborg and Jarleborg
+        # Relates to issue #133
+
+        Then param q = 'Gørlevsborg'
+
+        When method GET
+        Then status 200
+        And match response == '#[3]'
+
+        And match response.[0].visningstekst contains only deep 'Gørlevsborg (Vold i Ringsted)'
+        And match response.[0].skrivemaade_officiel contains only deep 'Gørlevsborg'
+        And match response.[0].skrivemaade_uofficiel contains only deep 'Gjørrildsborg,Jarleborg'
+
+        And match response.[*].visningstekst contains only deep ['Gørlevsborg (Vold i Ringsted)','Gjørrildsborg (Gørlevsborg, Vold i Ringsted)','Jarleborg (Gørlevsborg, Vold i Ringsted)']
+        And match response.[*].skrivemaade_officiel contains only deep ['Gørlevsborg','Gørlevsborg','Gørlevsborg']
+        And match response.[*].skrivemaade_uofficiel contains only deep ['Gjørrildsborg,Jarleborg','Gjørrildsborg,Jarleborg','Gjørrildsborg,Jarleborg']
+
+
+        Then param q = 'Gjørrildsborg'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[0].visningstekst contains only deep 'Gjørrildsborg (Gørlevsborg, Vold i Ringsted)'
+        And match response.[0].skrivemaade_officiel contains only deep 'Gørlevsborg'
+        And match response.[0].skrivemaade_uofficiel contains only deep 'Gjørrildsborg,Jarleborg'
+
+
+        Then param q = 'Jarleborg'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[0].visningstekst contains only deep 'Jarleborg (Gørlevsborg, Vold i Ringsted)'
+        And match response.[0].skrivemaade_officiel contains only deep 'Gørlevsborg'
+        And match response.[0].skrivemaade_uofficiel contains only deep 'Gjørrildsborg,Jarleborg'
+
+
+    Scenario: Search for the same place that only have uofficelle navne: BT-huset and Bien and Suppeterrinen
+        # Relates to issue #133
+
+        Then param q = 'BT-huset'
+
+        When method GET
+        Then status 200
+        And match response.[0].visningstekst contains only deep 'BT-huset (Bygning i København Ø)'
+        And match response.[0].skrivemaade_officiel == '#null'
+        And match response.[0].skrivemaade_uofficiel contains only deep 'BT-huset,Bien,Suppeterrinen'
+
+
+        Then param q = 'Bien'
+
+        When method GET
+        Then status 200
+        And match response.[0].visningstekst contains only deep 'Bien (Bygning i København Ø)'
+        And match response.[0].skrivemaade_officiel == '#null'
+        And match response.[0].skrivemaade_uofficiel contains only deep 'BT-huset,Bien,Suppeterrinen'
+
+
+        Then param q = 'Suppeterrinen'
+
+        When method GET
+        Then status 200
+        And match response.[0].visningstekst contains only deep 'Suppeterrinen (Bygning i København Ø)'
+        And match response.[0].skrivemaade_officiel == '#null'
+        And match response.[0].skrivemaade_uofficiel contains only deep 'BT-huset,Bien,Suppeterrinen'
+
     Scenario: Test 2196 crs response
         Then param q = 's'
         And param limit = '1'
@@ -280,127 +400,3 @@ Feature: Gsearch stednavn test
         Then status 200
         And match header Content-Crs == '<https://www.opengis.net/def/crs/EPSG/0/25833>'
         And match response == '#[1]'
-
-    Scenario: Search for B&W-hallerne
-        Then param q = 'B&W'
-
-        When method GET
-        Then status 200
-        And def firstresponse = response
-        And match firstresponse == '#[2]'
-        And match response.[*].skrivemaade_officiel contains ['B&W-hallerne']
-
-        Then param q = 'B&W - hall'
-
-        When method GET
-        Then status 200
-        And def secondresponse = response
-        And match secondresponse == '#[1]'
-        And match response.[*].skrivemaade_officiel contains ['B&W-hallerne']
-
-        Then param q = 'B&W-hallerne (Hal i København K)'
-
-        When method GET
-        Then status 200
-        And def thirdresponse = response
-        And match thirdresponse == '#[1]'
-        And match response.[*].skrivemaade_officiel contains ['B&W-hallerne']
-        Then match thirdresponse == secondresponse
-
-    Scenario: Search for the same place with its officelle navn: Monjasa Park and its one uofficelle navn: Fredericia Stadion
-        # Relates to issue #133
-
-        Then param q = 'Monjasa Park'
-
-        When method GET
-        Then status 200
-        And match response == '#[2]'
-        And match response.[0].visningstekst == 'Monjasa Park (Stadion i Fredericia)'
-        And match response.[0].skrivemaade_officiel == 'Monjasa Park'
-        And match response.[0].skrivemaade_uofficiel == 'Fredericia Stadion'
-        And match response.[1].visningstekst == 'Fredericia Stadion (Monjasa Park, Stadion i Fredericia)'
-        And match response.[1].skrivemaade_officiel == 'Monjasa Park'
-        And match response.[1].skrivemaade_uofficiel == 'Fredericia Stadion'
-
-
-        Then param q = 'Fredericia Stadion'
-
-        When method GET
-        Then status 200
-        # There is a place "KFUM-Parken Fredericia (Stadion i Fredericia)" that also matches on the name BUT it is not the same place!
-        And match response == '#[2]'
-        And match response.[0].visningstekst == 'Fredericia Stadion (Monjasa Park, Stadion i Fredericia)'
-        And match response.[0].skrivemaade_officiel == 'Monjasa Park'
-        And match response.[0].skrivemaade_uofficiel == 'Fredericia Stadion'
-
-
-    Scenario: Search for the same place with its officelle navn: Gørlevsborg and it two uofficelle navn: Gjørrildsborg and Jarleborg
-        # Relates to issue #133
-
-        Then param q = 'Gørlevsborg'
-
-        When method GET
-        Then status 200
-        And match response == '#[3]'
-
-        And match response.[0].visningstekst contains only deep 'Gørlevsborg (Vold i Ringsted)'
-        And match response.[0].skrivemaade_officiel contains only deep 'Gørlevsborg'
-        And match response.[0].skrivemaade_uofficiel contains only deep 'Gjørrildsborg,Jarleborg'
-
-        And match response.[1].visningstekst contains only deep 'Gjørrildsborg (Gørlevsborg, Vold i Ringsted)'
-        And match response.[1].skrivemaade_officiel contains only deep 'Gørlevsborg'
-        And match response.[1].skrivemaade_uofficiel contains only deep 'Gjørrildsborg,Jarleborg'
-
-        And match response.[2].visningstekst contains only deep 'Jarleborg (Gørlevsborg, Vold i Ringsted)'
-        And match response.[2].skrivemaade_officiel contains only deep 'Gørlevsborg'
-        And match response.[2].skrivemaade_uofficiel contains only deep 'Gjørrildsborg,Jarleborg'
-
-
-        Then param q = 'Gjørrildsborg'
-
-        When method GET
-        Then status 200
-        And match response == '#[1]'
-        And match response.[0].visningstekst contains only deep 'Gjørrildsborg (Gørlevsborg, Vold i Ringsted)'
-        And match response.[0].skrivemaade_officiel contains only deep 'Gørlevsborg'
-        And match response.[0].skrivemaade_uofficiel contains only deep 'Gjørrildsborg,Jarleborg'
-
-
-        Then param q = 'Jarleborg'
-
-        When method GET
-        Then status 200
-        And match response == '#[1]'
-        And match response.[0].visningstekst contains only deep 'Jarleborg (Gørlevsborg, Vold i Ringsted)'
-        And match response.[0].skrivemaade_officiel contains only deep 'Gørlevsborg'
-        And match response.[0].skrivemaade_uofficiel contains only deep 'Gjørrildsborg,Jarleborg'
-
-
-    Scenario: Search for the same place that only have uofficelle navne: BT-huset and Bien and Suppeterrinen
-        # Relates to issue #133
-
-        Then param q = 'BT-huset'
-
-        When method GET
-        Then status 200
-        And match response.[0].visningstekst contains only deep 'BT-huset (Bygning i København Ø)'
-        And match response.[0].skrivemaade_officiel == '#null'
-        And match response.[0].skrivemaade_uofficiel contains only deep 'BT-huset,Bien,Suppeterrinen'
-
-
-        Then param q = 'Bien'
-
-        When method GET
-        Then status 200
-        And match response.[0].visningstekst contains only deep 'Bien (Bygning i København Ø)'
-        And match response.[0].skrivemaade_officiel == '#null'
-        And match response.[0].skrivemaade_uofficiel contains only deep 'BT-huset,Bien,Suppeterrinen'
-
-
-        Then param q = 'Suppeterrinen'
-
-        When method GET
-        Then status 200
-        And match response.[0].visningstekst contains only deep 'Suppeterrinen (Bygning i København Ø)'
-        And match response.[0].skrivemaade_officiel == '#null'
-        And match response.[0].skrivemaade_uofficiel contains only deep 'BT-huset,Bien,Suppeterrinen'
