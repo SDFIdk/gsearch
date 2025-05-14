@@ -76,7 +76,7 @@ Feature: Gsearch matrikel test
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[*].ejerlavsnavn contains deep ['Utterslev By, Utterslev']
+        And match response.[*].ejerlavsnavn contains deep ['Utterslev, København']
 
     Scenario: Do not have a match on '.'
         Then param q = '.'
@@ -143,6 +143,32 @@ Feature: Gsearch matrikel test
         Then status 200
         And match response.[*].centroid_x contains deep [723841.455]
         And match response.[*].centroid_y contains deep [6179661.553]
+
+    Scenario: Levenshtein ordering test for 8a, Høve By, Høve issue #230
+        Then param q = '8a, høve by, høve'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[0].visningstekst contains '8a, Høve By, Høve'
+
+    Scenario: Levenshtein ordering test for 11b, Vig By, Vig issue #230
+        Then param q = '11b, Vig By, Vig'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[0].visningstekst contains '11b, Vig By, Vig'
+
+
+    Scenario: Levenshtein ordering test for 7, Nordentoft Gde., Sjørring issue #230
+        Then param q = '7, Nordentoft Gde., Sjørring'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[0].visningstekst contains '7, Nordentoft Gde., Sjørring'
+
 
     Scenario: Test 2196 crs response
         Then param q = 's'
