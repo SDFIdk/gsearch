@@ -19,6 +19,7 @@ CREATE TABLE stednavne_udstilling.stednavne_udstilling (
     geometri_udtyndet geometry(Geometry,
 25832),
     visningstekst varchar,
+    visningstekst_uden_hjaelpetekst varchar,
     area float,
     CONSTRAINT stednavne_udstilling_pkey PRIMARY KEY (objectid,
 navnefoelgenummer)
@@ -142,6 +143,17 @@ SET
 	visningstekst = NULL;
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
+
+-- Prioritetsmæssig opdatering af visningstekst_uden_hjaelpetekst
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst_uden_hjaelpetekst = skrivemaade;
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst_uden_hjaelpetekst);
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 -----------------
