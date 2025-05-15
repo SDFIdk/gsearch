@@ -144,13 +144,13 @@ END
 $function$;
 -- Test cases:
 /*
- SELECT (api.matrikel('søby',NULL, 1, 100)).*;
- SELECT (api.matrikel('11aa',NULL, 1, 100)).*;
- SELECT (api.matrikel('1320452',NULL, 1, 100)).*;
- SELECT (api.matrikel('11aa 1320452',NULL, 1, 100)).*;
- SELECT (api.matrikel('1320452 11aa kobbe',NULL, 1, 100)).*;
- SELECT (api.matrikel('11aa søby',NULL, 1, 100)).*;
- SELECT (api.matrikel('s',NULL, 1, 100)).*;
- SELECT (api.matrikel('a 1 a', NULL, 1, 100)).*;
+ SELECT (api.matrikel('søby',NULL, 1, 100, 25832)).*;
+ SELECT (api.matrikel('11aa',NULL, 1, 100, 25832)).*;
+ SELECT (api.matrikel('1320452',NULL, 1, 100, 25832)).*;
+ SELECT (api.matrikel('11aa 1320452',NULL, 1, 100, 25832)).*;
+ SELECT (api.matrikel('1320452 11aa kobbe',NULL, 1, 100, 25832)).*;
+ SELECT (api.matrikel('11aa søby',NULL, 1, 100, 25832)).*;
+ SELECT (api.matrikel('s',NULL, 1, 100, 25832)).*;
+ SELECT (api.matrikel('a 1 a', NULL, 1, 100, 25832)).*;
 
  */
