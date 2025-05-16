@@ -144,15 +144,15 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst_uden_hj
 -----------------
 -- SELECT skrivemaade, st_area(geometri)/1000/1000 FROM stednavne_udstilling.stednavne_udstilling WHERE type='bebyggelse' AND subtype='By' ORDER BY st_area(geometri) desc LIMIT 1000
 -- Store byer > 4 km**2 er kendte
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade
-WHERE
-	st_area (geometri) > 4000000
-	AND TYPE = 'bebyggelse'
-	AND subtype = 'by'
-	AND visningstekst IS NULL;
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade
+-- WHERE
+-- 	st_area (geometri) > 4000000
+-- 	AND TYPE = 'bebyggelse'
+-- 	AND subtype = 'by'
+-- 	AND visningstekst IS NULL;
 -- Bydele i store byer > 10 km**2
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -361,13 +361,6 @@ WHERE
 -------------
 -- Farvand --
 -------------
--- > 1500 km**2 er alment kendte
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade
-WHERE
-	area > 1500000000;
 -- Farvande, der ligger helt inde i et andet farvand
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -376,8 +369,7 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
-	(s2.visningstekst IS NOT NULL
-		AND s2.type = 'farvand'
+	(s2.type = 'farvand'
 		AND ST_contains (s2.geometri,
 		s.geometri_udtyndet))
 WHERE
@@ -393,8 +385,7 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
-	(s2.visningstekst IS NOT NULL
-		AND s2.type = 'farvand'
+	(s2.type = 'farvand'
 		AND s2.geometri_udtyndet && s.geometri_udtyndet
 		AND st_area (st_intersection (s2.geometri_udtyndet,
 		s.geometri_udtyndet)) > 0.5 * s.area)
@@ -529,15 +520,6 @@ WHERE
 -------------------
 -- Landskabsform --
 -------------------
--- Landskabsformer > 50 km**2
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND TYPE = 'landskabsform'
-	AND ST_Area (geometri) > 50000000;
 -- Ø'er i store farvande
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -664,13 +646,13 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Øvrige
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND stednavne_udstilling.stednavne_udstilling.type = 'lufthavn';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+-- WHERE
+-- 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+-- 	AND stednavne_udstilling.stednavne_udstilling.type = 'lufthavn';
 ----------------
 -- Naturareal --
 ----------------
@@ -797,13 +779,13 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Øvrige
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
-WHERE
-	visningstekst IS NULL
-	AND TYPE = 'rute';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+-- WHERE
+-- 	visningstekst IS NULL
+-- 	AND TYPE = 'rute';
 ------------------
 -- Sevaerdighed --
 ------------------
@@ -1001,13 +983,13 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Øvrige
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
-WHERE
-	visningstekst IS NULL
-	AND TYPE = 'andentopografiflade';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+-- WHERE
+-- 	visningstekst IS NULL
+-- 	AND TYPE = 'andentopografiflade';
 -------------------------
 -- andentopografipunkt --
 -------------------------
@@ -1032,13 +1014,13 @@ WHERE
 -- faergerutelinje --
 ---------------------
 
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || '(' || subtype_presentation || ')'
-WHERE
-	TYPE = 'faergerutelinje'
-	AND visningstekst IS NULL;
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || '(' || subtype_presentation || ')'
+-- WHERE
+-- 	TYPE = 'faergerutelinje'
+-- 	AND visningstekst IS NULL;
 -------------------
 -- idraetsanlaeg --
 -------------------
@@ -1126,13 +1108,13 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Øvrige
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND stednavne_udstilling.stednavne_udstilling.type = 'soe';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+-- WHERE
+-- 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+-- 	AND stednavne_udstilling.stednavne_udstilling.type = 'soe';
 ---------------------
 -- standsningssted --
 ---------------------
@@ -1152,13 +1134,13 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Øvrige
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ', ' || subtype || ')'
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND stednavne_udstilling.stednavne_udstilling.type = 'standsningssted';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ', ' || subtype || ')'
+-- WHERE
+-- 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+-- 	AND stednavne_udstilling.stednavne_udstilling.type = 'standsningssted';
 --------------------------
 -- ubearbejdetnavnflade --
 --------------------------
@@ -1178,13 +1160,13 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Øvrige
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnflade';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+-- WHERE
+-- 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+-- 	AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnflade';
 --------------------------
 -- ubearbejdetnavnlinje --
 --------------------------
@@ -1204,13 +1186,13 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Øvrige
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnlinje';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+-- WHERE
+-- 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+-- 	AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnlinje';
 --------------------------
 -- ubearbejdetnavnpunkt --
 --------------------------
@@ -1230,13 +1212,13 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Øvrige
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnpunkt';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+-- WHERE
+-- 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+-- 	AND stednavne_udstilling.stednavne_udstilling.type = 'ubearbejdetnavnpunkt';
 --------------------------
 -- vej --
 --------------------------
@@ -1256,13 +1238,13 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 -- Øvrige
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND stednavne_udstilling.stednavne_udstilling.type = 'vej';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+-- WHERE
+-- 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+-- 	AND stednavne_udstilling.stednavne_udstilling.type = 'vej';
 --------------------------
 -- Resterende stednavne --
 --------------------------
@@ -1314,23 +1296,23 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 -- Alle andre får blot type/subtype
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ')'
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND btrim(subtype_presentation) = '';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ')'
+-- WHERE
+-- 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+-- 	AND btrim(subtype_presentation) = '';
 
-UPDATE
-	stednavne_udstilling.stednavne_udstilling
-SET
-	visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ' / ' || subtype_presentation || ')'
-WHERE
-	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-	AND btrim(subtype_presentation) <> '';
+-- UPDATE
+-- 	stednavne_udstilling.stednavne_udstilling
+-- SET
+-- 	visningstekst = skrivemaade || ' (' || INITCAP(TYPE) || ' / ' || subtype_presentation || ')'
+-- WHERE
+-- 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+-- 	AND btrim(subtype_presentation) <> '';
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -- Tilføj og populer kommunefilter på tabellen
 -- Kommunekode needs to be done here and not in 510_api_stednavne as it else results in duplicated kommunekoder in
 -- stednavne that has more than one skrivemaade.
