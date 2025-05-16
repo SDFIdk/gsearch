@@ -58,10 +58,6 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, subtype);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype, TYPE);
 
-CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, visningstekst);
-
-CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
-
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype_presentation);
@@ -74,7 +70,7 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (navnefoelgenummer);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE);
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 
 -- Opdater subtype_presentation
 UPDATE
@@ -86,7 +82,7 @@ FROM
 WHERE
 	stednavne_udstilling.stednavne_udstilling.subtype = st.subtype;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -- Slet dublerede forekomster (Samme objekt og en uofficiel stavemaade der er magen til)
 DELETE
 FROM
@@ -141,7 +137,7 @@ SET
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst_uden_hjaelpetekst);
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 
 -----------------
 -- Bebyggelser --
@@ -195,7 +191,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -- By, > 50 % i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -245,7 +241,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 ------------------------
 -- Begravelsespladser --
 ------------------------
@@ -281,7 +277,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 ---------------
 -- Bygninger --
 ---------------
@@ -306,7 +302,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -- Bygninger, som ligger > 50 % indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -443,7 +439,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -----------------
 -- Friluftsbad --
 -----------------
@@ -616,7 +612,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -- Landskabsformer, > 50 % i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -694,7 +690,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -- Naturareal, > 50 % i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -712,7 +708,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -----------------------
 -- Navigationsanlaeg --
 -----------------------
@@ -932,7 +928,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 --------------
 -- Vandloeb --
 --------------
@@ -968,7 +964,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -------------------------
 -- andentopografiflade --
 -------------------------
@@ -1031,7 +1027,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 ---------------------
 -- faergerutelinje --
 ---------------------
@@ -1078,7 +1074,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 ---------
 -- soe --
 ---------
@@ -1361,4 +1357,6 @@ WHERE
 	stednavne_udstilling.stednavne_udstilling.objectid = t.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = t.navnefoelgenummer;
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, visningstekst);
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
