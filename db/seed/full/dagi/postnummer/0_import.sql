@@ -7,6 +7,8 @@ FROM
     dagi_500_fdw.postnummerinddeling;
 
 CREATE INDEX ON dagi_500.postnummerinddeling USING gist (geometri);
+CREATE INDEX ON dagi_500.postnummerinddeling (navn);
+
 VACUUM ANALYZE dagi_500.postnummerinddeling;
 
 
@@ -19,4 +21,5 @@ FROM
     dagi_10_fdw.postnummerinddeling;
 
 CREATE INDEX ON dagi_10.postnummerinddeling USING gist (geometri);
+CREATE INDEX ON dagi_10.postnummerinddeling (navn);
 VACUUM ANALYZE dagi_10.postnummerinddeling;
