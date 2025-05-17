@@ -1649,6 +1649,8 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -- Tilføj og populer kommunefilter på tabellen
 -- Kommunekode needs to be done here and not in 510_api_stednavne as it else results in duplicated kommunekoder in
 -- stednavne that has more than one skrivemaade.
@@ -1677,3 +1679,5 @@ WHERE
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, visningstekst);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
+
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
