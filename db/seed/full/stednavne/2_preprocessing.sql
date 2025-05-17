@@ -1624,6 +1624,26 @@ WHERE
 --------------------------
 -- Resterende stednavne --
 --------------------------
+-- Fanger nogle af de grænsepæle som ikke overlappede med postnummer
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
+FROM
+	stednavne_udstilling.stednavne_udstilling s1
+JOIN stednavne_udstilling.stednavne_udstilling s2 ON
+	(
+		s2.subtype = 'landsdel'
+        AND s2.skrivemaade != s1.skrivemaade
+		AND s2.geometri && s1.geometri
+		AND ST_contains (s2.geometri, s1.geometri)
+	)
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+
+-- Soerger for at de sidste stednavne faar en hjaelpetekst
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
