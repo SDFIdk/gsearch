@@ -140,7 +140,9 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri_u
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst_uden_hjaelpetekst = skrivemaade;
+    visningstekst_uden_hjaelpetekst = skrivemaade
+WHERE
+    visningstekst_uden_hjaelpetekst IS NULL;
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst_uden_hjaelpetekst);
 
