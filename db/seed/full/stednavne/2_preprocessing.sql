@@ -54,22 +54,21 @@ FROM
 WHERE
 	st_isvalid (geometri);
 
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE);
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype);
+
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, subtype);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype, TYPE);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri);
 
-CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype_presentation);
-
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (objectid);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (navnefoelgenummer);
-
-CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE);
-
 
 
 -- Opdater subtype_presentation
@@ -81,6 +80,15 @@ FROM
 	stednavne_udstilling.subtype_translation st
 WHERE
 	stednavne_udstilling.stednavne_udstilling.subtype = st.subtype;
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype_presentation);
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade, subtype_presentation, TYPE, skrivemaade, geometri, objectid, navnefoelgenummer);
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade, subtype_presentation, TYPE, subtype, skrivemaade, geometri, objectid, navnefoelgenummer);
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade, subtype_presentation, subtype, TYPE, skrivemaade, geometri, objectid, navnefoelgenummer);
+
 
 
 -- Slet dublerede forekomster (Samme objekt og en uofficiel stavemaade der er magen til)
