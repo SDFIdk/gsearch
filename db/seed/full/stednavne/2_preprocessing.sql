@@ -108,13 +108,11 @@ WHERE
 		SELECT
 			'1'
 		FROM
-			stednavne_udstilling.stednavne_udstilling s2
-		WHERE
-			s2.navnestatus = 'officielt'
-                    AND
-                    s2.objectid = stednavne_udstilling.stednavne_udstilling.objectid
-                    AND
-                    s2.skrivemaade = stednavne_udstilling.stednavne_udstilling.skrivemaade)
+                    stednavne_udstilling.stednavne_udstilling s2
+                WHERE
+                    s2.navnestatus = 'officielt'
+                    AND s2.objectid = stednavne_udstilling.stednavne_udstilling.objectid
+                    AND s2.skrivemaade = stednavne_udstilling.stednavne_udstilling.skrivemaade)
     );
 -- 2015-09-22/Christian: Slet stednavne med geometrier, der er GeometryCollection
 DELETE
