@@ -83,13 +83,6 @@ WHERE
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype_presentation);
 
-CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade, subtype_presentation, TYPE, skrivemaade, geometri, objectid, navnefoelgenummer);
-
-CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade, subtype_presentation, TYPE, subtype, skrivemaade, geometri, objectid, navnefoelgenummer);
-
-CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade, subtype_presentation, subtype, TYPE, skrivemaade, geometri, objectid, navnefoelgenummer);
-
-
 
 -- Slet dublerede forekomster (Samme objekt og en uofficiel stavemaade der er magen til)
 DELETE
