@@ -128,6 +128,7 @@ SET
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri_udtyndet);
 
+SELECT 'visningstekst_uden_hjaelpetekst: ', now();
 
 -- Prioritetsmæssig opdatering af visningstekst_uden_hjaelpetekst
 UPDATE
@@ -143,6 +144,8 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst_uden_hj
 -----------------
 -- Bebyggelser --
 -----------------
+SELECT 'Bebyggelser: ', now();
+
 -- Bydele
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -359,6 +362,8 @@ WHERE
 ------------------------
 -- Begravelsespladser --
 ------------------------
+SELECT 'Begravelsespladser: ', now();
+
 -- Helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -398,6 +403,8 @@ WHERE
 ---------------
 -- Bygninger --
 ---------------
+SELECT 'Bygninger: ', now();
+
 -- Bygninger helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -456,6 +463,8 @@ WHERE
 --------------------
 -- Campingpladser --
 --------------------
+SELECT 'Campingpladser: ', now();
+
 -- Helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -495,6 +504,8 @@ WHERE
 -------------
 -- Farvand --
 -------------
+SELECT 'Farvand: ', now();
+
 -- Farvande, der ligger helt inde i et andet farvand
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -629,6 +640,8 @@ WHERE
 ------------------
 -- Fortidsminde --
 ------------------
+SELECT 'Fortidsminde: ', now();
+
 -- Fortidsminder i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -669,6 +682,8 @@ WHERE
 -----------------
 -- Friluftsbad --
 -----------------
+SELECT 'Friluftsbad: ', now();
+
 -- Friluftsbad i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -690,6 +705,8 @@ WHERE
 -----------------
 -- Havnebassin --
 -----------------
+SELECT 'Havnebassin: ', now();
+
 -- Havnebassin i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -748,6 +765,8 @@ WHERE
 --------------
 -- Jernbane --
 --------------
+SELECT 'Jernbane: ', now();
+
 -- Jernbane i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -787,6 +806,8 @@ WHERE
 -------------------
 -- Landskabsform --
 -------------------
+SELECT 'Landskabsform: ', now();
+
 -- Ø'er i alle farvande
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -892,6 +913,8 @@ WHERE
 ---------------
 -- Lufthavne --
 ---------------
+SELECT 'Lufthavne: ', now();
+
 -- Lufthavne helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -930,6 +953,8 @@ WHERE
 ----------------
 -- Naturareal --
 ----------------
+SELECT 'Naturareal: ', now();
+
 -- Naturareal i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1005,6 +1030,8 @@ WHERE
 -----------------------
 -- Navigationsanlaeg --
 -----------------------
+SELECT 'Navigationsanlaeg: ', now();
+
 -- Naturareal i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1026,6 +1053,8 @@ WHERE
 ------------------------
 -- Restriktionsanlaeg --
 ------------------------
+SELECT 'Restriktionsanlaeg: ', now();
+
 -- Restriktionsanlaeg i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1118,6 +1147,8 @@ WHERE
 ------------------
 -- Sevaerdighed --
 ------------------
+SELECT 'Sevaerdighed: ', now();
+
 -- Sevaerdighed i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1157,6 +1188,8 @@ WHERE
 -------------------
 -- Terraenkontur --
 -------------------
+SELECT 'Terraenkontur: ', now();
+
 -- Terraenkontur i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1196,6 +1229,8 @@ WHERE
 ------------------
 -- Urentfarvand --
 ------------------
+SELECT 'Urentfarvand: ', now();
+
 -- Urentfarvand i alle farvande
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1256,6 +1291,8 @@ WHERE
 --------------
 -- Vandloeb --
 --------------
+SELECT 'Vandloeb: ', now();
+
 -- Vandloeb i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1295,8 +1332,10 @@ WHERE
 
 
 -------------------------
--- andentopografiflade --
+-- Andentopografiflade --
 -------------------------
+SELECT 'Andentopografiflade: ', now();
+
 -- SELECT * from stednavne_udstilling.stednavne_udstilling where type='andentopografiflade' AND visningstekst IS NULL;
 -- Helt indenfor et postnummerinddeling
 UPDATE
@@ -1353,8 +1392,10 @@ WHERE
 
 
 -------------------------
--- andentopografipunkt --
+-- Andentopografipunkt --
 -------------------------
+SELECT 'Andentopografipunkt: ', now();
+
 -- Helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1374,8 +1415,10 @@ WHERE
 
 
 -------------------
--- idraetsanlaeg --
+-- Idraetsanlaeg --
 -------------------
+SELECT 'Idraetsanlaeg: ', now();
+
 -- Helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1413,8 +1456,10 @@ WHERE
 
 
 ---------
--- soe --
+-- Soe --
 ---------
+SELECT 'Soe: ', now();
+
 -- Helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1487,8 +1532,10 @@ WHERE
 
 
 ---------------------
--- standsningssted --
+-- Standsningssted --
 ---------------------
+SELECT 'Standsningssted: ', now();
+
 -- Helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1508,8 +1555,10 @@ WHERE
 
 
 --------------------------
--- ubearbejdetnavnflade --
+-- Ubearbejdetnavnflade --
 --------------------------
+SELECT 'Ubearbejdetnavnflade: ', now();
+
 -- Er ingen stednavn for tiden der har denne type
 -- Helt indenfor et postnummerinddeling
 UPDATE
@@ -1530,8 +1579,10 @@ WHERE
 
 
 --------------------------
--- ubearbejdetnavnlinje --
+-- Ubearbejdetnavnlinje --
 --------------------------
+SELECT 'Ubearbejdetnavnlinje: ', now();
+
 -- Er ingen stednavn for tiden der har denne type
 -- Helt indenfor et postnummerinddeling
 UPDATE
@@ -1552,8 +1603,10 @@ WHERE
 
 
 --------------------------
--- ubearbejdetnavnpunkt --
+-- Ubearbejdetnavnpunkt --
 --------------------------
+SELECT 'Ubearbejdetnavnpunkt: ', now();
+
 -- Er ingen stednavn for tiden der har denne type
 -- Helt indenfor et postnummerinddeling
 UPDATE
@@ -1574,8 +1627,10 @@ WHERE
 
 
 --------------------------
--- vej --
+---------- Vej -----------
 --------------------------
+SELECT 'Vej: ', now();
+
 -- Helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1617,6 +1672,8 @@ WHERE
 --------------------------
 -- Resterende stednavne --
 --------------------------
+SELECT 'Resterende stednavne: ', now();
+
 -- Fanger nogle af de grænsepæle som ikke overlappede med postnummer
 UPDATE
     stednavne_udstilling.stednavne_udstilling
@@ -1651,6 +1708,9 @@ WHERE
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
+
+SELECT 'Kommunefilter: ', now();
+
 -- Tilføj og populer kommunefilter på tabellen
 -- Kommunekode needs to be done here and not in 510_api_stednavne as it else results in duplicated kommunekoder in
 -- stednavne that has more than one skrivemaade.
@@ -1681,3 +1741,5 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, visningstekst);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
+SELECT '2_preprocessing.sql DONE: ', now();
