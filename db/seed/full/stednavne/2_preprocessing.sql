@@ -201,7 +201,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
     (
-        ST_contains (p.geometri, s.geometri)
+        p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -220,7 +221,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
     (
-        p.geometri && s.geometri
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
         AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area
     )
 WHERE
@@ -280,7 +282,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -298,7 +301,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    p.geometri && s.geometri
+        p.navn != s.skrivemaade
+	    AND p.geometri && s.geometri
 		AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -318,7 +322,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -334,8 +339,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 		AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -352,8 +358,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 		AND st_area (st_intersection (p.geometri, s.geometri)) > 0.4 * s.area
 	)
 WHERE
@@ -377,7 +384,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+	    AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -393,8 +401,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -418,7 +427,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -434,8 +444,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -453,8 +464,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.2 * s.area
 	)
 WHERE
@@ -478,7 +490,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -494,8 +507,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -581,7 +595,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -597,8 +612,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -658,7 +674,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -674,8 +691,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area
 	)
 WHERE
@@ -700,7 +718,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -723,7 +742,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -739,8 +759,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area
 	)
 WHERE
@@ -758,8 +779,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.3 * s.area
 	)
 WHERE
@@ -783,7 +805,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
     (
-        ST_contains (p.geometri, s.geometri)
+        p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
     )
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -799,8 +822,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area
 	)
 WHERE
@@ -874,7 +898,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -891,7 +916,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-        p.geometri && s.geometri
+	    p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
         AND st_area (st_intersection (p.geometri,  s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -909,7 +935,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
     (
-        p.geometri && s.geometri
+	    p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
         AND st_area (st_intersection (p.geometri,  s.geometri)) > 0.4 * s.area
     )
 WHERE
@@ -933,7 +960,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -949,8 +977,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -973,7 +1002,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1050,7 +1080,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1073,7 +1104,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1089,8 +1121,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -1167,8 +1200,10 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(ST_contains (p.geometri,
-	s.geometri_udtyndet))
+	(
+	    p.navn != s.skrivemaade
+	    AND ST_contains (p.geometri, s.geometri)
+    )
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
 	AND stednavne_udstilling.stednavne_udstilling.type = 'rute'
@@ -1183,9 +1218,11 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(p.geometri && s.geometri_udtyndet
-		AND st_area (st_intersection (p.geometri,
-		s.geometri_udtyndet)) > 0.5 * s.area)
+	(
+	    p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
+		AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
+	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
 	AND stednavne_udstilling.stednavne_udstilling.type = 'rute'
@@ -1215,7 +1252,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1231,8 +1269,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area
 	)
 WHERE
@@ -1256,7 +1295,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1272,8 +1312,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.5 * s.area
 	)
 WHERE
@@ -1336,8 +1377,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -1361,7 +1403,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1379,8 +1422,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.6 * s.area
 	)
 WHERE
@@ -1405,7 +1449,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1421,8 +1466,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -1464,7 +1510,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+	    AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1487,7 +1534,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+	    AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1503,8 +1551,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -1528,7 +1577,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+	    AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1544,8 +1594,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
@@ -1562,8 +1613,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.4 * s.area
 	)
 WHERE
@@ -1604,7 +1656,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+	    AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1628,7 +1681,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1652,7 +1706,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1676,7 +1731,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
     )
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1699,7 +1755,8 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
 	(
-	    ST_contains (p.geometri, s.geometri)
+	    p.navn != s.skrivemaade
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1717,8 +1774,9 @@ SET
 FROM
 	stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.postnummerinddeling p ON
-	(
-	    p.geometri && s.geometri
+    (
+        p.navn != s.skrivemaade
+        AND p.geometri && s.geometri
 	    AND st_area (st_intersection (p.geometri, st_envelope (s.geometri))) > 0.6 * s.area
 	)
 WHERE
