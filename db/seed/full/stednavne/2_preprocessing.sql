@@ -369,6 +369,41 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
+-- Bebyggelser, > helt indenfor kommune
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
+FROM
+    stednavne_udstilling.stednavne_udstilling s
+JOIN dagi_10.kommune_helper_stednavne k ON
+	(
+	    ST_contains (k.geometri, s.geometri)
+	)
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.type = 'bebyggelse'
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- > 90 % i en kommune
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
+FROM
+    stednavne_udstilling.stednavne_udstilling s
+JOIN dagi_10.kommune_helper_stednavne k ON
+    (
+        k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
+    )
+WHERE
+	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+	AND stednavne_udstilling.stednavne_udstilling.type = 'bebyggelse'
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
 
 ------------------------
 -- Begravelsespladser --
