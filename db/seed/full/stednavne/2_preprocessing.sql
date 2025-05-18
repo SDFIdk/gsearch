@@ -1791,6 +1791,29 @@ WHERE
 --------------------------
 SELECT 'Resterende stednavne: ', now();
 
+-- Starter med at få placeret stednavne på ø'er og halvø'er
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' på ' || s2.skrivemaade || ')'
+FROM
+	stednavne_udstilling.stednavne_udstilling s1
+JOIN stednavne_udstilling.stednavne_udstilling s2 ON
+	(
+        s2.TYPE = 'landskabsform'
+		AND s2.navnefoelgenummer = '1'
+        AND s2.skrivemaade != s1.skrivemaade
+        AND st_area(s2.geometri) > 10000000
+		AND s2.geometri && s1.geometri
+		AND ST_contains (s2.geometri, s1.geometri)
+	)
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+
+
+-- Der ønskes at få så præcis en landsdel som muligt, så vi undlader først landsdel Jylland
 -- Fanger nogle af de grænsepæle som ikke overlappede med postnummer
 UPDATE
     stednavne_udstilling.stednavne_udstilling
@@ -1800,7 +1823,27 @@ FROM
 	stednavne_udstilling.stednavne_udstilling s1
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
-		s2.subtype = 'landsdel'
+	    s2.skrivemaade != 'Jylland'
+		AND s2.subtype = 'landsdel'
+		AND s2.navnefoelgenummer = '1'
+        AND s2.skrivemaade != s1.skrivemaade
+		AND s2.geometri && s1.geometri
+		AND ST_contains (s2.geometri, s1.geometri)
+	)
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
+FROM
+	stednavne_udstilling.stednavne_udstilling s1
+JOIN stednavne_udstilling.stednavne_udstilling s2 ON
+	(
+	    s2.subtype = 'landsdel'
 		AND s2.navnefoelgenummer = '1'
         AND s2.skrivemaade != s1.skrivemaade
 		AND s2.geometri && s1.geometri
