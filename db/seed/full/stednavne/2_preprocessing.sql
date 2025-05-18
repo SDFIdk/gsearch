@@ -1144,6 +1144,52 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 
+----------
+-- Rute --
+----------
+-- Er ingen stednavn for tiden der har denne type
+-- Rute helt indenfor et postnummerinddeling
+UPDATE
+	stednavne_udstilling.stednavne_udstilling
+SET
+	visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
+FROM
+	stednavne_udstilling.stednavne_udstilling s
+JOIN dagi_10.postnummerinddeling p ON
+	(ST_contains (p.geometri,
+	s.geometri_udtyndet))
+WHERE
+	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+	AND stednavne_udstilling.stednavne_udstilling.type = 'rute'
+	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- Rute > 50 % i et postnummerinddeling
+UPDATE
+	stednavne_udstilling.stednavne_udstilling
+SET
+	visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || p.navn || ')'
+FROM
+	stednavne_udstilling.stednavne_udstilling s
+JOIN dagi_10.postnummerinddeling p ON
+	(p.geometri && s.geometri_udtyndet
+		AND st_area (st_intersection (p.geometri,
+		s.geometri_udtyndet)) > 0.5 * s.area)
+WHERE
+	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+	AND stednavne_udstilling.stednavne_udstilling.type = 'rute'
+	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+-- Øvrige
+UPDATE
+	stednavne_udstilling.stednavne_udstilling
+SET
+	visningstekst = skrivemaade || ' (' || subtype_presentation || ')'
+WHERE
+	visningstekst IS NULL
+	AND TYPE = 'rute';
+
+
 ------------------
 -- Sevaerdighed --
 ------------------
