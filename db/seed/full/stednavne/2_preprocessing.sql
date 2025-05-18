@@ -234,16 +234,16 @@ WHERE
 
 -- Byer
 -- SELECT skrivemaade, st_area(geometri)/1000/1000 FROM stednavne_udstilling.stednavne_udstilling WHERE type='bebyggelse' AND subtype='By' ORDER BY st_area(geometri) desc LIMIT 1000
--- Store byer > 4 km**2 får en hjælpetekst med hvilken region de ligger i
+-- Store byer > 4 km**2 får en hjælpetekst med hvilken kommune de ligger i
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        ST_contains (r.geometri, s.geometri)
+        ST_contains (k.geometri, s.geometri)
     )
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -253,17 +253,17 @@ WHERE
   	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
   	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Store byer > 4 km**2 > 90 % i en region får en hjælpetekst med hvilken region de ligger i
+-- Store byer > 4 km**2 > 90 % i en kommune får en hjælpetekst med hvilken kommune de ligger i
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        r.geometri && s.geometri
-        AND st_area (st_intersection (r.geometri, s.geometri)) > 0.9 * s.area
+        k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -641,17 +641,17 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- > 90 % i en region
+-- > 90 % i en kommune
 UPDATE
-	stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling
 SET
-	visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
-	stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.regionsinddeling r ON
+    stednavne_udstilling.stednavne_udstilling s
+JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        r.geometri && s.geometri
-        AND st_area (st_intersection (r.geometri, s.geometri)) > 0.9 * s.area
+        k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1029,17 +1029,17 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
---> Naturareal, > 90% inden for en region
+--> Naturareal, > 90% inden for en kommune
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        r.geometri && s.geometri
-        AND st_area (st_intersection (r.geometri, s.geometri)) > 0.9 * s.area
+        k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1047,17 +1047,17 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
---> Naturareal, > 60% inden for en region
+--> Naturareal, > 60% inden for en kommune
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        r.geometri && s.geometri
-        AND st_area (st_intersection (r.geometri, s.geometri)) > 0.6 * s.area
+        k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.6 * s.area
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1136,12 +1136,12 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_500.kommune_helper_stednavne k ON
 	(
-	    ST_contains (r.geometri, s.geometri)
+	    ST_contains (k.geometri, s.geometri)
 	)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1149,17 +1149,17 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Restriktionsanlaeg, > 90 % i region
+-- Restriktionsanlaeg, > 90 % i en kommune
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        r.geometri && s.geometri
-        AND st_area (st_intersection (r.geometri, s.geometri)) > 0.9 * s.area
+        k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1167,17 +1167,17 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Restriktionsanlaeg, > 50 % i region
+-- Restriktionsanlaeg, > 60 % i kommune
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        r.geometri && s.geometri
-        AND st_area (st_intersection (r.geometri, s.geometri)) > 0.5 * s.area
+        k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.6 * s.area
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1477,17 +1477,17 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
---> 60% inden for en region
+--> 60% inden for en kommune
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        r.geometri && s.geometri
-        AND st_area (st_intersection (r.geometri, s.geometri)) > 0.6 * s.area
+        k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.6 * s.area
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1624,16 +1624,16 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
--- Soe, helt indenfor en region
+-- Soe, helt indenfor en kommune
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_10.kommune_helper_stednavne k ON
 	(
-	    ST_contains (r.geometri, s.geometri)
+	    ST_contains (k.geometri, s.geometri)
 	)
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -1791,7 +1791,40 @@ WHERE
 --------------------------
 SELECT 'Resterende stednavne: ', now();
 
--- Starter med at få placeret stednavne på ø'er og halvø'er
+-- Stednavne der ligger helt indenfor en region
+UPDATE
+	stednavne_udstilling.stednavne_udstilling
+SET
+	visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+FROM
+	stednavne_udstilling.stednavne_udstilling s
+    JOIN dagi_500.regionsinddeling r ON
+    (
+        ST_contains (r.geometri, s.geometri)
+    )
+WHERE
+	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+--> 90% indenfor region
+UPDATE
+	stednavne_udstilling.stednavne_udstilling
+SET
+	visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
+FROM
+	stednavne_udstilling.stednavne_udstilling s
+    JOIN dagi_500.regionsinddeling r ON
+    (
+        r.geometri && s.geometri
+        AND st_area (st_intersection (r.geometri, s.geometri)) > 0.9 * s.area
+    )
+WHERE
+	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- Placeret stednavne på ø'er og halvø'er
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
@@ -1812,9 +1845,7 @@ WHERE
     AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
-
 -- Der ønskes at få så præcis en landsdel som muligt, så vi undlader først landsdel Jylland
--- Fanger nogle af de grænsepæle som ikke overlappede med postnummer
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
