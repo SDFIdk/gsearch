@@ -228,6 +228,7 @@ WHERE
   AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
   AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
+-- Byer
 -- SELECT skrivemaade, st_area(geometri)/1000/1000 FROM stednavne_udstilling.stednavne_udstilling WHERE type='bebyggelse' AND subtype='By' ORDER BY st_area(geometri) desc LIMIT 1000
 -- Store byer > 4 km**2 får en hjælpetekst med hvilken region de ligger i
 UPDATE
@@ -305,6 +306,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
+-- Bebyggelser
 -- Bebyggelser som ligger helt indenfor et postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1147,6 +1149,8 @@ WHERE
 ----------
 -- Rute --
 ----------
+SELECT 'Rute: ', now();
+
 -- Er ingen stednavn for tiden der har denne type
 -- Rute helt indenfor et postnummerinddeling
 UPDATE
