@@ -62,6 +62,10 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, subtype);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype, TYPE);
 
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, visningstekst);
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
+
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (skrivemaade);
@@ -128,18 +132,16 @@ SET
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri_udtyndet);
 
-SELECT 'visningstekst_uden_hjaelpetekst: ', now();
 
 -- Prioritetsmæssig opdatering af visningstekst_uden_hjaelpetekst
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst_uden_hjaelpetekst = skrivemaade
-WHERE
-    visningstekst_uden_hjaelpetekst IS NULL;
+    visningstekst_uden_hjaelpetekst = skrivemaade;
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst_uden_hjaelpetekst);
 
+VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
 -----------------
 -- Bebyggelser --
