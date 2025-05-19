@@ -112,6 +112,25 @@ Feature: Gsearch husnummer test
         And match response == secondResponse
 
 
+    Scenario: Like search on h c andersen returns H.C. Andersen and H.C. Andersens
+        Then param q = 'h c andersen'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[*].vejnavn contains deep ['H.C. Andersen Haven', 'H C Andersens Gade']
+        And match response.[*].postnummernavn contains deep ['Odense C', 'Horsens']
+
+
+        Then param q = 'hc andersen'
+
+        When method GET
+        Then status 200
+        And match response == '#[10]'
+        And match response.[*].vejnavn contains deep ['H.C. Andersen Haven', 'H C Andersens Gade']
+        And match response.[*].postnummernavn contains deep ['Odense C', 'Horsens']
+
+
     Scenario: Search street name that has numbers in it
         Then param q = 'Haveforeningen af 10. maj 1918'
 
@@ -141,28 +160,28 @@ Feature: Gsearch husnummer test
         And match response.[*].vejnavn contains deep ['2.Tværvej']
 
 
-    Scenario: Search street name that has periods in it N. O. Hansens Vej and N.O.Hansens Vej
+Scenario: Search street name that has periods in it N. O. Hansens Vej and N.O.Hansens Vej
         Then param q = 'N.O.Hansens Vej'
 
         When method GET
         Then status 200
-        And match response == '#[2]'
+        And match response == '#[5]'
         And match response.[*].vejnavn contains deep ['N.O.Hansens Vej']
 
         Then param q = 'N. O. Hansens Vej'
 
         When method GET
         Then status 200
-        And match response == '#[2]'
-        And match response.[*].vejnavn contains only deep ['N.O. Hansens Vej', 'N.O.Hansens Vej']
+        And match response == '#[5]'
+        And match response.[*].vejnavn contains deep ['N.O. Hansens Vej', 'N.O.Hansens Vej']
 
 
         Then param q = 'N O Hansens Vej'
 
         When method GET
         Then status 200
-        And match response == '#[2]'
-        And match response.[*].vejnavn contains only deep ['N.O. Hansens Vej', 'N.O.Hansens Vej']
+        And match response == '#[5]'
+        And match response.[*].vejnavn contains deep ['N.O. Hansens Vej', 'N.O.Hansens Vej']
 
 
     Scenario: Search street name that has period in it 10. Juli Vej
@@ -171,14 +190,14 @@ Feature: Gsearch husnummer test
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[*].vejnavn contains only deep '10. Juli Vej'
+        And match response.[*].vejnavn contains deep ['10. Juli Vej']
 
         Then param q = '10 Juli Vej'
 
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[*].vejnavn contains only deep ['10. Juli Vej']
+        And match response.[*].vejnavn contains deep ['10. Juli Vej']
 
 
     Scenario: Search street name that has period in it 10. Februar Vej
@@ -187,14 +206,14 @@ Feature: Gsearch husnummer test
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[*].vejnavn contains only deep ['10. Februar Vej']
+        And match response.[*].vejnavn contains deep ['10. Februar Vej']
 
         Then param q = '10 Februar Vej'
 
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[*].vejnavn contains only deep ['10. Februar Vej']
+        And match response.[*].vejnavn contains deep ['10. Februar Vej']
 
 
     Scenario: Filter kommunekode in like

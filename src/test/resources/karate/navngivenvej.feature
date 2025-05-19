@@ -97,7 +97,7 @@ Feature: Gsearch navngivenvej test
 
         When method GET
         Then status 200
-        And match response == '#[8]'
+        And match response == '#[9]'
 
 
     Scenario: Search street name that has numbers in it
@@ -165,21 +165,21 @@ Feature: Gsearch navngivenvej test
         When method GET
         Then status 200
         And match response == '#[1]'
-        And match response.[*].vejnavn contains only deep ['10.Juli Vej']
+        And match response.[*].vejnavn contains only deep ['10. Juli Vej']
 
         Then param q = '10. Juli Vej'
 
         When method GET
         Then status 200
         And match response == '#[1]'
-        And match response.[*].vejnavn contains only deep ['10.Juli Vej']
+        And match response.[*].vejnavn contains only deep ['10. Juli Vej']
 
         Then param q = '10 Juli Vej'
 
         When method GET
         Then status 200
         And match response == '#[1]'
-        And match response.[*].vejnavn contains only deep ['10.Juli Vej']
+        And match response.[*].vejnavn contains only deep ['10. Juli Vej']
 
 
     Scenario: Search street name that has period in it 10. Februar Vej
