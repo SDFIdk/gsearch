@@ -319,7 +319,7 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[3]'
-        And match response.[*].visningstekst contains only ['Rørvig (By i Rørvig)', 'Rørvig (Gård i Tønder)', 'Rørviggård (Gård i Otterup)']
+        And match response.[*].visningstekst contains only ['Rørvig (By i Odsherred Kommune)', 'Rørvig (Gård i Tønder)', 'Rørviggård (Gård i Otterup)']
 
 
     Scenario: Search levenshtein ordering test Kongen
@@ -357,7 +357,7 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[0].visningstekst == 'Møn'
+        And match response.[0].visningstekst == 'Møn (Ø i Stege)'
 
 
     Scenario: Search levenshtein ordering test Aars
@@ -367,7 +367,7 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[2]'
-        And match response.[0].visningstekst contains only ['Aars (Rasteplads i Aars)', 'Aars']
+        And match response.[*].visningstekst contains only ['Aars (Rasteplads i Aars)', 'Aars (By i Vesthimmerlands Kommune)']
 
 
     Scenario: Search levenshtein ordering test Akademiet
