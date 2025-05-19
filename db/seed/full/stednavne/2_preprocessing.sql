@@ -143,6 +143,50 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst_uden_hj
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 
+
+-----------------
+-- Christiansø --
+-----------------
+-- Vi er nødt til at starte med at få stednavne på Christiansø fixet, da de stednavne ellers ender med at få en hjælpetekst
+-- som har Gudhjem, da Gudhjems postnummer geometri også indeholder Christiansø
+SELECT 'Christiansø: ', now();
+
+-- Stednavne der ligger helt indenfor Christiansø
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
+FROM
+    stednavne_udstilling.stednavne_udstilling s
+JOIN dagi_10.kommune_helper_stednavne k ON
+    (
+    	k.kommunenavn = 'Christiansø'
+        AND ST_contains (k.geometri, s.geometri)
+    )
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- Stednavne, > 50% ligger indenfor Christiansø
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
+FROM
+    stednavne_udstilling.stednavne_udstilling s
+JOIN dagi_10.kommune_helper_stednavne k ON
+    (
+        k.kommunenavn = 'Christiansø'
+        AND k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.5 * s.area
+    )
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+
 -----------------
 -- Bebyggelser --
 -----------------
@@ -1876,41 +1920,6 @@ WHERE
 -- Resterende stednavne --
 --------------------------
 SELECT 'Resterende stednavne: ', now();
-
--- Stednavne der ligger helt indenfor Christiansø
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
-FROM
-    stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_10.kommune_helper_stednavne k ON
-    (
-    	k.kommunenavn = 'Christiansø'
-        AND ST_contains (k.geometri, s.geometri)
-    )
-WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
-
--- Stednavne, > 50% ligger indenfor Christiansø
-UPDATE
-    stednavne_udstilling.stednavne_udstilling
-SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
-FROM
-    stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_10.kommune_helper_stednavne k ON
-    (
-        k.kommunenavn = 'Christiansø'
-        AND k.geometri && s.geometri
-        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.5 * s.area
-    )
-WHERE
-    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
-    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
-    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Stednavne der ligger helt indenfor en region
 UPDATE
