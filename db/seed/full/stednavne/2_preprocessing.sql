@@ -243,7 +243,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        ST_contains (k.geometri, s.geometri)
+    	k.kommunenavn != 'Christiansø'
+        AND ST_contains (k.geometri, s.geometri)
     )
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -262,7 +263,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        k.geometri && s.geometri
+        k.kommunenavn != 'Christiansø'
+        AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
@@ -377,9 +379,10 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
-	(
-	    ST_contains (k.geometri, s.geometri)
-	)
+    (
+    	k.kommunenavn != 'Christiansø'
+        AND ST_contains (k.geometri, s.geometri)
+    )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'bebyggelse'
@@ -395,7 +398,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        k.geometri && s.geometri
+        k.kommunenavn != 'Christiansø'
+        AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
@@ -685,7 +689,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        k.geometri && s.geometri
+        k.kommunenavn != 'Christiansø'
+        AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
@@ -1073,7 +1078,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        k.geometri && s.geometri
+        k.kommunenavn != 'Christiansø'
+        AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
@@ -1091,7 +1097,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        k.geometri && s.geometri
+        k.kommunenavn != 'Christiansø'
+        AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.6 * s.area
     )
 WHERE
@@ -1175,9 +1182,10 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
-	(
-	    ST_contains (k.geometri, s.geometri)
-	)
+    (
+    	k.kommunenavn != 'Christiansø'
+        AND ST_contains (k.geometri, s.geometri)
+    )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'restriktionsareal'
@@ -1193,7 +1201,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        k.geometri && s.geometri
+        k.kommunenavn != 'Christiansø'
+        AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
@@ -1211,7 +1220,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        k.geometri && s.geometri
+        k.kommunenavn != 'Christiansø'
+        AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.6 * s.area
     )
 WHERE
@@ -1521,7 +1531,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        k.geometri && s.geometri
+        k.kommunenavn != 'Christiansø'
+        AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.6 * s.area
     )
 WHERE
@@ -1562,9 +1573,10 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
-	(
-	    ST_contains (k.geometri, s.geometri)
-	)
+    (
+    	k.kommunenavn != 'Christiansø'
+        AND ST_contains (k.geometri, s.geometri)
+    )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'andentopografipunkt'
@@ -1580,7 +1592,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
-        k.geometri && s.geometri
+        k.kommunenavn != 'Christiansø'
+        AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.6 * s.area
     )
 WHERE
@@ -1702,9 +1715,10 @@ SET
 FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
-	(
-	    ST_contains (k.geometri, s.geometri)
-	)
+    (
+    	k.kommunenavn != 'Christiansø'
+        AND ST_contains (k.geometri, s.geometri)
+    )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
     AND stednavne_udstilling.stednavne_udstilling.type = 'soe'
@@ -1860,6 +1874,41 @@ WHERE
 -- Resterende stednavne --
 --------------------------
 SELECT 'Resterende stednavne: ', now();
+
+-- Stednavne der ligger helt indenfor Christiansø
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
+FROM
+    stednavne_udstilling.stednavne_udstilling s
+JOIN dagi_10.kommune_helper_stednavne k ON
+    (
+    	k.kommunenavn = 'Christiansø'
+        AND ST_contains (k.geometri, s.geometri)
+    )
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
+
+-- Stednavne, > 50% ligger indenfor Christiansø
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
+FROM
+    stednavne_udstilling.stednavne_udstilling s
+JOIN dagi_10.kommune_helper_stednavne k ON
+    (
+        k.kommunenavn = 'Christiansø'
+        AND k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.5 * s.area
+    )
+WHERE
+    stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
+    AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Stednavne der ligger helt indenfor en region
 UPDATE
