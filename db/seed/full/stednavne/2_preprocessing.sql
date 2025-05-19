@@ -975,7 +975,8 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
 
--- landskabsformer  postnummer
+-- landskabsformer postnummer
+-- Vi ønsker kun at det er landskabsformer der er mindre end Møn, da Møn ellers ender med en hjælpetekst Møn (ø i Stege)
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
 SET
@@ -985,6 +986,7 @@ FROM
 JOIN dagi_10.postnummerinddeling p ON
 	(
 	    p.navn != s.skrivemaade
+        AND s.area < 100000000
         AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
@@ -994,6 +996,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Landskabsformer, > 50 % i postnummerinddeling
+-- Vi ønsker kun at det er landskabsformer der er mindre end Møn, da Møn ellers ender med en hjælpetekst Møn (ø i Stege)
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
 SET
@@ -1003,6 +1006,7 @@ FROM
 JOIN dagi_10.postnummerinddeling p ON
 	(
 	    p.navn != s.skrivemaade
+	    AND s.area < 100000000
         AND p.geometri && s.geometri
         AND st_area (st_intersection (p.geometri,  s.geometri)) > 0.5 * s.area
 	)
@@ -1013,6 +1017,7 @@ WHERE
 	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
 -- Landskabsformer, > 40 % i postnummerinddeling
+-- Vi ønsker kun at det er landskabsformer der er mindre end Møn, da Møn ellers ender med en hjælpetekst Møn (ø i Stege)
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
@@ -1022,6 +1027,7 @@ FROM
 JOIN dagi_10.postnummerinddeling p ON
     (
 	    p.navn != s.skrivemaade
+	    AND s.area < 100000000
         AND p.geometri && s.geometri
         AND st_area (st_intersection (p.geometri,  s.geometri)) > 0.4 * s.area
     )
