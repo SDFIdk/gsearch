@@ -121,7 +121,7 @@ BEGIN
             AND %s
             ORDER BY
                 levenshtein(
-                    lower(skrivemaade)::text,
+                    lower(visningstekst_uden_hjaelpetekst)::text,
                     lower($5)
                 ) asc,
                 functions.combine_rank(
@@ -145,12 +145,12 @@ $function$;
 
 -- Test cases:
 /*
- SELECT (api.stednavn('tivoli',NULL, 1, 100)).*;
- SELECT (api.stednavn('tivoli forlys',NULL, 1, 100)).*;
- SELECT (api.stednavn('vuc ringkøb',NULL, 1, 100)).*;
- SELECT (api.stednavn('grøngård slot',NULL, 1, 100)).*;
- SELECT (api.stednavn('slotsruin',NULL, 1, 100)).*;
- SELECT (api.stednavn('uch',NULL, 1, 100)).*;
- SELECT (api.stednavn('hc andersen slot',NULL, 1, 100)).*;
- SELECT (api.stednavn('s',NULL, 1, 100)).*;
+ SELECT (api.stednavn('tivoli',NULL, 1, 100, 25832)).*;
+ SELECT (api.stednavn('tivoli forlys',NULL, 1, 100, 25832)).*;
+ SELECT (api.stednavn('vuc ringkøb',NULL, 1, 100, 25832)).*;
+ SELECT (api.stednavn('grøngård slot',NULL, 1, 100, 25832)).*;
+ SELECT (api.stednavn('slotsruin',NULL, 1, 100, 25832)).*;
+ SELECT (api.stednavn('uch',NULL, 1, 100, 25832)).*;
+ SELECT (api.stednavn('hc andersen slot',NULL, 1, 100, 25832)).*;
+ SELECT (api.stednavn('s',NULL, 1, 100, 25832)).*;
  */

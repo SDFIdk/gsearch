@@ -12,14 +12,14 @@ CREATE TABLE basic_initialloading.stednavn_count (
 WITH a AS (SELECT generate_series(1,8) a)
 INSERT INTO basic_initialloading.stednavn_count (tekstelement, forekomster)
 SELECT
-    substring(lower(skrivemaade) FROM 1 FOR a),
+    substring(lower(am.visningstekst_uden_hjaelpetekst) FROM 1 FOR a),
     count(*)
 FROM
     basic_initialloading.stednavn am
         CROSS JOIN a
-WHERE skrivemaade IS NOT null
+WHERE am.visningstekst_uden_hjaelpetekst IS NOT null
 GROUP BY
-    substring(lower(skrivemaade) FROM 1 FOR a)
+    substring(lower(am.visningstekst_uden_hjaelpetekst) FROM 1 FOR a)
 HAVING
     count(1) > 1000
 ON CONFLICT DO NOTHING;

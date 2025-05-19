@@ -1,11 +1,11 @@
 DROP TABLE IF EXISTS basic_initialloading.stednavn;
 
-WITH agg_stednavne_officiel AS (
+WITH stednavne_officiel AS (
     SELECT
         objectid,
         skrivemaade
     FROM
-        stednavne_udstilling.stednavne_udstilling o
+        stednavne_udstilling.stednavne_udstilling
     WHERE
         navnestatus <> 'uofficielt'
 ),
@@ -14,7 +14,7 @@ agg_stednavne_uofficiel AS (
         objectid,
         string_agg(skrivemaade, ',' ORDER BY skrivemaade ASC) AS skrivemaader
     FROM
-        stednavne_udstilling.stednavne_udstilling u
+        stednavne_udstilling.stednavne_udstilling
     WHERE
         navnestatus = 'uofficielt'
     GROUP BY
@@ -23,38 +23,41 @@ agg_stednavne_uofficiel AS (
 agg_stednavne AS (
     SELECT
         su.objectid,
-        id_lokalid,
-        navnefoelgenummer,
-        visningstekst,
-        o.skrivemaade AS skrivemaade,
-        u.skrivemaader AS skrivemaade_uofficiel,
-        navnestatus,
-        "type",
-        subtype,
-        kommunekode,
-        st_force2d (geometri_udtyndet) AS geometri
+        su.id_lokalid,
+        su.navnefoelgenummer,
+        su.visningstekst,
+        su.visningstekst_uden_hjaelpetekst,
+        so.skrivemaade AS skrivemaade,
+        asu.skrivemaader AS skrivemaade_uofficiel,
+        su.navnestatus,
+        su."type",
+        su.subtype,
+        su.kommunekode,
+        st_force2d (su.geometri_udtyndet) AS geometri
     FROM
         stednavne_udstilling.stednavne_udstilling su
-    LEFT JOIN agg_stednavne_officiel o ON
-        o.objectid = su.objectid
-    LEFT JOIN agg_stednavne_uofficiel u ON
-        u.objectid = su.objectid
+    LEFT JOIN stednavne_officiel so ON
+        so.objectid = su.objectid
+    LEFT JOIN agg_stednavne_uofficiel asu ON
+        asu.objectid = su.objectid
     GROUP BY
         su.objectid,
-        id_lokalid,
-        navnefoelgenummer,
-        visningstekst,
-        o.skrivemaade,
-        u.skrivemaader,
-        navnestatus,
-        "type",
-        subtype,
-        kommunekode,
-        geometri_udtyndet
+        su.id_lokalid,
+        su.navnefoelgenummer,
+        su.visningstekst,
+        su.visningstekst_uden_hjaelpetekst,
+        so.skrivemaade,
+        asu.skrivemaader,
+        su.navnestatus,
+        su."type",
+        su.subtype,
+        su.kommunekode,
+        su.geometri_udtyndet
 ),
 visningstekst_uofficel_merge AS (
     SELECT
         objectid,
+        visningstekst_uden_hjaelpetekst, -- Needed for not getting dublicates for stednavne with mulitple uofficel skrivemaader
         REPLACE(agg_s.visningstekst, '(', '(' || skrivemaade || ', ') AS visningstekst -- Uofficel skrivemaade shall always have the officel skrivemadde in visningstekst
     FROM
         agg_stednavne agg_s
@@ -80,6 +83,7 @@ SELECT
                  replace(replace(agg_s.visningstekst, ' - ', ' '), '-', ' ')
             END
         ) AS visningstekst_nohyphen,
+    agg_s.visningstekst_uden_hjaelpetekst,
     skrivemaade,
     skrivemaade_uofficiel,
     type AS stednavn_type,
@@ -92,11 +96,13 @@ FROM
     agg_stednavne agg_s
     LEFT JOIN visningstekst_uofficel_merge vum ON
         vum.objectid = agg_s.objectid
+        AND vum.visningstekst_uden_hjaelpetekst = agg_s.visningstekst_uden_hjaelpetekst -- Needed for not getting dublicates for stednavne with mulitple uofficel skrivemaader
 GROUP BY
     id,
     vum.visningstekst,
     agg_s.visningstekst,
     visningstekst_nohyphen,
+    agg_s.visningstekst_uden_hjaelpetekst,
     skrivemaade,
     skrivemaade_uofficiel,
     agg_s.navnestatus,

@@ -14,14 +14,12 @@ CREATE TABLE stednavne_udstilling.stednavne_udstilling (
     subtype varchar,
     subtype_presentation varchar,
     kommunekode varchar,
-    geometri geometry(Geometry,
-25832),
-    geometri_udtyndet geometry(Geometry,
-25832),
+    geometri geometry(Geometry,25832),
+    geometri_udtyndet geometry(Geometry,25832),
     visningstekst varchar,
+    visningstekst_uden_hjaelpetekst varchar,
     area float,
-    CONSTRAINT stednavne_udstilling_pkey PRIMARY KEY (objectid,
-navnefoelgenummer)
+    CONSTRAINT stednavne_udstilling_pkey PRIMARY KEY (objectid, navnefoelgenummer)
 );
 -- Ingen dubletter mere
 --WITH dubletter AS --4:10
@@ -61,6 +59,8 @@ CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, subtype);
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (subtype, TYPE);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (TYPE, visningstekst);
+
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
 
 CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri);
 
@@ -130,20 +130,19 @@ SET
 		ST_Ymax (ST_Envelope (geometri)) - ST_Ymin (ST_Envelope (geometri))) / 300)
 	END;
 
-CREATE INDEX ON
-stednavne_udstilling.stednavne_udstilling
-	USING gist (geometri_udtyndet);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling USING gist (geometri_udtyndet);
 
-VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
--- Prioritetsmæssig opdatering af visningstekst
+
+-- Prioritetsmæssig opdatering af visningstekst_uden_hjaelpetekst
 UPDATE
-	stednavne_udstilling.stednavne_udstilling
+    stednavne_udstilling.stednavne_udstilling
 SET
-	visningstekst = NULL;
+    visningstekst_uden_hjaelpetekst = skrivemaade;
 
-CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst);
+CREATE INDEX ON stednavne_udstilling.stednavne_udstilling (visningstekst_uden_hjaelpetekst);
 
 VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
+
 -----------------
 -- Bebyggelser --
 -----------------
