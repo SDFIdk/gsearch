@@ -71,12 +71,12 @@ Feature: Gsearch matrikel test
         And match response.[*].ejerlavsnavn contains deep ['Skrydstrup Ejerlav, Skrydstrup']
 
     Scenario: Combine search using ejerlavskode and ejerlavsnavn
-        Then param q = 'utterslev'
+        Then param q = 'utterslev 2000175'
 
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[*].ejerlavsnavn contains deep ['Utterslev By, Utterslev']
+        And match response.[*].ejerlavsnavn contains deep ['Utterslev, København']
 
     Scenario: Do not have a match on '.'
         Then param q = '.'

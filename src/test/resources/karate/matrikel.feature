@@ -71,7 +71,7 @@ Feature: Gsearch matrikel test
         And match response.[*].ejerlavsnavn contains deep ['Damhussøen, København']
 
     Scenario: Combine search using ejerlavskode and ejerlavsnavn
-        Then param q = 'utterslev'
+        Then param q = 'utterslev 2000175'
 
         When method GET
         Then status 200
