@@ -577,7 +577,7 @@ JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	    s2.type = 'farvand'
 	    AND s2.navnefoelgenummer = '1'
 	    AND s2.skrivemaade != s1.skrivemaade
-	    AND ST_contains (s2.geometri, s1.geometri_udtyndet)
+	    AND ST_contains (s2.geometri, s1.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -597,8 +597,8 @@ JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	    s2.type = 'farvand'
 	    AND s2.navnefoelgenummer = '1'
 	    AND s2.skrivemaade != s1.skrivemaade
-        AND s2.geometri && s1.geometri_udtyndet
-        AND st_area (st_intersection (s2.geometri, s1.geometri_udtyndet)) > 0.9 * s1.area
+        AND s2.geometri && s1.geometri
+        AND st_area (st_intersection (s2.geometri, s1.geometri)) > 0.9 * s1.area
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -618,8 +618,8 @@ JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	    s2.type = 'farvand'
 	    AND s2.navnefoelgenummer = '1'
 	    AND s2.skrivemaade != s1.skrivemaade
-        AND s2.geometri && s1.geometri_udtyndet
-        AND st_area (st_intersection (s2.geometri, s1.geometri_udtyndet)) > 0.5 * s1.area
+        AND s2.geometri && s1.geometri
+        AND st_area (st_intersection (s2.geometri, s1.geometri)) > 0.5 * s1.area
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -637,7 +637,7 @@ FROM
 JOIN dagi_10.postnummerinddeling p ON
 	(
 	    p.navn != s.skrivemaade
-        AND ST_contains (p.geometri, s.geometri_udtyndet)
+        AND ST_contains (p.geometri, s.geometri)
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -655,8 +655,8 @@ FROM
 JOIN dagi_10.postnummerinddeling p ON
     (
         p.navn != s.skrivemaade
-        AND p.geometri && s.geometri_udtyndet
-	    AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.5 * s.area
+        AND p.geometri && s.geometri
+	    AND st_area (st_intersection (p.geometri, s.geometri)) > 0.5 * s.area
 	)
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -673,8 +673,8 @@ FROM
     stednavne_udstilling.stednavne_udstilling s
     JOIN dagi_10.postnummerinddeling p ON
     (
-        p.geometri && s.geometri_udtyndet
-        AND st_area (st_intersection (p.geometri, s.geometri_udtyndet)) > 0.4 * s.area
+        p.geometri && s.geometri
+        AND st_area (st_intersection (p.geometri, s.geometri)) > 0.4 * s.area
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
@@ -692,8 +692,8 @@ FROM
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
         k.kommunenavn != 'Christiansø'
-        AND k.geometri && s.geometri_udtyndet
-        AND st_area (st_intersection (k.geometri, s.geometri_udtyndet)) > 0.9 * s.area
+        AND k.geometri && s.geometri
+        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.9 * s.area
     )
 WHERE
 	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
