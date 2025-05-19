@@ -159,7 +159,7 @@ JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
         s2.type = 'bebyggelse'
 		AND s2.subtype = 'by'
-        AND s2.navnefoelgenummer = '1'
+        AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
         AND s2.skrivemaade != s1.skrivemaade
 		AND s2.geometri && s1.geometri
 		AND ST_contains (s2.geometri, s1.geometri)
@@ -182,7 +182,7 @@ JOIN stednavne_udstilling.stednavne_udstilling s2 ON
     (
         s2.type = 'bebyggelse'
         AND s2.subtype = 'by'
-        AND s2.navnefoelgenummer = '1'
+        AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
         AND s2.geometri && s1.geometri
         AND st_area (st_intersection (s2.geometri, s1.geometri)) > 0.7 * s1.area
     )
@@ -575,7 +575,7 @@ FROM
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
 	    s2.type = 'farvand'
-	    AND s2.navnefoelgenummer = '1'
+	    AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
 	    AND s2.skrivemaade != s1.skrivemaade
 	    AND ST_contains (s2.geometri, s1.geometri)
 	)
@@ -595,7 +595,7 @@ FROM
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
 	    s2.type = 'farvand'
-	    AND s2.navnefoelgenummer = '1'
+	    AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
 	    AND s2.skrivemaade != s1.skrivemaade
         AND s2.geometri && s1.geometri
         AND st_area (st_intersection (s2.geometri, s1.geometri)) > 0.9 * s1.area
@@ -616,7 +616,7 @@ FROM
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
 	    s2.type = 'farvand'
-	    AND s2.navnefoelgenummer = '1'
+	    AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
 	    AND s2.skrivemaade != s1.skrivemaade
         AND s2.geometri && s1.geometri
         AND st_area (st_intersection (s2.geometri, s1.geometri)) > 0.5 * s1.area
@@ -891,7 +891,7 @@ FROM
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
 	    s2.type = 'farvand'
-	    AND s2.navnefoelgenummer = '1'
+	    AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
         AND s2.geometri && s1.geometri
         AND ST_contains (s2.geometri, s1.geometri)
 	)
@@ -916,7 +916,7 @@ FROM
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
 		s2.type = 'farvand'
-		AND s2.navnefoelgenummer = '1'
+		AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
         AND s2.geometri && s1.geometri
         AND st_area (st_intersection (s2.geometri, s1.geometri)) > 0.5 * s1.area
 	)
@@ -1386,7 +1386,7 @@ FROM
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
 	    s2.type = 'farvand'
-	    AND s2.navnefoelgenummer = '1'
+	    AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
         AND s2.geometri && s1.geometri
         AND ST_contains (s2.geometri, s1.geometri)
 	)
@@ -1406,7 +1406,7 @@ FROM
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
 	    s2.type = 'farvand'
-	    AND s2.navnefoelgenummer = '1'
+	    AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
         AND s2.geometri && s1.geometri
         AND st_area (st_intersection (s2.geometri, s1.geometri)) > 0.5 * s1.area
 	)
@@ -1955,7 +1955,7 @@ FROM
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
         s2.TYPE = 'landskabsform'
-		AND s2.navnefoelgenummer = '1'
+		AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
         AND s2.skrivemaade != s1.skrivemaade
         AND st_area(s2.geometri) > 10000000
 		AND s2.geometri && s1.geometri
@@ -1977,7 +1977,7 @@ JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
 	    s2.skrivemaade != 'Jylland'
 		AND s2.subtype = 'landsdel'
-		AND s2.navnefoelgenummer = '1'
+		AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
         AND s2.skrivemaade != s1.skrivemaade
 		AND s2.geometri && s1.geometri
 		AND ST_contains (s2.geometri, s1.geometri)
@@ -1996,7 +1996,7 @@ FROM
 JOIN stednavne_udstilling.stednavne_udstilling s2 ON
 	(
 	    s2.subtype = 'landsdel'
-		AND s2.navnefoelgenummer = '1'
+		AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
         AND s2.skrivemaade != s1.skrivemaade
 		AND s2.geometri && s1.geometri
 		AND ST_contains (s2.geometri, s1.geometri)
