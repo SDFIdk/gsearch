@@ -1174,7 +1174,7 @@ SET
     visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
-JOIN dagi_500.kommune_helper_stednavne k ON
+JOIN dagi_10.kommune_helper_stednavne k ON
 	(
 	    ST_contains (k.geometri, s.geometri)
 	)
