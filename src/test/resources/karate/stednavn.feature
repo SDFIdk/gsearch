@@ -405,7 +405,7 @@ Feature: Gsearch stednavn test
 
         When method GET
         Then status 200
-        And match response == '#[1]'
+        And match response == '#[5]'
         And match response.[*].visningstekst contains ['Slotsholmen (Ø i København K)']
 
 
