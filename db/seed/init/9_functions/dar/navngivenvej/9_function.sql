@@ -25,8 +25,7 @@ BEGIN
 
     SELECT
         -- Removes repeated whitespace and following symbols -()!
-        -- There after remove . with nothing wo searches like `Småkærvej 36, st., 6100 Haderslev` and 2.Tværvej and 2. Tværvej works
-        regexp_replace(regexp_replace(btrim(input_tekst), '[-()! \s]+', ' ', 'g'), '[.]+', '', 'g')
+        regexp_replace(btrim(input_tekst), '[-()! \s]+', ' ', 'g')
     INTO input_tekst;
 
     -- Build the query_string

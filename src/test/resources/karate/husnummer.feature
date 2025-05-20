@@ -122,7 +122,7 @@ Feature: Gsearch husnummer test
         And match response.[*].postnummernavn contains deep ['Odense C', 'Horsens']
 
 
-        Then param q = 'h. c. andersen'
+        Then param q = 'hc andersen'
 
         When method GET
         Then status 200
