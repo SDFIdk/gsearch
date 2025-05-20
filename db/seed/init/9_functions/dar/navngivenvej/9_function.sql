@@ -121,12 +121,15 @@ BEGIN
                     textsearchable_phonetic_col,
                     to_tsquery(''simple'',$1)
                 )::double precision desc,
-                vejnavn
+                levenshtein(
+                    lower(vejnavn)::text,
+                    lower($5)
+                ) asc
             LIMIT $3;', filters);
         --RAISE NOTICE '%', stmt;
         RETURN
         QUERY EXECUTE stmt
-        USING query_string, plain_query_string, rowlimit, srid;
+        USING query_string, plain_query_string, rowlimit, srid, input_tekst;
     END IF;
 END
 $function$;
