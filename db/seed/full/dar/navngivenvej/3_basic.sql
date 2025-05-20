@@ -59,7 +59,6 @@ SELECT
     v.vejnavn || ' (' || p.supplementtext || ')' AS visningstekst,
     v.id,
     v.vejnavn,
-    v.vejnavn_textsearchable,
     sbn.supplerendebynavn,
     p.postnummer,
     p.postnummernavn,
@@ -75,13 +74,8 @@ FROM
 GROUP BY
     v.id,
     v.vejnavn,
-    v.vejnavn_textsearchable,
     sbn.supplerendebynavn,
     p.postnummer,
     p.postnummernavn,
     p.supplementtext,
     k.kommunekode;
-
-CREATE INDEX ON basic_initialloading.navngivenvej (vejnavn_textsearchable);
-
-VACUUM ANALYZE basic_initialloading.navngivenvej;
