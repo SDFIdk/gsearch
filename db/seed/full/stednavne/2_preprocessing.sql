@@ -186,7 +186,7 @@ JOIN dagi_10.kommune_helper_stednavne k ON
         k.navn = 'Christiansø'
         AND k.navn != s.skrivemaade
         AND k.geometri && s.geometri
-        AND st_area (st_intersection (k.geometri, s.geometri)) > 0.5 * s.area
+        AND st_area (st_intersection (k.geometri, ST_envelope(s.geometri))) > 0.5 * s.area
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
