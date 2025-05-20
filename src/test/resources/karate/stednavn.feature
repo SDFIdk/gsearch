@@ -319,7 +319,7 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[3]'
-        And match response.[*].visningstekst contains only ['Rørvig (By i Rørvig)', 'Rørvig (Gård i Tønder)', 'Rørviggård (Gård i Otterup)']
+        And match response.[*].visningstekst contains only ['Rørvig (By i Odsherred Kommune)', 'Rørvig (Gård i Tønder)', 'Rørviggård (Gård i Otterup)']
 
 
     Scenario: Search levenshtein ordering test Kongen
@@ -357,7 +357,7 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[0].visningstekst == 'Møn'
+        And match response.[0].visningstekst == 'Møn (Ø i Region Sjælland)'
 
 
     Scenario: Search levenshtein ordering test Aars
@@ -367,7 +367,7 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[2]'
-        And match response.[0].visningstekst contains only ['Aars (Rasteplads i Aars)', 'Aars']
+        And match response.[*].visningstekst contains only ['Aars (Rasteplads i Vesthimmerlands Kommune)', 'Aars (By i Vesthimmerlands Kommune)']
 
 
     Scenario: Search levenshtein ordering test Akademiet
@@ -378,6 +378,35 @@ Feature: Gsearch stednavn test
         Then status 200
         And match response == '#[2]'
         And match response.[*].visningstekst contains only ['Akademiet (Uddannelsescenter i København N)', 'Akademiet (Københavns Skole & Idrætsakademi, Friskole i Hellerup)']
+
+
+    Scenario: Search Christiansø Kirke
+        Then param q = 'Christiansø Kirke'
+        And param limit = '1'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[*].visningstekst contains only ['Christiansø Kirke (Kirke på Christiansø)']
+
+
+    Scenario: Search Christiansø
+        Then param q = 'Christiansø (Ø i Østersøen)'
+        And param limit = '1'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[*].visningstekst contains only ['Christiansø (Ø i Østersøen)']
+
+
+    Scenario: Search Slotsholmen
+        Then param q = 'Slotsholmen'
+
+        When method GET
+        Then status 200
+        And match response == '#[5]'
+        And match response.[*].visningstekst contains ['Slotsholmen (Ø i København K)']
 
 
     Scenario: Test 2196 crs response

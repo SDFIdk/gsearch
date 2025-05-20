@@ -7,10 +7,8 @@ FROM
     dagi_500_fdw.regionsinddeling;
 
 CREATE INDEX ON dagi_500.regionsinddeling USING gist (geometri);
-VACUUM ANALYZE dagi_500.regionsinddeling;
+CREATE INDEX ON dagi_500.regionsinddeling (navn);
 
-
-CREATE INDEX ON dagi_500.regionsinddeling USING gist (geometri);
 VACUUM ANALYZE dagi_500.regionsinddeling;
 
 
@@ -23,4 +21,6 @@ FROM
     dagi_10_fdw.regionsinddeling;
 
 CREATE INDEX ON dagi_10.regionsinddeling USING gist (geometri);
+CREATE INDEX ON dagi_10.regionsinddeling (navn);
+
 VACUUM ANALYZE dagi_10.regionsinddeling;
