@@ -16,11 +16,13 @@ SELECT
             END
         ) AS visningstekst,
     k.navn AS navn,
+    k.kommunekode,
     st_multi (st_union (k.geometri)) AS geometri
 INTO dagi_10.kommune_helper_stednavne
 FROM
     dagi_10.kommuneinddeling k
 GROUP BY
+    k.kommunekode,
     k.navn;
 
 CREATE INDEX ON dagi_10.kommune_helper_stednavne (visningstekst);
