@@ -357,7 +357,7 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[10]'
-        And match response.[0].visningstekst == 'Møn (Ø i Stege)'
+        And match response.[0].visningstekst == 'Møn (Ø i Region Sjælland)'
 
 
     Scenario: Search levenshtein ordering test Aars
@@ -367,7 +367,7 @@ Feature: Gsearch stednavn test
         When method GET
         Then status 200
         And match response == '#[2]'
-        And match response.[*].visningstekst contains only ['Aars (Rasteplads i Aars)', 'Aars (By i Vesthimmerlands Kommune)']
+        And match response.[*].visningstekst contains only ['Aars (Rasteplads i Vesthimmerlands Kommune)', 'Aars (By i Vesthimmerlands Kommune)']
 
 
     Scenario: Search levenshtein ordering test Akademiet
