@@ -78,6 +78,16 @@ Feature: Gsearch matrikel test
         And match response == '#[10]'
         And match response.[*].ejerlavsnavn contains deep ['Utterslev, København']
 
+
+    Scenario: Combine search using bfenummer 8974269
+        Then param q = '8974269'
+
+        When method GET
+        Then status 200
+        And match response == '#[2]'
+        And match response.[*].visningstekst contains deep ['23f, Sofiendal By, Skalborg', '23q, Sofiendal By, Skalborg']
+
+
     Scenario: Do not have a match on '.'
         Then param q = '.'
 

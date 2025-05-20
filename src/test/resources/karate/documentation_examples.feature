@@ -2,7 +2,7 @@ Feature:
     Background:
         * url url
 
-    Scenario: Example 1 
+    Scenario: navngivenvej example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/navngivenvej?q=Lærke
         Given path 'navngivenvej'
         Then param q = 'Lærke'
@@ -11,7 +11,7 @@ Feature:
         Then status 200
         And match response == '#[10]'
 
-    Scenario: Example 2 
+    Scenario: navngivenvej example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/navngivenvej?q=vinkel&limit=90
         Given path 'navngivenvej'
         Then param q = 'vinkel'
@@ -21,7 +21,7 @@ Feature:
         Then status 200
         And match response == '#[90]'
 
-    Scenario: Example 3
+    Scenario: husnummer example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/husnummer?q=lærke&filter=kommunekode like '%250461%25'
         Given path 'husnummer'
         Then param q = 'Lærke'
@@ -32,7 +32,7 @@ Feature:
         And match response == '#[10]'
 
 
-    Scenario: Example 4
+    Scenario: stednavn example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/stednavn?q=Benedikte&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))
         Given path 'stednavn'
         Then param q = 'Benedikte'
@@ -52,7 +52,7 @@ Feature:
         And match response == '#[1]'
 
 
-    Scenario: Example 5
+    Scenario: adresse example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/adresse?q=flens
         Given path 'adresse'
         Then param q = 'flens'
@@ -61,7 +61,7 @@ Feature:
         Then status 200
         And match response == '#[10]'
 
-    Scenario: Example 6
+    Scenario: adresse example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/adresse?limit=30&q=fle&filter=kommunekode like '%250360%25'
         Given path 'adresse'
         Then param q = 'fle'
@@ -71,7 +71,7 @@ Feature:
         Then status 200
         And match response == '#[10]'
 
-    Scenario: Example 7
+    Scenario: adresse example 3
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/adresse?limit=100&q=skanse&filter=INTERSECTS(vejpunkt_geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))
         Given path 'adresse'
         Then param q = 'skanse'
@@ -83,7 +83,7 @@ Feature:
         And match response == '#[24]'
 
 
-    Scenario: Example 8
+    Scenario: husnummer example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/husnummer?q=genvej
         Given path 'husnummer'
         Then param q = 'genvej'
@@ -92,7 +92,7 @@ Feature:
         Then status 200
         And match response == '#[10]'
 
-    Scenario: Example 9
+    Scenario: husnummer example 3
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/husnummer?limit=30&q=fl&filter=kommunekode like '%250376%25'
         Given path 'husnummer'
         Then param q = 'fl'
@@ -103,7 +103,7 @@ Feature:
         Then status 200
         And match response == '#[30]'
 
-    Scenario: Example 10
+    Scenario: husnummer example 4
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/husnummer?limit=100&q=fjordbak&filter=INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
         Given path 'husnummer'
         Then param q = 'fjordbak'
@@ -115,7 +115,7 @@ Feature:
         And match response == '#[45]'
 
 
-    Scenario: Example 11
+    Scenario: kommune example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/kommune?q=a
         Given path 'kommune'
         Then param q = 'a'
@@ -124,7 +124,7 @@ Feature:
         Then status 200
         And match response == '#[7]'
 
-    Scenario: Example 12
+    Scenario: kommune example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/kommune?q=a&filter=kommunekode like '%250851%25'
         Given path 'kommune'
         Then param q = 'a'
@@ -134,7 +134,7 @@ Feature:
         Then status 200
         And match response == '#[1]'
 
-    Scenario: Example 13
+    Scenario: kommune example 3
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/kommune?q=l&filter=INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
         Given path 'kommune'
         Then param q = 'l'
@@ -146,7 +146,7 @@ Feature:
         And match response == '#[2]'
 
 
-    Scenario: Example 14
+    Scenario: matrikel example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=123ab
         Given path 'matrikel'
         Then param q = '123ab'
@@ -155,7 +155,7 @@ Feature:
         Then status 200
         And match response == '#[6]'
 
-    Scenario: Example 15
+    Scenario: matrikel example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=123ab&filter=ejerlavskode='130653'
         Given path 'matrikel'
         Then param q = '123ab'
@@ -165,7 +165,18 @@ Feature:
         Then status 200
         And match response == '#[1]'
 
-    Scenario: Example 16
+
+    Scenario: matrikel example 3
+        # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=9738473
+        Given path 'matrikel'
+        Then param q = '9738473'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+
+
+    Scenario: matrikel example 4
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=a&filter=bfenummer='100032397'
         Given path 'matrikel'
         Then param q = 'a'
@@ -175,7 +186,7 @@ Feature:
         Then status 200
         And match response == '#[10]'
 
-    Scenario: Example 17
+    Scenario: matrikel example 5
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=2&filter=INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))
         Given path 'matrikel'
         Then param q = '2'
@@ -186,7 +197,7 @@ Feature:
         And match response == '#[10]'
 
 
-    Scenario: Example 18
+    Scenario: matrikel_udgaaet example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel_udgaaet?q=11a
         Given path 'matrikel_udgaaet'
         Then param q = '11a'
@@ -195,7 +206,7 @@ Feature:
         Then status 200
         And match response == '#[10]'
 
-    Scenario: Example 19
+    Scenario: matrikel_udgaaet example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel_udgaaet?q=11a&filter=ejerlavskode='70854'
         Given path 'matrikel_udgaaet'
         Then param q = '11a'
@@ -205,7 +216,18 @@ Feature:
         Then status 200
         And match response == '#[3]'
 
-    Scenario: Example 20
+
+    Scenario: matrikel_udgaaet example 3
+        # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel_udgaaet?q=5202120
+        Given path 'matrikel_udgaaet'
+        Then param q = '5202120'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+
+
+    Scenario: matrikel_udgaaet example 4
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel_udgaaet?q=e&filter=bfenummer='5290287'
         Given path 'matrikel_udgaaet'
         Then param q = 'e'
@@ -215,7 +237,7 @@ Feature:
         Then status 200
         And match response == '#[1]'
 
-    Scenario: Example 21
+    Scenario: matrikel_udgaaet example 5
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel_udgaaet?q=10&filter=INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))
         Given path 'matrikel_udgaaet'
         Then param q = '1'
@@ -226,7 +248,7 @@ Feature:
         And match response == '#[10]'
 
 
-    Scenario: Example 22
+    Scenario: navngivenvej example 3
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/navngivenvej?q=birk&filter=INTERSECTS(geometri,SRID=25832;POLYGON((515000.1 6074200.2, 515000.3 6104200.4, 555000.5 6104200.6, 555000.7 6074200.8, 515000.1 6074200.2)))
         Given path 'navngivenvej'
         Then param q = 'birk'
@@ -237,7 +259,7 @@ Feature:
         And match response == '#[9]'
 
 
-    Scenario: Example 23
+    Scenario: opstillingskreds example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/opstillingskreds?q=vest
         Given path 'opstillingskreds'
         Then param q = 'vest'
@@ -246,7 +268,7 @@ Feature:
         Then status 200
         And match response == '#[5]'
 
-    Scenario: Example 24
+    Scenario: opstillingskreds example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/opstillingskreds?q=vest&filter=storkredsnummer='6'
         Given path 'opstillingskreds'
         Then param q = 'vest'
@@ -257,7 +279,7 @@ Feature:
         And match response == '#[1]'
 
 
-    Scenario: Example 25
+    Scenario: politikreds example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/politikreds?q=vest
         Given path 'politikreds'
         Then param q = 'vest'
@@ -266,7 +288,7 @@ Feature:
         Then status 200
         And match response == '#[3]'
 
-    Scenario: Example 26
+    Scenario: politikreds example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/politikreds?q=ø&filter=INTERSECTS(geometri,SRID=25832;POLYGON((440000.1 6190000.2, 440000.3 6410000.4, 620000.5 6410000.6, 620000.7 6190000.8, 440000.1 6190000.2)))
         Given path 'politikreds'
         Then param q = 'ø'
@@ -277,7 +299,7 @@ Feature:
         And match response == '#[1]'
 
 
-    Scenario: Example 27
+    Scenario: postnummer example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/postnummer?limit=60&q=b
         Given path 'postnummer'
         Then param q = 'b'
@@ -287,7 +309,7 @@ Feature:
         Then status 200
         And match response == '#[54]'
 
-    Scenario: Example 28
+    Scenario: postnummer example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/postnummer?q=mari
         Given path 'postnummer'
         Then param q = 'mari'
@@ -296,7 +318,7 @@ Feature:
         Then status 200
         And match response == '#[2]'
 
-    Scenario: Example 29
+    Scenario: postnummer example 3
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/postnummer?q=mari&filter=INTERSECTS(geometri,SRID=25832;POLYGON((615000.1 6049000.2, 615000.3 6111000.4, 735000.5 6111000.6, 735000.7 6049000.8, 615000.1 6049000.2)))
         Given path 'postnummer'
         Then param q = 'mari'
@@ -307,7 +329,7 @@ Feature:
         And match response == '#[1]'
 
 
-    Scenario: Example 30
+    Scenario: region example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/region?q=mid
         Given path 'region'
         Then param q = 'mid'
@@ -316,7 +338,7 @@ Feature:
         Then status 200
         And match response == '#[1]'
 
-    Scenario: Example 31
+    Scenario: region example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/region?q=regi
         Given path 'region'
         Then param q = 'regi'
@@ -326,7 +348,7 @@ Feature:
         And match response == '#[5]'
 
 
-    Scenario: Example 32
+    Scenario: retskreds example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/retskreds?q=ros
         Given path 'retskreds'
         Then param q = 'ros'
@@ -335,7 +357,7 @@ Feature:
         Then status 200
         And match response == '#[1]'
 
-    Scenario: Example 33
+    Scenario: retskreds example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/retskreds?q=a
         Given path 'retskreds'
         Then param q = 'a'
@@ -345,7 +367,7 @@ Feature:
         And match response == '#[2]'
 
 
-    Scenario: Example 34
+    Scenario: sogn example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/sogn?q=bis
         Given path 'sogn'
         Then param q = 'bis'
@@ -354,7 +376,7 @@ Feature:
         Then status 200
         And match response == '#[10]'
 
-    Scenario: Example 35
+    Scenario: sogn example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/sogn?q=skal
         Given path 'sogn'
         Then param q = 'skal'
@@ -363,7 +385,7 @@ Feature:
         Then status 200
         And match response == '#[4]'
 
-    Scenario: Example 36
+    Scenario: sogn example 3
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/sogn?q=r&filter=INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))
         Given path 'sogn'
         Then param q = 'r'
@@ -374,7 +396,7 @@ Feature:
         And match response == '#[5]'
 
 
-    Scenario: Example 37
+    Scenario: stednavn example 1
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/stednavn?q=kattebj
         Given path 'stednavn'
         Then param q = 'kattebj'
@@ -383,7 +405,7 @@ Feature:
         Then status 200
         And match response == '#[3]'
 
-    Scenario: Example 38
+    Scenario: stednavn example 2
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/stednavn?limit=40&q=kratg
         Given path 'stednavn'
         Then param q = 'kratg'
@@ -393,7 +415,7 @@ Feature:
         Then status 200
         And match response == '#[17]'
 
-    Scenario: Example 39
+    Scenario: stednavn example 3
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/stednavn?q=katte&filter=stednavn_type='bebyggelse'
         Given path 'stednavn'
         Then param q = 'katte'
@@ -403,7 +425,7 @@ Feature:
         Then status 200
         And match response == '#[5]'
 
-    Scenario: Example 40
+    Scenario: stednavn example 4
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/stednavn?q=katte&filter=stednavn_subtype='moseSump'
         Given path 'stednavn'
         Then param q = 'katte'
@@ -413,7 +435,7 @@ Feature:
         Then status 200
         And match response == '#[2]'
 
-    Scenario: Example 41
+    Scenario: stednavn example 5
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/stednavn?q=steng&filter=INTERSECTS(geometri,SRID=25832;POLYGON((625000.1 6165000.2, 625000.3 6215000.4, 677000.5 6215000.6, 677000.7 6165000.8, 625000.1 6165000.2)))
         Given path 'stednavn'
         Then param q = 'steng'

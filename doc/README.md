@@ -229,6 +229,16 @@ Syntaks eksempel som søger efter '123ab' med `filter` på `ejerlavskode` '13065
 <br/><br/>
 
 ```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=9738473 HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+
+Syntaks eksempel som søger efter `bfenummer` '9738473' :
+
+<br/><br/>
+
+```http
 GET https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=a&filter=bfenummer=%27100032397%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
@@ -262,6 +272,16 @@ Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 Syntaks eksempel som søger efter '11a' med `filter` på `ejerlavskode` '70854':
+
+<br/><br/>
+
+```http
+GET https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel_udgaaet?q=5202120 HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+
+Syntaks eksempel som søger efter `bfebummer` '5202120':
 
 <br/><br/>
 

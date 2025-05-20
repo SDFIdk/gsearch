@@ -8,7 +8,8 @@ ALTER TABLE basic_initialloading.matrikel_udgaaet
     ADD COLUMN textsearchable_plain_col tsvector
         GENERATED ALWAYS AS (textsearchable_plain_col_ejerlavsnavn ||
                              setweight(to_tsvector('simple', ejerlavskode), 'A') ||
-                             setweight(to_tsvector('simple', matrikelnummer), 'A'))
+                             setweight(to_tsvector('simple', matrikelnummer), 'A') ||
+                             setweight(to_tsvector('simple', bfenummer), 'A'))
         STORED;
 
 ALTER TABLE basic_initialloading.matrikel_udgaaet
@@ -18,7 +19,8 @@ ALTER TABLE basic_initialloading.matrikel_udgaaet
     ADD COLUMN textsearchable_unaccent_col tsvector
         GENERATED ALWAYS AS (textsearchable_unaccent_col_ejerlavsnavn ||
                              setweight(to_tsvector('simple', ejerlavskode), 'A') ||
-                             setweight(to_tsvector('simple', matrikelnummer), 'A'))
+                             setweight(to_tsvector('simple', matrikelnummer), 'A') ||
+                             setweight(to_tsvector('simple', bfenummer), 'A'))
         STORED;
 
 ALTER TABLE basic_initialloading.matrikel_udgaaet
@@ -28,5 +30,7 @@ ALTER TABLE basic_initialloading.matrikel_udgaaet
     ADD COLUMN textsearchable_phonetic_col tsvector
         GENERATED ALWAYS AS (textsearchable_phonetic_col_ejerlavsnavn ||
                              setweight(to_tsvector('simple', ejerlavskode), 'A') ||
-                             setweight(to_tsvector('simple', matrikelnummer), 'A'))
+                             setweight(to_tsvector('simple', ejerlavskode), 'A') ||
+                             setweight(to_tsvector('simple', matrikelnummer), 'A') ||
+                             setweight(to_tsvector('simple', bfenummer), 'A'))
         STORED;
