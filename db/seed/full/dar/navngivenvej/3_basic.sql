@@ -45,7 +45,6 @@ vejnavne AS (
     SELECT
         n.id AS id,
         n.vejnavn,
-        regexp_replace(regexp_replace(n.vejnavn, '[.]+', '. ', 'g'), '[\s]+', ' ', 'g') AS vejnavn_textsearchable, -- Need to change vejnavn like 2.Tværvej to 2. Tværvej
         n.geometri AS geometri
     FROM
         dar.navngivenvej n
