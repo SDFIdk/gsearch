@@ -78,6 +78,16 @@ Feature: Gsearch matrikel test
         And match response == '#[10]'
         And match response.[*].ejerlavsnavn contains deep ['Utterslev, København']
 
+
+    Scenario: Combine search using bfenummer 8974269
+        Then param q = '8974269'
+
+        When method GET
+        Then status 200
+        And match response == '#[2]'
+        And match response.[*].visningstekst contains deep ['23f, Sofiendal By, Skalborg', '23q, Sofiendal By, Skalborg']
+
+
     Scenario: Do not have a match on '.'
         Then param q = '.'
 
@@ -136,13 +146,13 @@ Feature: Gsearch matrikel test
         And match response == '#[100]'
         
     Scenario: Test string to double typecast of centroids
-        Then param q = '5787'
+        Then param q = '4æ, Staurby By, Vejlby'
         And param limit = '1'
 
         When method GET
         Then status 200
-        And match response.[*].centroid_x contains deep [723841.455]
-        And match response.[*].centroid_y contains deep [6179661.553]
+        And match response.[*].centroid_x contains deep [549466.63]
+        And match response.[*].centroid_y contains deep [6150573.518]
 
     Scenario: Levenshtein ordering test for 8a, Høve By, Høve issue #230
         Then param q = '8a, høve by, høve'
