@@ -163,11 +163,14 @@ JOIN dagi_10.kommune_helper_stednavne k ON
     (
     	k.navn = 'Christiansø'
     	AND k.navn != s.skrivemaade
-        AND (s.subtype != 'ø' OR s.subtype != 'øgruppe' OR s.subtype != 'skær' OR s.TYPE = 'restriktionsareal')
         AND ST_contains (k.geometri, s.geometri)
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.subtype != 'ø'
+    AND stednavne_udstilling.stednavne_udstilling.subtype != 'øgruppe'
+    AND stednavne_udstilling.stednavne_udstilling.subtype != 'skær'
+    AND stednavne_udstilling.stednavne_udstilling.TYPE != 'restriktionsareal'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
@@ -182,12 +185,15 @@ JOIN dagi_10.kommune_helper_stednavne k ON
     (
         k.navn = 'Christiansø'
         AND k.navn != s.skrivemaade
-        AND (s.subtype != 'ø' OR s.subtype != 'øgruppe' OR s.subtype != 'skær' OR s.TYPE = 'restriktionsareal')
         AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.5 * s.area
     )
 WHERE
     stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+    AND stednavne_udstilling.stednavne_udstilling.subtype != 'ø'
+    AND stednavne_udstilling.stednavne_udstilling.subtype != 'øgruppe'
+    AND stednavne_udstilling.stednavne_udstilling.subtype != 'skær'
+    AND stednavne_udstilling.stednavne_udstilling.TYPE != 'restriktionsareal'
     AND stednavne_udstilling.stednavne_udstilling.objectid = s.objectid
     AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s.navnefoelgenummer;
 
