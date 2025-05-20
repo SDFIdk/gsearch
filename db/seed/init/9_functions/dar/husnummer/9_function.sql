@@ -26,7 +26,8 @@ BEGIN
     -- Get vejnavn from input
     SELECT
         -- Removes repeated whitespace and following symbols -()!
-        regexp_replace(btrim(input_tekst), '[-()! \s]+', ' ', 'g')
+        -- There after remove . with nothing wo searches like `Småkærvej 36, st., 6100 Haderslev` and 2.Tværvej and 2. Tværvej works
+        regexp_replace(regexp_replace(btrim(input_tekst), '[-()! \s]+', ' ', 'g'), '[.]+', '', 'g')
     INTO input_tekst;
 
     -- Build the query_string (converting vejnavn of input to phonetic)
