@@ -148,19 +148,22 @@ VACUUM ANALYZE stednavne_udstilling.stednavne_udstilling;
 -- Christiansø --
 -----------------
 -- Vi er nødt til at starte med at få stednavne på Christiansø fixet, da de stednavne ellers ender med at få en hjælpetekst
--- som har Gudhjem, da Gudhjems postnummer geometri også indeholder Christiansø
+-- som har Gudhjem, da Gudhjems postnummer geometri også indeholder Christiansø.
+-- Vi undtager også nogle forskellige typer og subtyper, som ikke skal have Christiansø som hjælpetekst
 SELECT 'Christiansø: ', now();
 
 -- Stednavne der ligger helt indenfor Christiansø
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' på ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
     	k.navn = 'Christiansø'
+    	AND k.navn != s.skrivemaade
+        AND (s.subtype != 'ø' OR s.subtype != 'øgruppe' OR s.subtype != 'skær' OR s.TYPE = 'restriktionsareal')
         AND ST_contains (k.geometri, s.geometri)
     )
 WHERE
@@ -172,12 +175,14 @@ WHERE
 UPDATE
     stednavne_udstilling.stednavne_udstilling
 SET
-    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || k.visningstekst || ')'
+    visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' på ' || k.visningstekst || ')'
 FROM
     stednavne_udstilling.stednavne_udstilling s
 JOIN dagi_10.kommune_helper_stednavne k ON
     (
         k.navn = 'Christiansø'
+        AND k.navn != s.skrivemaade
+        AND (s.subtype != 'ø' OR s.subtype != 'øgruppe' OR s.subtype != 'skær' OR s.TYPE = 'restriktionsareal')
         AND k.geometri && s.geometri
         AND st_area (st_intersection (k.geometri, s.geometri)) > 0.5 * s.area
     )
@@ -1189,6 +1194,25 @@ WHERE
 ------------------------
 SELECT 'Restriktionsanlaeg: ', now();
 
+UPDATE
+    stednavne_udstilling.stednavne_udstilling
+SET
+    visningstekst = s1.skrivemaade || ' (' || s1.subtype_presentation || ' i ' || s2.skrivemaade || ')'
+FROM
+	stednavne_udstilling.stednavne_udstilling s1
+JOIN stednavne_udstilling.stednavne_udstilling s2 ON
+	(
+	    s2.type = 'farvand'
+	    AND (s2.navnestatus = 'officielt' OR s2.navnestatus = 'suAutoriseret')
+        AND s2.geometri && s1.geometri
+        AND ST_contains (s2.geometri, s1.geometri)
+	)
+WHERE
+	stednavne_udstilling.stednavne_udstilling.visningstekst IS NULL
+	AND stednavne_udstilling.stednavne_udstilling.type = 'restriktionsareal'
+	AND stednavne_udstilling.stednavne_udstilling.objectid = s1.objectid
+	AND stednavne_udstilling.stednavne_udstilling.navnefoelgenummer = s1.navnefoelgenummer;
+
 -- Restriktionsanlaeg i postnummerinddeling
 UPDATE
 	stednavne_udstilling.stednavne_udstilling
@@ -1934,7 +1958,7 @@ SET
 	visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
 FROM
 	stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_500.regionsinddeling r ON
     (
         ST_contains (r.geometri, s.geometri)
     )
@@ -1950,7 +1974,7 @@ SET
 	visningstekst = s.skrivemaade || ' (' || s.subtype_presentation || ' i ' || r.navn || ')'
 FROM
 	stednavne_udstilling.stednavne_udstilling s
-    JOIN dagi_500.regionsinddeling r ON
+JOIN dagi_500.regionsinddeling r ON
     (
         r.geometri && s.geometri
         AND st_area (st_intersection (r.geometri, s.geometri)) > 0.9 * s.area

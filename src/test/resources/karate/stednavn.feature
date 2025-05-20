@@ -380,6 +380,35 @@ Feature: Gsearch stednavn test
         And match response.[*].visningstekst contains only ['Akademiet (Uddannelsescenter i København N)', 'Akademiet (Københavns Skole & Idrætsakademi, Friskole i Hellerup)']
 
 
+    Scenario: Search Christiansø Kirke
+        Then param q = 'Christiansø Kirke'
+        And param limit = '1'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[*].visningstekst contains only ['Christiansø Kirke (Kirke på Christiansø)']
+
+
+    Scenario: Search Christiansø
+        Then param q = 'Christiansø (Ø i Østersøen)'
+        And param limit = '1'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[*].visningstekst contains only ['Christiansø (Ø i Østersøen)']
+
+
+    Scenario: Search Slotsholmen
+        Then param q = 'Slotsholmen'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[*].visningstekst contains ['Slotsholmen (Ø i København K)']
+
+
     Scenario: Test 2196 crs response
         Then param q = 's'
         And param limit = '1'
