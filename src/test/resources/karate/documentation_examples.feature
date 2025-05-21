@@ -413,7 +413,7 @@ Feature:
         And param limit = '40'
         When method GET
         Then status 200
-        And match response == '#[17]'
+        And match response == '#[18]'
 
     Scenario: stednavn example 3
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/stednavn?q=katte&filter=stednavn_type='bebyggelse'
