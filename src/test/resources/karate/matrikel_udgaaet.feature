@@ -95,6 +95,15 @@ Feature: Gsearch matrikel test
         Then status 200
         And match response == '#[0]'
 
+
+    Scenario: Do not have a match on '1000b, Skrydstrup Ejerlav'
+        Then param q = '1000b, Skrydstrup Ejerlav'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+
+
     Scenario: Search is interchangeable order of ejerlavsnavn and matrikelnummer
         Then param q = '104, Ellum, Løgumkloster 1470453'
 
