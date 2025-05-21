@@ -351,6 +351,17 @@ Feature: Gsearch stednavn test
         And match response.[0].visningstekst == 'Sankt Klemens Kirke (Klemenskirke, Kirke i Klemensker)'
 
 
+    Scenario: Search levenshtein ordering test Katrevel
+        Then param q = 'Katrevel'
+        And param limit = '1'
+
+        When method GET
+        Then status 200
+        And match response == '#[1]'
+        And match response.[0].visningstekst == 'Katrevel (Bydel i Strellev)'
+
+
+
     Scenario: Search levenshtein ordering test Møn
         Then param q = 'møn'
 
