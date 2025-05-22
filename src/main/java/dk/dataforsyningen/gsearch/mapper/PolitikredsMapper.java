@@ -21,7 +21,6 @@ public class PolitikredsMapper implements RowMapper<Politikreds> {
     data.setPolitikredsnummer(Integer.valueOf(rs.getString("politikredsnummer")));
     data.setNavn(rs.getString("navn"));
     data.setVisningstekst(rs.getString("visningstekst"));
-    // Gets cast to an Integer
     data.setMyndighedskode(rs.getString("myndighedskode"));
     data.setKommunekode(rs.getString("kommunekode"));
 
