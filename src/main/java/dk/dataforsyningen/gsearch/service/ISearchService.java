@@ -20,65 +20,47 @@ import org.geotools.filter.text.cql2.CQLException;
 
 public interface ISearchService {
 
-  List<Adresse> getAdresseResult(String q, String resource, Optional<String> filter, Integer limit,
-                                 Integer srid)
+  List<Adresse> getAdresseResult(String q, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Husnummer> getHusnummerResult(String q, String resource, Optional<String> filter,
-                                     Integer limit,
-                                     Integer srid)
+  List<Husnummer> getHusnummerResult(String q, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Kommune> getKommuneResult(String q, String resource, Optional<String> filter, Integer limit,
-                                 Integer srid)
+  List<Kommune> getKommuneResult(String q, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Matrikel> getMatrikelResult(String q, String resource, Optional<String> filter,
-                                   Integer limit,
-                                   Integer srid)
+  List<Matrikel> getMatrikelResult(String q, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<MatrikelUdgaaet> getMatrikelUdgaaetResult(String q, String resource, Optional<String> filter,
-                                                 Integer limit,
+  List<MatrikelUdgaaet> getMatrikelUdgaaetResult(String q, Optional<String> filter, Integer limit,
                                                  Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Navngivenvej> getNavngivenvejResult(String q, String resource, Optional<String> filter,
-                                           Integer limit,
+  List<Navngivenvej> getNavngivenvejResult(String q, Optional<String> filter, Integer limit,
                                            Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Opstillingskreds> getOpstillingskredsResult(String q, String resource,
-                                                   Optional<String> filter,
-                                                   Integer limit,
+  List<Opstillingskreds> getOpstillingskredsResult(String q, Optional<String> filter, Integer limit,
                                                    Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Politikreds> getPolitikredsResult(String q, String resource, Optional<String> filter,
-                                         Integer limit,
+  List<Politikreds> getPolitikredsResult(String q, Optional<String> filter, Integer limit,
                                          Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Postnummer> getPostnummerResult(String q, String resource, Optional<String> filter,
-                                       Integer limit,
+  List<Postnummer> getPostnummerResult(String q, Optional<String> filter, Integer limit,
                                        Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Region> getRegionResult(String q, String resource, Optional<String> filter, Integer limit,
-                               Integer srid)
+  List<Region> getRegionResult(String q, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Retskreds> getRetskredsResult(String q, String resource, Optional<String> filter,
-                                     Integer limit,
-                                     Integer srid)
+  List<Retskreds> getRetskredsResult(String q, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Sogn> getSognResult(String q, String resource, Optional<String> filter, Integer limit,
-                           Integer srid)
+  List<Sogn> getSognResult(String q, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException;
 
-  List<Stednavn> getStednavnResult(String q, String resource, Optional<String> filter,
-                                   Integer limit,
-                                   Integer srid)
+  List<Stednavn> getStednavnResult(String q, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException;
 }

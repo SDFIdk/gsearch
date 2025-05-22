@@ -16,42 +16,42 @@ import dk.dataforsyningen.gsearch.datamodel.Stednavn;
 import java.util.List;
 
 public interface ISearchDao {
-  List<Adresse> getAdresse(String q, String resource, String where, Integer limit, Integer srid);
+  List<Adresse> getAdresse(String q, String where, Integer limit, Integer srid);
 
-  List<Husnummer> getHusnummer(String q, String resource, String where, Integer limit,
+  List<Husnummer> getHusnummer(String q, String where, Integer limit,
                                Integer srid);
 
-  List<Kommune> getKommune(String q, String resource, String where, Integer limit,
+  List<Kommune> getKommune(String q, String where, Integer limit,
                            Integer srid);
 
-  List<Matrikel> getMatrikel(String q, String resource, String where, Integer limit,
+  List<Matrikel> getMatrikel(String q, String where, Integer limit,
                              Integer srid);
 
-  List<MatrikelUdgaaet> getMatrikelUdgaaet(String q, String resource, String where, Integer limit,
+  List<MatrikelUdgaaet> getMatrikelUdgaaet(String q, String where, Integer limit,
                                            Integer srid);
 
-  List<Navngivenvej> getNavngivenvej(String q, String resource, String where, Integer limit,
+  List<Navngivenvej> getNavngivenvej(String q, String where, Integer limit,
                                      Integer srid);
 
-  List<Opstillingskreds> getOpstillingskreds(String q, String resource, String where, Integer limit,
+  List<Opstillingskreds> getOpstillingskreds(String q, String where, Integer limit,
                                              Integer srid);
 
-  List<Politikreds> getPolitikreds(String q, String resource, String where, Integer limit,
+  List<Politikreds> getPolitikreds(String q, String where, Integer limit,
                                    Integer srid);
 
-  List<Postnummer> getPostnummer(String q, String resource, String where, Integer limit,
+  List<Postnummer> getPostnummer(String q, String where, Integer limit,
                                  Integer srid);
 
-  List<Region> getRegion(String q, String resource, String where, Integer limit,
+  List<Region> getRegion(String q, String where, Integer limit,
                          Integer srid);
 
-  List<Retskreds> getRetskreds(String q, String resource, String where, Integer limit,
+  List<Retskreds> getRetskreds(String q, String where, Integer limit,
                                Integer srid);
 
-  List<Sogn> getSogn(String q, String resource, String where, Integer limit,
+  List<Sogn> getSogn(String q, String where, Integer limit,
                      Integer srid);
 
-  List<Stednavn> getStednavn(String q, String resource, String where, Integer limit,
+  List<Stednavn> getStednavn(String q, String where, Integer limit,
                              Integer srid);
 
 }

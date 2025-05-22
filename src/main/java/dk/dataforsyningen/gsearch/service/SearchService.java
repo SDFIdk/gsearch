@@ -51,7 +51,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -59,14 +58,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Adresse> getAdresseResult(String q, String resource, Optional<String> filter,
-                                        Integer limit,
+  public List<Adresse> getAdresseResult(String q, Optional<String> filter, Integer limit,
                                         Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Adresse> result = iSearchDao.getAdresse(q, resource, finalWhere, limit, srid);
+    List<Adresse> result = iSearchDao.getAdresse(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -75,7 +73,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -83,14 +80,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Husnummer> getHusnummerResult(String q, String resource, Optional<String> filter,
-                                            Integer limit,
+  public List<Husnummer> getHusnummerResult(String q, Optional<String> filter, Integer limit,
                                             Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Husnummer> result = iSearchDao.getHusnummer(q, resource, finalWhere, limit, srid);
+    List<Husnummer> result = iSearchDao.getHusnummer(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -99,7 +95,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -107,14 +102,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Kommune> getKommuneResult(String q, String resource, Optional<String> filter,
-                                        Integer limit,
+  public List<Kommune> getKommuneResult(String q, Optional<String> filter, Integer limit,
                                         Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Kommune> result = iSearchDao.getKommune(q, resource, finalWhere, limit, srid);
+    List<Kommune> result = iSearchDao.getKommune(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -123,7 +117,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -131,14 +124,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Matrikel> getMatrikelResult(String q, String resource, Optional<String> filter,
-                                          Integer limit,
+  public List<Matrikel> getMatrikelResult(String q, Optional<String> filter, Integer limit,
                                           Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Matrikel> result = iSearchDao.getMatrikel(q, resource, finalWhere, limit, srid);
+    List<Matrikel> result = iSearchDao.getMatrikel(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -147,7 +139,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -155,16 +146,14 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<MatrikelUdgaaet> getMatrikelUdgaaetResult(String q, String resource,
-                                                        Optional<String> filter,
-                                                        Integer limit,
-                                                        Integer srid)
+  public List<MatrikelUdgaaet> getMatrikelUdgaaetResult(String q, Optional<String> filter,
+                                                        Integer limit, Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
     List<MatrikelUdgaaet> result =
-        iSearchDao.getMatrikelUdgaaet(q, resource, finalWhere, limit, srid);
+        iSearchDao.getMatrikelUdgaaet(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -173,7 +162,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -181,15 +169,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Navngivenvej> getNavngivenvejResult(String q, String resource,
-                                                  Optional<String> filter,
-                                                  Integer limit,
+  public List<Navngivenvej> getNavngivenvejResult(String q, Optional<String> filter, Integer limit,
                                                   Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Navngivenvej> result = iSearchDao.getNavngivenvej(q, resource, finalWhere, limit, srid);
+    List<Navngivenvej> result = iSearchDao.getNavngivenvej(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -198,7 +184,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -206,16 +191,14 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Opstillingskreds> getOpstillingskredsResult(String q, String resource,
-                                                          Optional<String> filter,
-                                                          Integer limit,
-                                                          Integer srid)
+  public List<Opstillingskreds> getOpstillingskredsResult(String q, Optional<String> filter,
+                                                          Integer limit, Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
     List<Opstillingskreds> result =
-        iSearchDao.getOpstillingskreds(q, resource, finalWhere, limit, srid);
+        iSearchDao.getOpstillingskreds(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -224,7 +207,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -232,14 +214,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Politikreds> getPolitikredsResult(String q, String resource, Optional<String> filter,
-                                                Integer limit,
+  public List<Politikreds> getPolitikredsResult(String q, Optional<String> filter, Integer limit,
                                                 Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Politikreds> result = iSearchDao.getPolitikreds(q, resource, finalWhere, limit, srid);
+    List<Politikreds> result = iSearchDao.getPolitikreds(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -248,7 +229,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -256,14 +236,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Postnummer> getPostnummerResult(String q, String resource, Optional<String> filter,
-                                              Integer limit,
+  public List<Postnummer> getPostnummerResult(String q, Optional<String> filter, Integer limit,
                                               Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Postnummer> result = iSearchDao.getPostnummer(q, resource, finalWhere, limit, srid);
+    List<Postnummer> result = iSearchDao.getPostnummer(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -272,7 +251,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -280,14 +258,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Region> getRegionResult(String q, String resource, Optional<String> filter,
-                                      Integer limit,
+  public List<Region> getRegionResult(String q, Optional<String> filter, Integer limit,
                                       Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Region> result = iSearchDao.getRegion(q, resource, finalWhere, limit, srid);
+    List<Region> result = iSearchDao.getRegion(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -296,7 +273,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -304,14 +280,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Retskreds> getRetskredsResult(String q, String resource, Optional<String> filter,
-                                            Integer limit,
+  public List<Retskreds> getRetskredsResult(String q, Optional<String> filter, Integer limit,
                                             Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Retskreds> result = iSearchDao.getRetskreds(q, resource, finalWhere, limit, srid);
+    List<Retskreds> result = iSearchDao.getRetskreds(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -320,7 +295,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -328,14 +302,12 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Sogn> getSognResult(String q, String resource, Optional<String> filter,
-                                  Integer limit,
-                                  Integer srid)
+  public List<Sogn> getSognResult(String q, Optional<String> filter, Integer limit, Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Sogn> result = iSearchDao.getSogn(q, resource, finalWhere, limit, srid);
+    List<Sogn> result = iSearchDao.getSogn(q, finalWhere, limit, srid);
 
     return result;
   }
@@ -344,7 +316,6 @@ public class SearchService implements ISearchService {
    * Transform request to database query, execute query and return the result.
    *
    * @param q
-   * @param resource
    * @param filter
    * @param limit
    * @param srid
@@ -352,14 +323,13 @@ public class SearchService implements ISearchService {
    * @throws FilterToSQLException
    * @throws CQLException
    */
-  public List<Stednavn> getStednavnResult(String q, String resource, Optional<String> filter,
-                                          Integer limit,
+  public List<Stednavn> getStednavnResult(String q, Optional<String> filter, Integer limit,
                                           Integer srid)
       throws FilterToSQLException, CQLException {
 
     String finalWhere = getWhereClause(filter, srid);
 
-    List<Stednavn> result = iSearchDao.getStednavn(q, resource, finalWhere, limit, srid);
+    List<Stednavn> result = iSearchDao.getStednavn(q, finalWhere, limit, srid);
 
     return result;
   }

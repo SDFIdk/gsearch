@@ -109,7 +109,7 @@ public class Controller {
       throws FilterToSQLException, CQLException {
 
     if (epsgMap.containsKey(srid)) {
-      List<Adresse> result = iSearchService.getAdresseResult(q, "adresse", filter, limit, srid);
+      List<Adresse> result = iSearchService.getAdresseResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -151,7 +151,7 @@ public class Controller {
 
     if (epsgMap.containsKey(srid)) {
       List<Husnummer> result =
-          iSearchService.getHusnummerResult(q, "husnummer", filter, limit, srid);
+          iSearchService.getHusnummerResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -192,7 +192,7 @@ public class Controller {
       throws FilterToSQLException, CQLException {
 
     if (epsgMap.containsKey(srid)) {
-      List<Kommune> result = iSearchService.getKommuneResult(q, "kommune", filter, limit, srid);
+      List<Kommune> result = iSearchService.getKommuneResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -233,7 +233,7 @@ public class Controller {
       throws FilterToSQLException, CQLException {
 
     if (epsgMap.containsKey(srid)) {
-      List<Matrikel> result = iSearchService.getMatrikelResult(q, "matrikel", filter, limit, srid);
+      List<Matrikel> result = iSearchService.getMatrikelResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -275,7 +275,7 @@ public class Controller {
 
     if (epsgMap.containsKey(srid)) {
       List<MatrikelUdgaaet> result =
-          iSearchService.getMatrikelUdgaaetResult(q, "matrikel_udgaaet", filter, limit, srid);
+          iSearchService.getMatrikelUdgaaetResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -318,7 +318,7 @@ public class Controller {
 
     if (epsgMap.containsKey(srid)) {
       List<Navngivenvej> result =
-          iSearchService.getNavngivenvejResult(q, "navngivenvej", filter, limit, srid);
+          iSearchService.getNavngivenvejResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -360,7 +360,7 @@ public class Controller {
 
     if (epsgMap.containsKey(srid)) {
       List<Opstillingskreds> result =
-          iSearchService.getOpstillingskredsResult(q, "opstillingskreds", filter, limit, srid);
+          iSearchService.getOpstillingskredsResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -402,7 +402,7 @@ public class Controller {
 
     if (epsgMap.containsKey(srid)) {
       List<Politikreds> result =
-          iSearchService.getPolitikredsResult(q, "politikreds", filter, limit, srid);
+          iSearchService.getPolitikredsResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -444,7 +444,7 @@ public class Controller {
 
     if (epsgMap.containsKey(srid)) {
       List<Postnummer> result =
-          iSearchService.getPostnummerResult(q, "postnummer", filter, limit, srid);
+          iSearchService.getPostnummerResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -485,7 +485,7 @@ public class Controller {
       throws FilterToSQLException, CQLException {
 
     if (epsgMap.containsKey(srid)) {
-      List<Region> result = iSearchService.getRegionResult(q, "region", filter, limit, srid);
+      List<Region> result = iSearchService.getRegionResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -527,7 +527,7 @@ public class Controller {
 
     if (epsgMap.containsKey(srid)) {
       List<Retskreds> result =
-          iSearchService.getRetskredsResult(q, "retskreds", filter, limit, srid);
+          iSearchService.getRetskredsResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -568,7 +568,7 @@ public class Controller {
       throws FilterToSQLException, CQLException {
 
     if (epsgMap.containsKey(srid)) {
-      List<Sogn> result = iSearchService.getSognResult(q, "sogn", filter, limit, srid);
+      List<Sogn> result = iSearchService.getSognResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 
@@ -609,7 +609,7 @@ public class Controller {
       throws FilterToSQLException, CQLException {
 
     if (epsgMap.containsKey(srid)) {
-      List<Stednavn> result = iSearchService.getStednavnResult(q, "stednavn", filter, limit, srid);
+      List<Stednavn> result = iSearchService.getStednavnResult(q, filter, limit, srid);
 
       response.addHeader("Content-Crs", "<" + epsgMap.get(srid) + ">");
 

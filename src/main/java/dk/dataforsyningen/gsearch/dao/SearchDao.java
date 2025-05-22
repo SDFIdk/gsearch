@@ -28,15 +28,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Adresse> getAdresse(String q, String resource, String where, Integer limit,
-                                  Integer srid) {
+  public List<Adresse> getAdresse(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.adresse(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -52,15 +50,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Husnummer> getHusnummer(String q, String resource, String where, Integer limit,
-                                      Integer srid) {
+  public List<Husnummer> getHusnummer(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.husnummer(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -76,15 +72,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Kommune> getKommune(String q, String resource, String where, Integer limit,
-                                  Integer srid) {
+  public List<Kommune> getKommune(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.kommune(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -100,15 +94,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Matrikel> getMatrikel(String q, String resource, String where, Integer limit,
-                                    Integer srid) {
+  public List<Matrikel> getMatrikel(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.matrikel(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -124,16 +116,14 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<MatrikelUdgaaet> getMatrikelUdgaaet(String q, String resource, String where,
-                                                  Integer limit,
+  public List<MatrikelUdgaaet> getMatrikelUdgaaet(String q, String where, Integer limit,
                                                   Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.matrikel_udgaaet(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -149,16 +139,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Navngivenvej> getNavngivenvej(String q, String resource, String where,
-                                            Integer limit,
-                                            Integer srid) {
+  public List<Navngivenvej> getNavngivenvej(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.navngivenvej(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -174,16 +161,14 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Opstillingskreds> getOpstillingskreds(String q, String resource, String where,
-                                                    Integer limit,
+  public List<Opstillingskreds> getOpstillingskreds(String q, String where, Integer limit,
                                                     Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.opstillingskreds(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -199,16 +184,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Politikreds> getPolitikreds(String q, String resource, String where,
-                                          Integer limit,
-                                          Integer srid) {
+  public List<Politikreds> getPolitikreds(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.politikreds(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -224,16 +206,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Postnummer> getPostnummer(String q, String resource, String where,
-                                        Integer limit,
-                                        Integer srid) {
+  public List<Postnummer> getPostnummer(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.postnummer(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -249,16 +228,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Region> getRegion(String q, String resource, String where,
-                                Integer limit,
-                                Integer srid) {
+  public List<Region> getRegion(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.region(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -274,16 +250,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Retskreds> getRetskreds(String q, String resource, String where,
-                                      Integer limit,
-                                      Integer srid) {
+  public List<Retskreds> getRetskreds(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.retskreds(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -299,16 +272,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Sogn> getSogn(String q, String resource, String where,
-                            Integer limit,
-                            Integer srid) {
+  public List<Sogn> getSogn(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.sogn(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
@@ -324,16 +294,13 @@ public class SearchDao implements ISearchDao {
    * It assembles full sql query from the parameters and maps the result to list of data entities.
    *
    * @param q
-   * @param resource
    * @param where
    * @param limit
    * @return
    */
-  public List<Stednavn> getStednavn(String q, String resource, String where,
-                                    Integer limit,
-                                    Integer srid) {
+  public List<Stednavn> getStednavn(String q, String where, Integer limit, Integer srid) {
     return jdbi.withHandle(handle -> {
-      String sql = "select (api." + resource + "(:q, :where, 1, :limit, :srid)).*";
+      String sql = "select (api.stednavn(:q, :where, 1, :limit, :srid)).*";
       return handle
           .createQuery(sql)
           .bind("q", q)
