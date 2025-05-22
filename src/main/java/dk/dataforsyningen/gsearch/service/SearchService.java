@@ -31,21 +31,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class SearchService implements ISearchService {
 
-  private final ISearchDao iSearchDao;
-
-  @Autowired
-  public SearchService(ISearchDao iSearchDao) {
-    this.iSearchDao = iSearchDao;
-  }
-
   static Logger logger = LoggerFactory.getLogger(Controller.class);
-
   static PostGISDialect dialect = new PostGISDialect(null);
   static FilterToSQL filterToSQL = new CustomPostgisFilterToSQL(dialect);
 
   static {
     dialect.setFunctionEncodingEnabled(true);
     filterToSQL.setInline(true);
+  }
+
+  private final ISearchDao iSearchDao;
+
+  @Autowired
+  public SearchService(ISearchDao iSearchDao) {
+    this.iSearchDao = iSearchDao;
   }
 
   /**
