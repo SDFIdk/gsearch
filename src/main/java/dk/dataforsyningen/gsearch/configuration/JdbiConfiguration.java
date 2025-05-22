@@ -82,6 +82,12 @@ public class JdbiConfiguration {
     return jdbi;
   }
 
+
+  /**
+   * Makes it possible for Jackson to deserialize Geometry so it can be returned in json response
+   *
+   * @return
+   */
   @Bean
   @Primary
   public ObjectMapper objectMapper() {
