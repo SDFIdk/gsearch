@@ -18,7 +18,6 @@ import javax.sql.DataSource;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.SqlStatements;
 import org.jdbi.v3.jackson2.Jackson2Plugin;
-import org.jdbi.v3.postgis.PostgisPlugin;
 import org.jdbi.v3.postgres.PostgresPlugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.n52.jackson.datatype.jts.JtsModule;
@@ -54,7 +53,6 @@ public class JdbiConfiguration {
     Jdbi jdbi = Jdbi.create(proxy)
         .installPlugin(new SqlObjectPlugin())
         .installPlugin(new PostgresPlugin())
-        .installPlugin(new PostgisPlugin())
         .installPlugin(new Jackson2Plugin());
 
     jdbi.registerRowMapper(new AdresseMapper());
