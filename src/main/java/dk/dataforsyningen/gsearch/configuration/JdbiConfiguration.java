@@ -1,14 +1,24 @@
 package dk.dataforsyningen.gsearch.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dk.dataforsyningen.gsearch.ResourceTypes;
-import java.sql.SQLException;
-import java.util.List;
+import dk.dataforsyningen.gsearch.mapper.AdresseMapper;
+import dk.dataforsyningen.gsearch.mapper.HusnummerMapper;
+import dk.dataforsyningen.gsearch.mapper.KommuneMapper;
+import dk.dataforsyningen.gsearch.mapper.MatrikelMapper;
+import dk.dataforsyningen.gsearch.mapper.MatrikelUdgaaetMapper;
+import dk.dataforsyningen.gsearch.mapper.NavngivenvejMapper;
+import dk.dataforsyningen.gsearch.mapper.OpstillingskredsMapper;
+import dk.dataforsyningen.gsearch.mapper.PolitikredsMapper;
+import dk.dataforsyningen.gsearch.mapper.PostnummerMapper;
+import dk.dataforsyningen.gsearch.mapper.RegionMapper;
+import dk.dataforsyningen.gsearch.mapper.RetskredsMapper;
+import dk.dataforsyningen.gsearch.mapper.SognMapper;
+import dk.dataforsyningen.gsearch.mapper.StednavnMapper;
 import javax.sql.DataSource;
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.SqlStatements;
 import org.jdbi.v3.jackson2.Jackson2Plugin;
+import org.jdbi.v3.postgis.PostgisPlugin;
 import org.jdbi.v3.postgres.PostgresPlugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.n52.jackson.datatype.jts.JtsModule;
@@ -24,68 +34,59 @@ import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 @Configuration
 public class JdbiConfiguration {
 
-    static Logger logger = LoggerFactory.getLogger(JdbiConfiguration.class);
+  static Logger logger = LoggerFactory.getLogger(JdbiConfiguration.class);
 
-    private ResourceTypes resourceTypes = new ResourceTypes();
+  /**
+   * The SQL data source that Jdbi will connect to. In this example we use an H2 database, but it can be any JDBC-compatible database.
+   * https://jdbi.org/#_spring5
+   *
+   * @return
+   */
+  @Bean
+  @ConfigurationProperties(prefix = "spring.datasource")
+  public DataSource driverManagerDataSource() {
+    return new DriverManagerDataSource();
+  }
 
-    /**
-     * The SQL data source that Jdbi will connect to. In this example we use an H2 database, but it can be any JDBC-compatible database.
-     * https://jdbi.org/#_spring5
-     *
-     * @return
-     */
-    @Bean
-    @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource driverManagerDataSource() {
-        return new DriverManagerDataSource();
-    }
+  @Bean
+  public Jdbi jdbi(DataSource ds) {
+    TransactionAwareDataSourceProxy proxy = new TransactionAwareDataSourceProxy(ds);
+    Jdbi jdbi = Jdbi.create(proxy)
+        .installPlugin(new SqlObjectPlugin())
+        .installPlugin(new PostgresPlugin())
+        .installPlugin(new PostgisPlugin())
+        .installPlugin(new Jackson2Plugin());
 
-    @Bean
-    public Jdbi jdbi(DataSource ds, List<RowMapper<?>> rowMappers) throws SQLException {
-        TransactionAwareDataSourceProxy proxy = new TransactionAwareDataSourceProxy(ds);
-        Jdbi jdbi = Jdbi.create(proxy)
-            .installPlugin(new SqlObjectPlugin())
-            .installPlugin(new PostgresPlugin())
-            .installPlugin(new Jackson2Plugin());
-        determineTypes(jdbi);
-        // TODO: Maybe this can be used to only register Row mapper once and not every time the getData gets called
-        rowMappers.forEach(mapper -> jdbi.registerRowMapper(mapper));
-        // This cancels the sql statement so the database don't use unnecessary ressources on requests
-        // taking to long.
-        // Gravitee timeout is 10 seconds, and it sends the correct 504 timeout http code.
-        // In the code we set it to 11 seconds because it triggers the UnableToExecuteStatementException,
-        // that returns a 400 http code (bad request), but in this case it should have been a 504 timeout.
-        // So the 11 seconds is for always be later than Gravitee, but still cancels the ongoing statement
-        // from being executed longer
-        jdbi.getConfig(SqlStatements.class).setQueryTimeout(11);
-        return jdbi;
-    }
+    jdbi.registerRowMapper(new AdresseMapper());
+    jdbi.registerRowMapper(new HusnummerMapper());
+    jdbi.registerRowMapper(new KommuneMapper());
+    jdbi.registerRowMapper(new MatrikelMapper());
+    jdbi.registerRowMapper(new MatrikelUdgaaetMapper());
+    jdbi.registerRowMapper(new NavngivenvejMapper());
+    jdbi.registerRowMapper(new OpstillingskredsMapper());
+    jdbi.registerRowMapper(new PolitikredsMapper());
+    jdbi.registerRowMapper(new PostnummerMapper());
+    jdbi.registerRowMapper(new RegionMapper());
+    jdbi.registerRowMapper(new RetskredsMapper());
+    jdbi.registerRowMapper(new SognMapper());
+    jdbi.registerRowMapper(new StednavnMapper());
 
-    @Bean
-    @Primary
-    public ObjectMapper objectMapper() {
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JtsModule());
-        return mapper;
-    }
+    // This cancels the sql statement so the database don't use unnecessary ressources on requests
+    // taking to long.
+    // Gravitee timeout is 10 seconds, and it sends the correct 504 timeout http code.
+    // In the code we set it to 11 seconds because it triggers the UnableToExecuteStatementException,
+    // that returns a 400 http code (bad request), but in this case it should have been a 504 timeout.
+    // So the 11 seconds is for always be later than Gravitee, but still cancels the ongoing statement
+    // from being executed longer
+    jdbi.getConfig(SqlStatements.class).setQueryTimeout(11);
+    return jdbi;
+  }
 
-    @Bean
-    public ResourceTypes resourceTypes() {
-        return resourceTypes;
-    }
-
-    public void determineTypes(Jdbi jdbi) {
-        List<String> types = jdbi.withHandle(handle -> {
-            String sql = "select typname from pg_catalog.pg_type t join pg_catalog.pg_namespace pn on (pn.oid = t.typnamespace) join pg_catalog.pg_class pc on (pc.reltype = t.oid) where pn.nspname = 'api' and pc.relkind = 'c'";
-            List<String> typnames = handle
-                .createQuery(sql)
-                .mapTo(String.class)
-                .list();
-            return typnames;
-        });
-        logger.info("Retrieved api types from database: {}", String.join(",", types));
-        // TODO: mutate with diff
-        resourceTypes.getTypes().clear();
-        resourceTypes.getTypes().addAll(types);
-    }
+  @Bean
+  @Primary
+  public ObjectMapper objectMapper() {
+    final ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JtsModule());
+    return mapper;
+  }
 }
