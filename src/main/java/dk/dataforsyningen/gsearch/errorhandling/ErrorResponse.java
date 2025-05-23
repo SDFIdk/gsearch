@@ -4,13 +4,19 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 
 public class ErrorResponse {
-  /** The HTTP status code */
+  /**
+   * The HTTP status code
+   */
   private HttpStatus status;
 
-  /** The error message associated with exception */
+  /**
+   * The error message associated with exception
+   */
   private String message;
 
-  /** List of constructed error messages */
+  /**
+   * List of constructed error messages
+   */
   private List<String> errors;
 
   public ErrorResponse(String message) {

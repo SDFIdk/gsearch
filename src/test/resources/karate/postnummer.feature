@@ -20,7 +20,7 @@ Feature: Gsearch postnummer test
       "postnummer": '#string',
       "postnummernavn": '#string',
       "kommunekode": '#string',
-      "gadepostnummer": '#string'
+      "gadepostnummer": '#boolean'
     }
     """
 
