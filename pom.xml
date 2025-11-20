@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.5</version>
+            <version>42.7.8</version>
         </dependency>
         <dependency>
             <groupId>org.n52.jackson</groupId>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.geotools.jdbc</groupId>
             <artifactId>gt-jdbc-postgis</artifactId>
-            <version>33.1</version>
+            <version>33.2</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
