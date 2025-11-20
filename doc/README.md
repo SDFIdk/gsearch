@@ -279,12 +279,12 @@ Syntaks eksempel som søger efter `bfenummer` '9738473' :
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=a&filter=bfenummer=%27100032397%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=a&filter=bfenummer=%271406344%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
 
-Syntaks eksempel som søger efter 'a' med `filter` på `bfenummer` '100032397':
+Syntaks eksempel som søger efter 'a' med `filter` på `bfenummer` '1406344':
 
 <br/><br/>
 
@@ -575,4 +575,3 @@ Accept: application/json
 Syntaks eksempel som søger efter 'steng' og med `filter` på `geometri` - Odsherred:
 
 <br/><br/>
-
