@@ -76,12 +76,12 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-cql</artifactId>
-            <version>33.1</version>
+            <version>33.2</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-epsg-wkt</artifactId>
-            <version>33.1</version>
+            <version>33.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
