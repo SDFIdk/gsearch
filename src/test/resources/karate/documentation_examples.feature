@@ -177,11 +177,11 @@ Feature:
 
 
     Scenario: matrikel example 4
-        # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=a&filter=bfenummer='100032397'
+        # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=a&filter=bfenummer='1406344'
         Given path 'matrikel'
         Then param q = 'a'
 
-        And param filter = "bfenummer='100032397'"
+        And param filter = "bfenummer='1406344'"
         When method GET
         Then status 200
         And match response == '#[10]'
