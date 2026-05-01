@@ -78,7 +78,7 @@ Accept: application/json
 _Parametren_ `filter` angiver hvilken del af data-ressourcen, der søges i.
 
 `Filter` skal defineres i syntaksen _ECQL_, som er en GeoServer extension af Open Geospatial
-Consortiums https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html.
+Consortiums <https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html>.
 
 Et ECQL filterudtryk kan anvende værdier fra en eller flere af de attributter, der optræder i den pågældende
 data-ressources retursvar, herunder geometrien i attributterne fx `bbox` og `geometri`.
@@ -279,7 +279,7 @@ Syntaks eksempel som søger efter `bfenummer` '9738473' :
 <br/><br/>
 
 ```http
-GET https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=a&filter=bfenummer=%271406344%27 HTTP/1.1
+GET https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=u&filter=bfenummer=%276022115%27 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
