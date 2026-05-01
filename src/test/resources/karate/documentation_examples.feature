@@ -177,14 +177,14 @@ Feature:
 
 
     Scenario: matrikel example 4
-        # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=a&filter=bfenummer='1406344'
+        # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=u&filter=bfenummer='6022115'
         Given path 'matrikel'
         Then param q = 'u'
 
         And param filter = "bfenummer='6022115'"
         When method GET
         Then status 200
-        And match response == '#[11]'
+        And match response == '#[1]'
 
     Scenario: matrikel example 5
         # https://api.dataforsyningen.dk/rest/gsearch/v2.0/matrikel?q=2&filter=INTERSECTS(geometri,SRID=25832;POLYGON((530000.1 6085450.2, 530000.3 6092950.4, 540000.5 6092950.6, 540000.7 6085450.8, 530000.1 6085450.2)))
