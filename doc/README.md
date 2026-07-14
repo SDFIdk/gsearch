@@ -1,5 +1,9 @@
 # GSearch dokumentation
 
+**Gsearch lukker d. 1 november. 2026. Det sker som led i arbejdet med at fremtidssikre Dataforsyningen.**
+
+---
+
 **GSearch** er et REST-api som udstiller forskellige endpoints til at søge i adresser, matrikelnumre og Danmarks
 Administrative Geografiske Inddeling og Danske Stednavne.
 API'et tilbyder funktionalitet, som kan implementeres i en brugerapplikation i form af et søgefelt med
