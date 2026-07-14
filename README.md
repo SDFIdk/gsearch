@@ -1,5 +1,7 @@
 # gsearch
 
+**Gsearch lukker d. 1 november. 2026. Det sker som led i arbejdet med at fremtidssikre Dataforsyningen.**
+
 Gsearch bygger på følgende hovedprincipper:
 
 - Udvikles i dette repo.
